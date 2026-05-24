@@ -7,6 +7,10 @@ import klayout.lay as lay
 import klayout.db as db
 
 
+def _rgb_to_color(red, green, blue):
+    return (red << 16) | (green << 8) | blue
+
+
 def main(input_layout, output_image, width, height, oversampling, pdk_root, pdk):
 
     # Background colors
@@ -37,6 +41,22 @@ def main(input_layout, output_image, width, height, oversampling, pdk_root, pdk)
         os.path.join(pdk_root, pdk, "libs.tech", "klayout", "tech", "sg13g2.lyp")
     )
 
+    # Improve contrast between TM2 signal routing and M5 ground planes.
+    layer_style_overrides = {
+        # (67, 0): {
+        #     "fill_color": _rgb_to_color(246, 240, 160),
+        #     "frame_color": _rgb_to_color(246, 240, 160),
+        # },  # M5
+        # (134, 0): {
+        #     "fill_color": _rgb_to_color(204, 90, 0),
+        #     "frame_color": _rgb_to_color(204, 90, 0),
+        # },  # TM2
+        # (134, 22): {
+        #     "fill_color": _rgb_to_color(204, 90, 0),
+        #     "frame_color": _rgb_to_color(204, 90, 0),
+        # },  # TM2 filler
+    }
+
     # Disable some layers
     enabled_layers = [
         (1, 0),      # Activ
@@ -61,7 +81,7 @@ def main(input_layout, output_image, width, height, oversampling, pdk_root, pdk)
         (126, 0),    # TopMetal1
         (133, 0),    # TopVia2
         (134, 0),    # TopMetal2
-        # (134, 22), # TopMetal2 Filler
+        (134, 22),   # TopMetal2 Filler
         (9, 0),      # Passiv
     ]
     for lyp in lv.each_layer():
@@ -69,6 +89,12 @@ def main(input_layout, output_image, width, height, oversampling, pdk_root, pdk)
 
         if layer_datatype not in enabled_layers:
             lyp.visible = False
+            continue
+
+        style = layer_style_overrides.get(layer_datatype)
+        if style is not None:
+            lyp.fill_color = style["fill_color"]
+            lyp.frame_color = style["frame_color"]
 
     # Save the images
     base_name = os.path.splitext(os.path.basename(output_image))[0]
