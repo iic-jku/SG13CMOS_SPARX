@@ -1,6 +1,6 @@
 # SPARX: An Open-Source, Automated, Programmatically Generated, Frequency-Scalable Six-Port Receiver in 130-nm CMOS
 
-[![Quarto Publish](https://github.com/iic-jku/SG13G2_SPARX/actions/workflows/quarto-publish.yml/badge.svg?branch=main)](https://github.com/iic-jku/SG13G2_SPARX/actions/workflows/quarto-publish.yml)
+[![Quarto Publish](https://github.com/iic-jku/SG13CMOS_SPARX/actions/workflows/quarto-publish.yml/badge.svg?branch=main)](https://github.com/iic-jku/SG13CMOS_SPARX/actions/workflows/quarto-publish.yml)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19654232.svg)](https://doi.org/10.5281/zenodo.19654232)
 
 (c) 2025-2026 David Kellerer-Pirklbauer, Simon Dorrer and Harald Pretl
@@ -21,16 +21,16 @@ Institute for Integrated Circuits and Quantum Computing, Johannes Kepler Univers
 
 <p align="center">
   <a href="doc/fig/sparx160/sparx160_top_white_wo_M5.png">
-    <img src="doc/fig/sparx160/sparx160_top_white_wo_M5.png" alt="Chip render of the ihp-sg13g2 Six-Port Receiver for 160GHz without M5 GND plane (1mm x 1.4mm)" width=70%>
+    <img src="doc/fig/sparx160/sparx160_top_white_wo_M5.png" alt="Chip render of the ihp-sg13cmos Six-Port Receiver for 160GHz without M5 GND plane (1mm x 1.4mm)" width=70%>
   </a>
   <br>
-  <em>Chip render of the ihp-sg13g2 Six-Port Receiver for 160GHz without M5 GND plane (1mm x 1.4mm).</em>
+  <em>Chip render of the ihp-sg13cmos Six-Port Receiver for 160GHz without M5 GND plane (1mm x 1.4mm).</em>
 </p>
 
 
 ## Documentation
 
-The full documentation of SPARX is available [here](https://iic-jku.github.io/SG13G2_SPARX/index.html).
+The full documentation of SPARX is available [here](https://iic-jku.github.io/SG13CMOS_SPARX/index.html).
 
 
 ## Overview
@@ -97,7 +97,7 @@ The updated IHP-Open-PDK GDSFactory version contains all self-made RF devices an
 
 | Parameter           | Value                                                                             |
 | ------------------- | --------------------------------------------------------------------------------- |
-| Technology          | IHP SG13G2 (130nm CMOS)                                                           |
+| Technology          | IHP SG13CMOS (130nm CMOS)                                                           |
 | Die Area            | 1000 × 1400 µm (1.4 mm²)                                                          |
 | Supply Voltage      | 1.5 V                                                                             |
 
@@ -113,7 +113,7 @@ The updated IHP-Open-PDK GDSFactory version contains all self-made RF devices an
 ## Directory Structure
 
 ```text
-📁 SG13G2_SPARX/
+📁 SG13CMOS_SPARX/
 ├─ 📁 .github/
 │  └─ 📁 workflows/
 │     └─ quarto-publish.yml
@@ -414,7 +414,7 @@ make release VERSION=2.1.0
 	month = apr,
   	year = {2026},
 	title = {{GitHub Repository for SPARX: An Open-Source, Automated, Programmatically Generated, Frequency-Scalable Six-Port Receiver in 130-nm CMOS}},
-	url = {https://github.com/iic-jku/SG13G2_SPARX},
+	url = {https://github.com/iic-jku/SG13CMOS_SPARX},
 	doi = {10.5281/zenodo.19654232}
 }
 ```
