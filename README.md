@@ -78,7 +78,7 @@ The updated IHP-Open-PDK GDSFactory version contains all self-made RF devices an
     <img src="doc/fig/sparx_blockdiagram/sparx_blockdiagram.png" alt="Block Diagram of the Six-Port Receiver" width=75%>
   </a>
   <br>
-  <em>Block Diagram of the Six-Port Receiver.</em>
+  <em>Block diagram of the six-port receiver.</em>
 </p>
 
 
@@ -89,7 +89,7 @@ The updated IHP-Open-PDK GDSFactory version contains all self-made RF devices an
     <img src="doc/fig/sparx_powdet_sbd/sparx_powdet_sbd_circuit.png" alt="Schematic of SBD-based Power Detector" width=100%>
   </a>
   <br>
-  <em>Schematic of SBD-based Power Detector.</em>
+  <em>Schematic of the SBD-based power detector with replica circuit for fully-differential measurements. The supply and bias voltages are decoupled on-chip by MIM capacitors. The filtering capacitor is placed off-chip.</em>
 </p>
 
 
