@@ -2024,7 +2024,7 @@ wavelength_8 = round(wavelength / 8 - (wavelength / 8) % (ihp.tech.nm), 3)  # ei
 
 # filter parameters
 order = 3  # order of the band pass filter
-bandwidth = 1e9  # 5% bandwidth for input band pass filter
+bandwidth = 1e9  # 1GHz bandwidth for input band pass filter
 filter_type = "butter"  # type of the band pass filter, can be "butter", "cheby",
 connection_length_bpf = 10  # length of the connection piece between the band pass filter and the rest of the circuit
 ripple_dB = 3  # ripple in dB for the cheby filter, ignored if the filter type is Butter
