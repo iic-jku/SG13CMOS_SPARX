@@ -77,8 +77,8 @@ only_toplevel=false
 value="
 control
   // Input frequencies (set here, used by sources and HB analysis)
-  var freq_lo=149G
-  var freq_rf=151G
+  var freq_lo=159G
+  var freq_rf=161G
 
   // Save operating point data
   include \\"sparx_powdet_sbd_tb_vacask.save\\"
@@ -128,4 +128,5 @@ C {spice_probe.sym} 1840 -590 0 0 {name=p19 attrs=""}
 C {devices/lab_pin.sym} 1840 -590 0 1 {name=p20 sig_type=std_logic lab=out}
 C {noconn.sym} 1840 -560 0 0 {name=l7}
 C {sparx_powdet_sbd_pex.sym} 1400 -920 0 0 {name=xdemod2
-spice_ignore=true}
+spice_ignore=true
+spectre_ignore=true}
