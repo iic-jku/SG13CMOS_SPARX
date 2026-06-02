@@ -23,6 +23,11 @@
 
 from rawfile import rawread
 import numpy as np
+import matplotlib
+matplotlib.use('Agg')   # non-interactive backend: no GUI window when run as a
+                        # VACASK postprocess (a Qt window there crashes VACASK's
+                        # boost::asio loop with "Bad file descriptor"). Open the
+                        # saved PNG to view the result.
 import matplotlib.pyplot as plt
 import re, glob, os
 
@@ -148,5 +153,3 @@ np.savetxt(
 )
 print(f'Wrote CSVs to {csv_dir}')
 print(f'Low-power responsivity (beta) : {beta[idx0]:.3e} V/W')
-
-plt.show()
