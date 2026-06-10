@@ -3,9 +3,11 @@
 [![Quarto Publish](https://github.com/iic-jku/SG13CMOS_SPARX/actions/workflows/quarto-publish.yml/badge.svg?branch=main)](https://github.com/iic-jku/SG13CMOS_SPARX/actions/workflows/quarto-publish.yml)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19654232.svg)](https://doi.org/10.5281/zenodo.19654232)
 
-(c) 2025-2026 David Kellerer-Pirklbauer, Simon Dorrer and Harald Pretl
+(c) 2025-2026 Simon Dorrer*, David Kellerer-Pirklbauer*, and Harald Pretl
 
 Institute for Integrated Circuits and Quantum Computing, Johannes Kepler University (JKU), Linz, Austria
+
+*Both authors contributed equally to this work and are ordered alphabetically.
 
 > [!WARNING]
 > This repository is a Work in Progress.
@@ -409,13 +411,13 @@ make release VERSION=2.1.0
 ## Cite This Work
 
 ```
-@software{2026_SPARX,
-	author = {Kellerer-Pirklbauer, David and Dorrer, Simon and Pretl, Harald},
-	month = apr,
-  	year = {2026},
-	title = {{GitHub Repository for SPARX: An Open-Source, Automated, Programmatically Generated, Frequency-Scalable Six-Port Receiver in 130-nm CMOS}},
-	url = {https://github.com/iic-jku/SG13CMOS_SPARX},
-	doi = {10.5281/zenodo.19654232}
+@misc{2026_SPARX,
+	author = {Dorrer, Simon and Kellerer-Pirklbauer, David and Pretl, Harald},
+  month = apr,
+  year = {2026},
+  title = {{GitHub Repository for SPARX: An Open-Source, Automated, Programmatically Generated, Frequency-Scalable Six-Port Receiver in 130-nm CMOS}},
+  url = {https://github.com/iic-jku/SG13CMOS_SPARX},
+  doi = {10.5281/zenodo.19654232}
 }
 ```
 
