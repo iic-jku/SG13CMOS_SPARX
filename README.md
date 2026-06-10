@@ -412,7 +412,7 @@ make release VERSION=2.1.0
 
 ```
 @misc{2026_SPARX,
-author = {Dorrer, Simon and Kellerer-Pirklbauer, David and Pretl, Harald},
+  author = {Dorrer, Simon and Kellerer-Pirklbauer, David and Pretl, Harald},
   month = apr,
   year = {2026},
   title = {{GitHub Repository for SPARX: An Open-Source, Automated, Programmatically Generated, Frequency-Scalable Six-Port Receiver in 130-nm CMOS}},
