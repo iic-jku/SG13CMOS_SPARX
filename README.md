@@ -109,7 +109,7 @@ The updated IHP-Open-PDK GDSFactory version contains all self-made RF devices an
 - [ ] Change DBU from 5 nm to 1 nm in code: @davkel99
 - [ ] Update GDSFactory IHP PDK `main` branch from `IHP-TO` branch: @davkel99
 - [ ] Clean up private repo and add SPARX as module: @davkel99
-- [ ] Add Top-level Six-Port simulation in Xschem: @simi1505
+- [ ] Add Top-level Six-Port simulation in Xschem (use snp2le and VACASK): @simi1505
 
 
 ## Directory Structure
