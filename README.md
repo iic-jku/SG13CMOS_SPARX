@@ -13,7 +13,7 @@ Institute for Integrated Circuits and Quantum Computing, Johannes Kepler Univers
 > This repository is a Work in Progress.
 
 > [!IMPORTANT]
-> This repository requires the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS) container with tag `2026.05` or later.
+> This repository requires the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS) container with tag `2026.06` or later.
 
 > [!TIP]
 > This repository is based on the [ihp-sg13g2-ams-chip-template](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template) template repository and has been extended with electromagnetic (EM) simulations using the tool AWS Palace. For a better understanding of the folder structure, how to use the Makefiles, and how to implement your own designs, it is recommended to go through this [tutorial](https://iic-jku.github.io/ihp-sg13g2-ams-chip-template/index.html).
@@ -22,11 +22,11 @@ Institute for Integrated Circuits and Quantum Computing, Johannes Kepler Univers
 > SPARX stands for **S**ix-**P**ort **A**utomated Receiver (**RX**). The name also carries a subtle double meaning: *SPARX* sounds like *spark*, which translates to *Funken* in German. Fittingly, the German verb *funken* also means to communicate via radio. A subtle reference to the wireless world for which this receiver was designed.
 
 <p align="center">
-  <a href="doc/fig/sparx160/sparx160_top_white_wo_M5.png">
-    <img src="doc/fig/sparx160/sparx160_top_white_wo_M5.png" alt="Chip render of the ihp-sg13cmos Six-Port Receiver for 160GHz without M5 GND plane (1mm x 1.4mm)" width=70%>
+  <a href="doc/fig/sparx160/sparx160_top_black_pinout.png">
+    <img src="doc/fig/sparx160/sparx160_top_black_pinout.png" alt="Chip render of the ihp-sg13cmos six-port receiver for 160GHz with M5 GND plane and pinout (1mm x 1.4mm)" width=70%>
   </a>
   <br>
-  <em>Chip render of the ihp-sg13cmos Six-Port Receiver for 160GHz without M5 GND plane (1mm x 1.4mm).</em>
+  <em>Chip render of the ihp-sg13cmos six-port receiver for 160GHz with M5 GND plane and pinout (1mm x 1.4mm).</em>
 </p>
 
 
