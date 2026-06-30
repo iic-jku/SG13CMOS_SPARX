@@ -1,11 +1,11 @@
 ---
 title: "SPARX: An Open-Source, Automated, Programmatically Generated, Frequency-Scalable Six-Port Receiver in 130-nm CMOS"
 author:
-  - name: David Kellerer-Pirklbauer
-    orcid: 0009-0001-4118-2846
   - name: Simon Dorrer
     orcid: 0009-0001-5994-5477
     email: simon.dorrer@jku.at
+  - name: David Kellerer-Pirklbauer
+    orcid: 0009-0001-4118-2846
   - name: Harald Pretl
     orcid: 0000-0003-1519-076X
     email: harald.pretl@jku.at
@@ -29,7 +29,7 @@ This documentation is a Work in Progress.
 :::
 
 ::: {.callout-important}
-This repository requires the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS) container with tag `2026.05` or later.
+This repository requires the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS) container with tag `2026.06` or later.
 :::
 
 ## Overview
