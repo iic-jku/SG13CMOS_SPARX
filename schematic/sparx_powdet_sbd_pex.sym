@@ -21,7 +21,7 @@ L 4 10 20 20 20 {}
 L 4 10 15 10 20 {}
 B 5 77.5 -22.5 82.5 -17.5 {name=vout dir=out}
 B 5 77.5 17.5 82.5 22.5 {name=vref dir=out}
-B 5 -2.5 -62.5 2.5 -57.5 {name=vdd dir=in}
+B 5 -2.5 -62.5 2.5 -57.5 {name=vdd dir=inout}
 B 5 -82.5 -2.5 -77.5 2.5 {name=rfin dir=in}
 B 5 -2.5 57.5 2.5 62.5 {name=vss dir=inout}
 P 4 1 -80 -60 {}

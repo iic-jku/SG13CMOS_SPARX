@@ -149,7 +149,7 @@ Ny=1
 spiceprefix=X
 }
 C {lab_wire.sym} 320 -620 0 0 {name=p5 sig_type=std_logic lab=rfin_int}
-C {ipin.sym} 100 -880 0 0 {name=p6 lab=vdd}
+C {iopin.sym} 100 -880 2 0 {name=p6 lab=vdd}
 C {cap_cmim.sym} 1760 -590 0 0 {name=C2
 model=cap_cmim
 w=10e-6
