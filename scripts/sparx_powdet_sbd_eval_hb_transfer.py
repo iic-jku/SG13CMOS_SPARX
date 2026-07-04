@@ -23,13 +23,17 @@
 
 from rawfile import rawread
 import numpy as np
+import os
 import matplotlib
-matplotlib.use('Agg')   # non-interactive backend: no GUI window when run as a
-                        # VACASK postprocess (a Qt window there crashes VACASK's
-                        # boost::asio loop with "Bad file descriptor"). Open the
-                        # saved PNG to view the result.
+# Default to the non-interactive Agg backend: write the PNG, open no window.
+# This is required under a VACASK postprocess, where a Qt window crashes VACASK's
+# boost::asio loop ("Bad file descriptor"). To pop up the figure when running the
+# script standalone, set the environment variable SHOW_PLOTS=1.
+SHOW_PLOTS = os.environ.get('SHOW_PLOTS', '0') == '1'
+if not SHOW_PLOTS:
+	matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-import re, glob, os
+import re, glob, json
 
 # Reference impedance for the voltage -> power conversion [Ohm]
 Z0 = 50.0
@@ -152,4 +156,25 @@ np.savetxt(
 	delimiter=',', header='x,beta', comments='', fmt='%.6e',
 )
 print(f'Wrote CSVs to {csv_dir}')
-print(f'Low-power responsivity (beta) : {beta[idx0]:.3e} V/W')
+
+# --- export the scalar (square-law) responsivity for downstream scripts ---
+# Use the flat low-power region: median of beta within a decade of the lowest
+# power (more robust than a single point). The transient-noise eval auto-loads
+# this to compute NEP / minimum detectable signal.
+flat = p_rf <= 10 * p_rf[idx0]
+beta_lowpower = float(np.median(beta[flat])) if np.any(flat) else float(beta[idx0])
+beta_meta = {
+	'beta_V_per_W': beta_lowpower,
+	'freq_rf_Hz': float(freq_rf),
+	'Z0_ohm': float(Z0),
+	'source': os.path.basename(__file__) if '__file__' in dir() else 'hb_transfer',
+	'note': 'low-power (square-law) responsivity, median over lowest power decade',
+}
+beta_file = os.path.join(FIG_DIR, 'sparx_powdet_sbd_beta.json')
+with open(beta_file, 'w') as f:
+	json.dump(beta_meta, f, indent=2)
+print(f'Wrote {beta_file}')
+print(f'Low-power responsivity (beta) : {beta_lowpower:.3e} V/W')
+
+if SHOW_PLOTS:
+	plt.show()
