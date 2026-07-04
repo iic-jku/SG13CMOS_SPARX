@@ -37,8 +37,8 @@ N 800 -800 1400 -800 {lab=vdd}
 N 1480 -680 1660 -680 {lab=out_cm}
 N 1480 -640 1560 -640 {lab=ref}
 C {devices/vsource.sym} 800 -410 0 0 {name=vdd value="dc=1.5"}
-C {devices/vsource.sym} 1020 -490 0 0 {name=vin3 value="type=\\"sine\\" sinedc=0 ampl=1m freq="freq_rf""}
-C {devices/vsource.sym} 1020 -410 0 0 {name=vin2 value="type=\\"sine\\" sinedc=0 ampl=300m freq="freq_lo""}
+C {devices/vsource.sym} 1020 -490 0 0 {name=vin3 value="type=\\"sine\\" sinedc=0 ampl=0 freq="freq_rf""}
+C {devices/vsource.sym} 1020 -410 0 0 {name=vin2 value="type=\\"sine\\" sinedc=0 ampl=0 freq="freq_lo""}
 C {simulator_commands_shown.sym} 1880 -1310 0 0 {
 name=Libs_VACASK
 simulator=vacask
@@ -76,27 +76,13 @@ simulator=vacask
 only_toplevel=false
 value="
 control
-  // Input frequencies (set here, used by sources and TN analysis)
-  var freq_lo=159G
-  var freq_rf=161G
+  include "sparx_powdet_sbd_tb_tn_vacask.save"
+  save default            // ensures 'out' (the E2 differential output) is saved
 
-  // Save operating point data
-  include \\"sparx_powdet_sbd_tb_tn_vacask.save\\"
-  save default
+  analysis op1  op
+  analysis powdet_tn1 tran stop=200u step=0.25n noisefmax=2G noisefmin=100k oversample=6 noiseseed=1
 
-  analysis sparx_powdet_sbd_tb_tn_vacask op
-
-  // HB convergence options
-  //options hb_skipinitial=0
-  //options nr_force=1e1
-
-  // Outer sweep: LO tone amplitude (3 values)
-  // Inner sweep: RF tone amplitude (log sweep)
-  sweep ampl_lo instance=\\"vin2\\" parameter=\\"ampl\\" values=[30m, 100m, 300m]
-    sweep ampl_rf instance=\\"vin3\\" parameter=\\"ampl\\" from=10u to=30m mode=\\"dec\\" points=5
-      analysis powdet_hb1 hb freq=[freq_lo, freq_rf] truncate=\\"diamond\\" nharm=[9, 5]
-
-  postprocess(PYTHON, \\"../../scripts/sparx_powdet_sbd_eval_tn.py\\")
+  postprocess(PYTHON, "../../scripts/sparx_powdet_sbd_eval_tn.py")
 endc
 "}
 C {sparx_powdet_sbd.sym} 1400 -660 0 0 {name=xdemod1}
