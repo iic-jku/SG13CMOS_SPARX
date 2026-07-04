@@ -108,9 +108,10 @@ The updated IHP-Open-PDK GDSFactory version contains all self-made RF devices an
 ## ToDo List
 
 - [ ] Add Top-level Six-Port simulation in Xschem (use snp2le and VACASK): @simi1505
-- [ ] Add GitHub action with IIC-OSIC-TOOLS regression: @simi1505
 - [ ] update and finalize the whole Makefile flow including EM simulation and snp2le: @simi1505
-- [ ] KLayout LVS --> CMIM issues with PWell.block layer: see [IHP Open-PDK issue](https://github.com/IHP-GmbH/IHP-Open-PDK/issues/958)
+- [ ] top-level LVS (labels on `*_top.gds` missing): @simi1505 & @davkel99
+- [ ] Add GitHub action with IIC-OSIC-TOOLS regression: @simi1505
+- [ ] KLayout LVS --> CMIM issues with PWell.block layer: see [IHP Open-PDK issue](https://github.com/IHP-GmbH/IHP-Open-PDK/issues/958) --> fixed with [IHP Open-PDK PR](https://github.com/IHP-GmbH/IHP-Open-PDK/pull/1030)
 - [ ] Change DBU from 5 nm to 1 nm in code: @davkel99
 - [ ] Update GDSFactory IHP PDK `main` branch from `IHP-TO` branch: @davkel99
 - [ ] Clean up private repo and add SPARX as module: @davkel99
