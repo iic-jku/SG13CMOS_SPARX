@@ -1,5 +1,6 @@
 # SPARX: An Open-Source, Automated, Programmatically Generated, Frequency-Scalable Six-Port Receiver in 130-nm CMOS
 
+[![License: Solderpad Hardware License v2.1](https://img.shields.io/badge/License-Solderpad%20Hardware%20License%20v2.1-blue.svg)](LICENSE)
 [![Quarto Publish](https://github.com/iic-jku/SG13CMOS_SPARX/actions/workflows/quarto-publish.yml/badge.svg?branch=main)](https://github.com/iic-jku/SG13CMOS_SPARX/actions/workflows/quarto-publish.yml)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19654232.svg)](https://doi.org/10.5281/zenodo.19654232)
 
@@ -443,3 +444,7 @@ This project is funded by the JKU/SAL [IWS Lab](https://research.jku.at/de/proje
     </td>
   </tr>
 </table>
+
+## License
+
+Licensed under the **Solderpad Hardware License v2.1**, see [`LICENSE`](LICENSE).
