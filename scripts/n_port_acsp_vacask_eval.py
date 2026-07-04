@@ -28,6 +28,30 @@ try:
     HERE = os.path.dirname(os.path.abspath(__file__))
 except NameError:                              # exec'd without __file__
     HERE = os.getcwd()
+
+
+def _find_design_root():
+    """Walk up from cwd (VACASK postprocess runs in testbenches/simulations) and from this
+    script's dir until a folder containing testbenches/simulations is found.  Robust whether
+    the script is exec'd with or without __file__ and from any cwd."""
+    for start in (os.getcwd(), HERE):
+        d = start
+        while True:
+            if os.path.isdir(os.path.join(d, "testbenches", "simulations")):
+                return d
+            parent = os.path.dirname(d)
+            if parent == d:
+                break
+            d = parent
+    # Last resort: HERE is <root>/scripts, so its parent is the design root.
+    return os.path.abspath(os.path.join(HERE, ".."))
+
+
+DESIGN_ROOT = _find_design_root()
+# The ngspice eval writes its result tables to testbenches/sim_data; VACASK must match so
+# snp2le finds both flows' outputs in the same place.
+SIM_DATA_DIR = os.path.join(DESIGN_ROOT, "testbenches", "sim_data")
+
 _spec = (glob.glob(os.path.join(os.getcwd(), "*.spectre"))
          or glob.glob(os.path.join(HERE, "simulations", "*.spectre"))
          or glob.glob(os.path.join(HERE, "*.spectre")))
@@ -36,8 +60,7 @@ TB = (os.path.splitext(os.path.basename(max(_spec, key=os.path.getmtime)))[0]
 
 
 def _abort_marker():
-    repo = os.path.abspath(os.path.join(HERE, "..", ".."))
-    return os.path.join(repo, "sim_data", TB + ".aborted")
+    return os.path.join(SIM_DATA_DIR, TB + ".aborted")
 
 
 def mark_aborted(reason):
@@ -108,8 +131,7 @@ def load_acsp(raw):
 def write_table(f, n, dB, deg):
     """Write sim_data/<TB>.txt: a frequency column plus s{i}{j}_db and s{i}{j}_deg for every
     port pair.  snp2le maps columns by name, so any port count imports."""
-    repo = os.path.abspath(os.path.join(HERE, "..", ".."))
-    out_dir = os.path.join(repo, "sim_data")
+    out_dir = SIM_DATA_DIR
     os.makedirs(out_dir, exist_ok=True)
     pairs = [(i, j) for i in range(1, n + 1) for j in range(1, n + 1)]
     cols = ["frequency"] + [f"s{i}{j}_db" for i, j in pairs] + [f"s{i}{j}_deg" for i, j in pairs]
