@@ -64,6 +64,13 @@ START_FREQ ?= 60
 STOP_FREQ ?= 300
 STEP_FREQ ?= 20
 
+# S-parameter to lumped element netlist conversion with snp2le
+# Override with: make snp2le SNP=<file.sNp> ORDER=<N> LE_FORMAT=<spice|spectre> LE_OUT=<output_path>
+SNP ?= verification/em/s-parameter/bpf_f_160GHz_bw_1GHz_sig_TM2_gnd_M5_z0_50Ohm_er_4_1_butter_ord_3.s2p
+ORDER ?= 13
+LE_FORMAT ?= spice
+LE_OUT ?= netlist/spice/sparx_bpf_le.spice
+
 # Folder structure
 SCH_DIR     	:= schematic
 LAY_DIR     	:= layout
@@ -73,6 +80,8 @@ RENDER_IMG_DIR  := render/img
 NET_SCH_DIR 	:= netlist/schematic
 NET_LAY_DIR 	:= netlist/layout
 NET_PEX_DIR 	:= netlist/pex
+NET_SPICE_DIR 	:= netlist/spice
+NET_SPECTRE_DIR := netlist/spectre
 LVS_RPT_DIR 	:= verification/lvs
 DRC_RPT_DIR 	:= verification/drc
 EM_RPT_DIR 		:= verification/em
@@ -364,6 +373,22 @@ FILE_NAME ?= blc_$(FREQ)GHz_$(Z0)Ohm_$(SIGNAL_CROSS_SECTION)_$(GROUND_CROSS_SECT
 view-em-sim: ## View EM simulation results with s-parameter plots (usage: make view-em-sim FILE_NAME=<name_with_extension>)
 	cd $(EM_RPT_DIR)/palace_model && python3 ../scripts/plot_snp.py $$(find . -type f -name "$(FILE_NAME)")
 .PHONY: view-em-sim
+# ================================================================================================
+
+
+# Netlist Conversion Target
+snp2le: ## Convert an S-parameter Touchstone file to a lumped element netlist via a universal fit (usage: make snp2le SNP=<file.sNp> [ORDER=<N>] [LE_FORMAT=<spice|spectre>] [LE_OUT=<path>])
+	@if [ -z "$(SNP)" ]; then echo "ERROR: set the input Touchstone file, e.g. make snp2le SNP=verification/em/s-parameter/blc_160GHz_50Ohm_TM2_M5_e_r_4_1.s4p"; exit 1; fi
+	case "$(LE_FORMAT)" in \
+		spice)   SNP2LE_FORMAT=ngspice; DEFAULT_OUT=$(NET_SPICE_DIR)/$$(basename $(SNP) | sed -E 's/\.s[0-9]+p$$//I')_le.spice ;; \
+		spectre) SNP2LE_FORMAT=vacask;  DEFAULT_OUT=$(NET_SPECTRE_DIR)/$$(basename $(SNP) | sed -E 's/\.s[0-9]+p$$//I')_le.inc ;; \
+		*) echo "Invalid LE_FORMAT: $(LE_FORMAT). Use spice or spectre."; exit 1 ;; \
+	esac; \
+	OUT="$(LE_OUT)"; \
+	if [ -z "$$OUT" ]; then OUT="$$DEFAULT_OUT"; fi; \
+	mkdir -p "$$(dirname "$$OUT")"; \
+	snp2le -b convert $(SNP) --mode universal --order $(ORDER) --format $$SNP2LE_FORMAT -o "$$OUT"
+.PHONY: snp2le
 # ================================================================================================
 
 

@@ -473,6 +473,25 @@ make view-em-sim FILE_NAME=blc_160GHz_50Ohm_TM2_M5_e_r_4_1.s4p
 The `FILE_NAME` parameter is the Touchstone file name including its extension (default: the BLC result for the current parameters).
 
 
+### S-Parameter to Lumped Element Netlist Conversion
+
+Converts an S-parameter Touchstone file into a lumped element (LE) netlist with [snp2le](https://github.com/iic-jku/snp2le). The conversion performs a universal rational fit of the given order and writes a passivity-enforced `.subckt` model that can be resimulated in place of the full EM S-parameter model.
+
+- `SNP` is the input Touchstone file (default: the BPF EM result `verification/em/s-parameter/bpf_f_160GHz_bw_1GHz_sig_TM2_gnd_M5_z0_50Ohm_er_4_1_butter_ord_3.s2p`).
+- `ORDER` sets the maximum model order (number of poles) of the universal fit (default: `13`).
+- `LE_FORMAT` selects the output dialect: `spice` (ngspice, `.spice`) or `spectre` (VACASK, `.inc`) (default: `spice`).
+- `LE_OUT` sets the output netlist path, which also names the `.subckt` (default: `netlist/spice/sparx_bpf_le.spice`). If set to an empty value, it falls back to `netlist/spice/<name>_le.spice` for `spice` or `netlist/spectre/<name>_le.inc` for `spectre`, where `<name>` is the input file name without its Touchstone extension.
+
+Running `make snp2le` without arguments reproduces the BPF conversion (first example below). The commands used to generate the LE netlists in `netlist/spice/` are:
+
+```sh
+make snp2le SNP=verification/em/s-parameter/bpf_f_160GHz_bw_1GHz_sig_TM2_gnd_M5_z0_50Ohm_er_4_1_butter_ord_3.s2p ORDER=13 LE_FORMAT=spice LE_OUT=netlist/spice/sparx_bpf_le.spice
+make snp2le SNP=verification/em/s-parameter/wpd_160GHz_50Ohm_TM2_M5_e_r_4_1_config_U.s3p ORDER=10 LE_FORMAT=spice LE_OUT=netlist/spice/sparx_wpd_le.spice
+make snp2le SNP=verification/em/s-parameter/blc_160GHz_50Ohm_TM2_M5_e_r_4_1.s4p ORDER=5 LE_FORMAT=spice LE_OUT=netlist/spice/sparx_blc_le.spice
+make snp2le SNP=verification/em/s-parameter/sparx160_core.s7p ORDER=24 LE_FORMAT=spice LE_OUT=netlist/spice/sparx_core_le.spice
+```
+
+
 ### Build and Verify All
 
 Builds the top-level cell by running `build-top`, then verifies the SBD-based power detector cell with Magic LVS and DRC. Finally, it runs Magic DRC and KLayout DRC for the top-level cell.
