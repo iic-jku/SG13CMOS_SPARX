@@ -420,6 +420,59 @@ make klayout-verify
 make magic-verify
 ```
 
+
+### EM Simulation
+
+Runs full-wave electromagnetic (EM) simulation of the passive RF structures with AWS Palace. Each target programmatically generates the structure's GDS in `verification/em/layout/`, builds the Palace model, runs the EM solve, and writes the combined Touchstone S-parameter file to `verification/em/palace_model/`.
+
+The following parameters are shared by all EM simulation targets:
+- `FREQ` sets the design frequency in GHz (default: `160`).
+- `SIGNAL_CROSS_SECTION` selects the signal metal layer (default: `TM2`).
+- `GROUND_CROSS_SECTION` selects the ground metal layer (default: `M5`).
+- `Z0` sets the characteristic impedance in Ohms (default: `50`).
+- `E_R` sets the relative permittivity of the substrate (default: `4.1`).
+- `NP` sets the number of processors used by Palace (default: `4`).
+
+**Branch-Line Coupler (BLC):**
+
+```sh
+make sim-blc-em
+make sim-blc-em FREQ=77
+make sim-blc-em FREQ=77 Z0=50 E_R=4.1 NP=8
+```
+
+**Wilkinson Power Divider (WPD):**
+
+The additional `CONFIG` parameter selects the divider configuration (`C` or `U`, default: `U`).
+
+```sh
+make sim-wpd-em
+make sim-wpd-em FREQ=77
+make sim-wpd-em FREQ=77 CONFIG=C
+```
+
+**Hairpin Coupled-Line Bandpass Filter (BPF):**
+
+The additional filter parameters are `BANDWIDTH` (filter bandwidth in GHz, default: `1`), `FILTER_TYPE` (`butter`, `cheby`, or `ellip`, default: `butter`), `FILTER_ORDER` (filter order, default: `3`), and `RIPPLE_DB` (passband ripple in dB for Chebyshev and elliptic filters, default: `3`).
+
+```sh
+make sim-bpf-em
+make sim-bpf-em FREQ=77 BANDWIDTH=2
+make sim-bpf-em FREQ=77 BANDWIDTH=2 FILTER_TYPE=cheby FILTER_ORDER=5 RIPPLE_DB=1
+```
+
+### View EM Simulation Results
+
+Plots the first-column S-parameters (magnitude and phase) of a Touchstone file from `verification/em/palace_model/` using `plot_snp.py`.
+
+```sh
+make view-em-sim
+make view-em-sim FILE_NAME=blc_160GHz_50Ohm_TM2_M5_e_r_4_1.s4p
+```
+
+The `FILE_NAME` parameter is the Touchstone file name including its extension (default: the BLC result for the current parameters).
+
+
 ### Build and Verify All
 
 Builds the top-level cell by running `build-top`, then verifies the SBD-based power detector cell with Magic LVS and DRC. Finally, it runs Magic DRC and KLayout DRC for the top-level cell.
