@@ -442,8 +442,8 @@ all: ## Build, EM-simulate, extract LE models, run testbenches, and verify the T
 	$(MAKE) snp2le SNP=verification/em/s-parameter/bpf_f_160GHz_bw_1GHz_sig_TM2_gnd_M5_z0_50Ohm_er_4_1_butter_ord_3.s2p ORDER=13 LE_FORMAT=spectre LE_OUT=netlist/spectre/sparx_bpf_le.inc
 	$(MAKE) snp2le SNP=verification/em/s-parameter/wpd_160GHz_50Ohm_TM2_M5_e_r_4_1_config_U.s3p ORDER=10 LE_FORMAT=spice LE_OUT=netlist/spice/sparx_wpd_le.spice
 	$(MAKE) snp2le SNP=verification/em/s-parameter/wpd_160GHz_50Ohm_TM2_M5_e_r_4_1_config_U.s3p ORDER=10 LE_FORMAT=spectre LE_OUT=netlist/spectre/sparx_wpd_le.inc
-	$(MAKE) snp2le SNP=verification/em/s-parameter/blc_160GHz_50Ohm_TM2_M5_e_r_4_1.s4p ORDER=5 LE_FORMAT=spice LE_OUT=netlist/spice/sparx_blc_le.spice
-	$(MAKE) snp2le SNP=verification/em/s-parameter/blc_160GHz_50Ohm_TM2_M5_e_r_4_1.s4p ORDER=5 LE_FORMAT=spectre LE_OUT=netlist/spectre/sparx_blc_le.inc
+	$(MAKE) snp2le SNP=verification/em/s-parameter/blc_160GHz_50Ohm_TM2_M5_e_r_4_1.s4p ORDER=6 LE_FORMAT=spice LE_OUT=netlist/spice/sparx_blc_le.spice
+	$(MAKE) snp2le SNP=verification/em/s-parameter/blc_160GHz_50Ohm_TM2_M5_e_r_4_1.s4p ORDER=6 LE_FORMAT=spectre LE_OUT=netlist/spectre/sparx_blc_le.inc
 # 	Xschem testbench simulations
 	$(MAKE) sim-all
 .PHONY: all
@@ -461,4 +461,24 @@ release: ## Copy the gds, netlist files and chip renders to the release folder (
 	cp -f $(RENDER_IMG_DIR)/$(TOP)_black.png $(RELEASE_DIR)/v.$(VERSION)/img/$(TOP)_black.png
 	cp -f $(RENDER_IMG_DIR)/$(TOP)_white.png $(RELEASE_DIR)/v.$(VERSION)/img/$(TOP)_white.png
 .PHONY: release
+# ================================================================================================
+
+
+# Regression Target
+regression: ## Regression test for IIC-OSIC-TOOLS (usage: make regression)
+# 	GDSFactory programmatic six-port layout generation
+	$(MAKE) build-top
+# 	KLayout LVS, DRC, and kpex PEX of the power-detector cell.
+#	$(MAKE) klayout-verify CELL=$(POWDET)
+# 	Magic + Netgen LVS, Magic DRC, and Magic PEX of the power-detector cell.
+	$(MAKE) magic-verify CELL=$(POWDET)
+#	EM simulation (WPD).
+	$(MAKE) sim-wpd-em
+# 	S-parameter to lumped-element netlist conversion (WPD).
+	$(MAKE) snp2le SNP=verification/em/s-parameter/wpd_160GHz_50Ohm_TM2_M5_e_r_4_1_config_U.s3p ORDER=10 LE_FORMAT=spice LE_OUT=netlist/spice/sparx_wpd_le.spice
+	$(MAKE) snp2le SNP=verification/em/s-parameter/wpd_160GHz_50Ohm_TM2_M5_e_r_4_1_config_U.s3p ORDER=10 LE_FORMAT=spectre LE_OUT=netlist/spectre/sparx_wpd_le.inc
+# 	Xschem netlisting + one ngspice and one VACASK AC S-parameter simulation.
+	$(MAKE) sim-xschem TB=sparx_bpf_le_tb_acsp_ngspice
+	$(MAKE) sim-xschem TB=sparx_bpf_le_tb_acsp_vacask
+.PHONY: regression
 # ================================================================================================

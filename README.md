@@ -2,6 +2,7 @@
 
 [![License: Solderpad Hardware License v2.1](https://img.shields.io/badge/License-Solderpad%20Hardware%20License%20v2.1-blue.svg)](LICENSE)
 [![Quarto Publish](https://github.com/iic-jku/SG13CMOS_SPARX/actions/workflows/quarto-publish.yml/badge.svg?branch=main)](https://github.com/iic-jku/SG13CMOS_SPARX/actions/workflows/quarto-publish.yml)
+[![Regression](https://github.com/iic-jku/SG13CMOS_SPARX/actions/workflows/regression.yml/badge.svg)](https://github.com/iic-jku/SG13CMOS_SPARX/actions/workflows/regression.yml)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19654232.svg)](https://doi.org/10.5281/zenodo.19654232)
 
 (c) 2025-2026 Simon Dorrer*, David Kellerer-Pirklbauer*, and Harald Pretl
@@ -477,7 +478,7 @@ Running `make snp2le` without arguments reproduces the BPF conversion (first exa
 ```sh
 make snp2le SNP=verification/em/s-parameter/bpf_f_160GHz_bw_1GHz_sig_TM2_gnd_M5_z0_50Ohm_er_4_1_butter_ord_3.s2p ORDER=13 LE_FORMAT=spice LE_OUT=netlist/spice/sparx_bpf_le.spice
 make snp2le SNP=verification/em/s-parameter/wpd_160GHz_50Ohm_TM2_M5_e_r_4_1_config_U.s3p ORDER=10 LE_FORMAT=spice LE_OUT=netlist/spice/sparx_wpd_le.spice
-make snp2le SNP=verification/em/s-parameter/blc_160GHz_50Ohm_TM2_M5_e_r_4_1.s4p ORDER=5 LE_FORMAT=spice LE_OUT=netlist/spice/sparx_blc_le.spice
+make snp2le SNP=verification/em/s-parameter/blc_160GHz_50Ohm_TM2_M5_e_r_4_1.s4p ORDER=6 LE_FORMAT=spice LE_OUT=netlist/spice/sparx_blc_le.spice
 make snp2le SNP=verification/em/s-parameter/sparx160_core.s7p ORDER=24 LE_FORMAT=spice LE_OUT=netlist/spice/sparx_core_le.spice
 ```
 
@@ -555,6 +556,38 @@ Run with a custom version:
 ```sh
 make release VERSION=2.1.0
 ```
+
+
+### Regression
+
+The `regression` target is the project's smoke test for the [IIC-OSIC-TOOLS](https://github.com/iic-jku/iic-osic-tools) environment. Its goal is to exercise **as many tools and flows** as possible with a short runtime. It is a tool/flow regression, not a design sign-off. It is self-contained: it builds the GDSFactory PDK add-on itself (via `build-top` → `build-pdk`), so it only needs the IIC-OSIC-TOOLS container.
+
+```sh
+make regression
+```
+
+This target also runs automatically in continuous integration: the [`regression`](.github/workflows/regression.yml) GitHub Actions workflow runs `make regression` inside the `hpretl/iic-osic-tools` container nightly (and on manual dispatch), and its status is shown by the *Regression* badge at the top of this README. The scheduled run is gated so it only executes when there have been changes since the previous night.
+
+To keep the runtime low while still covering most of the toolchain, the regression makes the following trade-offs:
+
+- Only the small `sparx_powdet_sbd` power-detector cell is verified — not the full six-port top cell. Magic + Netgen LVS, Magic DRC, and Magic PEX are run; KLayout LVS/DRC/PEX is currently disabled.
+- Of the three passive RF structures, only the Wilkinson power divider (WPD) is EM-simulated (with AWS Palace) and converted to a lumped-element netlist (SPICE and Spectre).
+- Only one ngspice and one VACASK testbench are simulated (the bandpass-filter AC S-parameter benches).
+- The layout is generated at a single frequency (160 GHz); no frequency sweep is run.
+- Top-level LVS is not run (work in progress).
+
+The following tools and flows are checked:
+
+| Tool / flow | Where it is exercised |
+| --- | --- |
+| GDSFactory PDK add-on build (git clone + pip install) | `build-pdk` (via `build-top`) |
+| GDSFactory (programmatic six-port layout generation) | `build-layout` (via `build-top`) |
+| KLayout (GDS-to-image rendering) | `render-gds` (via `build-top`) |
+| Xschem netlisting, Magic + Netgen LVS, Magic DRC, Magic PEX | `magic-verify CELL=sparx_powdet_sbd` |
+| GDSFactory + gds2palace meshing + AWS Palace EM solve | `sim-wpd-em` |
+| snp2le (S-parameter → lumped element, SPICE + Spectre) | `snp2le … wpd …` |
+| Xschem netlisting + ngspice | `sim-xschem TB=sparx_bpf_le_tb_acsp_ngspice` |
+| Xschem netlisting + VACASK | `sim-xschem TB=sparx_bpf_le_tb_acsp_vacask` |
 
 
 ## Cite This Work
