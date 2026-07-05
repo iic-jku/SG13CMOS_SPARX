@@ -44,18 +44,19 @@ GROUND_CROSS_SECTION ?= M5
 Z0 ?= 50
 E_R ?= 4.1
 
-# HBPF-specific filter parameters for EM simulation
-# Override with: make sim-hbpf-em BANDWIDTH=<GHz> FILTER_TYPE=<butter|cheby|ellip> FILTER_ORDER=<N> RIPPLE_DB=<dB>
+# BPF-specific filter parameters for EM simulation
+# Override with: make sim-bpf-em BANDWIDTH=<GHz> FILTER_TYPE=<butter|cheby|ellip> FILTER_ORDER=<N> RIPPLE_DB=<dB>
 BANDWIDTH ?= 1
 FILTER_TYPE ?= butter
 FILTER_ORDER ?= 3
 RIPPLE_DB ?= 3
 
-# Additional config parameter for wpd simulation
+# Additional config parameter for wpd simulation (C or U)
 # Override with: make sim-wpd-em FREQ=<GHz> SIGNAL_CROSS_SECTION=<metal> GROUND_CROSS_SECTION=<metal> Z0=<Ohms> E_R=<relative_permittivity> CONFIG=<config_name>
-CONFIG ?= U 	# C or U 
+CONFIG ?= U
 
-# Palace number of processors for EM simulation# Override with: make sim-blc-em NP=<num_processors>
+# Palace number of processors for EM simulation
+# Override with: make sim-blc-em NP=<num_processors>
 NP ?= 4
 
 # Frequency sweep in GHz
@@ -103,6 +104,11 @@ help: ## Show this help message
 	@echo 'NO_FILL_M5 defaults to 0 (M5 fill enabled). Set to 1 to disable M5 ground fill.'
 	@echo 'START_FREQ, STOP_FREQ, STEP_FREQ default to 60, 300, and 20 (GHz) for build-layout-sweep.'
 	@echo 'EV_PRECISION defaults to 5 significant digits for Xschem ev function.'
+	@echo 'TB selects the Xschem testbench for sim-xschem (e.g. sparx_bpf_le_tb_acsp_ngspice).'
+	@echo 'snp2le: SNP=<file.sNp> ORDER=<N> LE_FORMAT=<spice|spectre> LE_OUT=<path>.'
+	@echo 'EM sim: NP=<procs> Z0=<Ohms> E_R=<e_r> SIGNAL_CROSS_SECTION=<metal> GROUND_CROSS_SECTION=<metal>.'
+	@echo 'sim-bpf-em: BANDWIDTH=<GHz> FILTER_TYPE=<butter|cheby|ellip> FILTER_ORDER=<N> RIPPLE_DB=<dB>. sim-wpd-em: CONFIG=<C|U>.'
+	@echo 'view-em-sim: FILE_NAME=<name_with_extension>. release: VERSION=<version>.'
 .PHONY: help
 # ================================================================================================
 
