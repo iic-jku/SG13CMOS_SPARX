@@ -1,7 +1,7 @@
 ## ToDo List
 
 - [ ] update `sparx_powdet_sbd.sch` with new KLayout LVS (no `ntap` / `ptap` extraction)
-- [ ] add regression test to IIC-OSIC-TOOLS
+- [ ] add regression test to IIC-OSIC-TOOLS repo
 - [ ] fix top-level Ngspice testbench: @simi1505
 - [ ] implement top-level VACASK testbench: @simi1505
 - [ ] top-level LVS (labels on `*_top.gds` missing): @simi1505 & @davkel99
