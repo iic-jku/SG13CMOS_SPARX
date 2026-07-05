@@ -22,8 +22,5 @@ venv/
 /doc/.quarto/
 /doc/_site/
 /doc/videos/sparx_gen_60ghz_to_300ghz_orig.mp4
-/scripts/six_port_area_optimized.py
-/scripts/six_port_flex.py
-/verification/s-parameter
 sparx_powdet_sbd.nodes
 sparx_powdet_sbd.sim
