@@ -82,7 +82,7 @@ control
   analysis op1  op
   analysis powdet_tn1 tran stop=200u step=0.25n noisefmax=2G noisefmin=100k oversample=6 noiseseed=1
 
-  postprocess(PYTHON, "../../scripts/sparx_powdet_sbd_eval_tn.py")
+  postprocess(PYTHON, "../scripts/sparx_powdet_sbd_eval_tn.py")
 endc
 "}
 C {sparx_powdet_sbd.sym} 1400 -660 0 0 {name=xdemod1}

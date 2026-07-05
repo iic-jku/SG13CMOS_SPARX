@@ -96,8 +96,8 @@ control
     sweep ampl_rf instance=\\"vin3\\" parameter=\\"ampl\\" from=10u to=30m mode=\\"dec\\" points=5
       analysis powdet_hb1 hb freq=[freq_lo, freq_rf] truncate=\\"diamond\\" nharm=[9, 5]
 
-  postprocess(PYTHON, \\"../../scripts/sparx_powdet_sbd_eval_hb_dBV-dBV.py\\")
-  postprocess(PYTHON, \\"../../scripts/sparx_powdet_sbd_eval_hb_V-W.py\\")
+  postprocess(PYTHON, \\"../scripts/sparx_powdet_sbd_eval_hb_dBV-dBV.py\\")
+  postprocess(PYTHON, \\"../scripts/sparx_powdet_sbd_eval_hb_V-W.py\\")
 endc
 "}
 C {sparx_powdet_sbd.sym} 1400 -660 0 0 {name=xdemod1}
