@@ -303,7 +303,7 @@ magic-verify: ## Verify the CELL cell with Magic (usage: make magic-verify [CELL
 sim-blc-em: ## Run EM simulation with BLC of the CELL cell (usage: make sim-blc-em [FREQ=<GHz>] [SIGNAL_CROSS_SECTION=<metal>] [GROUND_CROSS_SECTION=<metal>] [Z0=<Ohms>] [E_R=<e_r>])
 	BLC_GDS_FILENAME=blc_$(FREQ)GHz_$(Z0)Ohm_$(SIGNAL_CROSS_SECTION)_$(GROUND_CROSS_SECTION)_e_r_$(subst .,_,$(E_R)); \
 	. .venv/bin/activate && \
-		python3 $(EM_RPT_DIR)/scripts/blc_em_sim.py \
+		python3 $(EM_RPT_DIR)/scripts/sparx_blc_em_sim.py \
 			--frequency $(FREQ)e9 \
 			--signal_cross_section $(SIGNAL_CROSS_SECTION) \
 			--ground_cross_section $(GROUND_CROSS_SECTION) \
@@ -318,7 +318,7 @@ sim-blc-em: ## Run EM simulation with BLC of the CELL cell (usage: make sim-blc-
 sim-wpd-em: ## Run EM simulation with WPD of the CELL cell (usage: make sim-wpd-em [FREQ=<GHz>] [SIGNAL_CROSS_SECTION=<metal>] [GROUND_CROSS_SECTION=<metal>] [Z0=<Ohms>] [E_R=<e_r>])
 	WPD_GDS_FILENAME=wpd_$(FREQ)GHz_$(Z0)Ohm_$(SIGNAL_CROSS_SECTION)_$(GROUND_CROSS_SECTION)_e_r_$(subst .,_,$(E_R))_config_$(CONFIG); \
 	. .venv/bin/activate && \
-		python3 $(EM_RPT_DIR)/scripts/wpd_em_sim.py \
+		python3 $(EM_RPT_DIR)/scripts/sparx_wpd_em_sim.py \
 			--frequency $(FREQ)e9 \
 			--signal_cross_section $(SIGNAL_CROSS_SECTION) \
 			--ground_cross_section $(GROUND_CROSS_SECTION) \
@@ -341,7 +341,7 @@ sim-bpf-em: ## Run EM simulation with BPF of the CELL cell (usage: make sim-bpf-
 	fi; \
 	BPF_GDS_FILENAME=bpf_f_$(FREQ)GHz_bw_$(BANDWIDTH)GHz_sig_$(SIGNAL_CROSS_SECTION)_gnd_$(GROUND_CROSS_SECTION)_z0_$(Z0)Ohm_er_$(subst .,_,$(E_R))_$(FILTER_TYPE)_ord_$(FILTER_ORDER)$$RIPPLE_TAG; \
 	. .venv/bin/activate && \
-		python3 $(EM_RPT_DIR)/scripts/bpf_em_sim.py \
+		python3 $(EM_RPT_DIR)/scripts/sparx_bpf_em_sim.py \
 			--frequency $(FREQ)e9 \
 			--bandwidth $(BANDWIDTH)e9 \
 			--signal_cross_section $(SIGNAL_CROSS_SECTION) \
