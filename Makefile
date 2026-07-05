@@ -422,14 +422,30 @@ sim-all: ## Run all Xschem testbench simulations (usage: make sim-all)
 # ================================================================================================
 
 
-all: ## Build and verify the TOP cell (usage: make all)
+all: ## Build, EM-simulate, extract LE models, run testbenches, and verify the TOP cell (usage: make all)
 	$(MAKE) build-top
+# 	Verification
+#	$(MAKE) klayout-verify CELL=$(POWDET)
+#	$(MAKE) magic-verify CELL=$(POWDET)
 #	$(MAKE) klayout-verify
 #	$(MAKE) magic-verify
 	$(MAKE) magic-lvs CELL=$(POWDET)
 	$(MAKE) magic-drc CELL=$(POWDET)
 	$(MAKE) magic-drc
 	$(MAKE) klayout-drc
+# 	EM simulation of the passive RF structures (BPF, WPD, BLC)
+	$(MAKE) sim-bpf-em
+	$(MAKE) sim-wpd-em
+	$(MAKE) sim-blc-em
+# 	S-parameter to lumped element netlist conversion (SPICE and Spectre) for BPF, WPD, BLC
+	$(MAKE) snp2le SNP=verification/em/s-parameter/bpf_f_160GHz_bw_1GHz_sig_TM2_gnd_M5_z0_50Ohm_er_4_1_butter_ord_3.s2p ORDER=13 LE_FORMAT=spice LE_OUT=netlist/spice/sparx_bpf_le.spice
+	$(MAKE) snp2le SNP=verification/em/s-parameter/bpf_f_160GHz_bw_1GHz_sig_TM2_gnd_M5_z0_50Ohm_er_4_1_butter_ord_3.s2p ORDER=13 LE_FORMAT=spectre LE_OUT=netlist/spectre/sparx_bpf_le.inc
+	$(MAKE) snp2le SNP=verification/em/s-parameter/wpd_160GHz_50Ohm_TM2_M5_e_r_4_1_config_U.s3p ORDER=10 LE_FORMAT=spice LE_OUT=netlist/spice/sparx_wpd_le.spice
+	$(MAKE) snp2le SNP=verification/em/s-parameter/wpd_160GHz_50Ohm_TM2_M5_e_r_4_1_config_U.s3p ORDER=10 LE_FORMAT=spectre LE_OUT=netlist/spectre/sparx_wpd_le.inc
+	$(MAKE) snp2le SNP=verification/em/s-parameter/blc_160GHz_50Ohm_TM2_M5_e_r_4_1.s4p ORDER=5 LE_FORMAT=spice LE_OUT=netlist/spice/sparx_blc_le.spice
+	$(MAKE) snp2le SNP=verification/em/s-parameter/blc_160GHz_50Ohm_TM2_M5_e_r_4_1.s4p ORDER=5 LE_FORMAT=spectre LE_OUT=netlist/spectre/sparx_blc_le.inc
+# 	Xschem testbench simulations
+	$(MAKE) sim-all
 .PHONY: all
 # ================================================================================================
 

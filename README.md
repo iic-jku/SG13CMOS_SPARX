@@ -525,13 +525,22 @@ The following testbenches are simulated:
 > The VACASK counterparts of the two six-port core testbenches (`sparx_core_le_tb_acsp_vacask` and `sparx_core_tb_acsp_vacask`) are commented out in `sim-all` until their schematics are created.
 
 
-### Build and Verify All
+### Build, Simulate, and Verify All
 
-Builds the top-level cell by running `build-top`, then verifies the SBD-based power detector cell with Magic LVS and DRC. Finally, it runs Magic DRC and KLayout DRC for the top-level cell.
+Runs the complete design flow end to end:
+
+1. `build-top` — builds the PDK, generates the six-port layout, and renders the top-level GDS.
+2. Verification with KLayout and Magic+Netgen of the SBD-based power detector cell and the total top-level six-port (LVS / DRC / PEX).
+3. EM simulation of the passive RF structures with AWS Palace (`sim-bpf-em`, `sim-wpd-em`, `sim-blc-em`).
+4. S-parameter to lumped element netlist conversion with snp2le, in both SPICE and Spectre netlists, for the BPF, WPD, and BLC.
+5. All Xschem testbench simulations (`sim-all`).
 
 ```sh
 make all
 ```
+
+> [!NOTE]
+> This target runs the full-wave EM simulations and therefore has a long runtime. The snp2le conversions read the Touchstone files in `verification/em/s-parameter/`, which are the results of the EM simulation step.
 
 ### Release
 
