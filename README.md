@@ -492,6 +492,39 @@ make snp2le SNP=verification/em/s-parameter/sparx160_core.s7p ORDER=24 LE_FORMAT
 ```
 
 
+### Xschem Testbench Simulation
+
+Runs a single Xschem testbench in batch mode (no display): it saves the schematic, exports the netlist to `testbenches/simulations/`, and runs the simulator. The testbench is selected with the `TB` variable (given without the `.sch` extension). The netlist format and simulator are derived automatically from the testbench name: names ending in `_ngspice` are netlisted as SPICE and simulated with ngspice, while names ending in `_vacask` are netlisted as Spectre and simulated with VACASK.
+
+```sh
+make sim-xschem TB=sparx_bpf_le_tb_acsp_ngspice
+make sim-xschem TB=sparx_bpf_le_tb_acsp_vacask
+make sim-xschem TB=sparx_powdet_sbd_tb_ngspice
+make sim-xschem TB=sparx_powdet_sbd_tb_hb_vacask
+```
+
+### Simulate All Testbenches
+
+Runs all Xschem testbench simulations sequentially by invoking `sim-xschem` for each testbench:
+
+```sh
+make sim-all
+```
+
+The following testbenches are simulated:
+
+- `sparx_bpf_le_tb_acsp_ngspice` / `sparx_bpf_le_tb_acsp_vacask` — bandpass filter LE model, AC S-parameter
+- `sparx_wpd_le_tb_acsp_ngspice` / `sparx_wpd_le_tb_acsp_vacask` — Wilkinson power divider LE model, AC S-parameter
+- `sparx_blc_le_tb_acsp_ngspice` / `sparx_blc_le_tb_acsp_vacask` — branch-line coupler LE model, AC S-parameter
+- `sparx_core_le_tb_acsp_ngspice` — six-port core LE model, AC S-parameter
+- `sparx_core_tb_acsp_ngspice` — six-port core EM S-parameter model, AC S-parameter
+- `sparx_powdet_sbd_tb_ngspice` — SBD-based power detector (ngspice)
+- `sparx_powdet_sbd_tb_hb_vacask` — SBD-based power detector, harmonic balance (VACASK)
+
+> [!NOTE]
+> The VACASK counterparts of the two six-port core testbenches (`sparx_core_le_tb_acsp_vacask` and `sparx_core_tb_acsp_vacask`) are commented out in `sim-all` until their schematics are created.
+
+
 ### Build and Verify All
 
 Builds the top-level cell by running `build-top`, then verifies the SBD-based power detector cell with Magic LVS and DRC. Finally, it runs Magic DRC and KLayout DRC for the top-level cell.

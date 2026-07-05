@@ -75,6 +75,7 @@ LE_OUT ?= netlist/spice/sparx_bpf_le.spice
 SCH_DIR     	:= schematic
 LAY_DIR     	:= layout
 SCRIPTS_DIR     := scripts
+XSCHEM_TB_DIR   := testbenches
 RELEASE_DIR		:= release
 RENDER_IMG_DIR  := render/img
 NET_SCH_DIR 	:= netlist/schematic
@@ -389,6 +390,35 @@ snp2le: ## Convert an S-parameter Touchstone file to a lumped element netlist vi
 	mkdir -p "$$(dirname "$$OUT")"; \
 	snp2le -b convert $(SNP) --mode universal --order $(ORDER) --format $$SNP2LE_FORMAT -o "$$OUT"
 .PHONY: snp2le
+# ================================================================================================
+
+
+# Xschem Simulation Targets
+sim-xschem: ## Run a testbench simulation with Xschem in batch mode (usage: make sim-xschem TB=<testbenchname>)
+	mkdir -p $(XSCHEM_TB_DIR)/simulations
+	cd $(XSCHEM_TB_DIR) && xschem -x -q --rcfile xschemrc --command ' \
+		xschem set netlist_type $(if $(findstring _vacask,$(TB)),spectre,spice); \
+		set netlist_dir $(abspath $(XSCHEM_TB_DIR)/simulations); \
+		xschem save; \
+		xschem netlist; \
+		xschem simulate \
+	' $(TB).sch
+.PHONY: sim-xschem
+
+sim-all: ## Run all Xschem testbench simulations (usage: make sim-all)
+	$(MAKE) sim-xschem TB=sparx_bpf_le_tb_acsp_ngspice
+	$(MAKE) sim-xschem TB=sparx_bpf_le_tb_acsp_vacask
+	$(MAKE) sim-xschem TB=sparx_wpd_le_tb_acsp_ngspice
+	$(MAKE) sim-xschem TB=sparx_wpd_le_tb_acsp_vacask
+	$(MAKE) sim-xschem TB=sparx_blc_le_tb_acsp_ngspice
+	$(MAKE) sim-xschem TB=sparx_blc_le_tb_acsp_vacask
+	$(MAKE) sim-xschem TB=sparx_core_le_tb_acsp_ngspice
+#	$(MAKE) sim-xschem TB=sparx_core_le_tb_acsp_vacask   # TODO: testbench schematic not yet created
+	$(MAKE) sim-xschem TB=sparx_core_tb_acsp_ngspice
+#	$(MAKE) sim-xschem TB=sparx_core_tb_acsp_vacask      # TODO: testbench schematic not yet created
+	$(MAKE) sim-xschem TB=sparx_powdet_sbd_tb_ngspice
+	$(MAKE) sim-xschem TB=sparx_powdet_sbd_tb_hb_vacask
+.PHONY: sim-all
 # ================================================================================================
 
 
