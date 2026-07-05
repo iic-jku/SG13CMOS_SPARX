@@ -31,9 +31,18 @@ Institute for Integrated Circuits and Quantum Computing, Johannes Kepler Univers
 </p>
 
 
+## Chip Specifications
+
+| Parameter           | Value                                                                             |
+| ------------------- | --------------------------------------------------------------------------------- |
+| Technology          | IHP SG13CMOS (130nm CMOS)                                                           |
+| Die Area            | 1000 × 1400 µm (1.4 mm²)                                                          |
+| Supply Voltage      | 1.5 V                                                                             |
+
+
 ## Documentation
 
-The full documentation of SPARX is available [here](https://iic-jku.github.io/SG13CMOS_SPARX/index.html).
+The full documentation of SPARX is available [here](https://iic-jku.github.io/SG13CMOS_SPARX/index.html) (WIP).
 
 
 ## Overview
@@ -96,19 +105,23 @@ The updated IHP-Open-PDK GDSFactory version contains all self-made RF devices an
 </p>
 
 
-## Chip Specifications
+## Design Flow
 
-| Parameter           | Value                                                                             |
-| ------------------- | --------------------------------------------------------------------------------- |
-| Technology          | IHP SG13CMOS (130nm CMOS)                                                           |
-| Die Area            | 1000 × 1400 µm (1.4 mm²)                                                          |
-| Supply Voltage      | 1.5 V                                                                             |
+An overview of the open-source design flow for SPARX is shown below. The flow covers schematic entry, circuit simulation, parameterized layout generation, physical verification, post-layout simulation, EM simulation and resimulation of fitted lumped element models. All required tools and the IHP Open-PDK run inside the IIC-OSIC-TOOLS Docker image.
+
+<p align="center">
+  <a href="doc/fig/design_flow/design_flow.png">
+    <img src="doc/fig/design_flow/design_flow.png" alt="Design flow of SPARX" width=80%>
+  </a>
+  <br>
+  <em>Overview of the open-source design flow for SPARX.</em>
+</p>
+
+The complete design flow is automated with Makefile targets, which are explained below.
 
 
 ## ToDo List
 
-- [ ] Add Top-level Six-Port simulation in Xschem (use snp2le and VACASK): @simi1505
-- [ ] update and finalize the whole Makefile flow including EM simulation and snp2le: @simi1505
 - [ ] top-level LVS (labels on `*_top.gds` missing): @simi1505 & @davkel99
 - [ ] Add GitHub action with IIC-OSIC-TOOLS regression: @simi1505
 - [ ] KLayout LVS --> CMIM issues with PWell.block layer: see [IHP Open-PDK issue](https://github.com/IHP-GmbH/IHP-Open-PDK/issues/958) --> fixed with [IHP Open-PDK PR](https://github.com/IHP-GmbH/IHP-Open-PDK/pull/1030)
