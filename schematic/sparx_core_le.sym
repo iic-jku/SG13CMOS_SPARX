@@ -16,13 +16,13 @@ L 7 -120 0 -100 0 {}
 L 7 100 40 120 40 {}
 L 7 40 80 40 100 {}
 L 7 -40 80 -40 100 {}
-B 5 -42.5 -102.5 -37.5 -97.5 {name=p3 dir=inout}
-B 5 37.5 -102.5 42.5 -97.5 {name=p4 dir=inout}
-B 5 117.5 -42.5 122.5 -37.5 {name=p2 dir=inout}
-B 5 -122.5 -2.5 -117.5 2.5 {name=p1 dir=inout}
-B 5 117.5 37.5 122.5 42.5 {name=p7 dir=inout}
-B 5 37.5 97.5 42.5 102.5 {name=p5 dir=inout}
-B 5 -42.5 97.5 -37.5 102.5 {name=p6 dir=inout}
+B 5 -42.5 -102.5 -37.5 -97.5 {name=p3 dir=inout sim_pinnumber=3}
+B 5 37.5 -102.5 42.5 -97.5 {name=p4 dir=inout sim_pinnumber=4}
+B 5 117.5 -42.5 122.5 -37.5 {name=p2 dir=inout sim_pinnumber=2}
+B 5 -122.5 -2.5 -117.5 2.5 {name=p1 dir=inout sim_pinnumber=1}
+B 5 117.5 37.5 122.5 42.5 {name=p7 dir=inout sim_pinnumber=7}
+B 5 37.5 97.5 42.5 102.5 {name=p5 dir=inout sim_pinnumber=5}
+B 5 -42.5 97.5 -37.5 102.5 {name=p6 dir=inout sim_pinnumber=6}
 P 4 5 -100 -80 100 -80 100 80 -100 80 -100 -80 {}
 T {p3} -44 -75 3 1 0.2 0.2 {}
 T {p4} 36 -75 3 1 0.2 0.2 {}
