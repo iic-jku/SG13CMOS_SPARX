@@ -107,7 +107,7 @@ The updated IHP-Open-PDK GDSFactory version contains all self-made RF devices an
 
 ## Design Flow
 
-An overview of the open-source design flow for SPARX is shown below. The flow covers schematic entry, circuit simulation, parameterized layout generation, physical verification, post-layout simulation, EM simulation and resimulation of fitted lumped element models. All required tools and the IHP Open-PDK run inside the IIC-OSIC-TOOLS Docker image.
+An overview of the open-source design flow for SPARX is shown below. The flow covers schematic entry, circuit simulation, parameterized layout generation, physical verification, post-layout simulation, EM simulation and resimulation of fitted lumped element models. All required tools and the IHP Open-PDK run inside the IIC-OSIC-TOOLS Docker image. The complete design flow is automated with Makefile targets, which are explained below.
 
 <p align="center">
   <a href="doc/fig/design_flow/design_flow.png">
@@ -116,8 +116,6 @@ An overview of the open-source design flow for SPARX is shown below. The flow co
   <br>
   <em>Overview of the open-source design flow for SPARX.</em>
 </p>
-
-The complete design flow is automated with Makefile targets, which are explained below.
 
 
 ## ToDo List
