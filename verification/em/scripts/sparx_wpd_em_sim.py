@@ -41,7 +41,7 @@ signal_cross_section = layer_dict[args.signal_cross_section]
 ground_cross_section = layer_dict[args.ground_cross_section]
 
 
-c = gf.Component("wpd_em_sim")
+c = gf.Component("sparx_wpd_em_sim")
 wpd_ref = c.add_ref(ihp.cells.wilkinson_power_divider(
     connection_length=0,
     frequency= args.frequency,
@@ -66,7 +66,7 @@ port3.move((-0.05,0))
 
 
 
-filename = f"wpd_{args.frequency/1e9:.0f}GHz_{args.Z0:.0f}Ohm_{args.signal_cross_section}_{args.ground_cross_section}_e_r_{str(args.e_r).replace('.', '_')}_config_{args.config}.gds"
+filename = f"sparx_wpd_{args.frequency/1e9:.0f}GHz_{args.Z0:.0f}Ohm_{args.signal_cross_section}_{args.ground_cross_section}_e_r_{str(args.e_r).replace('.', '_')}_config_{args.config}.gds"
 gds_path = GDS_DIR / filename
 # c.show()
 c.write_gds(str(gds_path), with_metadata=False)

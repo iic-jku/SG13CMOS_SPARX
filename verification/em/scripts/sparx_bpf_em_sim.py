@@ -61,7 +61,7 @@ signal_cross_section = layer_dict[args.signal_cross_section]
 ground_cross_section = layer_dict[args.ground_cross_section]
 
 
-c = gf.Component("bpf_em_sim")
+c = gf.Component("sparx_bpf_em_sim")
 hbpf_ref = c.add_ref(ihp.cells.hairpin_coupled_line_bandpass_filter(
     connection_length=0,
     frequency= args.frequency,
@@ -86,7 +86,7 @@ port2.move((-0.05,0))
 
 
 filename = (
-    f"bpf_"
+    f"sparx_bpf_"
     f"f_{args.frequency/1e9:.0f}GHz_"
     f"bw_{args.bandwidth/1e9:.0f}GHz_"
     f"sig_{args.signal_cross_section}_"

@@ -39,7 +39,7 @@ signal_cross_section = layer_dict[args.signal_cross_section]
 ground_cross_section = layer_dict[args.ground_cross_section]
 
 
-c = gf.Component("blc_em_sim")
+c = gf.Component("sparx_blc_em_sim")
 blc_ref = c.add_ref(ihp.cells.branch_line_coupler(
     connection_length=0,
     frequency= args.frequency,
@@ -65,7 +65,7 @@ port4 = c.add_ref(gf.components.rectangle(size=(0.1, blc_ref.ports["e4"].width),
 port4.center = (blc_ref.ports["e4"].center)
 port4.move((0.05,0))
 
-filename = f"blc_{args.frequency/1e9:.0f}GHz_{args.Z0:.0f}Ohm_{args.signal_cross_section}_{args.ground_cross_section}_e_r_{str(args.e_r).replace('.', '_')}.gds"
+filename = f"sparx_blc_{args.frequency/1e9:.0f}GHz_{args.Z0:.0f}Ohm_{args.signal_cross_section}_{args.ground_cross_section}_e_r_{str(args.e_r).replace('.', '_')}.gds"
 gds_path = GDS_DIR / filename
 # c.show()
 c.write_gds(str(gds_path), with_metadata=False)
