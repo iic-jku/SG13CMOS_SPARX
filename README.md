@@ -140,6 +140,7 @@ An overview of the open-source design flow for SPARX is shown below. The flow co
 │  ├─ 📁 videos/
 │  ├─ _quarto.yml
 │  ├─ index.qmd
+│  ├─ requirements.txt
 │  └─ Makefile
 ├─ 📁 layout/
 │  ├─ sparx60_top.gds
@@ -147,10 +148,8 @@ An overview of the open-source design flow for SPARX is shown below. The flow co
 │  ├─ sparx160_top.gds
 │  ├─ ...
 │  ├─ sparx300_top.gds
-│  ├─ sparx_powdet_sbd.gds
-│  └─ sparx_powdet_sbd_flat.gds
+│  └─ sparx_powdet_sbd.gds
 ├─ 📁 measurements/
-│  └─ README.md
 ├─ 📁 netlist/
 │  ├─ 📁 layout/
 │  │  ├─ sparx_powdet_sbd_klayout.cir
@@ -159,39 +158,68 @@ An overview of the open-source design flow for SPARX is shown below. The flow co
 │  │  ├─ reorder_spice_pins.py
 │  │  ├─ sparx_powdet_sbd_klayout_pex.spice
 │  │  └─ sparx_powdet_sbd_magic_pex.spice
-│  └─ 📁 schematic/
-│     ├─ sparx_powdet_sbd_klayout.cdl
-│     └─ sparx_powdet_sbd_magic.spice
+│  ├─ 📁 schematic/
+│  │  ├─ sparx_powdet_sbd_klayout.cdl
+│  │  └─ sparx_powdet_sbd_magic.spice
+│  ├─ 📁 spectre/
+│  │  ├─ sparx_blc_le.inc
+│  │  ├─ sparx_bpf_le.inc
+│  │  ├─ sparx_core_le.inc
+│  │  └─ sparx_wpd_le.inc
+│  └─ 📁 spice/
+│     ├─ sparx_blc_le.spice
+│     ├─ sparx_bpf_le.spice
+│     ├─ sparx_core_le.spice
+│     └─ sparx_wpd_le.spice
 ├─ 📁 release/
 │  └─ 📁 v.1.0.0/
 │     ├─ 📁 gds/
-│     │  └─ RFFE6027.gds
 │     ├─ 📁 img/
 │     └─ ReleaseNote.md
 ├─ 📁 render/
+│  ├─ 📁 blender/
 │  └─ 📁 img/
 │     ├─ sparx160_top_black.png
 │     └─ sparx160_top_white.png
 ├─ 📁 schematic/
+│  ├─ sparx_blc_le.sym
+│  ├─ sparx_bpf_le.sym
+│  ├─ sparx_core.sch
+│  ├─ sparx_core.sym
+│  ├─ sparx_core_le.sym
 │  ├─ sparx_powdet_sbd.sch
 │  ├─ sparx_powdet_sbd.sym
 │  ├─ sparx_powdet_sbd_pex.sym
+│  ├─ sparx_top.sch
+│  ├─ sparx_top.sym
+│  ├─ sparx_top_lvs.sch
+│  ├─ sparx_wpd_le.sym
 │  └─ xschemrc
 ├─ 📁 scripts/
 │  ├─ 📁 assets/
 │  ├─ lay2img.py
 │  ├─ make_gds.py
-│  ├─ s2spice.py
 │  ├─ six_port_gen.py
-│  ├─ sparx_powdet_sbd_circuit.ipynb
-│  └─ sparx_powdet_sbd_eval.py
+│  └─ sparx_powdet_sbd_circuit.ipynb
 ├─ 📁 sscs-ose-code-a-chip/
 │  ├─ 📁 assets/
 │  ├─ README.md
-│  ├─ SPARX_JKU_VLSI2026.ipynb
+│  └─ SPARX_JKU_VLSI2026.ipynb
 ├─ 📁 testbenches/
+│  ├─ 📁 scripts/
+│  │  ├─ n_port_acsp_vacask_eval.py
+│  │  ├─ sparx_powdet_sbd_eval_hb_V-W.py
+│  │  └─ sparx_powdet_sbd_eval_hb_dBV-dBV.py
+│  ├─ 📁 sim_data/
+│  ├─ sparx_blc_le_tb_acsp_ngspice.sch
+│  ├─ ...
+│  ├─ sparx_core_tb_acsp_ngspice.sch
+│  ├─ ...
 │  ├─ sparx_powdet_sbd_tb.sch
-│  ├─ sparx_powdet_sbd_tb_vacask.sch
+│  ├─ ...
+│  ├─ sparx_top_tb_tran_ngspice.sch
+│  ├─ sim_range.inc
+│  ├─ sim_range.spice
 │  └─ xschemrc
 ├─ 📁 verification/
 │  ├─ 📁 drc/
@@ -202,6 +230,7 @@ An overview of the open-source design flow for SPARX is shown below. The flow co
 │  ├─ 📁 em/
 │  │  ├─ 📁 layout/
 │  │  ├─ 📁 palace_model/
+│  │  ├─ 📁 s-parameter/
 │  │  └─ 📁 scripts/
 │  └─ 📁 lvs/
 │     ├─ sparx_powdet_sbd.lvs.out
