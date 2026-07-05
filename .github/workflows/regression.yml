@@ -1,0 +1,135 @@
+name: regression
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Nightly at 02:00 UTC. Scheduled runs only ever trigger on the default
+    # branch (main). The "gate" job below skips the heavy regression when
+    # nothing has changed since the previous nightly run.
+    - cron: '0 2 * * *'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: regression-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  gate:
+    name: Check for changes since last nightly run
+    runs-on: ubuntu-latest
+    outputs:
+      should_run: ${{ steps.check.outputs.should_run }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+
+      - name: Decide whether to run
+        id: check
+        run: |
+          # Manual runs always execute.
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "Manual dispatch -> run."
+            echo "should_run=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          # Scheduled run: execute only if the tip of the default branch was
+          # committed within the nightly window, i.e. there is a change since
+          # the previous nightly run. (Use a window slightly larger than the
+          # 24h cadence so a commit landing near the boundary is never missed.)
+          head_date="$(git log -1 --format=%cI)"
+          echo "Latest commit: $head_date"
+          if [ -n "$(git log -1 --since='25 hours ago' --format=%H)" ]; then
+            echo "Changes since last nightly run -> run."
+            echo "should_run=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "No changes since last nightly run -> skip."
+            echo "should_run=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  regression:
+    name: Run make regression
+    needs: gate
+    if: needs.gate.outputs.should_run == 'true'
+    runs-on: ubuntu-latest
+    # The tool/flow regression builds the PDK add-on, generates a six-port
+    # layout, runs LVS/DRC/PEX, an EM simulation, and ngspice/VACASK simulations;
+    # give it headroom.
+    timeout-minutes: 180
+    container:
+      # IIC-OSIC-TOOLS ships the complete toolchain the regression exercises
+      # (xschem, ngspice, vacask, magic, netgen, klayout, palace, snp2le,
+      # gdsfactory, ...) together with the IHP SG13G2 PDK.
+      image: hpretl/iic-osic-tools:latest
+      options: --user root
+    env:
+      PDK: ihp-sg13g2
+      PDK_ROOT: /foss/pdks
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+
+      - name: Mark workspace as safe for git
+        # The container runs as root while the checkout is owned by a different
+        # UID, so git refuses to operate ("detected dubious ownership"). The
+        # regression runs git across the repo (e.g. `make build-pdk` clones the
+        # PDK add-on), so whitelist all paths rather than a single one.
+        run: git config --global --add safe.directory '*'
+
+      - name: Set up IIC-OSIC-TOOLS environment
+        # GitHub Actions bypasses the container entrypoint, so the image's tool
+        # environment is never initialised: $PATH is overridden with the runner
+        # host's PATH and LD_LIBRARY_PATH/PYTHONPATH/KLAYOUT_PATH/... are unset.
+        # Several tools (notably klayout, which lives in /foss/tools/klayout and
+        # not in a bin/ dir) are then "not found". Replicate the entrypoint by
+        # sourcing the image's single source of truth for the environment and
+        # persist the result so every subsequent step sees the full toolchain.
+        shell: bash
+        run: |
+          set -a
+          source /etc/profile.d/iic-osic-tools-setup.sh
+          set +a
+          {
+            echo "PATH=$PATH"
+            echo "PYTHONPATH=$PYTHONPATH"
+            echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH"
+            echo "LIBRARY_PATH=$LIBRARY_PATH"
+            echo "CPATH=$CPATH"
+            echo "SAK=$SAK"
+            echo "KLAYOUT_HOME=$KLAYOUT_HOME"
+            echo "KLAYOUT_PATH=$KLAYOUT_PATH"
+            echo "PDK=$PDK"
+            echo "PDKPATH=$PDKPATH"
+            echo "PDK_ROOT=$PDK_ROOT"
+            echo "STD_CELL_LIBRARY=$STD_CELL_LIBRARY"
+            echo "SPICE_USERINIT_DIR=$SPICE_USERINIT_DIR"
+          } >> "$GITHUB_ENV"
+
+      - name: Show tool environment
+        run: |
+          echo "PDK=$PDK  PDK_ROOT=$PDK_ROOT"
+          for tool in xschem ngspice vacask magic netgen klayout palace snp2le; do
+            echo "$tool -> $(command -v "$tool" || echo NOT FOUND)"
+          done
+          ls "$PDK_ROOT" || true
+
+      - name: Run regression
+        # `make regression` is self-contained: it builds the GDSFactory PDK
+        # add-on into a project-local .venv (via `build-top`), then runs the
+        # verification, EM, snp2le and Xschem simulation flows.
+        run: make regression
+
+      - name: Upload regression logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: regression-logs
+          path: |
+            verification/lvs/**
+            verification/drc/**
+            netlist/**
+            testbenches/simulations/**
+            render/img/**
+            **/*.log
+          if-no-files-found: ignore
