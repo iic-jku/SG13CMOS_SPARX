@@ -125,7 +125,8 @@ An overview of the open-source design flow for SPARX is shown below. The flow co
 📁 SG13CMOS_SPARX/
 ├─ 📁 .github/
 │  └─ 📁 workflows/
-│     └─ quarto-publish.yml
+│     ├─ quarto-publish.yml
+│     └─ regression.yml
 ├─ 📁 doc/
 │  ├─ 📁 fig/
 │  ├─ 📁 videos/
@@ -206,7 +207,7 @@ An overview of the open-source design flow for SPARX is shown below. The flow co
 │  ├─ ...
 │  ├─ sparx_core_tb_acsp_ngspice.sch
 │  ├─ ...
-│  ├─ sparx_powdet_sbd_tb.sch
+│  ├─ sparx_powdet_sbd_tb_ngspice.sch
 │  ├─ ...
 │  ├─ sparx_top_tb_tran_ngspice.sch
 │  ├─ sim_range.inc
