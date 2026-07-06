@@ -1,5 +1,8 @@
 ## ToDo List
 
+- [ ] add GitHub action for checking license headers
+    - https://github.com/aesc-silicon/ElemRV/blob/main/.github/workflows/license-check.yaml
+    - https://github.com/aesc-silicon/ElemRV/blob/main/REUSE.toml
 - [ ] update `sparx_powdet_sbd.sch` with new KLayout LVS (no `ntap` / `ptap` extraction)
 - [ ] add regression test to IIC-OSIC-TOOLS repo
 - [ ] fix top-level Ngspice testbench: @simi1505
