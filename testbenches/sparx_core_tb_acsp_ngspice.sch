@@ -6,15 +6,15 @@ S {}
 F {}
 E {}
 B 2 820 -1440 1620 -1040 {flags=graph
-y1=-27
-y2=-0.66
+y1=-26
+y2=-2.4
 ypos1=0
 ypos2=2
 divy=5
 subdivy=4
 unity=1
-x1=1.2e+11
-x2=2e+11
+x1=1.44e+11
+x2=1.76e+11
 divx=5
 subdivx=8
 xlabmag=1.0
@@ -33,15 +33,15 @@ logx=0
 logy=0
 linewidth_mult=4}
 B 2 820 -1020 1620 -620 {flags=graph
-y1=-160
-y2=170
+y1=-94
+y2=160
 ypos1=0
 ypos2=2
 divy=5
 subdivy=4
 unity=1
-x1=1.2e+11
-x2=2e+11
+x1=1.44e+11
+x2=1.76e+11
 divx=5
 subdivx=8
 xlabmag=1.0
@@ -60,23 +60,23 @@ logx=0
 logy=0
 linewidth_mult=4}
 B 2 1680 -1440 2480 -1040 {flags=graph
-y1=-0.8
-y2=25
+y1=1.3
+y2=6.3
 ypos1=0
 ypos2=2
 divy=5
 subdivy=4
 unity=1
-x1=1.2e+11
-x2=2e+11
+x1=1.44e+11
+x2=1.76e+11
 divx=5
 subdivx=8
 xlabmag=1.0
 ylabmag=1.0
-node="\\"|S41|-|S31|; s_4_1 db20() s_3_1 db20() -\\"
-\\"|S51|-|S61|; s_5_1 db20() s_6_1 db20() -\\"
-\\"|S32|-|S42|; s_3_2 db20() s_4_2 db20() -\\"
-\\"|S62|-|S52|; s_6_2 db20() s_5_2 db20() -\\""
+node="\\"|S41|-|S31|; s41_31_dB\\"
+\\"|S51|-|S61|; s51_61_dB\\"
+\\"|S32|-|S42|; s32_42_dB\\"
+\\"|S62|-|S52|; s62_52_dB\\""
 color="4 7 12 21"
 dataset=-1
 unitx=1
@@ -84,23 +84,23 @@ logx=0
 logy=0
 linewidth_mult=4}
 B 2 1680 -1020 2480 -620 {flags=graph
-y1=-200
-y2=290
+y1=77
+y2=110
 ypos1=0
 ypos2=2
 divy=5
 subdivy=4
 unity=1
-x1=1.2e+11
-x2=2e+11
+x1=1.44e+11
+x2=1.76e+11
 divx=5
 subdivx=8
 xlabmag=1.0
 ylabmag=1.0
-node="\\"arg(S41)-arg(S31); ph(s_4_1) ph(s_3_1) -\\"
-\\"arg(S51)-arg(S61); ph(s_5_1) ph(s_6_1) -\\"
-\\"arg(S32)-arg(S42); ph(s_3_2) ph(s_4_2) -\\"
-\\"arg(S62)-arg(S52); ph(s_6_2) ph(s_5_2) -\\""
+node="\\"arg(S41)-arg(S31); s41_31_deg\\"
+\\"arg(S51)-arg(S61); s51_61_deg\\"
+\\"arg(S32)-arg(S42); s32_42_deg\\"
+\\"arg(S62)-arg(S52); s62_52_deg\\""
 color="4 7 12 21"
 dataset=-1
 unitx=1
@@ -159,8 +159,6 @@ set appendwrite
 * AC S-Parameter Analysis
 sp lin 1001 $&const.f_min $&const.f_max
 remzerovec
-write @schname\\\\.raw
-set appendwrite
 
 * Calculating S-Parameters
 let s31_dB = db(S_3_1)
@@ -198,10 +196,16 @@ let s44_deg = cph(S_4_4) * 180/pi
 let s55_deg = cph(S_5_5) * 180/pi
 let s66_deg = cph(S_6_6) * 180/pi
 let s77_deg = cph(S_7_7) * 180/pi
-let s41_31_deg = s41_deg - s31_deg
-let s51_61_deg = s51_deg - s61_deg
-let s32_42_deg = s32_deg - s42_deg
-let s62_52_deg = s62_deg - s52_deg
+
+let s41_31_deg = ph(S_4_1/S_3_1) * 180/pi
+let s51_61_deg = ph(S_5_1/S_6_1) * 180/pi
+let s32_42_deg = ph(S_3_2/S_4_2) * 180/pi
+let s62_52_deg = ph(S_6_2/S_5_2) * 180/pi
+
+* Write the raw AFTER the derived vectors so the interactive graphs can
+* reference the imbalance vectors (s41_31_deg, ...) directly by name.
+write @schname\\\\.raw
+set appendwrite
 
 * Plotting
 plot s11_dB s22_dB s33_dB s44_dB s55_dB s66_dB s77_dB

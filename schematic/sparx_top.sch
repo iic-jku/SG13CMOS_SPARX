@@ -5,7 +5,7 @@ V {}
 S {}
 F {}
 E {}
-T {SPARX Top (for Top-Level LVS)} 870 -1720 0 0 1 1 {}
+T {SPARX Top} 1090 -1720 0 0 1 1 {}
 T {SPDX-FileCopyrightText: 2025-2026 The SPARX Team
 SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1} 1920 -220 0 0 0.4 0.4 {}
 N 1040 -1260 1200 -1260 {lab=#net1}
@@ -90,7 +90,7 @@ C {sg13g2_pr/rsil.sym} 1640 -790 0 0 {name=R1
 w=0.5e-6
 l=2.5e-6
 model=rsil
-body=sub!
+body=VSS
 spiceprefix=X
  m=1
   mm_ok=1

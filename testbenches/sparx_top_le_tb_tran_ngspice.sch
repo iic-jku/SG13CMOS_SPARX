@@ -7,14 +7,14 @@ F {}
 E {}
 B 2 30 -660 830 -260 {flags=graph
 y1=0.73
-y2=0.74
+y2=0.75
 ypos1=0
 ypos2=2
 divy=5
 subdivy=4
 unity=1
-x1=1.014133e-08
-x2=1.1859316e-08
+x1=7.0689294e-09
+x2=8.6795419e-09
 divx=5
 subdivx=8
 xlabmag=1.0
@@ -30,15 +30,15 @@ logx=0
 logy=0
 linewidth_mult=4}
 B 2 850 -660 1650 -260 {flags=graph
-y1=0.72
-y2=0.74
+y1=0.71
+y2=0.73
 ypos1=0
 ypos2=2
 divy=5
 subdivy=4
 unity=1
-x1=1.014133e-08
-x2=1.1859316e-08
+x1=7.0689294e-09
+x2=8.6795419e-09
 divx=5
 subdivx=8
 xlabmag=1.0
@@ -54,15 +54,15 @@ logx=0
 logy=0
 linewidth_mult=4}
 B 2 1670 -660 2470 -260 {flags=graph
-y1=-0.0075
-y2=-0.0067
+y1=-0.0096
+y2=-0.007
 ypos1=0
 ypos2=2
 divy=5
 subdivy=4
 unity=1
-x1=1.014133e-08
-x2=1.1859316e-08
+x1=7.0689294e-09
+x2=8.6795419e-09
 divx=5
 subdivx=8
 xlabmag=1.0
@@ -77,7 +77,7 @@ unitx=1
 logx=0
 logy=0
 linewidth_mult=4}
-T {Ngspice Testbench for Transient analysis - Six-Port} 550 -1710 0 0 1 1 {}
+T {Ngspice Testbench for Transient analysis - Six-Port LE} 510 -1710 0 0 1 1 {}
 N 940 -980 940 -940 {lab=GND}
 N 1180 -1020 1180 -940 {lab=GND}
 N 1260 -1020 1260 -940 {lab=GND}
@@ -120,9 +120,7 @@ C {devices/code_shown.sym} 60 -1530 0 0 {name=NGSPICE
 only_toplevel=true
 lock=false
 value="
-.include ../../netlist/spice/sparx_bpf_le.spice
-.include ../../netlist/spice/sparx_wpd_le.spice
-.include ../../netlist/spice/sparx_blc_le.spice
+.include ../../netlist/spice/sparx_core_le.spice
 .include ../sim_range.spice
 .param temp=27
 .options savecurrents klu method=gear reltol=1e-3 abstol=1e-15 gmin=1e-15
@@ -196,7 +194,6 @@ C {devices/gnd.sym} 1260 -940 0 0 {name=l7 lab=GND}
 C {devices/gnd.sym} 940 -940 0 1 {name=l6 lab=GND}
 C {devices/vsource.sym} 1500 -1010 0 0 {name=vrf spice_ignore=False value="sin(0 200m 161G)"
 }
-C {sparx_top.sym} 1220 -1160 0 0 {name=x1}
 C {devices/gnd.sym} 1020 -940 0 1 {name=l3 lab=GND}
 C {devices/gnd.sym} 1500 -940 0 0 {name=l4 lab=GND}
 C {devices/gnd.sym} 1420 -940 0 0 {name=l10 lab=GND}
@@ -245,3 +242,4 @@ C {lab_pin.sym} 1920 -1080 2 1 {name=p10 sig_type=std_logic lab=vout1}
 C {lab_pin.sym} 2040 -1080 2 1 {name=p11 sig_type=std_logic lab=vout2}
 C {lab_pin.sym} 2160 -1080 0 0 {name=p12 sig_type=std_logic lab=vout3}
 C {lab_pin.sym} 2280 -1080 0 0 {name=p13 sig_type=std_logic lab=vout4}
+C {sparx_top_le.sym} 1220 -1160 0 0 {name=x1}
