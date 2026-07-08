@@ -6,15 +6,15 @@ S {}
 F {}
 E {}
 B 2 780 -1880 1580 -1480 {flags=graph
-y1=-33
-y2=-6
+y1=-27
+y2=-11
 ypos1=0
 ypos2=2
 divy=5
 subdivy=4
 unity=1
-x1=2.0626146e+11
-x2=2.8626146e+11
+x1=1.44e+11
+x2=1.76e+11
 divx=5
 subdivx=8
 xlabmag=1.0
@@ -30,15 +30,15 @@ logx=0
 logy=0
 linewidth_mult=4}
 B 2 780 -1460 1580 -1060 {flags=graph
-y1=-110
-y2=110
+y1=-88
+y2=98
 ypos1=0
 ypos2=2
 divy=5
 subdivy=4
 unity=1
-x1=2.0626146e+11
-x2=2.8626146e+11
+x1=1.44e+11
+x2=1.76e+11
 divx=5
 subdivx=8
 xlabmag=1.0
@@ -54,15 +54,15 @@ logx=0
 logy=0
 linewidth_mult=4}
 B 2 1640 -1880 2440 -1480 {flags=graph
-y1=-3.5
-y2=-3.3
+y1=-18
+y2=-3.1
 ypos1=0
 ypos2=2
 divy=5
 subdivy=4
 unity=1
-x1=2.0626146e+11
-x2=2.8626146e+11
+x1=1.44e+11
+x2=1.76e+11
 divx=5
 subdivx=8
 xlabmag=1.0
@@ -80,15 +80,15 @@ logx=0
 logy=0
 linewidth_mult=4}
 B 2 1640 -1460 2440 -1060 {flags=graph
-y1=-120
-y2=-67
+y1=-180
+y2=180
 ypos1=0
 ypos2=2
 divy=5
 subdivy=4
 unity=1
-x1=2.0626146e+11
-x2=2.8626146e+11
+x1=1.44e+11
+x2=1.76e+11
 divx=5
 subdivx=8
 xlabmag=1.0
@@ -106,15 +106,15 @@ logx=0
 logy=0
 linewidth_mult=4}
 B 2 780 -1040 1580 -640 {flags=graph
-y1=-7.1
-y2=-6.7
+y1=-5.6
+y2=-3.1
 ypos1=0
 ypos2=2
 divy=5
 subdivy=4
 unity=1
-x1=2.0626146e+11
-x2=2.8626146e+11
+x1=1.44e+11
+x2=1.76e+11
 divx=5
 subdivx=8
 xlabmag=1.0
@@ -137,8 +137,8 @@ ypos2=2
 divy=5
 subdivy=4
 unity=1
-x1=2.0626146e+11
-x2=2.8626146e+11
+x1=1.44e+11
+x2=1.76e+11
 divx=5
 subdivx=8
 xlabmag=1.0
@@ -154,15 +154,15 @@ logx=0
 logy=0
 linewidth_mult=4}
 B 2 1640 -1040 2440 -640 {flags=graph
-y1=-7.1
-y2=-6.7
+y1=-18
+y2=-12
 ypos1=0
 ypos2=2
 divy=5
 subdivy=4
 unity=1
-x1=2.0626146e+11
-x2=2.8626146e+11
+x1=1.44e+11
+x2=1.76e+11
 divx=5
 subdivx=8
 xlabmag=1.0
@@ -176,15 +176,15 @@ logx=0
 logy=0
 linewidth_mult=4}
 B 2 1640 -620 2440 -220 {flags=graph
-y1=-180
-y2=180
+y1=-120
+y2=-77
 ypos1=0
 ypos2=2
 divy=5
 subdivy=4
 unity=1
-x1=2.0626146e+11
-x2=2.8626146e+11
+x1=1.44e+11
+x2=1.76e+11
 divx=5
 subdivx=8
 xlabmag=1.0
@@ -203,13 +203,13 @@ N 1720 -2100 1800 -2100 {lab=v3}
 N 1800 -2000 1800 -1960 {lab=GND}
 N 1800 -2100 1840 -2100 {lab=v3}
 N 2000 -2000 2000 -1960 {lab=GND}
-N 2000 -2180 2040 -2180 {lab=v4}
-N 2000 -2180 2000 -2060 {lab=v4}
-N 1720 -2180 2000 -2180 {lab=v4}
-N 1440 -2100 1520 -2100 {lab=v2}
+N 2000 -2180 2040 -2180 {lab=#net1}
+N 2000 -2180 2000 -2060 {lab=#net1}
+N 1720 -2180 2000 -2180 {lab=#net1}
+N 1440 -2100 1520 -2100 {lab=v4}
 N 1440 -2000 1440 -1960 {lab=GND}
-N 1440 -2100 1440 -2060 {lab=v2}
-N 1400 -2100 1440 -2100 {lab=v2}
+N 1440 -2100 1440 -2060 {lab=v4}
+N 1400 -2100 1440 -2100 {lab=v4}
 N 1240 -2000 1240 -1960 {lab=GND}
 N 1200 -2180 1240 -2180 {lab=v1}
 N 1240 -2180 1240 -2060 {lab=v1}
@@ -310,10 +310,10 @@ wrdata ../sim_data/@schname\\\\.txt
 "}
 C {title-2.sym} 0 0 0 0 {name=l2 author="Simon Dorrer" rev=1.0 lock=true}
 C {lab_pin.sym} 1840 -2100 0 1 {name=p3 sig_type=std_logic lab=v3}
-C {devices/lab_pin.sym} 1400 -2100 0 0 {name=l19 sig_type=std_logic lab=v2
+C {devices/lab_pin.sym} 2040 -2180 0 1 {name=l19 sig_type=std_logic lab=v2
 }
 C {devices/gnd.sym} 1440 -1960 0 0 {name=l39 lab=GND}
-C {devices/vsource.sym} 1440 -2030 0 1 {name=v2 value="dc 0 ac 1 portnum 2 z0 50"
+C {devices/vsource.sym} 2000 -2030 0 0 {name=v2 value="dc 0 ac 1 portnum 2 z0 50"
 }
 C {devices/gnd.sym} 1800 -1960 0 0 {name=l3 lab=GND}
 C {devices/launcher.sym} 2600 -2120 0 0 {name=h2
@@ -340,9 +340,9 @@ value="
 "}
 C {devices/vsource.sym} 1800 -2030 0 0 {name=v3 value="dc 0 ac 1 portnum 3 z0 50"
 }
-C {lab_pin.sym} 2040 -2180 0 1 {name=p1 sig_type=std_logic lab=v4}
+C {lab_pin.sym} 1400 -2100 0 0 {name=p1 sig_type=std_logic lab=v4}
 C {devices/gnd.sym} 2000 -1960 0 0 {name=l1 lab=GND}
-C {devices/vsource.sym} 2000 -2030 0 0 {name=v4 value="dc 0 ac 1 portnum 4 z0 50"
+C {devices/vsource.sym} 1440 -2030 0 1 {name=v4 value="dc 0 ac 1 portnum 4 z0 50"
 }
 C {lab_pin.sym} 1200 -2180 0 0 {name=p2 sig_type=std_logic lab=v1}
 C {devices/gnd.sym} 1240 -1960 0 1 {name=l4 lab=GND}

@@ -148,14 +148,14 @@ N 1420 -1540 1420 -1480 {lab=v1}
 N 1420 -1420 1420 -1360 {lab=GND}
 N 1340 -1540 1420 -1540 {lab=v1}
 N 1420 -1540 1500 -1540 {lab=v1}
-N 1780 -1500 1780 -1460 {lab=v2}
-N 1700 -1500 1780 -1500 {lab=v2}
+N 1780 -1500 1780 -1460 {lab=v3}
+N 1700 -1500 1780 -1500 {lab=v3}
 N 1780 -1400 1780 -1360 {lab=GND}
-N 1780 -1500 1820 -1500 {lab=v2}
+N 1780 -1500 1820 -1500 {lab=v3}
 N 1980 -1400 1980 -1360 {lab=GND}
-N 1980 -1580 2020 -1580 {lab=v3}
-N 1980 -1580 1980 -1460 {lab=v3}
-N 1700 -1580 1980 -1580 {lab=v3}
+N 1980 -1580 2020 -1580 {lab=#net1}
+N 1980 -1580 1980 -1460 {lab=#net1}
+N 1700 -1580 1980 -1580 {lab=#net1}
 C {devices/code_shown.sym} 60 -2250 0 0 {name=NGSPICE
 only_toplevel=true
 lock=false
@@ -233,7 +233,7 @@ wrdata ../sim_data/@schname\\\\.txt
 .endc
 "}
 C {title-2.sym} 0 0 0 0 {name=l2 author="Simon Dorrer" rev=1.0 lock=true}
-C {lab_pin.sym} 1820 -1500 0 1 {name=p3 sig_type=std_logic lab=v2}
+C {lab_pin.sym} 2020 -1580 0 1 {name=p3 sig_type=std_logic lab=v2}
 C {devices/lab_pin.sym} 1340 -1540 0 0 {name=l19 sig_type=std_logic lab=v1
 }
 C {devices/gnd.sym} 1420 -1360 0 0 {name=l39 lab=GND}
@@ -262,10 +262,10 @@ value="
 .lib cornerCAP.lib cap_typ
 .lib cornerDIO.lib dio_tt
 "}
-C {devices/vsource.sym} 1780 -1430 0 0 {name=v2 value="dc 0 ac 1 portnum 2 z0 50"
+C {devices/vsource.sym} 1980 -1430 0 0 {name=v2 value="dc 0 ac 1 portnum 2 z0 50"
 }
-C {lab_pin.sym} 2020 -1580 0 1 {name=p1 sig_type=std_logic lab=v3}
+C {lab_pin.sym} 1820 -1500 0 1 {name=p1 sig_type=std_logic lab=v3}
 C {devices/gnd.sym} 1980 -1360 0 0 {name=l1 lab=GND}
-C {devices/vsource.sym} 1980 -1430 0 0 {name=v3 value="dc 0 ac 1 portnum 3 z0 50"
+C {devices/vsource.sym} 1780 -1430 0 0 {name=v3 value="dc 0 ac 1 portnum 3 z0 50"
 }
 C {sparx_wpd_le.sym} 1600 -1540 0 0 {name=x1}
