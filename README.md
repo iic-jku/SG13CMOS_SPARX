@@ -3,13 +3,12 @@
 [![License: Solderpad Hardware License v2.1](https://img.shields.io/badge/License-Solderpad%20Hardware%20License%20v2.1-blue.svg)](LICENSE)
 [![Quarto Publish](https://github.com/iic-jku/SG13CMOS_SPARX/actions/workflows/quarto-publish.yml/badge.svg?branch=main)](https://github.com/iic-jku/SG13CMOS_SPARX/actions/workflows/quarto-publish.yml)
 [![Regression](https://github.com/iic-jku/SG13CMOS_SPARX/actions/workflows/regression.yml/badge.svg)](https://github.com/iic-jku/SG13CMOS_SPARX/actions/workflows/regression.yml)
+[![Documentation](https://img.shields.io/badge/Documentation-online-orange?logo=quarto)](https://iic-jku.github.io/SG13CMOS_SPARX/index.html)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19654232.svg)](https://doi.org/10.5281/zenodo.19654232)
 
-(c) 2025-2026 Simon Dorrer*, David Kellerer-Pirklbauer*, and Harald Pretl
+(c) 2025-2026 Simon Dorrer, David Kellerer-Pirklbauer, and Harald Pretl
 
 Institute for Integrated Circuits and Quantum Computing, Johannes Kepler University (JKU), Linz, Austria
-
-*Both authors contributed equally to this work and are ordered alphabetically.
 
 > [!WARNING]
 > This repository is a Work in Progress.
