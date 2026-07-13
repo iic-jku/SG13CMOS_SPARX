@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="680" height="350" viewBox="0 0 680 350" role="img">
+  <title>The four SG13CMOS5L stackup XML variants</title>
+  <desc>Four side-by-side cross-sections comparing SG13CMOS5L_200um, _300um, _200um_backsideGND and _nosub. All share the same 5-metal BEOL and differ only in what sits below it.</desc>
+  <style>
+    text { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
+    .hdr { font-size: 14px; font-weight: 500; fill: #3d3d3a; }
+    .cap { font-size: 12px; font-weight: 400; fill: #73726c; }
+    .t   { font-size: 14px; font-weight: 500; }
+    .s   { font-size: 12px; font-weight: 400; }
+    rect { stroke-width: 0.5; }
+    .gray rect  { fill: #F1EFE8; stroke: #5F5E5A; }
+    .gray text  { fill: #444441; }
+    .purple rect{ fill: #EEEDFE; stroke: #534AB7; }
+    .purple .t  { fill: #3C3489; }
+    .purple .s  { fill: #534AB7; }
+    .teal rect  { fill: #E1F5EE; stroke: #0F6E56; }
+    .teal text  { fill: #0F6E56; }
+    .blue rect  { fill: #E6F1FB; stroke: #185FA5; }
+    .blue text  { fill: #0C447C; }
+    .amber rect { fill: #FAEEDA; stroke: #854F0B; }
+    .amber text { fill: #854F0B; }
+    @media (prefers-color-scheme: dark) {
+      .hdr { fill: #e8e6dc; }
+      .cap { fill: #9c9a92; }
+      .gray rect  { fill: #444441; stroke: #B4B2A9; }
+      .gray text  { fill: #D3D1C7; }
+      .purple rect{ fill: #3C3489; stroke: #AFA9EC; }
+      .purple .t  { fill: #CECBF6; }
+      .purple .s  { fill: #AFA9EC; }
+      .teal rect  { fill: #085041; stroke: #5DCAA5; }
+      .teal text  { fill: #9FE1CB; }
+      .blue rect  { fill: #0C447C; stroke: #85B7EB; }
+      .blue text  { fill: #B5D4F4; }
+      .amber rect { fill: #633806; stroke: #EF9F27; }
+      .amber text { fill: #FAC775; }
+    }
+  </style>
+
+  <text class="cap" x="107" y="30" text-anchor="middle">SG13CMOS5L</text>
+  <text class="hdr" x="107" y="48" text-anchor="middle">_200um</text>
+  <text class="cap" x="262" y="30" text-anchor="middle">SG13CMOS5L</text>
+  <text class="hdr" x="262" y="48" text-anchor="middle">_300um</text>
+  <text class="cap" x="417" y="30" text-anchor="middle">SG13CMOS5L</text>
+  <text class="hdr" x="417" y="48" text-anchor="middle">_200um_backsideGND</text>
+  <text class="cap" x="572" y="30" text-anchor="middle">SG13CMOS5L</text>
+  <text class="hdr" x="572" y="48" text-anchor="middle">_nosub</text>
+
+  <g class="gray"><rect x="42" y="62" width="130" height="36" rx="4"/><text class="s" x="107" y="80" text-anchor="middle" dominant-baseline="central">Air 300 µm</text></g>
+  <g class="purple"><rect x="42" y="98" width="130" height="60" rx="4"/><text class="t" x="107" y="118" text-anchor="middle" dominant-baseline="central">BEOL 9.3 µm</text><text class="s" x="107" y="138" text-anchor="middle" dominant-baseline="central">M1–M4, TopMetal1</text></g>
+  <g class="teal"><rect x="42" y="158" width="130" height="16" rx="2"/><text class="s" x="107" y="166" text-anchor="middle" dominant-baseline="central">EPI 3.75 µm</text></g>
+  <g class="blue"><rect x="42" y="174" width="130" height="70" rx="4"/><text class="s" x="107" y="209" text-anchor="middle" dominant-baseline="central">Si 186.95 µm</text></g>
+
+  <g class="gray"><rect x="197" y="62" width="130" height="36" rx="4"/><text class="s" x="262" y="80" text-anchor="middle" dominant-baseline="central">Air 300 µm</text></g>
+  <g class="purple"><rect x="197" y="98" width="130" height="60" rx="4"/><text class="t" x="262" y="118" text-anchor="middle" dominant-baseline="central">BEOL 9.3 µm</text><text class="s" x="262" y="138" text-anchor="middle" dominant-baseline="central">M1–M4, TopMetal1</text></g>
+  <g class="teal"><rect x="197" y="158" width="130" height="16" rx="2"/><text class="s" x="262" y="166" text-anchor="middle" dominant-baseline="central">EPI 3.75 µm</text></g>
+  <g class="blue"><rect x="197" y="174" width="130" height="105" rx="4"/><text class="s" x="262" y="226" text-anchor="middle" dominant-baseline="central">Si 286.95 µm</text></g>
+
+  <g class="gray"><rect x="352" y="62" width="130" height="36" rx="4"/><text class="s" x="417" y="80" text-anchor="middle" dominant-baseline="central">Air 300 µm</text></g>
+  <g class="purple"><rect x="352" y="98" width="130" height="60" rx="4"/><text class="t" x="417" y="118" text-anchor="middle" dominant-baseline="central">BEOL 9.3 µm</text><text class="s" x="417" y="138" text-anchor="middle" dominant-baseline="central">M1–M4, TopMetal1</text></g>
+  <g class="teal"><rect x="352" y="158" width="130" height="16" rx="2"/><text class="s" x="417" y="166" text-anchor="middle" dominant-baseline="central">EPI 3.75 µm</text></g>
+  <g class="blue"><rect x="352" y="174" width="130" height="70" rx="4"/><text class="s" x="417" y="209" text-anchor="middle" dominant-baseline="central">Si 186.95 µm</text></g>
+  <g class="amber"><rect x="352" y="244" width="130" height="14" rx="2"/><text class="s" x="417" y="251" text-anchor="middle" dominant-baseline="central">Backside metal 1 µm</text></g>
+
+  <g class="gray"><rect x="507" y="62" width="130" height="36" rx="4"/><text class="s" x="572" y="80" text-anchor="middle" dominant-baseline="central">Air 300 µm</text></g>
+  <g class="purple"><rect x="507" y="98" width="130" height="60" rx="4"/><text class="t" x="572" y="118" text-anchor="middle" dominant-baseline="central">BEOL 9.3 µm</text><text class="s" x="572" y="138" text-anchor="middle" dominant-baseline="central">M1–M4, TopMetal1</text></g>
+  <g class="teal"><rect x="507" y="158" width="130" height="16" rx="2"/><text class="s" x="572" y="166" text-anchor="middle" dominant-baseline="central">SiO₂ spacing 2 µm</text></g>
+
+  <text class="cap" x="107" y="305" text-anchor="middle">De-facto default</text>
+  <text class="cap" x="262" y="305" text-anchor="middle">Thicker substrate</text>
+  <text class="cap" x="417" y="305" text-anchor="middle">Ideal backside ground</text>
+  <text class="cap" x="572" y="305" text-anchor="middle">No silicon</text>
+  <text class="cap" x="340" y="332" text-anchor="middle">Thinner BEOL than SG13G2: no Metal5, no TopMetal2, no MIM</text>
+</svg>

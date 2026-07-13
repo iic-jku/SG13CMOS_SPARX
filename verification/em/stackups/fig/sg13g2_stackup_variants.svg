@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="680" height="330" viewBox="0 0 680 330" role="img">
+  <title>Substrate variants of the SG13G2 stackup XML files</title>
+  <desc>Three side-by-side cross-sections comparing SG13G2_200um, SG13G2_100um and SG13G2_nosub. All three share the same BEOL, but differ in the silicon below and the air above.</desc>
+  <style>
+    text { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
+    .hdr { font-size: 14px; font-weight: 500; fill: #3d3d3a; }
+    .cap { font-size: 12px; font-weight: 400; fill: #73726c; }
+    .t   { font-size: 14px; font-weight: 500; }
+    .s   { font-size: 12px; font-weight: 400; }
+    rect { stroke-width: 0.5; }
+    .gray rect  { fill: #F1EFE8; stroke: #5F5E5A; }
+    .gray text  { fill: #444441; }
+    .purple rect{ fill: #EEEDFE; stroke: #534AB7; }
+    .purple .t  { fill: #3C3489; }
+    .purple .s  { fill: #534AB7; }
+    .teal rect  { fill: #E1F5EE; stroke: #0F6E56; }
+    .teal text  { fill: #0F6E56; }
+    .blue rect  { fill: #E6F1FB; stroke: #185FA5; }
+    .blue text  { fill: #0C447C; }
+    .amber rect { fill: #FAEEDA; stroke: #854F0B; }
+    @media (prefers-color-scheme: dark) {
+      .hdr { fill: #e8e6dc; }
+      .cap { fill: #9c9a92; }
+      .gray rect  { fill: #444441; stroke: #B4B2A9; }
+      .gray text  { fill: #D3D1C7; }
+      .purple rect{ fill: #3C3489; stroke: #AFA9EC; }
+      .purple .t  { fill: #CECBF6; }
+      .purple .s  { fill: #AFA9EC; }
+      .teal rect  { fill: #085041; stroke: #5DCAA5; }
+      .teal text  { fill: #9FE1CB; }
+      .blue rect  { fill: #0C447C; stroke: #85B7EB; }
+      .blue text  { fill: #B5D4F4; }
+      .amber rect { fill: #633806; stroke: #EF9F27; }
+    }
+  </style>
+
+  <text class="hdr" x="135" y="42" text-anchor="middle">SG13G2_200um</text>
+  <text class="hdr" x="340" y="42" text-anchor="middle">SG13G2_100um</text>
+  <text class="hdr" x="545" y="42" text-anchor="middle">SG13G2_nosub</text>
+
+  <g class="gray"><rect x="60" y="60" width="150" height="40" rx="4"/><text class="s" x="135" y="80" text-anchor="middle" dominant-baseline="central">Air 200 µm</text></g>
+  <g class="purple"><rect x="60" y="100" width="150" height="70" rx="4"/><text class="t" x="135" y="126" text-anchor="middle" dominant-baseline="central">BEOL 16.1 µm</text><text class="s" x="135" y="146" text-anchor="middle" dominant-baseline="central">M1–TopMetal2, MIM</text></g>
+  <g class="teal"><rect x="60" y="170" width="150" height="18" rx="2"/><text class="s" x="135" y="179" text-anchor="middle" dominant-baseline="central">EPI 3.75 µm</text></g>
+  <g class="blue"><rect x="60" y="188" width="150" height="70" rx="4"/><text class="s" x="135" y="223" text-anchor="middle" dominant-baseline="central">Silicon 180 µm</text></g>
+  <g class="amber"><rect x="60" y="258" width="150" height="9" rx="2"/></g>
+
+  <g class="gray"><rect x="265" y="60" width="150" height="40" rx="4"/><text class="s" x="340" y="80" text-anchor="middle" dominant-baseline="central">Air 200 µm</text></g>
+  <g class="purple"><rect x="265" y="100" width="150" height="70" rx="4"/><text class="t" x="340" y="126" text-anchor="middle" dominant-baseline="central">BEOL 16.1 µm</text><text class="s" x="340" y="146" text-anchor="middle" dominant-baseline="central">M1–TopMetal2, MIM</text></g>
+  <g class="teal"><rect x="265" y="170" width="150" height="18" rx="2"/><text class="s" x="340" y="179" text-anchor="middle" dominant-baseline="central">EPI 3.75 µm</text></g>
+  <g class="blue"><rect x="265" y="188" width="150" height="36" rx="4"/><text class="s" x="340" y="206" text-anchor="middle" dominant-baseline="central">Silicon 80 µm</text></g>
+  <g class="amber"><rect x="265" y="224" width="150" height="9" rx="2"/></g>
+
+  <g class="gray"><rect x="470" y="60" width="150" height="40" rx="4"/><text class="s" x="545" y="80" text-anchor="middle" dominant-baseline="central">Air 300 µm</text></g>
+  <g class="purple"><rect x="470" y="100" width="150" height="70" rx="4"/><text class="t" x="545" y="126" text-anchor="middle" dominant-baseline="central">BEOL 16.1 µm</text><text class="s" x="545" y="146" text-anchor="middle" dominant-baseline="central">M1–TopMetal2, MIM</text></g>
+  <g class="teal"><rect x="470" y="170" width="150" height="18" rx="2"/><text class="s" x="545" y="179" text-anchor="middle" dominant-baseline="central">SiO₂ spacing 2 µm</text></g>
+
+  <text class="cap" x="135" y="290" text-anchor="middle">Default on-wafer model</text>
+  <text class="cap" x="340" y="290" text-anchor="middle">Thinned wafer</text>
+  <text class="cap" x="545" y="290" text-anchor="middle">No silicon, smaller mesh</text>
+  <text class="cap" x="340" y="312" text-anchor="middle">Amber strip = optional BACKSIDEGND (GDS layer 251)</text>
+</svg>

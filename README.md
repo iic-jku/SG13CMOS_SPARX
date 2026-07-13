@@ -223,7 +223,8 @@ An overview of the open-source design flow for SPARX is shown below. The flow co
 │  │  ├─ 📁 layout/
 │  │  ├─ 📁 palace_model/
 │  │  ├─ 📁 s-parameter/
-│  │  └─ 📁 scripts/
+│  │  ├─ 📁 scripts/
+│  │  └─ 📁 stackups/
 │  └─ 📁 lvs/
 │     ├─ sparx_powdet_sbd.lvs.out
 │     └─ sparx_powdet_sbd.lvsdb

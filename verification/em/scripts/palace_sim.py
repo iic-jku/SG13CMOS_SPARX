@@ -91,7 +91,10 @@ def _get_layers(cell, layers=None):
 # ===================== input files and path settings =======================
 
 gds_filename = sys.argv[1]   # geometries
-XML_filename = "SG13G2_nosub.xml"          # stackup
+# stackup (lives in ../stackups/, resolved absolutely so it does not depend on the cwd)
+XML_filename = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), "..", "stackups", "SG13G2_nosub.xml"
+)
 
 # preprocess GDSII for safe handling of cutouts/holes?
 preprocess_gds = False
