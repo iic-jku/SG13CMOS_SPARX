@@ -1,6 +1,6 @@
-# Overview of the XML files in `gds2palace_ihp_sg13g2/workflow`
+# Overview of the XML files
 
-Repository: <https://github.com/VolkerMuehlhaus/gds2palace_ihp_sg13g2/tree/main/workflow>
+Origin repository: <https://github.com/VolkerMuehlhaus/gds2palace_ihp_sg13g2>
 
 ## Short answer
 
@@ -156,5 +156,3 @@ In the SG13G2 files `LBE` is declared `Type="dielectric"`, while in the older CM
 SG13G2 form is the cleaner one to copy if you write your own stackup.
 
 ---
-
-*Compiled from the repository state at commit on branch `main` (checked 2026-07-13).*
