@@ -257,7 +257,7 @@ make build-pdk
 
 ### Build SPARX Layout
 
-Generates the six-port layout GDS files for a specific frequency (e.g. `layout/sparx160_top.gds` and `layout/sparx_powdet_sbd.gds` for the default 160 GHz, or `layout/sparx77_top.gds` and `layout/sparx_powdet_sbd.gds` for 77 GHz):
+Generates the six-port layout GDS files for a specific frequency (e.g. `layout/sparx160_top.gds` and `layout/sparx_powdet_sbd.gds` for the default 160 GHz, or `layout/sparx77_top.gds` and `layout/sparx_powdet_sbd.gds` for 77 GHz) by calling `six_port_gen.py`:
 
 ```sh
 make build-layout
@@ -267,6 +267,9 @@ make build-layout FREQ=77 NO_FILL_M5=1
 ```
 
 The `FREQ` parameter sets the design frequency in GHz (default: `160`). `NO_FILL=1` disables metal fill (faster for layout preview). `NO_FILL_M5=1` disables only the Metal5 ground fill.
+
+> [!NOTE]
+> `six_port_gen.py` also generates `sparx160_core.gds` in `verification/em/layout`, which is used for EM simulation.
 
 ### Build Frequency Sweep Automatically
 
