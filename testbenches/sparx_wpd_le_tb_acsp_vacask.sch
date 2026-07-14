@@ -12,6 +12,9 @@ T {VACASK Testbench for AC S-parameter analysis - Wilkinson Power Divider} 270 -
 T {Port 1} 785 -835 0 0 0.3 0.3 {}
 T {Port 2} 1575 -835 0 1 0.3 0.3 {}
 T {Port 3} 1335 -835 0 1 0.3 0.3 {}
+T {SPDX-FileCopyrightText: 2025-2026 The SPARX Team
+SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1
+} 1920 -220 0 0 0.4 0.4 {}
 N 880 -900 960 -900 {lab=v1}
 N 880 -760 880 -740 {lab=#net1}
 N 880 -680 880 -640 {lab=GND}

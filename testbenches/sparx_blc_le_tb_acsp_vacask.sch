@@ -14,6 +14,9 @@ T {Port 3} 1495 -695 0 1 0.3 0.3 {}
 T {Port 4} 945 -695 0 0 0.3 0.3 {}
 T {Port 2} 1735 -695 0 1 0.3 0.3 {}
 T {Port 1} 705 -695 0 0 0.3 0.3 {}
+T {SPDX-FileCopyrightText: 2025-2026 The SPARX Team
+SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1
+} 1920 -220 0 0 0.4 0.4 {}
 N 1400 -620 1400 -600 {lab=#net1}
 N 1400 -540 1400 -500 {lab=GND}
 N 1400 -720 1400 -680 {lab=v3}

@@ -10,6 +10,9 @@ B 4 1380 -880 1520 -700 {fill = false}
 T {VACASK Testbench for AC S-parameter analysis - Bandpass Filter} 360 -1715 0 0 1 1 {}
 T {Port 1} 965 -875 0 0 0.3 0.3 {}
 T {Port 2} 1515 -875 0 1 0.3 0.3 {}
+T {SPDX-FileCopyrightText: 2025-2026 The SPARX Team
+SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1
+} 1920 -220 0 0 0.4 0.4 {}
 N 1060 -900 1140 -900 {lab=v1}
 N 1060 -800 1060 -780 {lab=#net1}
 N 1060 -720 1060 -680 {lab=GND}

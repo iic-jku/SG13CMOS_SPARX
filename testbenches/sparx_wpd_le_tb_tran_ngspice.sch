@@ -29,6 +29,9 @@ logx=0
 logy=0
 linewidth_mult=4}
 T {Ngspice Testbench for Transient analysis - Wilkinson Power Divider} 430 -1710 0 0 1 1 {}
+T {SPDX-FileCopyrightText: 2025-2026 The SPARX Team
+SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1
+} 1920 -220 0 0 0.4 0.4 {}
 N 1100 -1120 1100 -1060 {lab=v1}
 N 1100 -1000 1100 -940 {lab=GND}
 N 1020 -1120 1100 -1120 {lab=v1}

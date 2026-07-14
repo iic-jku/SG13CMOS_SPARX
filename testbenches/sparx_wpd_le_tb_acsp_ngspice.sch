@@ -144,6 +144,9 @@ logx=0
 logy=0
 linewidth_mult=4}
 T {Ngspice Testbench for AC S-parameter analysis - Wilkinson Power Divider} 740 -2370 0 0 1 1 {}
+T {SPDX-FileCopyrightText: 2025-2026 The SPARX Team
+SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1
+} 1520 -60 0 0 0.4 0.4 {}
 N 1420 -1540 1420 -1480 {lab=v1}
 N 1420 -1420 1420 -1360 {lab=GND}
 N 1340 -1540 1420 -1540 {lab=v1}

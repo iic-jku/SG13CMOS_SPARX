@@ -94,6 +94,9 @@ logx=0
 logy=0
 linewidth_mult=4}
 T {Ngspice Testbench for AC S-parameter analysis - Bandpass Filter} 400 -1710 0 0 1 1 {}
+T {SPDX-FileCopyrightText: 2025-2026 The SPARX Team
+SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1
+} 610 -60 0 0 0.4 0.4 {}
 N 1000 -1240 1000 -1180 {lab=v1}
 N 1000 -1120 1000 -1060 {lab=GND}
 N 920 -1240 1000 -1240 {lab=v1}

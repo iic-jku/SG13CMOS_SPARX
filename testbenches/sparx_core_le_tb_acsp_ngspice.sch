@@ -108,6 +108,9 @@ logx=0
 logy=0
 linewidth_mult=4}
 T {Ngspice Testbench for AC S-parameter analysis - Six-Port Core LE} 790 -2380 0 0 1 1 {}
+T {SPDX-FileCopyrightText: 2025-2026 The SPARX Team
+SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1
+} 2850 -220 0 0 0.4 0.4 {}
 N 1920 -1780 1920 -1680 {lab=v7}
 N 1920 -1620 1920 -1580 {lab=GND}
 N 1920 -1780 1960 -1780 {lab=v7}

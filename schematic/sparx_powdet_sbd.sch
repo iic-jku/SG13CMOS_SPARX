@@ -44,7 +44,8 @@ Transistors} 2262.5 -725 0 0 0.4 0.4 {}
 T {1.129V} 350 -910 0 0 0.2 0.2 {}
 T {0.761V} 1275 -720 0 1 0.2 0.2 {}
 T {SPDX-FileCopyrightText: 2025-2026 The SPARX Team
-SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1} 1920 -230 0 0 0.4 0.4 {}
+SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1
+} 1920 -230 0 0 0.4 0.4 {}
 N 320 -770 320 -700 {lab=rfin_int}
 N 320 -700 400 -700 {lab=rfin_int}
 N 140 -960 700 -960 {lab=vdd}

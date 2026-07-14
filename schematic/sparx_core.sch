@@ -7,7 +7,8 @@ F {}
 E {}
 T {SPARX Core} 1090 -1720 0 0 1 1 {}
 T {SPDX-FileCopyrightText: 2025-2026 The SPARX Team
-SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1} 1920 -220 0 0 0.4 0.4 {}
+SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1
+} 1920 -220 0 0 0.4 0.4 {}
 N 1360 -1060 1360 -980 {lab=#net1}
 N 1360 -980 1440 -980 {lab=#net1}
 N 1360 -900 1440 -900 {lab=#net2}

@@ -198,6 +198,9 @@ logx=0
 logy=0
 linewidth_mult=4}
 T {Ngspice Testbench for AC S-parameter analysis - Branch Line Coupler} 760 -2390 0 0 1 1 {}
+T {SPDX-FileCopyrightText: 2025-2026 The SPARX Team
+SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1
+} 2850 -220 0 0 0.4 0.4 {}
 N 1800 -2100 1800 -2060 {lab=v3}
 N 1720 -2100 1800 -2100 {lab=v3}
 N 1800 -2000 1800 -1960 {lab=GND}
