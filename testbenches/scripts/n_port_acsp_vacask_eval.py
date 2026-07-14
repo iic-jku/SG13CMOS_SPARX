@@ -9,7 +9,7 @@
 #   * writes sim_data/<TB>.txt with a frequency column plus s{i}{j}_db and s{i}{j}_deg for
 #     every port pair (the same column naming the ngspice testbench uses), which snp2le
 #     imports, and
-#   * plots every |S(i,j)| in dB and its phase to a PNG.
+#   * plots every |S(i,j)| in dB and its unwrapped phase to a PNG.
 #
 # VACASK ships rawfile.py on the postprocess Python path (the IIC reference scripts also do
 # `from rawfile import rawread`).

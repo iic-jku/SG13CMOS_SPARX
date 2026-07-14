@@ -6,15 +6,15 @@ S {}
 F {}
 E {}
 B 2 780 -1880 1580 -1480 {flags=graph
-y1=-27
-y2=-11
+y1=-28
+y2=-4.9
 ypos1=0
 ypos2=2
 divy=5
 subdivy=4
 unity=1
-x1=1.44e+11
-x2=1.76e+11
+x1=8e+10
+x2=2.4e+11
 divx=5
 subdivx=8
 xlabmag=1.0
@@ -30,23 +30,23 @@ logx=0
 logy=0
 linewidth_mult=4}
 B 2 780 -1460 1580 -1060 {flags=graph
-y1=-88
-y2=98
+y1=-170
+y2=170
 ypos1=0
 ypos2=2
 divy=5
 subdivy=4
 unity=1
-x1=1.44e+11
-x2=1.76e+11
+x1=8e+10
+x2=2.4e+11
 divx=5
 subdivx=8
 xlabmag=1.0
 ylabmag=1.0
-node="\\"arg(S11); ph(S_1_1)\\"
-\\"arg(S22); ph(S_2_2)\\"
-\\"arg(S33); ph(S_3_3)\\"
-\\"arg(S44); ph(S_4_4)\\""
+node="\\"arg(S11); ph(S_1_1) cph()\\"
+\\"arg(S22); ph(S_2_2) cph()\\"
+\\"arg(S33); ph(S_3_3) cph()\\"
+\\"arg(S44); ph(S_4_4) cph()\\""
 color="4 7 12 21"
 dataset=-1
 unitx=1
@@ -61,8 +61,8 @@ ypos2=2
 divy=5
 subdivy=4
 unity=1
-x1=1.44e+11
-x2=1.76e+11
+x1=8e+10
+x2=2.4e+11
 divx=5
 subdivx=8
 xlabmag=1.0
@@ -80,25 +80,25 @@ logx=0
 logy=0
 linewidth_mult=4}
 B 2 1640 -1460 2440 -1060 {flags=graph
-y1=-180
-y2=180
+y1=-280
+y2=-46
 ypos1=0
 ypos2=2
 divy=5
 subdivy=4
 unity=1
-x1=1.44e+11
-x2=1.76e+11
+x1=8e+10
+x2=2.4e+11
 divx=5
 subdivx=8
 xlabmag=1.0
 ylabmag=1.0
-node="\\"arg(S12); ph(S_1_2)\\"
-\\"arg(S21); ph(S_2_1)\\"
-\\"arg(S13); ph(S_1_3)\\"
-\\"arg(S31); ph(S_3_1)\\"
-\\"arg(S14); ph(S_1_4)\\"
-\\"arg(S41); ph(S_4_1)\\""
+node="\\"arg(S12); ph(S_1_2) cph()\\"
+\\"arg(S21); ph(S_2_1) cph()\\"
+\\"arg(S13); ph(S_1_3) cph()\\"
+\\"arg(S31); ph(S_3_1) cph()\\"
+\\"arg(S14); ph(S_1_4) cph()\\"
+\\"arg(S41); ph(S_4_1) cph()\\""
 color="4 7 12 21 17 18"
 dataset=-1
 unitx=1
@@ -106,15 +106,15 @@ logx=0
 logy=0
 linewidth_mult=4}
 B 2 780 -1040 1580 -640 {flags=graph
-y1=-5.6
+y1=-18
 y2=-3.1
 ypos1=0
 ypos2=2
 divy=5
 subdivy=4
 unity=1
-x1=1.44e+11
-x2=1.76e+11
+x1=8e+10
+x2=2.4e+11
 divx=5
 subdivx=8
 xlabmag=1.0
@@ -130,23 +130,23 @@ logx=0
 logy=0
 linewidth_mult=4}
 B 2 780 -620 1580 -220 {flags=graph
-y1=-180
-y2=180
+y1=-290
+y2=-62
 ypos1=0
 ypos2=2
 divy=5
 subdivy=4
 unity=1
-x1=1.44e+11
-x2=1.76e+11
+x1=8e+10
+x2=2.4e+11
 divx=5
 subdivx=8
 xlabmag=1.0
 ylabmag=1.0
-node="\\"arg(S23); ph(S_2_3)\\"
-\\"arg(S32); ph(S_3_2)\\"
-\\"arg(S24); ph(S_2_4)\\"
-\\"arg(S42); ph(S_4_2)\\""
+node="\\"arg(S23); ph(S_2_3) cph()\\"
+\\"arg(S32); ph(S_3_2) cph()\\"
+\\"arg(S24); ph(S_2_4) cph()\\"
+\\"arg(S42); ph(S_4_2) cph()\\""
 color="4 7 12 21"
 dataset=-1
 unitx=1
@@ -154,15 +154,15 @@ logx=0
 logy=0
 linewidth_mult=4}
 B 2 1640 -1040 2440 -640 {flags=graph
-y1=-18
-y2=-12
+y1=-7.8
+y2=-4.5
 ypos1=0
 ypos2=2
 divy=5
 subdivy=4
 unity=1
-x1=1.44e+11
-x2=1.76e+11
+x1=8e+10
+x2=2.4e+11
 divx=5
 subdivx=8
 xlabmag=1.0
@@ -176,21 +176,21 @@ logx=0
 logy=0
 linewidth_mult=4}
 B 2 1640 -620 2440 -220 {flags=graph
-y1=-120
-y2=-77
+y1=-150
+y2=-48
 ypos1=0
 ypos2=2
 divy=5
 subdivy=4
 unity=1
-x1=1.44e+11
-x2=1.76e+11
+x1=8e+10
+x2=2.4e+11
 divx=5
 subdivx=8
 xlabmag=1.0
 ylabmag=1.0
-node="\\"arg(S34); ph(S_3_4)\\"
-\\"arg(S43); ph(S_4_3)\\""
+node="\\"arg(S34); ph(S_3_4) cph()\\"
+\\"arg(S43); ph(S_4_3) cph()\\""
 color="4 7"
 dataset=-1
 unitx=1

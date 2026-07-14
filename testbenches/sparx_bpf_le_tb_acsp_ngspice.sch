@@ -41,8 +41,8 @@ divx=5
 subdivx=8
 xlabmag=1.0
 ylabmag=1.0
-node="\\"arg(S11); ph(S_1_1)\\"
-\\"arg(S22); ph(S_2_2)\\""
+node="\\"arg(S11); ph(S_1_1) cph()\\"
+\\"arg(S22); ph(S_2_2) cph()\\""
 color="4 7"
 dataset=-1
 unitx=1
@@ -85,8 +85,8 @@ divx=5
 subdivx=8
 xlabmag=1.0
 ylabmag=1.0
-node="\\"arg(S12); ph(S_1_2)\\"
-\\"arg(S21); ph(S_2_1)\\""
+node="\\"arg(S12); ph(S_1_2) cph()\\"
+\\"arg(S21); ph(S_2_1) cph()\\""
 color="4 7"
 dataset=-1
 unitx=1

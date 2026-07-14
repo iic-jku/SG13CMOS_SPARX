@@ -46,13 +46,13 @@ divx=5
 subdivx=8
 xlabmag=1.0
 ylabmag=1.0
-node="\\"arg(S11); ph(S_1_1)\\"
-\\"arg(S22); ph(S_2_2)\\"
-\\"arg(S33); ph(S_3_3)\\"
-\\"arg(S44); ph(S_4_4)\\"
-\\"arg(S55); ph(S_5_5)\\"
-\\"arg(S66); ph(S_6_6)\\"
-\\"arg(S77); ph(S_7_7)\\""
+node="\\"arg(S11); ph(S_1_1) cph()\\"
+\\"arg(S22); ph(S_2_2) cph()\\"
+\\"arg(S33); ph(S_3_3) cph()\\"
+\\"arg(S44); ph(S_4_4) cph()\\"
+\\"arg(S55); ph(S_5_5) cph()\\"
+\\"arg(S66); ph(S_6_6) cph()\\"
+\\"arg(S77); ph(S_7_7) cph()\\""
 color="4 7 12 21 9 10 17"
 dataset=-1
 unitx=1
