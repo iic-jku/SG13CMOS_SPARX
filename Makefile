@@ -180,14 +180,13 @@ klayout-lvs: ## Run KLayout LVS of the CELL cell (usage: make klayout-lvs [CELL=
 	mkdir -p $(LVS_RPT_DIR)
 	mkdir -p $(NET_LAY_DIR)
 	python3 $(PDK_ROOT)/$(PDK)/libs.tech/klayout/tech/lvs/run_lvs.py \
-		--layout=$(LAY_DIR)/$(CELL)_flat.gds \
+		--layout=$(LAY_DIR)/$(CELL).gds \
 		--netlist=$(NET_SCH_DIR)/$(CELL)_klayout.cdl \
 		--topcell=$(CELL) \
 		--run_dir=$(LVS_RPT_DIR) \
 		--run_mode=deep \
 		--disable_tap_extraction
-	mv $(LVS_RPT_DIR)/$(CELL)_flat_extracted.cir $(NET_LAY_DIR)/$(CELL)_klayout.cir
-	mv $(LVS_RPT_DIR)/$(CELL)_flat.lvsdb $(LVS_RPT_DIR)/$(CELL).lvsdb
+	mv $(LVS_RPT_DIR)/$(CELL)_extracted.cir $(NET_LAY_DIR)/$(CELL)_klayout.cir
 	sleep 4
 .PHONY: klayout-lvs
 
@@ -211,7 +210,7 @@ magic-lvs: ## Run Magic + Netgen LVS of the CELL cell (usage: make magic-lvs [CE
 	$(MAKE) magic-lvs-netlist CELL=$(CELL)
 	sak-lvs.sh -d -w $(LVS_RPT_DIR) -s $(NET_SCH_DIR)/$(CELL)_magic.spice -l $(LAY_DIR)/$(CELL).gds -c $(CELL)
 # 	Alternative using sak-lvs.sh for netlist export and LVS in one step (replaces magic-lvs-netlist target):
-# 	sak-lvs.sh -d -w $(LVS_RPT_DIR) -s $(SCH_DIR)/$(CELL).sch -l $(LAY_DIR)/$(CELL)_flat.gds -c $(CELL)
+# 	sak-lvs.sh -d -w $(LVS_RPT_DIR) -s $(SCH_DIR)/$(CELL).sch -l $(LAY_DIR)/$(CELL).gds -c $(CELL)
 	mv $(LVS_RPT_DIR)/$(CELL).ext.spc $(NET_LAY_DIR)/$(CELL)_magic.ext.spc
 	rm -f $(LVS_RPT_DIR)/$(CELL).sch.spc
 	rm -f $(LVS_RPT_DIR)/ext_$(CELL).tcl
@@ -270,16 +269,17 @@ klayout-pex: ## Run Parasitic Extraction with KPEX of the CELL cell (usage: make
 	--pdk $$PDK_UNDERSCORED \
 	--cell $(CELL) \
 	--schematic $(SCH_DIR)/$(CELL).sch \
-	--gds $(LAY_DIR)/$(CELL)_flat.gds \
+	--gds $(LAY_DIR)/$(CELL).gds \
 	--magic \
 	--magic_mode $$KPEX_MODE \
 	--out_dir $(NET_PEX_DIR) \
 	--out_spice $(NET_PEX_DIR)/$(CELL)_klayout_pex.spice
 #	--2.5D
 #	--mode $$KPEX_MODE
-	sed -i 's/$(CELL)_flat/$(CELL)_pex/g' $(NET_PEX_DIR)/$(CELL)_klayout_pex.spice
-	rm -rf $(NET_PEX_DIR)/$(CELL)_flat__$(CELL)
-	rm -f $(CELL)_flat.nodes $(CELL)_flat.sim
+	sed -i 's/$(CELL)/$(CELL)_pex/g' $(NET_PEX_DIR)/$(CELL)_klayout_pex.spice
+	rm -rf $(NET_PEX_DIR)/$(CELL)__$(CELL)
+	rm -f $(CELL).nodes $(CELL).sim $(NET_PEX_DIR)/$(CELL).nodes $(NET_PEX_DIR)/$(CELL).sim
+	rm -f $(NET_PEX_DIR)/$(CELL).ext $(NET_PEX_DIR)/$(CELL).res.ext
 	@if [ -f $(SCH_DIR)/$(CELL)_pex.sym ]; then \
 		echo "Reordering pins in $(CELL)_klayout_pex.spice to match $(CELL)_pex.sym..."; \
 		python3 $(NET_PEX_DIR)/reorder_spice_pins.py $(SCH_DIR)/$(CELL)_pex.sym $(NET_PEX_DIR)/$(CELL)_klayout_pex.spice; \
