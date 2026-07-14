@@ -68,6 +68,12 @@ FREQUENCY = args.frequency
 do_fill = not args.no_fill
 do_fill_m5 = not args.no_fill_m5
 
+# only the six-port RF core (no pads/fill) is exported for EM simulation;
+# the "160" in the name reflects the input/design frequency in GHz
+six_port_gds_filename = resolve_output_path(
+    f"verification/em/layout/sparx{FREQUENCY / 1e9:.0f}_core.gds"
+)
+
 # ============================================================
 # Design constants
 # ============================================================
@@ -2128,6 +2134,57 @@ connection_bpf_wpd = c.add_ref(
 connection_bpf_wpd.connect("e1", wpd_ref.ports["e1"])
 
 
+bandpass_filter = c.add_ref(
+    ihp.cells.hairpin_coupled_line_bandpass_filter(
+        frequency=f,
+        bandwidth=bandwidth,
+        order=order,
+        filter_type=filter_type,
+        ripple_dB=ripple_dB,
+        connection_length=connection_length_bpf,
+        signal_cross_section=signal_cross_section,
+        ground_cross_section=ground_cross_section,
+        Z0=Z0,
+        e_r=e_r,
+    )
+)
+
+bandpass_filter.connect("e1", connection_bpf_wpd.ports["e2"])
+
+
+# create blank Six-Port for em simulation
+six_port_blank = c.copy()
+
+port2 = six_port_blank.add_ref(gf.components.rectangle(size=(0.1, bandpass_filter.ports["e2"].width), layer=(201,0)))
+port2.center = (bandpass_filter.ports["e2"].center)
+port2.move((0.05,0))
+
+port2 = six_port_blank.add_ref(gf.components.rectangle(size=(0.1, blc_3_ref.ports["e2"].width), layer=(202,0)))
+port2.center = (blc_3_ref.ports["e2"].center)
+port2.move((-0.05,0))
+
+port3 = six_port_blank.add_ref(gf.components.rectangle(size=(blc_1_ref.ports["e2"].width, 0.1), layer=(203,0)))
+port3.center = (blc_1_ref.ports["e2"].center)
+port3.move((0, -0.05))
+
+port4 = six_port_blank.add_ref(gf.components.rectangle(size=(blc_1_ref.ports["e3"].width, 0.1), layer=(204,0)))
+port4.center = (blc_1_ref.ports["e3"].center)
+port4.move((0, -0.05))
+
+port5 = six_port_blank.add_ref(gf.components.rectangle(size=(blc_2_ref.ports["e2"].width, 0.1), layer=(205,0)))
+port5.center = (blc_2_ref.ports["e2"].center)
+port5.move((0, 0.05))
+
+port6 = six_port_blank.add_ref(gf.components.rectangle(size=(blc_2_ref.ports["e3"].width, 0.1), layer=(206,0)))
+port6.center = (blc_2_ref.ports["e3"].center)
+port6.move((0, 0.05))
+
+port7 = six_port_blank.add_ref(gf.components.rectangle(size=(0.1, blc_3_ref.ports["e3"].width), layer=(207,0)))
+port7.center = (blc_3_ref.ports["e3"].center)
+port7.move((-0.05,0))
+
+# end Six-Port em
+
 connection_blc_r_termination = ihp.cells.straight(
     length=round(CONNECTION_LEN_TERM * freq_scale, 3),  # scales with frequency
     cross_section=signal_cross_section,
@@ -2137,6 +2194,8 @@ connection_blc_r_termination = ihp.cells.straight(
 )
 connection_blc_r_termination_ref = c.add_ref(connection_blc_r_termination)
 connection_blc_r_termination_ref.connect("e1", blc_3_ref.ports["e3"])
+
+
 
 via_m1_tm2 = ihp.cells.via_stack(
     top_layer="TopMetal2",
@@ -2190,22 +2249,7 @@ c.add_ref(
     )
 ).center = connection_r_termination_vss_ref.center
 
-bandpass_filter = c.add_ref(
-    ihp.cells.hairpin_coupled_line_bandpass_filter(
-        frequency=f,
-        bandwidth=bandwidth,
-        order=order,
-        filter_type=filter_type,
-        ripple_dB=ripple_dB,
-        connection_length=connection_length_bpf,
-        signal_cross_section=signal_cross_section,
-        ground_cross_section=ground_cross_section,
-        Z0=Z0,
-        e_r=e_r,
-    )
-)
 
-bandpass_filter.connect("e1", connection_bpf_wpd.ports["e2"])
 
 connection_bpd_pad = c.add_ref(
     ihp.cells.straight(
@@ -2912,5 +2956,14 @@ c.write_gds(top_gds_filename, with_metadata=False)
 c.show()
 
 pd.name = powdet_gds_filename.stem
-pd.show()
+# pd.show()
 pd.write_gds(powdet_gds_filename, with_metadata=False)
+
+
+
+
+# only Six-Port RF Structure for EM simulation
+
+# six_port_blank.show()
+six_port_blank.write_gds(six_port_gds_filename, with_metadata=False)
+
