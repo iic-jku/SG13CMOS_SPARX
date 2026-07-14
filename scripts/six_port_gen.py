@@ -2956,7 +2956,9 @@ c.write_gds(top_gds_filename, with_metadata=False)
 c.show()
 
 pd.name = powdet_gds_filename.stem
-# pd.show()
+pd.xmin = 0
+pd.ymin = 0
+pd.show()
 pd.write_gds(powdet_gds_filename, with_metadata=False)
 
 
