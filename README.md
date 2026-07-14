@@ -521,13 +521,10 @@ The following testbenches are simulated:
 - `sparx_bpf_le_tb_acsp_ngspice` / `sparx_bpf_le_tb_acsp_vacask`: bandpass filter LE model, AC S-parameter
 - `sparx_wpd_le_tb_acsp_ngspice` / `sparx_wpd_le_tb_acsp_vacask`: Wilkinson power divider LE model, AC S-parameter
 - `sparx_blc_le_tb_acsp_ngspice` / `sparx_blc_le_tb_acsp_vacask`: branch-line coupler LE model, AC S-parameter
-- `sparx_core_le_tb_acsp_ngspice`: six-port core LE model, AC S-parameter
-- `sparx_core_tb_acsp_ngspice`: six-port core EM S-parameter model, AC S-parameter
+- `sparx_core_le_tb_acsp_ngspice` / `sparx_core_le_tb_acsp_vacask`: six-port core LE model, AC S-parameter
+- `sparx_core_tb_acsp_ngspice` / `sparx_core_tb_acsp_vacask`: six-port core built from the BPF, WPD, and BLC LE models, AC S-parameter
 - `sparx_powdet_sbd_tb_ngspice`: SBD-based power detector (ngspice)
 - `sparx_powdet_sbd_tb_hb_vacask`: SBD-based power detector, harmonic balance (VACASK)
-
-> [!NOTE]
-> The VACASK counterparts of the two six-port core testbenches (`sparx_core_le_tb_acsp_vacask` and `sparx_core_tb_acsp_vacask`) are commented out in `sim-all` until their schematics are created.
 
 
 ### Build, Simulate, and Verify All

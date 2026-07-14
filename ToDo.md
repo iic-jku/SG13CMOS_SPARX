@@ -2,7 +2,6 @@
 
 - [ ] more testing: @simi1505
 - [ ] add regression test to IIC-OSIC-TOOLS repo
-- [ ] implement top-level VACASK testbench: @simi1505
 - [ ] add GitHub action for checking license headers
     - https://github.com/aesc-silicon/ElemRV/blob/main/.github/workflows/license-check.yaml
     - https://github.com/aesc-silicon/ElemRV/blob/main/REUSE.toml

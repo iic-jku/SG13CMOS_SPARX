@@ -434,9 +434,9 @@ sim-all: ## Run all Xschem testbench simulations (usage: make sim-all)
 	$(MAKE) sim-xschem TB=sparx_blc_le_tb_acsp_ngspice
 	$(MAKE) sim-xschem TB=sparx_blc_le_tb_acsp_vacask
 	$(MAKE) sim-xschem TB=sparx_core_le_tb_acsp_ngspice
-#	$(MAKE) sim-xschem TB=sparx_core_le_tb_acsp_vacask   # TODO: testbench schematic not yet created
+	$(MAKE) sim-xschem TB=sparx_core_le_tb_acsp_vacask
 	$(MAKE) sim-xschem TB=sparx_core_tb_acsp_ngspice
-#	$(MAKE) sim-xschem TB=sparx_core_tb_acsp_vacask      # TODO: testbench schematic not yet created
+	$(MAKE) sim-xschem TB=sparx_core_tb_acsp_vacask
 	$(MAKE) sim-xschem TB=sparx_powdet_sbd_tb_ngspice
 	$(MAKE) sim-xschem TB=sparx_powdet_sbd_tb_hb_vacask
 .PHONY: sim-all
