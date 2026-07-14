@@ -146,7 +146,6 @@ An overview of the open-source design flow for SPARX is shown below. The flow co
 │  │  ├─ sparx_powdet_sbd_klayout.cir
 │  │  └─ sparx_powdet_sbd_magic.ext.spc
 │  ├─ 📁 pex/
-│  │  ├─ reorder_spice_pins.py
 │  │  ├─ sparx_powdet_sbd_klayout_pex.spice
 │  │  └─ sparx_powdet_sbd_magic_pex.spice
 │  ├─ 📁 schematic/
@@ -190,6 +189,7 @@ An overview of the open-source design flow for SPARX is shown below. The flow co
 │  ├─ 📁 assets/
 │  ├─ lay2img.py
 │  ├─ make_gds.py
+│  ├─ reorder_spice_pins.py
 │  ├─ six_port_gen.py
 │  └─ sparx_powdet_sbd_circuit.ipynb
 ├─ 📁 sscs-ose-code-a-chip/

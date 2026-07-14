@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# SPDX-FileCopyrightText: 2025-2026 The SPARX Team
+# SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1
 """
 Reorder the .subckt pin list in a PEX SPICE file to match the pin order
 of an Xschem .sym symbol file.
