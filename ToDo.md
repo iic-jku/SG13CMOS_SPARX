@@ -1,11 +1,9 @@
 ## ToDo List
 
-- [ ] more testing: @simi1505
-- [ ] add regression test to IIC-OSIC-TOOLS repo
-- [ ] add GitHub action for checking license headers
+- [ ] add GitHub action for checking license headers: @simi1505
     - https://github.com/aesc-silicon/ElemRV/blob/main/.github/workflows/license-check.yaml
     - https://github.com/aesc-silicon/ElemRV/blob/main/REUSE.toml
-- [ ] top-level LVS (labels on `*_top.gds` missing): @simi1505 & @davkel99
 - [ ] Change DBU from 5 nm to 1 nm in code to fix KLayout LVS issue with `m` of SBD: @davkel99
+- [ ] top-level LVS (labels on `*_top.gds` missing): @simi1505 & @davkel99
 - [ ] Update GDSFactory IHP PDK `main` branch from `IHP-TO` branch: @davkel99
 - [ ] Clean up private repo and add SPARX as module: @davkel99
