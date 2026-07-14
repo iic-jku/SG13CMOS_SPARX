@@ -415,7 +415,7 @@ make magic-verify
 
 ### EM Simulation
 
-Runs full-wave electromagnetic (EM) simulation of the passive RF structures with AWS Palace. Each target programmatically generates the structure's GDS in `verification/em/layout/`, builds the Palace model, runs the EM solve, and writes the combined Touchstone S-parameter file to `verification/em/palace_model/`.
+Runs full-wave electromagnetic (EM) simulation of the passive RF structures with AWS Palace. Each target programmatically generates the structure's GDS in `verification/em/layout/`, builds the Palace model, runs the EM solve, and writes the combined Touchstone S-parameter files (raw and de-embedded) to `verification/em/palace_model/`. Use the `copy-sparam` target afterwards to copy the results to `verification/em/s-parameter/`.
 
 The following parameters are shared by all EM simulation targets:
 - `FREQ` sets the design frequency in GHz (default: `160`).
@@ -465,11 +465,24 @@ make view-em-sim FILE_NAME=blc_160GHz_50Ohm_TM2_M5_e_r_4_1.s4p
 The `FILE_NAME` parameter is the Touchstone file name including its extension (default: the BLC result for the current parameters).
 
 
+### Copy EM S-Parameter Results
+
+Copies both Touchstone files of an EM simulation run, the raw result and the de-embedded version (`*_deembedded.sNp`), from the Palace output folder `verification/em/palace_model/<name>_data/output/<name>/` to `verification/em/s-parameter/`, where the snp2le conversion expects them.
+
+- `SPARAM` is the EM run name, i.e. the GDS / Touchstone base name without extension (default: the BLC run for the current EM parameters).
+
+```sh
+make copy-sparam SPARAM=bpf_f_160GHz_bw_1GHz_sig_TM2_gnd_M5_z0_50Ohm_er_4_1_butter_ord_3
+make copy-sparam SPARAM=wpd_160GHz_50Ohm_TM2_M5_e_r_4_1_config_U
+make copy-sparam SPARAM=blc_160GHz_50Ohm_TM2_M5_e_r_4_1
+```
+
+
 ### S-Parameter to Lumped Element Netlist Conversion
 
-Converts an S-parameter Touchstone file into a lumped element (LE) netlist with [snp2le](https://github.com/iic-jku/snp2le). The conversion performs a universal rational fit of the given order and writes a passivity-enforced `.subckt` model that can be resimulated in place of the full EM S-parameter model.
+Converts an S-parameter Touchstone file into a lumped element (LE) netlist with [snp2le](https://github.com/iic-jku/snp2le). The conversion performs a universal rational fit of the given order and writes a passivity-enforced `.subckt` model that can be resimulated in place of the full EM S-parameter model. The de-embedded EM results (`*_deembedded.sNp`, see `copy-sparam`) are always used as input.
 
-- `SNP` is the input Touchstone file (default: the BPF EM result `verification/em/s-parameter/bpf_f_160GHz_bw_1GHz_sig_TM2_gnd_M5_z0_50Ohm_er_4_1_butter_ord_3.s2p`).
+- `SNP` is the input Touchstone file (default: the de-embedded BPF EM result `verification/em/s-parameter/bpf_f_160GHz_bw_1GHz_sig_TM2_gnd_M5_z0_50Ohm_er_4_1_butter_ord_3_deembedded.s2p`).
 - `ORDER` sets the maximum model order (number of poles) of the universal fit (default: `13`).
 - `LE_FORMAT` selects the output dialect: `spice` (ngspice, `.spice`) or `spectre` (VACASK, `.inc`) (default: `spice`).
 - `LE_OUT` sets the output netlist path, which also names the `.subckt` (default: `netlist/spice/sparx_bpf_le.spice`). If set to an empty value, it falls back to `netlist/spice/<name>_le.spice` for `spice` or `netlist/spectre/<name>_le.inc` for `spectre`, where `<name>` is the input file name without its Touchstone extension.
@@ -477,10 +490,10 @@ Converts an S-parameter Touchstone file into a lumped element (LE) netlist with 
 Running `make snp2le` without arguments reproduces the BPF conversion (first example below). The commands used to generate the LE netlists in `netlist/spice/` are:
 
 ```sh
-make snp2le SNP=verification/em/s-parameter/bpf_f_160GHz_bw_1GHz_sig_TM2_gnd_M5_z0_50Ohm_er_4_1_butter_ord_3.s2p ORDER=13 LE_FORMAT=spice LE_OUT=netlist/spice/sparx_bpf_le.spice
-make snp2le SNP=verification/em/s-parameter/wpd_160GHz_50Ohm_TM2_M5_e_r_4_1_config_U.s3p ORDER=10 LE_FORMAT=spice LE_OUT=netlist/spice/sparx_wpd_le.spice
-make snp2le SNP=verification/em/s-parameter/blc_160GHz_50Ohm_TM2_M5_e_r_4_1.s4p ORDER=6 LE_FORMAT=spice LE_OUT=netlist/spice/sparx_blc_le.spice
-make snp2le SNP=verification/em/s-parameter/sparx160_core.s7p ORDER=24 LE_FORMAT=spice LE_OUT=netlist/spice/sparx_core_le.spice
+make snp2le SNP=verification/em/s-parameter/bpf_f_160GHz_bw_1GHz_sig_TM2_gnd_M5_z0_50Ohm_er_4_1_butter_ord_3_deembedded.s2p ORDER=13 LE_FORMAT=spice LE_OUT=netlist/spice/sparx_bpf_le.spice
+make snp2le SNP=verification/em/s-parameter/wpd_160GHz_50Ohm_TM2_M5_e_r_4_1_config_U_deembedded.s3p ORDER=10 LE_FORMAT=spice LE_OUT=netlist/spice/sparx_wpd_le.spice
+make snp2le SNP=verification/em/s-parameter/blc_160GHz_50Ohm_TM2_M5_e_r_4_1_deembedded.s4p ORDER=6 LE_FORMAT=spice LE_OUT=netlist/spice/sparx_blc_le.spice
+make snp2le SNP=verification/em/s-parameter/sparx160_core_deembedded.s7p ORDER=24 LE_FORMAT=spice LE_OUT=netlist/spice/sparx_core_le.spice
 ```
 
 
@@ -524,15 +537,16 @@ Runs the complete design flow end to end:
 1. `build-top` — builds the PDK, generates the six-port layout, and renders the top-level GDS.
 2. Verification with KLayout and Magic+Netgen of the SBD-based power detector cell and the total top-level six-port (LVS / DRC / PEX).
 3. EM simulation of the passive RF structures with AWS Palace (`sim-bpf-em`, `sim-wpd-em`, `sim-blc-em`).
-4. S-parameter to lumped element netlist conversion with snp2le, in both SPICE and Spectre netlists, for the BPF, WPD, and BLC.
-5. All Xschem testbench simulations (`sim-all`).
+4. Copying of the raw and de-embedded EM S-parameter results to `verification/em/s-parameter/` (`copy-sparam` for BPF, WPD, and BLC).
+5. De-embedded S-parameter to lumped element netlist conversion with snp2le, in both SPICE and Spectre netlists, for the BPF, WPD, and BLC.
+6. All Xschem testbench simulations (`sim-all`).
 
 ```sh
 make all
 ```
 
 > [!NOTE]
-> This target runs the full-wave EM simulations and therefore has a long runtime. The snp2le conversions read the Touchstone files in `verification/em/s-parameter/`, which are the results of the EM simulation step.
+> This target runs the full-wave EM simulations and therefore has a long runtime. The snp2le conversions read the de-embedded Touchstone files in `verification/em/s-parameter/`, which are copied there from the Palace output by `copy-sparam`.
 
 ### Release
 
@@ -586,7 +600,8 @@ The following tools and flows are checked:
 | KLayout (GDS-to-image rendering) | `render-gds` (via `build-top`) |
 | Xschem netlisting, Magic + Netgen LVS, Magic DRC, Magic PEX | `magic-verify CELL=sparx_powdet_sbd` |
 | GDSFactory + gds2palace meshing + AWS Palace EM solve | `sim-wpd-em` |
-| snp2le (S-parameter → lumped element, SPICE + Spectre) | `snp2le … wpd …` |
+| S-parameter result copy (raw + de-embedded) | `copy-sparam SPARAM=wpd_…` |
+| snp2le (de-embedded S-parameter → lumped element, SPICE + Spectre) | `snp2le … wpd_…_deembedded.s3p …` |
 | Xschem netlisting + ngspice | `sim-xschem TB=sparx_bpf_le_tb_acsp_ngspice` |
 | Xschem netlisting + VACASK | `sim-xschem TB=sparx_bpf_le_tb_acsp_vacask` |
 
