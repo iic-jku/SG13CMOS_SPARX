@@ -3,6 +3,7 @@
 [![License: Solderpad Hardware License v2.1](https://img.shields.io/badge/License-Solderpad%20Hardware%20License%20v2.1-blue.svg)](LICENSE)
 [![Quarto Publish](https://github.com/iic-jku/SG13CMOS_SPARX/actions/workflows/quarto-publish.yml/badge.svg?branch=main)](https://github.com/iic-jku/SG13CMOS_SPARX/actions/workflows/quarto-publish.yml)
 [![Regression](https://github.com/iic-jku/SG13CMOS_SPARX/actions/workflows/regression.yml/badge.svg)](https://github.com/iic-jku/SG13CMOS_SPARX/actions/workflows/regression.yml)
+[![License Check](https://github.com/iic-jku/SG13CMOS_SPARX/actions/workflows/license-check.yml/badge.svg)](https://github.com/iic-jku/SG13CMOS_SPARX/actions/workflows/license-check.yml)
 [![Documentation](https://img.shields.io/badge/Documentation-online-orange?logo=quarto)](https://iic-jku.github.io/SG13CMOS_SPARX/index.html)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19654232.svg)](https://doi.org/10.5281/zenodo.19654232)
 
@@ -124,6 +125,7 @@ An overview of the open-source design flow for SPARX is shown below. The flow co
 📁 SG13CMOS_SPARX/
 ├─ 📁 .github/
 │  └─ 📁 workflows/
+│     ├─ license-check.yml
 │     ├─ quarto-publish.yml
 │     └─ regression.yml
 ├─ 📁 doc/
@@ -133,6 +135,9 @@ An overview of the open-source design flow for SPARX is shown below. The flow co
 │  ├─ index.qmd
 │  ├─ requirements.txt
 │  └─ Makefile
+├─ 📁 LICENSES/
+│  ├─ Apache-2.0.txt
+│  └─ SHL-2.1.txt
 ├─ 📁 layout/
 │  ├─ sparx60_top.gds
 │  ├─ ...
@@ -232,7 +237,8 @@ An overview of the open-source design flow for SPARX is shown below. The flow co
 ├─ CITATION.cff
 ├─ LICENSE
 ├─ Makefile
-└─ README.md
+├─ README.md
+└─ REUSE.toml
 ```
 
 

@@ -1,0 +1,71 @@
+version = 1
+
+# Files that cannot carry an SPDX header (data, figures, generated results)
+# are annotated here. Source files (Python scripts, Makefiles, workflows)
+# carry their own SPDX headers, so the license check still catches new
+# source files without licensing information.
+
+[[annotations]]
+path = [".gitattributes", ".gitignore", "CITATION.cff", "README.md", "ToDo.md"]
+SPDX-FileCopyrightText = "2025-2026 The SPARX Team"
+SPDX-License-Identifier = "Apache-2.0 WITH SHL-2.1"
+
+[[annotations]]
+path = ".claude/**"
+SPDX-FileCopyrightText = "2025-2026 The SPARX Team"
+SPDX-License-Identifier = "Apache-2.0 WITH SHL-2.1"
+
+[[annotations]]
+path = "doc/**"
+SPDX-FileCopyrightText = "2025-2026 The SPARX Team"
+SPDX-License-Identifier = "Apache-2.0 WITH SHL-2.1"
+
+[[annotations]]
+path = "layout/**"
+SPDX-FileCopyrightText = "2025-2026 The SPARX Team"
+SPDX-License-Identifier = "Apache-2.0 WITH SHL-2.1"
+
+[[annotations]]
+path = "measurements/**"
+SPDX-FileCopyrightText = "2025-2026 The SPARX Team"
+SPDX-License-Identifier = "Apache-2.0 WITH SHL-2.1"
+
+[[annotations]]
+path = "netlist/**"
+SPDX-FileCopyrightText = "2025-2026 The SPARX Team"
+SPDX-License-Identifier = "Apache-2.0 WITH SHL-2.1"
+
+[[annotations]]
+path = "release/**"
+SPDX-FileCopyrightText = "2025-2026 The SPARX Team"
+SPDX-License-Identifier = "Apache-2.0 WITH SHL-2.1"
+
+[[annotations]]
+path = "render/**"
+SPDX-FileCopyrightText = "2025-2026 The SPARX Team"
+SPDX-License-Identifier = "Apache-2.0 WITH SHL-2.1"
+
+[[annotations]]
+path = "schematic/**"
+SPDX-FileCopyrightText = "2025-2026 The SPARX Team"
+SPDX-License-Identifier = "Apache-2.0 WITH SHL-2.1"
+
+[[annotations]]
+path = ["scripts/assets/**", "scripts/*.ipynb"]
+SPDX-FileCopyrightText = "2025-2026 The SPARX Team"
+SPDX-License-Identifier = "Apache-2.0 WITH SHL-2.1"
+
+[[annotations]]
+path = "sscs-ose-code-a-chip/**"
+SPDX-FileCopyrightText = "2025-2026 The SPARX Team"
+SPDX-License-Identifier = "Apache-2.0 WITH SHL-2.1"
+
+[[annotations]]
+path = ["testbenches/*.sch", "testbenches/xschemrc", "testbenches/sim_range.inc", "testbenches/sim_range.spice", "testbenches/sim_data/**"]
+SPDX-FileCopyrightText = "2025-2026 The SPARX Team"
+SPDX-License-Identifier = "Apache-2.0 WITH SHL-2.1"
+
+[[annotations]]
+path = ["verification/drc/**", "verification/lvs/**", "verification/em/layout/**", "verification/em/palace_model/**", "verification/em/s-parameter/**", "verification/em/stackups/**"]
+SPDX-FileCopyrightText = "2025-2026 The SPARX Team"
+SPDX-License-Identifier = "Apache-2.0 WITH SHL-2.1"
