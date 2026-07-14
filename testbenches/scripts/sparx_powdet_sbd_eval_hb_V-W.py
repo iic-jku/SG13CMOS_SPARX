@@ -149,7 +149,7 @@ curves.append({'label': '1/2 slope (V ∝ √P)', 'slug': 'ref', 'x': p_ref, 'y'
 
 # Plot (log-log)
 fig, ax = plt.subplots(figsize=(8, 5), constrained_layout=True)
-fig.suptitle(f'Power Detector SBD — IF at {freq_if/1e9:.1f} GHz')
+fig.suptitle(f'Power Detector SBD - IF at {freq_if/1e9:.1f} GHz')
 
 for c in curves[:-1]:
 	ax.plot(c['x'], c['y'], 'o-', label=c['label'])

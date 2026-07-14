@@ -129,7 +129,7 @@ curves.append({'label': '1 dB/dB slope', 'slug': 'ref', 'x': a_rf_ref_db, 'y': r
 
 # Plot
 fig, ax = plt.subplots(figsize=(8, 5), constrained_layout=True)
-fig.suptitle(f'Power Detector SBD — IF at {freq_if/1e9:.1f} GHz')
+fig.suptitle(f'Power Detector SBD - IF at {freq_if/1e9:.1f} GHz')
 
 for c in curves[:-1]:
 	ax.plot(c['x'], c['y'], 'o-', label=c['label'])

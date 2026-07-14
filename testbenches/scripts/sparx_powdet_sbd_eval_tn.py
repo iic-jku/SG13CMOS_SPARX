@@ -195,7 +195,7 @@ else:
 
 # --- plot output-noise ASD ---
 fig, ax = plt.subplots(figsize=(8, 5), constrained_layout=True)
-fig.suptitle('Power Detector SBD — Output Noise (transient noise)')
+fig.suptitle('Power Detector SBD - Output Noise (transient noise)')
 ax.loglog(freqs[1:], asd[1:])
 ax.axvspan(f_lo, f_hi, color='tab:orange', alpha=0.15, label='video band')
 ax.set_xlabel('Frequency (Hz)')

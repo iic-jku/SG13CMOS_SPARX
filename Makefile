@@ -51,7 +51,7 @@ FILTER_TYPE ?= butter
 FILTER_ORDER ?= 3
 RIPPLE_DB ?= 3
 
-# Additional config parameter for wpd simulation (C or U)
+# Additional config parameter for the WPD simulation (C or U)
 # Override with: make sim-wpd-em FREQ=<GHz> SIGNAL_CROSS_SECTION=<metal> GROUND_CROSS_SECTION=<metal> Z0=<Ohms> E_R=<relative_permittivity> CONFIG=<config_name>
 CONFIG ?= U
 
@@ -72,7 +72,7 @@ ORDER ?= 13
 LE_FORMAT ?= spice
 LE_OUT ?= netlist/spice/sparx_bpf_le.spice
 
-# EM run name for the copy-sparam target (base name of the GDS / Touchstone files)
+# EM run name for the copy-sparam target (base name of the GDS/Touchstone files)
 # Override with: make copy-sparam SPARAM=<em_run_name>
 SPARAM ?= blc_$(FREQ)GHz_$(Z0)Ohm_$(SIGNAL_CROSS_SECTION)_$(GROUND_CROSS_SECTION)_e_r_$(subst .,_,$(E_R))
 
@@ -321,7 +321,7 @@ magic-verify: ## Verify the CELL cell with Magic (usage: make magic-verify [CELL
 
 
 # EM Simulation Targets
-sim-blc-em: ## Run EM simulation with BLC of the CELL cell (usage: make sim-blc-em [FREQ=<GHz>] [SIGNAL_CROSS_SECTION=<metal>] [GROUND_CROSS_SECTION=<metal>] [Z0=<Ohms>] [E_R=<e_r>])
+sim-blc-em: ## Run the BLC EM simulation with AWS Palace (usage: make sim-blc-em [FREQ=<GHz>] [SIGNAL_CROSS_SECTION=<metal>] [GROUND_CROSS_SECTION=<metal>] [Z0=<Ohms>] [E_R=<e_r>] [NP=<num_processors>])
 	BLC_GDS_FILENAME=blc_$(FREQ)GHz_$(Z0)Ohm_$(SIGNAL_CROSS_SECTION)_$(GROUND_CROSS_SECTION)_e_r_$(subst .,_,$(E_R)); \
 	. .venv/bin/activate && \
 		python3 $(EM_RPT_DIR)/scripts/sparx_blc_em_sim.py \
@@ -336,7 +336,7 @@ sim-blc-em: ## Run EM simulation with BLC of the CELL cell (usage: make sim-blc-
 		python3 $(PALACE_SCRIPTS_DIR)/combine_extend_snp.py
 .PHONY: sim-blc-em
 
-sim-wpd-em: ## Run EM simulation with WPD of the CELL cell (usage: make sim-wpd-em [FREQ=<GHz>] [SIGNAL_CROSS_SECTION=<metal>] [GROUND_CROSS_SECTION=<metal>] [Z0=<Ohms>] [E_R=<e_r>])
+sim-wpd-em: ## Run the WPD EM simulation with AWS Palace (usage: make sim-wpd-em [FREQ=<GHz>] [SIGNAL_CROSS_SECTION=<metal>] [GROUND_CROSS_SECTION=<metal>] [Z0=<Ohms>] [E_R=<e_r>] [CONFIG=<C|U>] [NP=<num_processors>])
 	WPD_GDS_FILENAME=wpd_$(FREQ)GHz_$(Z0)Ohm_$(SIGNAL_CROSS_SECTION)_$(GROUND_CROSS_SECTION)_e_r_$(subst .,_,$(E_R))_config_$(CONFIG); \
 	. .venv/bin/activate && \
 		python3 $(EM_RPT_DIR)/scripts/sparx_wpd_em_sim.py \
@@ -352,7 +352,7 @@ sim-wpd-em: ## Run EM simulation with WPD of the CELL cell (usage: make sim-wpd-
 		python3 $(PALACE_SCRIPTS_DIR)/combine_extend_snp.py
 .PHONY: sim-wpd-em
 
-sim-bpf-em: ## Run EM simulation with BPF of the CELL cell (usage: make sim-bpf-em [FREQ=<GHz>] [BANDWIDTH=<GHz>] [SIGNAL_CROSS_SECTION=<metal>] [GROUND_CROSS_SECTION=<metal>] [Z0=<Ohms>] [E_R=<e_r>] [FILTER_TYPE=<butter|cheby>] [FILTER_ORDER=<N>] [RIPPLE_DB=<dB>])
+sim-bpf-em: ## Run the BPF EM simulation with AWS Palace (usage: make sim-bpf-em [FREQ=<GHz>] [BANDWIDTH=<GHz>] [SIGNAL_CROSS_SECTION=<metal>] [GROUND_CROSS_SECTION=<metal>] [Z0=<Ohms>] [E_R=<e_r>] [FILTER_TYPE=<butter|cheby|ellip>] [FILTER_ORDER=<N>] [RIPPLE_DB=<dB>] [NP=<num_processors>])
 	BPF_FILTER_TYPE_LOWER=$$(echo "$(FILTER_TYPE)" | tr '[:upper:]' '[:lower:]'); \
 	if [ "$$BPF_FILTER_TYPE_LOWER" = "butter" ]; then \
 		RIPPLE_TAG=""; \
@@ -380,7 +380,7 @@ sim-bpf-em: ## Run EM simulation with BPF of the CELL cell (usage: make sim-bpf-
 # ================================================================================================
 
 
-# view the sim results of EM simulation
+# View EM Simulation Results Target
 FILE_NAME ?= blc_$(FREQ)GHz_$(Z0)Ohm_$(SIGNAL_CROSS_SECTION)_$(GROUND_CROSS_SECTION)_e_r_$(subst .,_,$(E_R)).s4p
 view-em-sim: ## View EM simulation results with s-parameter plots (usage: make view-em-sim FILE_NAME=<name_with_extension>)
 	cd $(EM_RPT_DIR)/palace_model && python3 ../scripts/plot_snp.py $$(find . -type f -name "$(FILE_NAME)")
@@ -442,7 +442,7 @@ sim-all: ## Run all Xschem testbench simulations (usage: make sim-all)
 # ================================================================================================
 
 
-all: ## Build, EM-simulate, extract LE models, run testbenches, and verify the TOP cell (usage: make all)
+all: ## Build, verify, EM-simulate, extract LE models, and run all testbenches (usage: make all)
 	$(MAKE) build-top
 # 	Verification
 #	$(MAKE) klayout-verify CELL=$(POWDET)

@@ -121,7 +121,7 @@ v_ref = 10 ** (np.log10(p_rf + 1e-30) + c_off)
 
 # --- plot transfer curve ---
 fig, ax = plt.subplots(figsize=(8, 5), constrained_layout=True)
-fig.suptitle(f'Power Detector SBD — Transfer Curve (RF {freq_rf/1e9:.0f} GHz)')
+fig.suptitle(f'Power Detector SBD - Transfer Curve (RF {freq_rf/1e9:.0f} GHz)')
 ax.loglog(p_rf, v_abs, 'o-', label='DC output')
 ax.loglog(p_rf, v_ref, 'k--', alpha=0.5, label='slope 1 (square law)')
 ax.set_xlabel(f'RF Input Power at {freq_rf/1e9:.0f} GHz (W, ref. {Z0:.0f} Ω)')

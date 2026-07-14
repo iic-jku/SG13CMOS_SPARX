@@ -469,7 +469,7 @@ The `FILE_NAME` parameter is the Touchstone file name including its extension (d
 
 Copies both Touchstone files of an EM simulation run, the raw result and the de-embedded version (`*_deembedded.sNp`), from the Palace output folder `verification/em/palace_model/<name>_data/output/<name>/` to `verification/em/s-parameter/`, where the snp2le conversion expects them.
 
-- `SPARAM` is the EM run name, i.e. the GDS / Touchstone base name without extension (default: the BLC run for the current EM parameters).
+- `SPARAM` is the EM run name, i.e. the GDS/Touchstone base name without extension (default: the BLC run for the current EM parameters).
 
 ```sh
 make copy-sparam SPARAM=bpf_f_160GHz_bw_1GHz_sig_TM2_gnd_M5_z0_50Ohm_er_4_1_butter_ord_3
@@ -518,13 +518,13 @@ make sim-all
 
 The following testbenches are simulated:
 
-- `sparx_bpf_le_tb_acsp_ngspice` / `sparx_bpf_le_tb_acsp_vacask` — bandpass filter LE model, AC S-parameter
-- `sparx_wpd_le_tb_acsp_ngspice` / `sparx_wpd_le_tb_acsp_vacask` — Wilkinson power divider LE model, AC S-parameter
-- `sparx_blc_le_tb_acsp_ngspice` / `sparx_blc_le_tb_acsp_vacask` — branch-line coupler LE model, AC S-parameter
-- `sparx_core_le_tb_acsp_ngspice` — six-port core LE model, AC S-parameter
-- `sparx_core_tb_acsp_ngspice` — six-port core EM S-parameter model, AC S-parameter
-- `sparx_powdet_sbd_tb_ngspice` — SBD-based power detector (ngspice)
-- `sparx_powdet_sbd_tb_hb_vacask` — SBD-based power detector, harmonic balance (VACASK)
+- `sparx_bpf_le_tb_acsp_ngspice` / `sparx_bpf_le_tb_acsp_vacask`: bandpass filter LE model, AC S-parameter
+- `sparx_wpd_le_tb_acsp_ngspice` / `sparx_wpd_le_tb_acsp_vacask`: Wilkinson power divider LE model, AC S-parameter
+- `sparx_blc_le_tb_acsp_ngspice` / `sparx_blc_le_tb_acsp_vacask`: branch-line coupler LE model, AC S-parameter
+- `sparx_core_le_tb_acsp_ngspice`: six-port core LE model, AC S-parameter
+- `sparx_core_tb_acsp_ngspice`: six-port core EM S-parameter model, AC S-parameter
+- `sparx_powdet_sbd_tb_ngspice`: SBD-based power detector (ngspice)
+- `sparx_powdet_sbd_tb_hb_vacask`: SBD-based power detector, harmonic balance (VACASK)
 
 > [!NOTE]
 > The VACASK counterparts of the two six-port core testbenches (`sparx_core_le_tb_acsp_vacask` and `sparx_core_tb_acsp_vacask`) are commented out in `sim-all` until their schematics are created.
@@ -534,8 +534,8 @@ The following testbenches are simulated:
 
 Runs the complete design flow end to end:
 
-1. `build-top` — builds the PDK, generates the six-port layout, and renders the top-level GDS.
-2. Verification with KLayout and Magic+Netgen of the SBD-based power detector cell and the total top-level six-port (LVS / DRC / PEX).
+1. `build-top` builds the PDK, generates the six-port layout, and renders the top-level GDS.
+2. Verification of the SBD-based power detector cell with Magic + Netgen LVS and Magic DRC, followed by Magic DRC and KLayout DRC of the top-level six-port.
 3. EM simulation of the passive RF structures with AWS Palace (`sim-bpf-em`, `sim-wpd-em`, `sim-blc-em`).
 4. Copying of the raw and de-embedded EM S-parameter results to `verification/em/s-parameter/` (`copy-sparam` for BPF, WPD, and BLC).
 5. De-embedded S-parameter to lumped element netlist conversion with snp2le, in both SPICE and Spectre netlists, for the BPF, WPD, and BLC.
@@ -575,7 +575,7 @@ make release VERSION=2.1.0
 
 ### Regression
 
-The `regression` target is the project's smoke test for the [IIC-OSIC-TOOLS](https://github.com/iic-jku/iic-osic-tools) environment. Its goal is to exercise **as many tools and flows** as possible with a short runtime. It is a tool/flow regression, not a design sign-off. It is self-contained: it builds the GDSFactory PDK add-on itself (via `build-top` → `build-pdk`), so it only needs the IIC-OSIC-TOOLS container.
+The `regression` target is the project's smoke test for the [IIC-OSIC-TOOLS](https://github.com/iic-jku/iic-osic-tools) environment. Its goal is to exercise **as many tools and flows** as possible with a short runtime. It is a tool/flow regression, not a design sign-off. The target is self-contained. It installs the GDSFactory PDK add-on itself (`build-top` runs `build-pdk` first), so a plain IIC-OSIC-TOOLS container is all it needs.
 
 ```sh
 make regression
@@ -585,10 +585,10 @@ This target also runs automatically in continuous integration: the [`regression`
 
 To keep the runtime low while still covering most of the toolchain, the regression makes the following trade-offs:
 
-- Only the small `sparx_powdet_sbd` power-detector cell is verified — not the full six-port top cell. Magic + Netgen LVS, Magic DRC, and Magic PEX are run; KLayout LVS/DRC/PEX is currently disabled.
+- Only the small `sparx_powdet_sbd` power-detector cell is verified, not the full six-port top cell. Magic + Netgen LVS, Magic DRC, and Magic PEX are run. KLayout LVS/DRC/PEX is currently disabled.
 - Of the three passive RF structures, only the Wilkinson power divider (WPD) is EM-simulated (with AWS Palace) and converted to a lumped-element netlist (SPICE and Spectre).
 - Only one ngspice and one VACASK testbench are simulated (the bandpass-filter AC S-parameter benches).
-- The layout is generated at a single frequency (160 GHz); no frequency sweep is run.
+- The layout is generated at a single frequency (160 GHz). No frequency sweep is run.
 - Top-level LVS is not run (work in progress).
 
 The following tools and flows are checked:
@@ -600,8 +600,8 @@ The following tools and flows are checked:
 | KLayout (GDS-to-image rendering) | `render-gds` (via `build-top`) |
 | Xschem netlisting, Magic + Netgen LVS, Magic DRC, Magic PEX | `magic-verify CELL=sparx_powdet_sbd` |
 | GDSFactory + gds2palace meshing + AWS Palace EM solve | `sim-wpd-em` |
-| S-parameter result copy (raw + de-embedded) | `copy-sparam SPARAM=wpd_…` |
-| snp2le (de-embedded S-parameter → lumped element, SPICE + Spectre) | `snp2le … wpd_…_deembedded.s3p …` |
+| S-parameter result copy (raw + de-embedded) | `copy-sparam SPARAM=wpd_...` |
+| snp2le (de-embedded S-parameter to lumped element, SPICE + Spectre) | `snp2le SNP=..._deembedded.s3p ...` |
 | Xschem netlisting + ngspice | `sim-xschem TB=sparx_bpf_le_tb_acsp_ngspice` |
 | Xschem netlisting + VACASK | `sim-xschem TB=sparx_bpf_le_tb_acsp_vacask` |
 
