@@ -20,6 +20,7 @@ venv/
 /sscs-ose-code-a-chip/magic
 /schematic/simulations
 /testbenches/simulations
+/testbenches/archive
 /doc/.quarto/
 /doc/_site/
 /doc/videos/sparx_gen_60ghz_to_300ghz_orig.mp4
