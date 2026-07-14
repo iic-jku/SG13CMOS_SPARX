@@ -535,7 +535,7 @@ The following testbenches are simulated:
 Runs the complete design flow end to end:
 
 1. `build-top` builds the PDK, generates the six-port layout, and renders the top-level GDS.
-2. Verification of the SBD-based power detector cell with Magic + Netgen LVS and Magic DRC, followed by Magic DRC and KLayout DRC of the top-level six-port.
+2. Verification of the SBD-based power detector cell with Magic + Netgen LVS, Magic and KLayout DRC and Magic PEX, followed by Magic DRC and KLayout DRC of the top-level six-port.
 3. EM simulation of the passive RF structures with AWS Palace (`sim-bpf-em`, `sim-wpd-em`, `sim-blc-em`).
 4. Copying of the raw and de-embedded EM S-parameter results to `verification/em/s-parameter/` (`copy-sparam` for BPF, WPD, and BLC).
 5. De-embedded S-parameter to lumped element netlist conversion with snp2le, in both SPICE and Spectre netlists, for the BPF, WPD, and BLC.

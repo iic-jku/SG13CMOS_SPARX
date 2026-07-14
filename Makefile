@@ -447,13 +447,12 @@ all: ## Build, verify, EM-simulate, extract LE models, and run all testbenches (
 	$(MAKE) build-top
 # 	Verification
 #	$(MAKE) klayout-verify CELL=$(POWDET)
-#	$(MAKE) magic-verify CELL=$(POWDET)
+	$(MAKE) klayout-drc CELL=$(POWDET)
+	$(MAKE) magic-verify CELL=$(POWDET)
 #	$(MAKE) klayout-verify
-#	$(MAKE) magic-verify
-	$(MAKE) magic-lvs CELL=$(POWDET)
-	$(MAKE) magic-drc CELL=$(POWDET)
-	$(MAKE) magic-drc
 	$(MAKE) klayout-drc
+#	$(MAKE) magic-verify
+	$(MAKE) magic-drc
 # 	EM simulation of the passive RF structures (BPF, WPD, BLC)
 	$(MAKE) sim-bpf-em
 	$(MAKE) sim-wpd-em
