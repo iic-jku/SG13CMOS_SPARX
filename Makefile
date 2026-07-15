@@ -121,7 +121,7 @@ help: ## Show this help message
 # Build Targets
 build-pdk: ## Clone & install the IHP-Open-PDK repository with GDSFactory cells (usage: make build-pdk)
 	rm -rf IHP/
-	git clone -b main https://github.com/iic-jku/IHP.git
+	git clone -b main https://github.com/iic-jku/IHP-GDSFactory-Addon.git IHP
 	rm -rf .venv/
 	/usr/bin/python3 -m venv --system-site-packages .venv
 	. .venv/bin/activate && cd IHP && pip install .
