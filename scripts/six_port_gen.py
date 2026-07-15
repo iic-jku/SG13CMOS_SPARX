@@ -978,6 +978,7 @@ def powdet_sbd() -> gf.Component:
     via_gat_m3.ports["bottom"].orientation = 90
     via_gat_m3.ports["top"].orientation = 270  # turn top port for later connection
     gate_ports = m1_3.get_ports_list(layer=ihp.tech.LAYER.GatPolydrawing)
+    gate_ports.sort(key=lambda p: p.center[0])  # left to right, so list indices match the G_ numbering
     gate_straight = ihp.cells.straight(
         length=GATE_EXTENSION_NMOS, cross_section="gatpoly_routing", width=GATE_LENGTH  # gate poly width
     )
@@ -998,8 +999,8 @@ def powdet_sbd() -> gf.Component:
 
     # connect gates 1 and 24 with metal1 to ground
     via_gat_m2.ports["top"].orientation = 0
-    start_point = gate_via_refs_nmos[0].ports["top"].center[0]
-    end_point = m1_3.ports["DS_29"].center[0]
+    start_point = gate_via_refs_nmos[23].ports["top"].center[0]  # G_24's via
+    end_point = m1_3.ports["DS_29"].center[0]  # right guard-ring tap
     straight_ref = m1_3.add_ref(
         ihp.cells.straight(
             length=abs(end_point - start_point),
@@ -1007,7 +1008,7 @@ def powdet_sbd() -> gf.Component:
             width=1.11,  # manual measure of the height of the via
         )
     )
-    straight_ref.connect("e1", gate_via_refs_nmos[0].ports["top"], allow_width_mismatch=True, allow_layer_mismatch=True)
+    straight_ref.connect("e1", gate_via_refs_nmos[23].ports["top"], allow_width_mismatch=True, allow_layer_mismatch=True)
     via_m1_m2 = ihp.cells.via_stack(
         top_layer="Metal2",
         bottom_layer="Metal1",
@@ -1026,7 +1027,7 @@ def powdet_sbd() -> gf.Component:
         )
     )
     straight_ref.connect(
-        "e1", gate_via_refs_nmos[23].ports["top"], allow_width_mismatch=True, allow_layer_mismatch=True
+        "e1", gate_via_refs_nmos[0].ports["top"], allow_width_mismatch=True, allow_layer_mismatch=True
     )
     via_m1_m2_ref = m1_3.add_ref(via_m1_m2)
     via_m1_m2_ref.connect("top", straight_ref.ports["e2"], allow_width_mismatch=True, allow_layer_mismatch=True)
@@ -1064,20 +1065,18 @@ def powdet_sbd() -> gf.Component:
     )  # align with the via of the first M3 gate
 
     # connect source to GND
-    m1_3_ds_ports = m1_3.get_ports_list(layer=ihp.tech.LAYER.Metal1drawing)
-    m1_3_source_ports = []
-    m1_3_drain_ports = []
-    for i in range(3, len(m1_3_ds_ports) - 1):  # filter out unwanted ports
-        if i == 3 or i == len(m1_3_ds_ports) - 2 or i % 2 == 0:
-            m1_3_source_ports.append(m1_3_ds_ports[i])
-        else:
-            m1_3_drain_ports.append(m1_3_ds_ports[i])
+    # Source and drain fingers by their deterministic left-to-right port names
+    # (DS_ ports are renumbered by position in the IHP PDK, so these lists are
+    # stable across tool versions). DS_15 is the center column that also holds
+    # the shortened drain via stack.
+    m1_3_source_ports = [m1_3.ports[f"DS_{i}"] for i in (2, 3, 5, 7, 9, 11, 13, 17, 19, 21, 23, 25, 27, 28)]
+    m1_3_drain_ports = [m1_3.ports[f"DS_{i}"] for i in (4, 6, 8, 10, 12, 15, 18, 20, 22, 24, 26)]
 
     # source ground connection
     source_straight = ihp.cells.straight(
-        length=abs(
-            m1_3.ports["DS_1"].center[1] - m1_3.ports["DS_27"].center[1]
-        ),  # any source port to the the center of the top guardring segment
+        length=3.28,  # source finger to the center of the top guardring segment
+        # (was |DS_1.y - DS_27.y| under the old port enumeration; those
+        # guard-rail pin ports are no longer emitted as ports)
         cross_section="metal2_routing",
         width=0.26,  # manual measure of the height of the via
     )
@@ -1108,7 +1107,8 @@ def powdet_sbd() -> gf.Component:
 
     drain_via_refs_nmos = []
     for p in m1_3_drain_ports:
-        if p.name in ["DS_13"]:
+        p.orientation = 90  # orient ports to face the top
+        if p.name in ["DS_15"]:  # center drain column (x = 6.27), gets the shortened stack
             via_m1_m4_short = ihp.cells.via_stack(
                 top_layer="Metal4",
                 bottom_layer="Metal1",
@@ -1135,11 +1135,12 @@ def powdet_sbd() -> gf.Component:
         width=2,  # manual measure of the height of the via
     )
     straight_drain_connection_ref = m1_3.add_ref(straight_drain_connection)
-    straight_drain_connection_ref.xmin = drain_via_refs_nmos[-1].center[0]
-    straight_drain_connection_ref.ymin = drain_via_refs_nmos[-1].center[1]
+    straight_drain_connection_ref.xmin = drain_via_refs_nmos[0].center[0]  # leftmost drain via
+    straight_drain_connection_ref.ymin = drain_via_refs_nmos[0].center[1]
 
-    m1_3.add_ports(gate_via_refs_nmos[17].ports, prefix="gate_M1_")
-    m1_3.add_port(name="drain_connection_M1", port=drain_via_refs_nmos[2].ports["top"])
+    m1_3.add_ports(gate_via_refs_nmos[6].ports, prefix="gate_M1_")  # G_7's via
+    m1_3.ports["DS_16"].orientation = 90  # so the top-level vdd via stack connects unrotated
+    m1_3.add_port(name="drain_connection_M1", port=drain_via_refs_nmos[8].ports["top"])  # DS_22 column (x = 9.33)
     m1_3.add_port(name="drain_connection_M3", port=drain_via_refs_nmos[5].ports["top"])
     m1_3.add_port(
         name="gate_connection_M3",
@@ -1166,15 +1167,16 @@ def powdet_sbd() -> gf.Component:
 
     m2_4.locked = False
     gate_ports = m2_4.get_ports_list(layer=ihp.tech.LAYER.GatPolydrawing)
+    gate_ports.sort(key=lambda p: p.center[0])  # left to right, so list indices match the G_ numbering
     gate_straight = ihp.cells.straight(
         length=GATE_EXTENSION_PMOS, cross_section="gatpoly_routing", width=GATE_LENGTH  # gate poly width
     )
     gate_via_refs_pmos = []
     for i, p in enumerate(gate_ports):
         p.orientation += 180  # orient gates to face downwards for easier connection to nmos gates
-        if p.name in ["G_1", "G_25"]:  # these gates will be connected to metal1
+        if p.name in ["G_1", "G_24"]:  # these gates will be connected to metal1
             gate_via_refs_pmos.append(m2_4.add_ref(via_gat_m2))
-        elif p.name in ["G_13", "G_14"]:  # these gates will be connected to metal2
+        elif p.name in ["G_12", "G_13"]:  # these gates will be connected to metal2
             gate_via_refs_pmos.append(m2_4.add_ref(via_gat_m2))
         else:  # all others to metal3
             gate_via_refs_pmos.append(m2_4.add_ref(via_gat_m3))
@@ -1184,13 +1186,10 @@ def powdet_sbd() -> gf.Component:
             "bottom", gate_straight_ref.ports["e2"], allow_width_mismatch=True, allow_layer_mismatch=True
         )
 
-    ## Gate numbers are shifted by 1 after G1, e.g. G1 G3 G4 G5 ... don't know why...
-    ## Similar for DS: DS1 DS3 DS5 DS6 DS7 ... maybe guard rings are interfering
-    ## even though they are disabled
     # connect gates 1 and 24 with metal1 to ground
     via_gat_m2.ports["top"].orientation = 180
-    start_point = gate_via_refs_pmos[0].ports["top"].center[0]
-    end_point = m2_4.ports["DS_31"].center[0]
+    start_point = gate_via_refs_pmos[23].ports["top"].center[0]  # G_24's via
+    end_point = m2_4.ports["DS_29"].center[0]  # right guard-ring tap
     straight_ref = m2_4.add_ref(
         ihp.cells.straight(
             length=abs(end_point - start_point),
@@ -1199,7 +1198,7 @@ def powdet_sbd() -> gf.Component:
         )
     )
 
-    straight_ref.connect("e1", gate_via_refs_pmos[0].ports["top"], allow_width_mismatch=True, allow_layer_mismatch=True)
+    straight_ref.connect("e1", gate_via_refs_pmos[23].ports["top"], allow_width_mismatch=True, allow_layer_mismatch=True)
     via_m1_m2 = ihp.cells.via_stack(
         top_layer="Metal2",
         bottom_layer="Metal1",
@@ -1212,7 +1211,7 @@ def powdet_sbd() -> gf.Component:
     straight_ref.connect("e2", via_m1_m2_ref.ports["top"], allow_width_mismatch=True, allow_layer_mismatch=True)
 
     via_gat_m2.ports["bottom"].orientation = 0
-    straight_ref.connect("e1", gate_via_refs_pmos[0].ports["top"], allow_width_mismatch=True, allow_layer_mismatch=True)
+    straight_ref.connect("e1", gate_via_refs_pmos[23].ports["top"], allow_width_mismatch=True, allow_layer_mismatch=True)
     straight_ref = m2_4.add_ref(
         ihp.cells.straight(
             length=abs(end_point - start_point),
@@ -1221,15 +1220,15 @@ def powdet_sbd() -> gf.Component:
         )
     )
     straight_ref.connect(
-        "e1", gate_via_refs_pmos[23].ports["bottom"], allow_width_mismatch=True, allow_layer_mismatch=True
+        "e1", gate_via_refs_pmos[0].ports["bottom"], allow_width_mismatch=True, allow_layer_mismatch=True
     )
 
     via_m1_m2_ref = m2_4.add_ref(via_m1_m2)
     via_m1_m2_ref.connect("top", straight_ref.ports["e2"], allow_width_mismatch=True, allow_layer_mismatch=True)
 
     # connect Gates 2-11 and 14-23 (20 gates) together with metal3
-    start_point = m2_4.ports["G_3"].center
-    end_point = m2_4.ports["G_24"].center
+    start_point = m2_4.ports["G_2"].center
+    end_point = m2_4.ports["G_23"].center
     straight_ref = m2_4.add_ref(
         ihp.cells.straight(
             length=abs(end_point[0] - start_point[0]),
@@ -1245,8 +1244,8 @@ def powdet_sbd() -> gf.Component:
     )  # align with the via of the first M1 gate
 
     # connect Gates 12-13 (2 gates) together with metal2
-    start_point = m2_4.ports["G_13"].center
-    end_point = m2_4.ports["G_14"].center
+    start_point = m2_4.ports["G_12"].center
+    end_point = m2_4.ports["G_13"].center
     straight_ref = m2_4.add_ref(
         ihp.cells.straight(
             length=abs(end_point[0] - start_point[0]),
@@ -1260,20 +1259,16 @@ def powdet_sbd() -> gf.Component:
     )  # align with the via of the first M3 gate
 
     # connect source to vdd
-    m2_4_ds_ports = m2_4.get_ports_list(layer=ihp.tech.LAYER.Metal1drawing)
-    m2_4_source_ports = []
-    m2_4_drain_ports = []
-    for i in range(3, len(m2_4_ds_ports) - 1):  # filter out unwanted ports
-        if i == 3 or i == len(m2_4_ds_ports) - 2 or i % 2 == 0:
-            m2_4_source_ports.append(m2_4_ds_ports[i])
-        else:
-            m2_4_drain_ports.append(m2_4_ds_ports[i])
+    # Source and drain fingers by their deterministic left-to-right port names
+    # (same column assignment as the nmos above).
+    m2_4_source_ports = [m2_4.ports[f"DS_{i}"] for i in (2, 3, 5, 7, 9, 11, 13, 17, 19, 21, 23, 25, 27, 28)]
+    m2_4_drain_ports = [m2_4.ports[f"DS_{i}"] for i in (4, 6, 8, 10, 12, 15, 18, 20, 22, 24, 26)]
 
     # source vdd connection
     source_straight = ihp.cells.straight(
-        length=abs(
-            m2_4.ports["DS_1"].center[1] - m2_4.ports["DS_29"].center[1]
-        ),  # any source port to the the center of the top guardring segment
+        length=4.66,  # source finger to the center of the top guardring segment
+        # (was |DS_1.y - DS_29.y| under the old port enumeration; those
+        # guard-rail pin ports are no longer emitted as ports)
         cross_section="metal2_routing",
         width=0.26,  # manual measure of the height of the via
     )
@@ -1303,7 +1298,8 @@ def powdet_sbd() -> gf.Component:
     )
     drain_via_refs_pmos = []
     for p in m2_4_drain_ports:
-        if p.name in ["DS_15"]:
+        p.orientation = 90  # orient ports to face the top
+        if p.name in ["DS_15"]:  # center drain column (x = 6.27), gets the shortened stack
             via_m1_m4_short = ihp.cells.via_stack(
                 top_layer="Metal4",
                 bottom_layer="Metal1",
@@ -1330,11 +1326,11 @@ def powdet_sbd() -> gf.Component:
         width=2.61,  #  manual measurement
     )
     straight_drain_connection_ref = m2_4.add_ref(straight_drain_connection)
-    straight_drain_connection_ref.xmin = drain_via_refs_pmos[-1].center[0]
-    straight_drain_connection_ref.ymin = drain_via_refs_pmos[-1].ymin
+    straight_drain_connection_ref.xmin = drain_via_refs_pmos[0].center[0]  # leftmost drain via
+    straight_drain_connection_ref.ymin = drain_via_refs_pmos[0].ymin
 
-    m2_4.add_ports(gate_via_refs_pmos[17].ports, prefix="gate_M2_")
-    m2_4.add_port(name="drain_connection_M2", port=drain_via_refs_pmos[2].ports["top"])
+    m2_4.add_ports(gate_via_refs_pmos[6].ports, prefix="gate_M2_")  # G_7's via
+    m2_4.add_port(name="drain_connection_M2", port=drain_via_refs_pmos[8].ports["top"])  # DS_22 column (x = 9.33)
     m2_4.add_port(name="drain_connection_M4", port=drain_via_refs_pmos[5].ports["top"])
     m2_4.add_port(
         name="gate_connection_M4",
@@ -1401,7 +1397,7 @@ def powdet_sbd() -> gf.Component:
 
     xr4 = ihp.cells.rppd(width=RPPD_WIDTH, length=RPPD_LENGTH)
     xr4_ref = c_output.add_ref(xr4).rotate(90)
-    xr4_ref.center = m1_3_ref.ports["DS_15"].center
+    xr4_ref.center = m1_3_ref.ports["DS_18"].center
     xr4_ref.movex(0.01)  # manual measurement to align with the gate connection
     xr4_ref.ymax = m1_3_ref.ymin - 2  # manual measurement to set the spacing between the nmos and the resistors
 
@@ -1695,7 +1691,7 @@ def powdet_sbd() -> gf.Component:
     via_m1_m5.ports["bottom"].orientation = 0
     via_m1_m5_ref = c.add_ref(via_m1_m5)
     via_m1_m5_ref.connect(
-        "bottom", output_stage_ref.ports["M1_DS_27"], allow_width_mismatch=True, allow_layer_mismatch=True
+        "bottom", output_stage_ref.ports["M1_DS_16"], allow_width_mismatch=True, allow_layer_mismatch=True
     )
 
     # connect nmos source/bulk to vdd
@@ -1710,11 +1706,11 @@ def powdet_sbd() -> gf.Component:
     via_m1_tm1.ports["bottom"].orientation = 90
     via_m1_tm1_ref = c.add_ref(via_m1_tm1)
     via_m1_tm1_ref.connect(
-        "bottom", output_stage_ref.ports["M2_DS_28"], allow_width_mismatch=True, allow_layer_mismatch=True
+        "bottom", output_stage_ref.ports["M2_DS_14"], allow_width_mismatch=True, allow_layer_mismatch=True
     )
 
     tm1_straight = ihp.cells.straight(
-        length=abs(output_stage_ref.ports["M2_DS_28"].center[0] - c3_ref.ports["MC_T_4_1"].center[0]),
+        length=abs(output_stage_ref.ports["M2_DS_14"].center[0] - c3_ref.ports["MC_T_4_1"].center[0]),
         cross_section="topmetal1_routing",
         width=2,  # manual measurement to align with the via
     )
