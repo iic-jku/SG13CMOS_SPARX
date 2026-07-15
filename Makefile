@@ -447,11 +447,10 @@ sim-all: ## Run all Xschem testbench simulations (usage: make sim-all)
 all: ## Build, verify, EM-simulate, extract LE models, and run all testbenches (usage: make all)
 	$(MAKE) build-top
 # 	Verification
-#	$(MAKE) klayout-verify CELL=$(POWDET)
-	$(MAKE) klayout-drc CELL=$(POWDET)
+	$(MAKE) klayout-verify CELL=$(POWDET)
 	$(MAKE) magic-verify CELL=$(POWDET)
 #	$(MAKE) klayout-verify
-	$(MAKE) klayout-drc
+#	$(MAKE) klayout-drc
 #	$(MAKE) magic-verify
 	$(MAKE) magic-drc
 # 	EM simulation of the passive RF structures (BPF, WPD, BLC)
