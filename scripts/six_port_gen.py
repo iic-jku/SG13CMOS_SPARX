@@ -2040,6 +2040,7 @@ connection_length_wpd = 0  # length of the connection piece of the wilkinson pow
 connection_length_bpf_wpd = (
     wavelength_4 * 3.5 / 5
 )  # length of the connection piece between the branch line couplers and the rest of the circuit
+connection_length_bpf_wpd = connection_length_bpf_wpd - (connection_length_bpf_wpd % (ihp.tech.nm))  # snap to grid
 
 # branch line coupler parameters
 connection_length_blc = 0  # length of the connection piece between the branch line couplers and the rest of the circuit
@@ -2105,7 +2106,7 @@ connection_length_wpd_blc_one_leg = (
 
 
 connection_wpd_blc = ihp.cells.tline(
-    length=connection_length_wpd_blc_one_leg / 2,
+    length= (connection_length_wpd_blc_one_leg / 2) - ((connection_length_wpd_blc_one_leg / 2) % (ihp.tech.nm)) + ihp.tech.nm,  # snap to grid
     signal_cross_section=signal_cross_section,
     ground_cross_section=ground_cross_section,
     Z0=Z0,
@@ -2723,8 +2724,10 @@ route_pd4_vref = gf.routing.route_bundle_electrical(
 sealring_margin = SEALRING_MARGIN  # margin around circuit for sealring
 sealring_width = round(c.xsize + 2 * sealring_margin)
 sealring_height = round(c.ysize + 2 * sealring_margin)
+
 print(f"Sealring: {sealring_width} x {sealring_height} um (freq_scale={freq_scale:.2f})")
-sealring_center = c.center  # save before adding more refs
+
+sealring_center =  c.center # save before adding more refs
 c.add_ref(ihp.cells.sealring(width=sealring_width, height=sealring_height)).center = sealring_center
 
 # JKU logo — lower right corner, relative to right chip edge, just above south pads
@@ -2953,12 +2956,12 @@ c.ymin = 0
 c.move((-25, -25))
 
 c.write_gds(top_gds_filename, with_metadata=False)
-c.show()
+# c.show()
 
 pd.name = powdet_gds_filename.stem
 pd.xmin = 0
 pd.ymin = 0
-pd.show()
+# pd.show()
 pd.write_gds(powdet_gds_filename, with_metadata=False)
 
 
@@ -2967,5 +2970,8 @@ pd.write_gds(powdet_gds_filename, with_metadata=False)
 # only Six-Port RF Structure for EM simulation
 
 # six_port_blank.show()
+six_port_blank.xmin = 0
+six_port_blank.ymin = 0
 six_port_blank.write_gds(six_port_gds_filename, with_metadata=False)
+six_port_blank.show()
 
