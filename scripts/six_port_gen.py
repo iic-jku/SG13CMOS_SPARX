@@ -1976,8 +1976,17 @@ def powdet_sbd() -> gf.Component:
     gf.add_pins.add_pin_rectangle(c, port=vdd_port, layer=ihp.tech.LAYER.TopMetal1pin)
 
     # No-fill exclusion zones for each metal layer
-    c.center = (0, 0)
-    c.add_ref(gf.components.rectangle(size=(c.xsize + 2, c.ysize + 2), layer=ihp.tech.LAYER.Activnofill, centered=True))
+    c.xmin = 0
+    c.ymin = 0
+    c_center = c.center
+    size_nofill_x = round(c.xsize,2)
+    size_nofill_y = round(c.ysize,2)
+    print(f"size_nofill_x: {size_nofill_x}, size_nofill_y: {size_nofill_y}")
+    nofill = c.add_ref(gf.components.rectangle(size=(size_nofill_x + 2, size_nofill_y + 2), layer=ihp.tech.LAYER.Activnofill))
+    nofill.center = c_center
+    nofill.xmin = snap_to_grid(nofill.xmin)
+    nofill.ymin = snap_to_grid(nofill.ymin)
+    
     for nofill_layer in [
         ihp.tech.LAYER.GatPolynofill,
         ihp.tech.LAYER.Metal1nofill,
@@ -1985,8 +1994,13 @@ def powdet_sbd() -> gf.Component:
         ihp.tech.LAYER.Metal3nofill,
         ihp.tech.LAYER.Metal4nofill,
     ]:
-        c.add_ref(gf.components.rectangle(size=(c.xsize, c.ysize), layer=nofill_layer, centered=True))
-
+        nofill = c.add_ref(gf.components.rectangle(size=(size_nofill_x, size_nofill_y), layer=nofill_layer, centered=True))
+        # snap to grid
+        nofill.center = c_center
+        nofill.xmin = snap_to_grid(nofill.xmin)
+        nofill.ymin = snap_to_grid(nofill.ymin)
+        
+        
     c.add_ref(
         gf.components.rectangle(size=(c1_ref.xsize + 40, c1_ref.ysize + 20), layer=ihp.tech.LAYER.Metal5nofill)
     ).center = c1_ref.center
@@ -2948,7 +2962,8 @@ if abs(probe_top.ymin - probe_left.ymax) > kellerer.ysize + 2* LOGO_VERTICAL_CLE
     kellerer_ref = c.add_ref(kellerer)
     kellerer_ref.xmin = probe_left.xmin
     kellerer_ref.center = (kellerer_ref.center[0], probe_left.ymax + (abs(probe_top.ymin - probe_left.ymax) / 2))
-
+    kellerer_ref.xmin = snap_to_grid(kellerer_ref.xmin)
+    kellerer_ref.ymin = snap_to_grid(kellerer_ref.ymin)
 
 # place supervisor names only if space is available between bottom probe pads and left probe pads
 supervisors = gf.import_gds(str(supervisors_gds_path), cellname="supervisors").rotate(-90)
@@ -2956,7 +2971,8 @@ if abs(probe_bottom.ymax - probe_left.ymin) > supervisors.ysize + 2* LOGO_VERTIC
     supervisors_ref = c.add_ref(supervisors)
     supervisors_ref.xmin = probe_left.xmin
     supervisors_ref.center = (supervisors_ref.center[0], probe_bottom.ymax + (abs(probe_bottom.ymax - probe_left.ymin) / 2))
-
+    supervisors_ref.xmin = snap_to_grid(supervisors_ref.xmin)
+    supervisors_ref.ymin = snap_to_grid(supervisors_ref.ymin)
 
 
 if do_fill:
