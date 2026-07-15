@@ -30,6 +30,11 @@ def resolve_output_path(path_value: str) -> Path:
         path = PROJECT_ROOT / path
     return path
 
+
+def snap_to_grid(value: float) -> float:
+    """Snap a length in um down to the nearest PDK grid point."""
+    return round(value - value % ihp.tech.nm, 3)
+
 # ============================================================
 # CLI parameters
 # ============================================================
@@ -2023,9 +2028,9 @@ c0 = scipy.constants.c  # speed of light
 wavelength = c0 / f * 1e6 / sqrt(e_eff)  # wavelength
 wavelength_4 = wavelength / 4  # quarter wavelength
 
-wavelength = round(wavelength - wavelength % (ihp.tech.nm), 3)  # snap to grid
-wavelength_4 = round(wavelength_4 - (wavelength_4 % (ihp.tech.nm)), 3)  # quarter wavelength snap to grid
-wavelength_8 = round(wavelength / 8 - (wavelength / 8) % (ihp.tech.nm), 3)  # eighth wavelength snap to grid
+wavelength = snap_to_grid(wavelength)
+wavelength_4 = snap_to_grid(wavelength_4)  # quarter wavelength
+wavelength_8 = snap_to_grid(wavelength / 8)  # eighth wavelength
 
 
 # filter parameters
@@ -2040,7 +2045,7 @@ connection_length_wpd = 0  # length of the connection piece of the wilkinson pow
 connection_length_bpf_wpd = (
     wavelength_4 * 3.5 / 5
 )  # length of the connection piece between the branch line couplers and the rest of the circuit
-connection_length_bpf_wpd = connection_length_bpf_wpd - (connection_length_bpf_wpd % (ihp.tech.nm))  # snap to grid
+connection_length_bpf_wpd = snap_to_grid(connection_length_bpf_wpd)
 
 # branch line coupler parameters
 connection_length_blc = 0  # length of the connection piece between the branch line couplers and the rest of the circuit
@@ -2106,7 +2111,7 @@ connection_length_wpd_blc_one_leg = (
 
 
 connection_wpd_blc = ihp.cells.tline(
-    length= (connection_length_wpd_blc_one_leg / 2) - ((connection_length_wpd_blc_one_leg / 2) % (ihp.tech.nm)) + ihp.tech.nm,  # snap to grid
+    length=snap_to_grid(connection_length_wpd_blc_one_leg / 2) + ihp.tech.nm,  # one grid step of margin
     signal_cross_section=signal_cross_section,
     ground_cross_section=ground_cross_section,
     Z0=Z0,
@@ -2252,9 +2257,10 @@ c.add_ref(
 
 
 
+
 connection_bpd_pad = c.add_ref(
     ihp.cells.straight(
-        length=round(CONNECTION_LEN_BPF_PAD * freq_scale, 3),  # scales with frequency
+        length=round(CONNECTION_LEN_BPF_PAD * freq_scale, 2),  # scales with frequency
         cross_section=signal_cross_section,
         width=ihp.cells.waveguides._calculate_width_from_Z0(
             Z0=Z0, e_r=e_r, signal_cross_section=signal_cross_section, ground_cross_section=ground_cross_section
@@ -2262,6 +2268,7 @@ connection_bpd_pad = c.add_ref(
     )
 )
 connection_bpd_pad.connect("e1", bandpass_filter.ports["e2"], allow_width_mismatch=True)
+
 
 
 # probe pads left
@@ -2332,6 +2339,9 @@ rfin_gap = RFIN_GAP  # straight T-line gap between BLC port and PD rfin port
 pd = powdet_sbd()
 pd.locked = False
 
+# snap whole chip on grid
+c.xmin = 0
+c.ymin = 0
 
 # probe pads top — positioned to clear PD extent
 pd_height = pd.ysize  # approximate half-height of power detector cell
@@ -2346,7 +2356,9 @@ probe_top = c.add_ref(
     )
 )
 probe_top.center = chip_center
-probe_top.ymin = blc_1_ref.ymax + RFIN_GAP / 2 + pd_height + probe_pd_gap
+probe_top.ymin = snap_to_grid(blc_1_ref.ymax + RFIN_GAP / 2 + pd_height + probe_pd_gap)
+probe_top.xmin = snap_to_grid(probe_top.xmin)
+
 
 # no fill VDD
 c.add_ref(
@@ -2377,7 +2389,9 @@ probe_bottom = c.add_ref(
     )
 ).rotate(180)
 probe_bottom.center = chip_center
-probe_bottom.ymax = blc_2_ref.ymin - RFIN_GAP / 2 - pd_height - probe_pd_gap
+probe_bottom.ymax = snap_to_grid(blc_2_ref.ymin - RFIN_GAP / 2 - pd_height - probe_pd_gap)
+probe_bottom.xmin = snap_to_grid(probe_bottom.xmin)
+
 
 # no fill VDD
 c.add_ref(
@@ -2730,6 +2744,7 @@ print(f"Sealring: {sealring_width} x {sealring_height} um (freq_scale={freq_scal
 sealring_center =  c.center # save before adding more refs
 c.add_ref(ihp.cells.sealring(width=sealring_width, height=sealring_height)).center = sealring_center
 
+
 # JKU logo — lower right corner, relative to right chip edge, just above south pads
 logo_dir = Path(__file__).parent / "assets"
 
@@ -2805,36 +2820,6 @@ if not supervisors_gds_path.exists():
         boundaries=[],
     )
     
-    
-jku_logo = gf.import_gds(logo_dir / "jku_logo_m5.gds")
-jku_logo_ref = c.add_ref(jku_logo)
-chip_right = sealring_center[0] + sealring_width / 2
-jku_logo_ref.xmax = chip_right - sealring_margin
-jku_logo_ref.ymin = probe_bottom.ymax + 10
-
-
-# place IWS logo only for 160 GHz design, to avoid overcrowding the layout for higher frequencies where the design is more compact
-if FREQUENCY <= 200e9:
-    iws = c.add_ref(gf.import_gds(str(iws_gds_path), cellname="Logo_IWS"))
-    iws.xmax = blc_3_ref.xmax  # align right edge of IWS logo with right edge of BLC block
-    iws.ymax = blc_1_ref.ymax  # align top edge of IWS logo with top edge of BLC block
-    
-
-
-# place gds with D. Kellerer only if space is available between top probe pads and left probe pads
-kellerer = gf.import_gds(str(kellerer_gds_path), cellname="Name_D").rotate(-90)
-if abs(probe_top.ymin - probe_left.ymax) > kellerer.ysize + 2* LOGO_VERTICAL_CLEARANCE:  # only place if enough space between pads
-    kellerer_ref = c.add_ref(kellerer)
-    kellerer_ref.xmin = probe_left.xmin
-    kellerer_ref.center = (kellerer_ref.center[0], probe_left.ymax + (abs(probe_top.ymin - probe_left.ymax) / 2))
-
-
-# place supervisor names only if space is available between bottom probe pads and left probe pads
-supervisors = gf.import_gds(str(supervisors_gds_path), cellname="supervisors").rotate(-90)
-if abs(probe_bottom.ymax - probe_left.ymin) > supervisors.ysize + 2* LOGO_VERTICAL_CLEARANCE:  # only place if enough space between pads
-    supervisors_ref = c.add_ref(supervisors)
-    supervisors_ref.xmin = probe_left.xmin
-    supervisors_ref.center = (supervisors_ref.center[0], probe_bottom.ymax + (abs(probe_bottom.ymax - probe_left.ymin) / 2))
 
 
 if do_fill:
@@ -2941,6 +2926,39 @@ if do_fill:
         y_space=3,
     )
 
+
+jku_logo = gf.import_gds(logo_dir / "jku_logo_m5.gds")
+jku_logo_ref = c.add_ref(jku_logo)
+chip_right = sealring_center[0] + sealring_width / 2
+jku_logo_ref.xmax = chip_right - sealring_margin
+jku_logo_ref.ymin = probe_bottom.ymax + 10
+
+
+# place IWS logo only for 160 GHz design, to avoid overcrowding the layout for higher frequencies where the design is more compact
+if FREQUENCY <= 200e9:
+    iws = c.add_ref(gf.import_gds(str(iws_gds_path), cellname="Logo_IWS"))
+    iws.xmax = blc_3_ref.xmax  # align right edge of IWS logo with right edge of BLC block
+    iws.ymax = blc_1_ref.ymax  # align top edge of IWS logo with top edge of BLC block
+    
+
+
+# place gds with D. Kellerer only if space is available between top probe pads and left probe pads
+kellerer = gf.import_gds(str(kellerer_gds_path), cellname="Name_D").rotate(-90)
+if abs(probe_top.ymin - probe_left.ymax) > kellerer.ysize + 2* LOGO_VERTICAL_CLEARANCE:  # only place if enough space between pads
+    kellerer_ref = c.add_ref(kellerer)
+    kellerer_ref.xmin = probe_left.xmin
+    kellerer_ref.center = (kellerer_ref.center[0], probe_left.ymax + (abs(probe_top.ymin - probe_left.ymax) / 2))
+
+
+# place supervisor names only if space is available between bottom probe pads and left probe pads
+supervisors = gf.import_gds(str(supervisors_gds_path), cellname="supervisors").rotate(-90)
+if abs(probe_bottom.ymax - probe_left.ymin) > supervisors.ysize + 2* LOGO_VERTICAL_CLEARANCE:  # only place if enough space between pads
+    supervisors_ref = c.add_ref(supervisors)
+    supervisors_ref.xmin = probe_left.xmin
+    supervisors_ref.center = (supervisors_ref.center[0], probe_bottom.ymax + (abs(probe_bottom.ymax - probe_left.ymin) / 2))
+
+
+
 if do_fill:
     # topmetal2 fill
     c.fill(
@@ -2956,7 +2974,7 @@ c.ymin = 0
 c.move((-25, -25))
 
 c.write_gds(top_gds_filename, with_metadata=False)
-# c.show()
+c.show()
 
 pd.name = powdet_gds_filename.stem
 pd.xmin = 0
@@ -2973,5 +2991,5 @@ pd.write_gds(powdet_gds_filename, with_metadata=False)
 six_port_blank.xmin = 0
 six_port_blank.ymin = 0
 six_port_blank.write_gds(six_port_gds_filename, with_metadata=False)
-six_port_blank.show()
+# six_port_blank.show()
 
