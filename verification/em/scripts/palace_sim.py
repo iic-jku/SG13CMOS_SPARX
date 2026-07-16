@@ -9,9 +9,8 @@ import gdspy
 import argparse
 
 
-
 def _get_number_of_ports(gds_filename):
-    """Get number of ports from GDSII file, by counting layers with layer number > 200"""
+    """Get the number of ports from a GDSII file by counting layers with layer number > 200."""
     lib = gdspy.GdsLibrary()
     lib.read_gds(gds_filename)
     cell = lib.top_level()[0]
@@ -78,8 +77,8 @@ def _get_impedance_from_filename(gds_filename):
     impedance = float(match.group(1))
     return impedance
 
-# helper to find number of ports
 def _get_layers(cell, layers=None):
+    """Collect all (layer, datatype) pairs used in a cell, recursively."""
     if layers is None:
         layers = set()
     for poly in cell.polygons:
@@ -111,7 +110,7 @@ script_path = utilities.get_script_path(__file__)
 model_basename = str.split(gds_filename.split('/')[-1], ".")[0]
 
 # set and create directory for simulation output
-sim_path = utilities.create_sim_path (script_path,model_basename, dirname="../palace_model/")
+sim_path = utilities.create_sim_path(script_path, model_basename, dirname="../palace_model/")
 print('Simulation data directory: ', sim_path)
 
 f_center = _get_ghz_from_filename(gds_filename) * 1e9
@@ -178,7 +177,7 @@ for portnumber in range(1, num_ports + 1):
 # ======================== simulation ================================
 
 # get technology stackup data
-materials_list, dielectrics_list, metals_list = stackup_reader.read_substrate (XML_filename)
+materials_list, dielectrics_list, metals_list = stackup_reader.read_substrate(XML_filename)
 # get list of layers from technology
 layernumbers = metals_list.getlayernumbers()
 layernumbers.extend(simulation_ports.portlayers)
@@ -201,4 +200,4 @@ settings['model_basename'] = model_basename
 
 # list of ports that are excited (set voltage to zero in port excitation to skip an excitation!)
 excite_ports = simulation_ports.all_active_excitations()
-config_name, data_dir = simulation_setup.create_palace (excite_ports, settings)
+config_name, data_dir = simulation_setup.create_palace(excite_ports, settings)

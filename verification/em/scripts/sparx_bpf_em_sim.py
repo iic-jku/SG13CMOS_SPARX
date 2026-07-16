@@ -6,10 +6,7 @@ import ihp
 from pathlib import Path
 import gds2palace
 
-
-
 ihp.PDK.activate()
-
 
 DEFAULT_FREQUENCY = 160e9
 DEFAULT_BANDWIDTH = 20e9
@@ -21,25 +18,23 @@ DEFAULT_FILTER_TYPE = "butter"
 DEFAULT_FILTER_ORDER = 3
 DEFAULT_RIPPLE_DB = 3
 
-
 GDS_DIR = Path(__file__).resolve().parent.parent / "layout"
-# argparse
-parser = argparse.ArgumentParser(description="EM simulation of BLC")
+
+parser = argparse.ArgumentParser(description="EM simulation of the BPF")
 parser.add_argument("--frequency", type=float, default=DEFAULT_FREQUENCY, help="Frequency in Hz")
 parser.add_argument("--bandwidth", type=float, default=DEFAULT_BANDWIDTH, help="Bandwidth in Hz")
 parser.add_argument("--signal_cross_section", type=str, default=DEFAULT_SIGNAL_CROSS_SECTION, help="Cross section for signal line")
 parser.add_argument("--ground_cross_section", type=str, default=DEFAULT_GROUND_CROSS_SECTION, help="Cross section for ground line")
 parser.add_argument("--Z0", type=float, default=DEFAULT_Z0, help="Characteristic impedance in Ohms")
 parser.add_argument("--e_r", type=float, default=DEFAULT_E_R, help="Relative permittivity of the substrate")
-parser.add_argument("--filter_type", type=str, default=DEFAULT_FILTER_TYPE, help="Type of the filter (butter, cheby)")
+parser.add_argument("--filter_type", type=str, default=DEFAULT_FILTER_TYPE, help="Type of the filter (butter, cheby, ellip)")
 parser.add_argument("--filter_order", type=int, default=DEFAULT_FILTER_ORDER, help="Order of the filter")
-parser.add_argument("--ripple_dB", type=float, default=DEFAULT_RIPPLE_DB, help="Ripple in dB for Chebyshev and Elliptic filters")
-
+parser.add_argument("--ripple_dB", type=float, default=DEFAULT_RIPPLE_DB, help="Ripple in dB for Chebyshev and elliptic filters")
 
 args = parser.parse_args()
 filter_type = args.filter_type.lower()
 
-# format filter ripple
+
 def format_ripple(value):
     text = str(value)
     if text.endswith(".0"):
@@ -66,7 +61,7 @@ ground_cross_section = layer_dict[args.ground_cross_section]
 c = gf.Component("sparx_bpf_em_sim")
 hbpf_ref = c.add_ref(ihp.cells.hairpin_coupled_line_bandpass_filter(
     connection_length=0,
-    frequency= args.frequency,
+    frequency=args.frequency,
     bandwidth=args.bandwidth,
     signal_cross_section=signal_cross_section,
     ground_cross_section=ground_cross_section,
@@ -85,8 +80,7 @@ port2 = c.add_ref(gf.components.rectangle(size=(0.1, hbpf_ref.ports["e2"].width)
 port2.center = (hbpf_ref.ports["e2"].center)
 port2.move((-0.05,0))
 
-
-
+# The name must match BPF_GDS_FILENAME in the Makefile (sim-bpf-em target)
 filename = (
     f"sparx_bpf_"
     f"f_{args.frequency/1e9:.0f}GHz_"

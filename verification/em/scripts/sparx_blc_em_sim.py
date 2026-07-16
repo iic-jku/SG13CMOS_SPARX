@@ -6,10 +6,7 @@ import ihp
 from pathlib import Path
 import gds2palace
 
-
-
 ihp.PDK.activate()
-
 
 DEFAULT_FREQUENCY = 160e9
 DEFAULT_SIGNAL_CROSS_SECTION = "TM2"
@@ -18,8 +15,8 @@ DEFAULT_Z0 = 50
 DEFAULT_E_R = 4.1
 
 GDS_DIR = Path(__file__).resolve().parent.parent / "layout"
-# argparse
-parser = argparse.ArgumentParser(description="EM simulation of BLC")
+
+parser = argparse.ArgumentParser(description="EM simulation of the BLC")
 parser.add_argument("--frequency", type=float, default=DEFAULT_FREQUENCY, help="Frequency in Hz")
 parser.add_argument("--signal_cross_section", type=str, default=DEFAULT_SIGNAL_CROSS_SECTION, help="Cross section for signal line")
 parser.add_argument("--ground_cross_section", type=str, default=DEFAULT_GROUND_CROSS_SECTION, help="Cross section for ground line")
@@ -44,7 +41,7 @@ ground_cross_section = layer_dict[args.ground_cross_section]
 c = gf.Component("sparx_blc_em_sim")
 blc_ref = c.add_ref(ihp.cells.branch_line_coupler(
     connection_length=0,
-    frequency= args.frequency,
+    frequency=args.frequency,
     signal_cross_section=signal_cross_section,
     ground_cross_section=ground_cross_section,
     Z0=args.Z0,
@@ -67,6 +64,7 @@ port4 = c.add_ref(gf.components.rectangle(size=(0.1, blc_ref.ports["e4"].width),
 port4.center = (blc_ref.ports["e4"].center)
 port4.move((0.05,0))
 
+# The name must match BLC_GDS_FILENAME in the Makefile (sim-blc-em target)
 filename = f"sparx_blc_{args.frequency/1e9:.0f}GHz_{args.Z0:.0f}Ohm_{args.signal_cross_section}_{args.ground_cross_section}_e_r_{str(args.e_r).replace('.', '_')}.gds"
 gds_path = GDS_DIR / filename
 # c.show()
