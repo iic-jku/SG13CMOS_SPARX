@@ -469,7 +469,7 @@ Plots the first-column S-parameters (magnitude and phase) of a Touchstone file f
 
 ```sh
 make view-em-sim
-make view-em-sim FILE_NAME=blc_160GHz_50Ohm_TM2_M5_e_r_4_1.s4p
+make view-em-sim FILE_NAME=sparx_blc_160GHz_50Ohm_TM2_M5_e_r_4_1.s4p
 ```
 
 The `FILE_NAME` parameter is the Touchstone file name including its extension (default: the BLC result for the current parameters).
@@ -482,9 +482,9 @@ Copies both Touchstone files of an EM simulation run, the raw result and the de-
 - `SPARAM` is the EM run name, i.e. the GDS/Touchstone base name without extension (default: the BLC run for the current EM parameters).
 
 ```sh
-make copy-sparam SPARAM=bpf_f_160GHz_bw_1GHz_sig_TM2_gnd_M5_z0_50Ohm_er_4_1_butter_ord_3
-make copy-sparam SPARAM=wpd_160GHz_50Ohm_TM2_M5_e_r_4_1_config_U
-make copy-sparam SPARAM=blc_160GHz_50Ohm_TM2_M5_e_r_4_1
+make copy-sparam SPARAM=sparx_bpf_f_160GHz_bw_1GHz_sig_TM2_gnd_M5_z0_50Ohm_er_4_1_butter_ord_3
+make copy-sparam SPARAM=sparx_wpd_160GHz_50Ohm_TM2_M5_e_r_4_1_config_U
+make copy-sparam SPARAM=sparx_blc_160GHz_50Ohm_TM2_M5_e_r_4_1
 ```
 
 
@@ -492,7 +492,7 @@ make copy-sparam SPARAM=blc_160GHz_50Ohm_TM2_M5_e_r_4_1
 
 Converts an S-parameter Touchstone file into a lumped element (LE) netlist with [snp2le](https://github.com/iic-jku/snp2le). The conversion performs a universal rational fit of the given order and writes a passivity-enforced `.subckt` model that can be resimulated in place of the full EM S-parameter model. The de-embedded EM results (`*_deembedded.sNp`, see `copy-sparam`) are always used as input.
 
-- `SNP` is the input Touchstone file (default: the de-embedded BPF EM result `verification/em/s-parameter/bpf_f_160GHz_bw_1GHz_sig_TM2_gnd_M5_z0_50Ohm_er_4_1_butter_ord_3_deembedded.s2p`).
+- `SNP` is the input Touchstone file (default: the de-embedded BPF EM result `verification/em/s-parameter/sparx_bpf_f_160GHz_bw_1GHz_sig_TM2_gnd_M5_z0_50Ohm_er_4_1_butter_ord_3_deembedded.s2p`).
 - `ORDER` sets the maximum model order (number of poles) of the universal fit (default: `13`).
 - `LE_FORMAT` selects the output dialect: `spice` (ngspice, `.spice`) or `spectre` (VACASK, `.inc`) (default: `spice`).
 - `LE_OUT` sets the output netlist path, which also names the `.subckt` (default: `netlist/spice/sparx_bpf_le.spice`). If set to an empty value, it falls back to `netlist/spice/<name>_le.spice` for `spice` or `netlist/spectre/<name>_le.inc` for `spectre`, where `<name>` is the input file name without its Touchstone extension.
@@ -500,9 +500,9 @@ Converts an S-parameter Touchstone file into a lumped element (LE) netlist with 
 Running `make snp2le` without arguments reproduces the BPF conversion (first example below). The commands used to generate the LE netlists in `netlist/spice/` are:
 
 ```sh
-make snp2le SNP=verification/em/s-parameter/bpf_f_160GHz_bw_1GHz_sig_TM2_gnd_M5_z0_50Ohm_er_4_1_butter_ord_3_deembedded.s2p ORDER=13 LE_FORMAT=spice LE_OUT=netlist/spice/sparx_bpf_le.spice
-make snp2le SNP=verification/em/s-parameter/wpd_160GHz_50Ohm_TM2_M5_e_r_4_1_config_U_deembedded.s3p ORDER=10 LE_FORMAT=spice LE_OUT=netlist/spice/sparx_wpd_le.spice
-make snp2le SNP=verification/em/s-parameter/blc_160GHz_50Ohm_TM2_M5_e_r_4_1_deembedded.s4p ORDER=6 LE_FORMAT=spice LE_OUT=netlist/spice/sparx_blc_le.spice
+make snp2le SNP=verification/em/s-parameter/sparx_bpf_f_160GHz_bw_1GHz_sig_TM2_gnd_M5_z0_50Ohm_er_4_1_butter_ord_3_deembedded.s2p ORDER=13 LE_FORMAT=spice LE_OUT=netlist/spice/sparx_bpf_le.spice
+make snp2le SNP=verification/em/s-parameter/sparx_wpd_160GHz_50Ohm_TM2_M5_e_r_4_1_config_U_deembedded.s3p ORDER=10 LE_FORMAT=spice LE_OUT=netlist/spice/sparx_wpd_le.spice
+make snp2le SNP=verification/em/s-parameter/sparx_blc_160GHz_50Ohm_TM2_M5_e_r_4_1_deembedded.s4p ORDER=6 LE_FORMAT=spice LE_OUT=netlist/spice/sparx_blc_le.spice
 make snp2le SNP=verification/em/s-parameter/sparx160_core_deembedded.s7p ORDER=24 LE_FORMAT=spice LE_OUT=netlist/spice/sparx_core_le.spice
 ```
 
@@ -607,7 +607,7 @@ The following tools and flows are checked:
 | KLayout (GDS-to-image rendering) | `render-gds` (via `build-top`) |
 | Xschem netlisting, Magic + Netgen LVS, Magic DRC, Magic PEX | `magic-verify CELL=sparx_powdet_sbd` |
 | GDSFactory + gds2palace meshing + AWS Palace EM solve | `sim-wpd-em` |
-| S-parameter result copy (raw + de-embedded) | `copy-sparam SPARAM=wpd_...` |
+| S-parameter result copy (raw + de-embedded) | `copy-sparam SPARAM=sparx_wpd_...` |
 | snp2le (de-embedded S-parameter to lumped element, SPICE + Spectre) | `snp2le SNP=..._deembedded.s3p ...` |
 | Xschem netlisting + ngspice | `sim-xschem TB=sparx_wpd_le_tb_acsp_ngspice` |
 | Xschem netlisting + VACASK | `sim-xschem TB=sparx_wpd_le_tb_acsp_vacask` |
