@@ -2,10 +2,10 @@
     "Problem": {
         "Type": "Driven",
         "Verbose": 3,
-        "Output": "output/blc_160GHz_50Ohm_TM2_M5_e_r_4_1"
+        "Output": "output/sparx_bpf_f_160GHz_bw_1GHz_sig_TM2_gnd_M5_z0_50Ohm_er_4_1_butter_ord_3"
     },
     "Model": {
-        "Mesh": "blc_160GHz_50Ohm_TM2_M5_e_r_4_1.msh",
+        "Mesh": "sparx_bpf_f_160GHz_bw_1GHz_sig_TM2_gnd_M5_z0_50Ohm_er_4_1_butter_ord_3.msh",
         "L0": 1e-06,
         "Refinement": {
             "UniformLevels": 0,
@@ -93,14 +93,22 @@
             },
             {
                 "Attributes": [
-                    24
+                    24,
+                    26,
+                    28,
+                    30,
+                    32
                 ],
                 "Conductivity": 30300000.0,
                 "Thickness": 3.0
             },
             {
                 "Attributes": [
-                    25
+                    25,
+                    27,
+                    29,
+                    31,
+                    33
                 ],
                 "Conductivity": 30300000.0,
                 "Thickness": 3.0
@@ -113,7 +121,7 @@
                 "Direction": "Z",
                 "Excitation": 1,
                 "Attributes": [
-                    26
+                    34
                 ]
             },
             {
@@ -122,31 +130,13 @@
                 "Direction": "Z",
                 "Excitation": 2,
                 "Attributes": [
-                    27
-                ]
-            },
-            {
-                "Index": 3,
-                "R": 50.0,
-                "Direction": "Z",
-                "Excitation": 3,
-                "Attributes": [
-                    28
-                ]
-            },
-            {
-                "Index": 4,
-                "R": 50.0,
-                "Direction": "Z",
-                "Excitation": 4,
-                "Attributes": [
-                    29
+                    35
                 ]
             }
         ],
         "Absorbing": {
             "Attributes": [
-                30
+                36
             ],
             "Order": 2
         }
