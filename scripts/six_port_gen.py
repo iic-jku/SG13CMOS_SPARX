@@ -222,7 +222,7 @@ def slit_ground() -> gf.Component:
 
 
 # ============================================================
-# Power detector cell (HBT-based — kept for reference)
+# Power detector cell (HBT-based, kept for reference)
 # ============================================================
 
 
@@ -2353,7 +2353,7 @@ pd.locked = False
 c.xmin = 0
 c.ymin = 0
 
-# probe pads top — positioned to clear PD extent
+# probe pads top, positioned to clear PD extent
 pd_height = pd.ysize  # approximate half-height of power detector cell
 probe_pd_gap = PROBE_PD_GAP  # gap between PD edge and probe edge
 chip_center = c.center
@@ -2755,7 +2755,7 @@ sealring_center =  c.center # save before adding more refs
 c.add_ref(ihp.cells.sealring(width=sealring_width, height=sealring_height)).center = sealring_center
 
 
-# JKU logo — lower right corner, relative to right chip edge, just above south pads
+# JKU logo in the lower right corner, relative to right chip edge, just above south pads
 logo_dir = Path(__file__).parent / "assets"
 
 logo_png_path = logo_dir / "jku_logo.png"
