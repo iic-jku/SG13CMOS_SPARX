@@ -40,6 +40,9 @@ Institute for Integrated Circuits and Quantum Computing, Johannes Kepler Univers
 
 ## Documentation
 
+> [!IMPORTANT]
+> This work has been submitted to the IEEE for possible publication. Copyright may be transferred without notice, after which this version may no longer be accessible.
+
 The full documentation of SPARX is available [here](https://iic-jku.github.io/SG13CMOS_SPARX/index.html) (WIP).
 
 
