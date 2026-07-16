@@ -12,7 +12,7 @@ authors:
   orcid: https://orcid.org/0000-0003-1519-076X
 title: "GitHub Repository for SPARX: An Open-Source, Automated, Programmatically Generated, Frequency-Scalable Six-Port Receiver in 130-nm CMOS"
 date-released: 2026
-url: https://github.com/iic-jku/SG13G2_SPARX160
+url: https://github.com/iic-jku/SG13CMOS_SPARX
 identifiers:
   - type: doi
     value: 10.5281/zenodo.19654232
