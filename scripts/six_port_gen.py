@@ -683,7 +683,6 @@ def powdet_sbd() -> gf.Component:
     c2.add_ports(bottom_row.ports, prefix="BR_")
 
     
-
     # Orient outermost ports inward for horizontal cap-to-cap connection
     for prefix in [
         "TR_T_1_",
@@ -1130,7 +1129,7 @@ def powdet_sbd() -> gf.Component:
     straight_drain_connection = ihp.cells.straight(
         length=abs(
             drain_via_refs_nmos[0].center[0] - drain_via_refs_nmos[-1].center[0]
-        ),  # any drain via to the the center of the top guardring segment
+        ),  # span from the first to the last drain via
         cross_section="metal4_routing",
         width=2,  # manual measure of the height of the via
     )
@@ -1321,7 +1320,7 @@ def powdet_sbd() -> gf.Component:
     straight_drain_connection = ihp.cells.straight(
         length=abs(
             drain_via_refs_pmos[0].center[0] - drain_via_refs_pmos[-1].center[0]
-        ),  # any drain via to the the center of the top guardring segment
+        ),  # span from the first to the last drain via
         cross_section="metal4_routing",
         width=2.61,  #  manual measurement
     )
@@ -1406,7 +1405,6 @@ def powdet_sbd() -> gf.Component:
     c_output.add_port(name="vref", port=via_m1_m4_ref.ports["top"])
      
     
-
     via_m1_m2.ports["top"].orientation = 180
     via_m1_m2_ref = c_output.add_ref(via_m1_m2)
     via_m1_m2_ref.connect("bottom", xr4_ref.ports["e2"], allow_width_mismatch=True, allow_layer_mismatch=True)
@@ -1942,7 +1940,7 @@ def powdet_sbd() -> gf.Component:
     )
     straight_m3_ref = c.add_ref(straight_m3)
     straight_m3_ref.connect("e1", output_stage_ref.ports["vref"], allow_width_mismatch=True, allow_layer_mismatch=True)
-    # add ports to the powerdetector
+    # add ports to the power detector
     vout_port = c.add_port(name="vout", port=output_stage_ref.ports["vout"])
     c.ports["vout"].orientation = 90
     
@@ -2212,7 +2210,6 @@ connection_blc_r_termination_ref = c.add_ref(connection_blc_r_termination)
 connection_blc_r_termination_ref.connect("e1", blc_3_ref.ports["e3"])
 
 
-
 via_m1_tm2 = ihp.cells.via_stack(
     top_layer="TopMetal2",
     bottom_layer="Metal1",
@@ -2266,8 +2263,6 @@ c.add_ref(
 ).center = connection_r_termination_vss_ref.center
 
 
-
-
 connection_bpd_pad = c.add_ref(
     ihp.cells.straight(
         length=round(CONNECTION_LEN_BPF_PAD * freq_scale, 2),  # scales with frequency
@@ -2278,7 +2273,6 @@ connection_bpd_pad = c.add_ref(
     )
 )
 connection_bpd_pad.connect("e1", bandpass_filter.ports["e2"], allow_width_mismatch=True)
-
 
 
 # probe pads left
@@ -2345,7 +2339,7 @@ c.add_ref(
 # with only a short straight gap (rfin_gap) in between.
 rfin_gap = RFIN_GAP  # straight T-line gap between BLC port and PD rfin port
 
-# create powerdetector (needed here to read rfin port offset)
+# create power detector (needed here to read rfin port offset)
 pd = powdet_sbd()
 pd.locked = False
 
@@ -2521,7 +2515,6 @@ route_pd1_vref = gf.routing.route_bundle_electrical(
     auto_taper=False,
     separation=0,
 )
-
 
 
 # PD2 reference, position and route
@@ -2740,7 +2733,6 @@ route_pd4_vref = gf.routing.route_bundle_electrical(
 )
 
 
-
 # ============================================================
 # Sealring, logo, and metal fill
 # ============================================================
@@ -2830,7 +2822,6 @@ if not supervisors_gds_path.exists():
         boundaries=[],
     )
     
-
 
 if do_fill:
     # active/gat poly fill
@@ -2951,7 +2942,6 @@ if FREQUENCY <= 200e9:
     iws.ymax = blc_1_ref.ymax  # align top edge of IWS logo with top edge of BLC block
     
 
-
 # place gds with D. Kellerer only if space is available between top probe pads and left probe pads
 kellerer = gf.import_gds(str(kellerer_gds_path), cellname="Name_D").rotate(-90)
 if abs(probe_top.ymin - probe_left.ymax) > kellerer.ysize + 2* LOGO_VERTICAL_CLEARANCE:  # only place if enough space between pads
@@ -2993,8 +2983,6 @@ pd.xmin = 0
 pd.ymin = 0
 # pd.show()
 pd.write_gds(powdet_gds_filename, with_metadata=False)
-
-
 
 
 # only Six-Port RF Structure for EM simulation
