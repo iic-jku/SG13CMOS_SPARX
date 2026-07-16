@@ -119,7 +119,7 @@ help: ## Show this help message
 
 
 # Build Targets
-build-pdk: ## Clone & install the IHP-Open-PDK repository with GDSFactory cells (usage: make build-pdk)
+build-pdk: ## Clone and install the GDSFactory PDK add-on (usage: make build-pdk)
 	rm -rf IHP/
 	git clone -b main https://github.com/iic-jku/IHP-GDSFactory-Addon.git IHP
 	rm -rf .venv/
@@ -504,7 +504,7 @@ regression: ## Regression test for IIC-OSIC-TOOLS (usage: make regression)
 	$(MAKE) snp2le SNP=verification/em/s-parameter/wpd_160GHz_50Ohm_TM2_M5_e_r_4_1_config_U_deembedded.s3p ORDER=10 LE_FORMAT=spice LE_OUT=netlist/spice/sparx_wpd_le.spice
 	$(MAKE) snp2le SNP=verification/em/s-parameter/wpd_160GHz_50Ohm_TM2_M5_e_r_4_1_config_U_deembedded.s3p ORDER=10 LE_FORMAT=spectre LE_OUT=netlist/spectre/sparx_wpd_le.inc
 # 	Xschem netlisting + one ngspice and one VACASK AC S-parameter simulation.
-	$(MAKE) sim-xschem TB=sparx_bpf_le_tb_acsp_ngspice
-	$(MAKE) sim-xschem TB=sparx_bpf_le_tb_acsp_vacask
+	$(MAKE) sim-xschem TB=sparx_wpd_le_tb_acsp_ngspice
+	$(MAKE) sim-xschem TB=sparx_wpd_le_tb_acsp_vacask
 .PHONY: regression
 # ================================================================================================

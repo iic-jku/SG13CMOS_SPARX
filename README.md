@@ -11,9 +11,6 @@
 
 Institute for Integrated Circuits and Quantum Computing, Johannes Kepler University (JKU), Linz, Austria
 
-> [!WARNING]
-> This repository is a Work in Progress.
-
 > [!IMPORTANT]
 > This repository requires the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS) container with tag `2026.07` or later.
 
@@ -21,14 +18,14 @@ Institute for Integrated Circuits and Quantum Computing, Johannes Kepler Univers
 > This repository is based on the [ihp-sg13g2-ams-chip-template](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template) template repository and has been extended with electromagnetic (EM) simulations using the tool AWS Palace. For a better understanding of the folder structure, how to use the Makefiles, and how to implement your own designs, it is recommended to go through this [tutorial](https://iic-jku.github.io/ihp-sg13g2-ams-chip-template/index.html).
 
 > [!NOTE]
-> SPARX stands for **S**ix-**P**ort **A**utomated Receiver (**RX**). The name also carries a subtle double meaning: *SPARX* sounds like *spark*, which translates to *Funken* in German. Fittingly, the German verb *funken* also means to communicate via radio. A subtle reference to the wireless world for which this receiver was designed.
+> SPARX stands for **S**ix-**P**ort **A**utomated Receiver (**RX**). The name also carries a subtle double meaning: *SPARX* sounds like *spark*, which translates to *Funken* in German. Fittingly, the German verb *funken* also means to communicate via radio, a subtle nod to the wireless world this receiver was designed for.
 
 <p align="center">
   <a href="doc/fig/sparx160/sparx160_top_black_pinout.png">
-    <img src="doc/fig/sparx160/sparx160_top_black_pinout.png" alt="Chip render of the ihp-sg13cmos six-port receiver for 160GHz with M5 GND plane and pinout (1mm x 1.4mm)" width=70%>
+    <img src="doc/fig/sparx160/sparx160_top_black_pinout.png" alt="Chip render of the ihp-sg13cmos six-port receiver for 160 GHz with M5 GND plane and pinout (1 mm × 1.4 mm)" width=70%>
   </a>
   <br>
-  <em>Chip render of the ihp-sg13cmos six-port receiver for 160GHz with M5 GND plane and pinout (1mm x 1.4mm).</em>
+  <em>Chip render of the ihp-sg13cmos six-port receiver for 160 GHz with M5 GND plane and pinout (1 mm × 1.4 mm).</em>
 </p>
 
 
@@ -36,7 +33,7 @@ Institute for Integrated Circuits and Quantum Computing, Johannes Kepler Univers
 
 | Parameter           | Value                                                                             |
 | ------------------- | --------------------------------------------------------------------------------- |
-| Technology          | IHP SG13CMOS (130nm CMOS)                                                           |
+| Technology          | IHP SG13CMOS (130 nm CMOS)                                                          |
 | Die Area            | 1000 × 1400 µm (1.4 mm²)                                                          |
 | Supply Voltage      | 1.5 V                                                                             |
 
@@ -255,7 +252,7 @@ make help
 
 ### Build PDK
 
-Clones and installs the IHP-Open-PDK repository with GDSFactory cells:
+Clones and installs the GDSFactory PDK add-on (`IHP-GDSFactory-Addon`):
 
 ```sh
 make build-pdk
@@ -381,13 +378,14 @@ The `EXT_MODE` parameter selects the extraction mode:
 - `2` = C-coupled
 - `3` = full-RC (default)
 
-> **Note:** For `klayout-pex`, `EXT_MODE=1` (C-decoupled) is not yet supported by kpex and automatically falls back to `EXT_MODE=2` (CC) with a warning.
+> [!NOTE]
+> For `klayout-pex`, `EXT_MODE=1` (C-decoupled) is not yet supported by kpex and automatically falls back to `EXT_MODE=2` (CC) with a warning.
 
 The `.subckt` name in the extracted SPICE file is automatically renamed from `<CELL>` to `<CELL>_pex`.
 
 If a matching Xschem symbol (`schematic/<CELL>_pex.sym`) exists, the `.subckt` pin order in the extracted SPICE file is automatically reordered to match the symbol's pin positions. This ensures the PEX netlist can be used directly with the corresponding Xschem symbol for simulation.
 
-**KLayout PEX** uses `kpex` with the Magic extraction engine currently (2.5D engine is work in progress):
+**KLayout PEX** uses `kpex` with the Magic extraction engine (the 2.5D engine is work in progress):
 
 ```sh
 make klayout-pex
@@ -581,7 +579,7 @@ make release VERSION=2.1.0
 
 ### Regression
 
-The `regression` target is the project's smoke test for the [IIC-OSIC-TOOLS](https://github.com/iic-jku/iic-osic-tools) environment. Its goal is to exercise **as many tools and flows** as possible with a short runtime. It is a tool/flow regression, not a design sign-off. The target is self-contained. It installs the GDSFactory PDK add-on itself (`build-top` runs `build-pdk` first), so a plain IIC-OSIC-TOOLS container is all it needs.
+The `regression` target is the project's smoke test for the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS) environment. Its goal is to exercise **as many tools and flows** as possible with a short runtime. It is a tool/flow regression, not a design sign-off. The target is self-contained. It installs the GDSFactory PDK add-on itself (`build-top` runs `build-pdk` first), so a plain IIC-OSIC-TOOLS container is all it needs.
 
 ```sh
 make regression
@@ -608,8 +606,8 @@ The following tools and flows are checked:
 | GDSFactory + gds2palace meshing + AWS Palace EM solve | `sim-wpd-em` |
 | S-parameter result copy (raw + de-embedded) | `copy-sparam SPARAM=wpd_...` |
 | snp2le (de-embedded S-parameter to lumped element, SPICE + Spectre) | `snp2le SNP=..._deembedded.s3p ...` |
-| Xschem netlisting + ngspice | `sim-xschem TB=sparx_bpf_le_tb_acsp_ngspice` |
-| Xschem netlisting + VACASK | `sim-xschem TB=sparx_bpf_le_tb_acsp_vacask` |
+| Xschem netlisting + ngspice | `sim-xschem TB=sparx_wpd_le_tb_acsp_ngspice` |
+| Xschem netlisting + VACASK | `sim-xschem TB=sparx_wpd_le_tb_acsp_vacask` |
 
 
 ## Cite This Work
