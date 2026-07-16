@@ -1,11 +1,11 @@
 # SPDX-FileCopyrightText: 2025-2026 The SPARX Team
 # SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1
-# n_port_tb_acsp_vacask_eval.py
+# n_port_acsp_vacask_eval.py
 #
 # Universal VACASK postprocessing script for the acsp (AC S-parameter) testbenches.  One
 # script serves the 2-, 3- and 4-port testbenches: it reads VACASK's raw output, discovers
 # the port count from the s(i,j) vector names, and processes the full N x N S-matrix.  Each
-# testbench calls it with postprocess(PYTHON, "../n_port_tb_acsp_vacask_eval.py").
+# testbench calls it with postprocess(PYTHON, "../scripts/n_port_acsp_vacask_eval.py").
 #
 # It then:
 #   * writes sim_data/<TB>.txt with a frequency column plus s{i}{j}_db and s{i}{j}_deg for
@@ -179,9 +179,11 @@ def main():
             axm.plot(fghz, dB[(i, j)], label=lab)
             axp.plot(fghz, deg[(i, j)], label=lab)
     axm.set_title(f"{n}-port, VACASK acsp S-parameters")
-    axm.set_ylabel("magnitude (dB)"); axm.grid(True, alpha=0.3)
+    axm.set_ylabel("magnitude (dB)")
+    axm.grid(True, alpha=0.3)
     axm.legend(ncol=min(n, 4), fontsize=7)
-    axp.set_ylabel("phase (deg)"); axp.set_xlabel("frequency (GHz)")
+    axp.set_ylabel("phase (deg)")
+    axp.set_xlabel("frequency (GHz)")
     axp.grid(True, alpha=0.3)
     fig.tight_layout()
     png = os.path.join(os.path.dirname(table), TB + ".png")

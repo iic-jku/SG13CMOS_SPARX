@@ -23,7 +23,7 @@ import matplotlib
 # script standalone, set the environment variable SHOW_PLOTS=1.
 SHOW_PLOTS = os.environ.get('SHOW_PLOTS', '0') == '1'
 if not SHOW_PLOTS:
-	matplotlib.use('Agg')
+    matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import re, glob
 
@@ -33,21 +33,21 @@ import re, glob
 # postprocess (cwd = testbenches/simulations) or standalone from anywhere.
 # ---------------------------------------------------------------------------
 def find_design_root():
-	cands = [os.getcwd()]
-	try:
-		cands.append(os.path.dirname(os.path.abspath(__file__)))
-	except NameError:
-		pass
-	for start in cands:
-		d = start
-		while True:
-			if os.path.isdir(os.path.join(d, 'testbenches', 'simulations')):
-				return d
-			parent = os.path.dirname(d)
-			if parent == d:
-				break
-			d = parent
-	raise RuntimeError('Could not locate design root (need testbenches/simulations)')
+    cands = [os.getcwd()]
+    try:
+        cands.append(os.path.dirname(os.path.abspath(__file__)))
+    except NameError:
+        pass
+    for start in cands:
+        d = start
+        while True:
+            if os.path.isdir(os.path.join(d, 'testbenches', 'simulations')):
+                return d
+            parent = os.path.dirname(d)
+            if parent == d:
+                break
+            d = parent
+    raise RuntimeError('Could not locate design root (need testbenches/simulations)')
 
 
 DESIGN_ROOT = find_design_root()
@@ -57,17 +57,17 @@ RAW_FILE = os.path.join(SIM_DIR, 'powdet_hb1.raw')   # named after the HB analys
 
 
 def parse_freq(netlist, name):
-	m = re.search(rf'var\s+{name}\s*=\s*([\d.eE+\-]+[GMKkT]?)', netlist)
-	val = m.group(1)
-	for suf, exp in (('G', 'e9'), ('M', 'e6'), ('K', 'e3'), ('k', 'e3'), ('T', 'e12')):
-		val = val.replace(suf, exp)
-	return float(val)
+    m = re.search(rf'var\s+{name}\s*=\s*([\d.eE+\-]+[GMKkT]?)', netlist)
+    val = m.group(1)
+    for suf, exp in (('G', 'e9'), ('M', 'e6'), ('K', 'e3'), ('k', 'e3'), ('T', 'e12')):
+        val = val.replace(suf, exp)
+    return float(val)
 
 
 # Parse LO and RF frequencies from the spectre netlist
 spectre_file = glob.glob(os.path.join(SIM_DIR, '*.spectre'))[0]
 with open(spectre_file) as f:
-	netlist = f.read()
+    netlist = f.read()
 freq_lo = parse_freq(netlist, 'freq_lo')
 freq_rf = parse_freq(netlist, 'freq_rf')
 freq_if = abs(freq_rf - freq_lo)
@@ -77,45 +77,45 @@ hb = rawread(RAW_FILE).get(sweeps=2)
 # Collect data grouped by LO amplitude
 data = {}
 for g in range(hb.sweepGroups):
-	sd = hb.sweepData(g)
-	a_lo = np.abs(sd['ampl_lo'])
-	a_rf = np.abs(sd['ampl_rf'])
+    sd = hb.sweepData(g)
+    a_lo = np.abs(sd['ampl_lo'])
+    a_rf = np.abs(sd['ampl_rf'])
 
-	freq = np.real(hb[g, 'frequency'])
-	out = hb[g, 'out']
+    freq = np.real(hb[g, 'frequency'])
+    out = hb[g, 'out']
 
-	# Find IF bin at |f_rf - f_lo|
-	idx_if = np.argmin(np.abs(freq - freq_if))
+    # Find IF bin at |f_rf - f_lo|
+    idx_if = np.argmin(np.abs(freq - freq_if))
 
-	if a_lo not in data:
-		data[a_lo] = {'a_rf': [], 'mag_if': []}
+    if a_lo not in data:
+        data[a_lo] = {'a_rf': [], 'mag_if': []}
 
-	data[a_lo]['a_rf'].append(a_rf)
-	data[a_lo]['mag_if'].append(np.abs(out[idx_if]))
+    data[a_lo]['a_rf'].append(a_rf)
+    data[a_lo]['mag_if'].append(np.abs(out[idx_if]))
 
 # Collect curves (x = RF input in dBV, y = IF output in dBV), one per LO amplitude
 curves = []
 for a_lo in sorted(data.keys()):
-	d = data[a_lo]
-	a_rf = np.array(d['a_rf'])
-	mag_if = np.array(d['mag_if'])
+    d = data[a_lo]
+    a_rf = np.array(d['a_rf'])
+    mag_if = np.array(d['mag_if'])
 
-	order = np.argsort(a_rf)
-	a_rf = a_rf[order]
-	mag_if = mag_if[order]
+    order = np.argsort(a_rf)
+    a_rf = a_rf[order]
+    mag_if = mag_if[order]
 
-	a_rf_db = 20 * np.log10(a_rf + 1e-30)
-	mag_if_db = 20 * np.log10(mag_if + 1e-30)
-	label = f'A(LO {freq_lo/1e9:.0f} GHz) = {a_lo*1e3:.0f} mV'
-	# slug used for the per-curve CSV filename
-	slug = f'alo_{a_lo*1e3:.0f}mV'
-	curves.append({'label': label, 'slug': slug, 'x': a_rf_db, 'y': mag_if_db})
+    a_rf_db = 20 * np.log10(a_rf + 1e-30)
+    mag_if_db = 20 * np.log10(mag_if + 1e-30)
+    label = f'A(LO {freq_lo/1e9:.0f} GHz) = {a_lo*1e3:.0f} mV'
+    # slug used for the per-curve CSV filename
+    slug = f'alo_{a_lo*1e3:.0f}mV'
+    curves.append({'label': label, 'slug': slug, 'x': a_rf_db, 'y': mag_if_db})
 
 # Build 1 dB/dB reference slope curve (signature of the square-law beat term)
 a_rf_all = []
 for a_lo in sorted(data.keys()):
-	d = data[a_lo]
-	a_rf_all.extend(d['a_rf'])
+    d = data[a_lo]
+    a_rf_all.extend(d['a_rf'])
 a_rf_ref = np.array(sorted(set(a_rf_all)))
 a_rf_ref_db = 20 * np.log10(a_rf_ref + 1e-30)
 first_key = sorted(data.keys())[0]
@@ -132,7 +132,7 @@ fig, ax = plt.subplots(figsize=(8, 5), constrained_layout=True)
 fig.suptitle(f'Power Detector SBD - IF at {freq_if/1e9:.1f} GHz')
 
 for c in curves[:-1]:
-	ax.plot(c['x'], c['y'], 'o-', label=c['label'])
+    ax.plot(c['x'], c['y'], 'o-', label=c['label'])
 ref = curves[-1]
 ax.plot(ref['x'], ref['y'], 'k--', alpha=0.5, label=ref['label'])
 
@@ -153,16 +153,16 @@ os.makedirs(csv_dir, exist_ok=True)
 
 # One CSV per curve, columns: x (RF input dBV), mag_db (IF output dBV)
 for c in curves:
-	csv_path = os.path.join(csv_dir, f'{basename}_{c["slug"]}.csv')
-	np.savetxt(
-		csv_path,
-		np.column_stack((c['x'], c['y'])),
-		delimiter=',',
-		header='x,mag_db',
-		comments='',
-		fmt='%.6f',
-	)
-	print(f'Wrote {csv_path}')
+    csv_path = os.path.join(csv_dir, f'{basename}_{c["slug"]}.csv')
+    np.savetxt(
+        csv_path,
+        np.column_stack((c['x'], c['y'])),
+        delimiter=',',
+        header='x,mag_db',
+        comments='',
+        fmt='%.6f',
+    )
+    print(f'Wrote {csv_path}')
 
 if SHOW_PLOTS:
-	plt.show()
+    plt.show()
