@@ -34,7 +34,7 @@ This repository requires the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSI
 
 ## Overview
 
-SPARX stands for **Six-Port Automated Receiver**. The complete layout is generated in Python using self-made RF devices as a GDSFactory IHP PDK add-on. S-parameter simulation of the passive RF structures is performed with AWS Palace. With KLayout, Magic, and Netgen, a complete LVS, DRC, and RCX verification flow is implemented. The SBD-based power detector is designed in Xschem and simulated with ngspice and VACASK. This repository is controlled by a Makefile. Just clone it and run `make all` to build the six-port receiver at 160 GHz and verify the power detector cell. To generate a frequency-scalable layout at a different target frequency, for example 77 GHz, run `make build-layout FREQ=77`.
+SPARX stands for **Six-Port Automated Receiver**. The complete layout is generated in Python using self-made RF devices as a GDSFactory IHP PDK add-on. S-parameter simulation of the passive RF structures (BPF, WPD, and BLC) is performed with AWS Palace. The de-embedded EM results are then fitted to passivity-enforced lumped element models with [snp2le](https://github.com/iic-jku/snp2le), in both SPICE and Spectre dialects, and resimulated in Xschem testbenches with ngspice and VACASK. The six-port core is verified in two ways, as a single fitted model of the full-core EM simulation and as a composition of the individual BPF, WPD, and BLC models. With KLayout, Magic, and Netgen, a complete LVS, DRC, and PEX verification flow is implemented. The SBD-based power detector is designed in Xschem and simulated with ngspice and VACASK. This repository is controlled by a Makefile. Just clone it and run `make all` to build the six-port receiver at 160 GHz, verify it, run the EM simulations, extract the lumped element models, and simulate all testbenches. To generate a frequency-scalable layout at a different target frequency, for example 77 GHz, run `make build-layout FREQ=77`.
 
 **Index Terms:** Branch-line coupler, frequency-scalable layout, GDSFactory, hairpin coupled-line bandpass filter, IHP Open-PDK, mmWave, open-source EDA, power detector, programmatic layout, Schottky barrier diode, six-port receiver, Wilkinson power divider.
 
@@ -42,19 +42,29 @@ SPARX stands for **Six-Port Automated Receiver**. The complete layout is generat
 
 To understand the principle of six-port receivers and their architectures, it is recommended to read the following references:
 
-- A. Koelpin, G. Vinci, B. Laemmle, D. Kissinger and R. Weigel, "The Six-Port in Modern Society," in *IEEE Microwave Magazine*, vol. 11, no. 7, pp. 35–43, Dec. 2010, doi: [10.1109/MMM.2010.938584](https://doi.org/10.1109/MMM.2010.938584)
-- T. Hentschel, "The six-port as a communications receiver," in *IEEE Transactions on Microwave Theory and Techniques*, vol. 53, no. 3, pp. 1039–1047, March 2005, doi: [10.1109/TMTT.2005.843507](https://doi.org/10.1109/TMTT.2005.843507)
-- M. Mailand, "System Analysis of Six-Port-Based RF-Receivers," in *IEEE Transactions on Circuits and Systems I: Regular Papers*, vol. 65, no. 1, pp. 319–330, Jan. 2018, doi: [10.1109/TCSI.2017.2734922](https://doi.org/10.1109/TCSI.2017.2734922)
+- A. Koelpin, G. Vinci, B. Laemmle, D. Kissinger and R. Weigel, "The Six-Port in Modern Society," in *IEEE Microwave Magazine*, vol. 11, no. 7, pp. 35-43, Dec. 2010, doi: [10.1109/MMM.2010.938584](https://doi.org/10.1109/MMM.2010.938584)
+- T. Hentschel, "The six-port as a communications receiver," in *IEEE Transactions on Microwave Theory and Techniques*, vol. 53, no. 3, pp. 1039-1047, March 2005, doi: [10.1109/TMTT.2005.843507](https://doi.org/10.1109/TMTT.2005.843507)
+- M. Mailand, "System Analysis of Six-Port-Based RF-Receivers," in *IEEE Transactions on Circuits and Systems I: Regular Papers*, vol. 65, no. 1, pp. 319-330, Jan. 2018, doi: [10.1109/TCSI.2017.2734922](https://doi.org/10.1109/TCSI.2017.2734922)
 
 ## Requirements
 
 To build this six-port receiver, the following tools and their respective dependencies are required:
 
 - GDSFactory: https://github.com/gdsfactory/gdsfactory
-- Updated IHP-Open-PDK GDSFactory version: https://github.com/iic-jku/IHP-GDSFactory-Addon/tree/main
-- IHP-Open-PDK: https://github.com/iic-jku/IHP-Open-PDK
+- Updated IHP Open-PDK GDSFactory version: https://github.com/iic-jku/IHP-GDSFactory-Addon/tree/main
+- IHP Open-PDK: https://github.com/iic-jku/IHP-Open-PDK
 
-The updated IHP-Open-PDK GDSFactory version contains all self-made RF devices and wraps existing PCells provided by the IHP-Open-PDK, allowing them to be used directly within the GDSFactory framework. This approach requires very little maintenance: if IHP changes the layout of a cell, no wrapper update is necessary. Only interface changes to a PCell function require updates.
+The updated IHP Open-PDK GDSFactory version contains all self-made RF devices and wraps existing PCells provided by the IHP Open-PDK, allowing them to be used directly within the GDSFactory framework. This approach requires very little maintenance: if IHP changes the layout of a cell, no wrapper update is necessary. Only interface changes to a PCell function require updates.
+
+## Chip Specifications
+
+| Parameter      | Value                   |
+|----------------|-------------------------|
+| Technology     | IHP SG13CMOS (130 nm CMOS)|
+| Die Area       | 1000 × 1400 µm (1.4 mm²)|
+| Supply Voltage | 1.5 V                   |
+
+: Chip Specifications {tbl-colwidths="[35,65]"}
 
 ## Block Diagram
 
@@ -76,23 +86,17 @@ The SPARX architecture consists of the following main components:
 
 ![Schematic of SBD-based Power Detector](fig/sparx_powdet_sbd/sparx_powdet_sbd_circuit.png){fig-align="center" width=100%}
 
+## Design Flow
+
+An overview of the open-source design flow for SPARX is shown below. The flow covers schematic entry, circuit simulation, parameterized layout generation, physical verification, post-layout simulation, EM simulation, and resimulation of fitted lumped element models. All required tools and the IHP Open-PDK run inside the IIC-OSIC-TOOLS Docker image. The complete design flow is automated with Makefile targets.
+
+![Overview of the open-source design flow for SPARX](fig/design_flow/design_flow.png){fig-align="center" width=80%}
+
 ## Layouts
 
 The following figures show the chip layout of the 160 GHz six-port receiver (die area: 1000 × 1400 µm).
 
-::: {layout-ncol=2}
-![160 GHz layout with M5 GND plane](fig/sparx160/sparx160_top_white.png){fig-align="center"}
-
-![160 GHz layout without M5 GND plane](fig/sparx160/sparx160_top_white_wo_M5.png){fig-align="center"}
-:::
-
-| Parameter      | Value                   |
-|----------------|-------------------------|
-| Technology     | IHP SG13G2 (130 nm CMOS)|
-| Die Area       | 1000 × 1400 µm (1.4 mm²)|
-| Supply Voltage | 1.5 V                   |
-
-: Chip Specifications {tbl-colwidths="[35,65]"}
+![Chip render of the ihp-sg13cmos six-port receiver for 160 GHz with M5 GND plane and pinout (1 mm × 1.4 mm).](fig/sparx160/sparx160_top_black_pinout.png){fig-align="center" width=80%}
 
 ## Acknowledgements
 

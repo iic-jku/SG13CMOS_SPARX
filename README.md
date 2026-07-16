@@ -66,10 +66,10 @@ To understand the principle of six-port receivers and their architectures, it is
 
 To build this six-port receiver, the following tools and their respective dependencies are required:
 - GDSFactory: https://github.com/gdsfactory/gdsfactory
-- Updated IHP-Open-PDK GDSFactory version: https://github.com/iic-jku/IHP-GDSFactory-Addon/tree/main
-- IHP-Open-PDK: https://github.com/iic-jku/IHP-Open-PDK
+- Updated IHP Open-PDK GDSFactory version: https://github.com/iic-jku/IHP-GDSFactory-Addon/tree/main
+- IHP Open-PDK: https://github.com/iic-jku/IHP-Open-PDK
 
-The updated IHP-Open-PDK GDSFactory version contains all self-made RF devices and wraps existing PCells provided by the IHP-Open-PDK, allowing them to be used directly within the GDSFactory framework. We choose this approach because it requires very little maintenance. If IHP changes the layout of a cell, no wrapper update is necessary. Only interface changes to a PCell function require updates on our side.
+The updated IHP Open-PDK GDSFactory version contains all self-made RF devices and wraps existing PCells provided by the IHP Open-PDK, allowing them to be used directly within the GDSFactory framework. We choose this approach because it requires very little maintenance. If IHP changes the layout of a cell, no wrapper update is necessary. Only interface changes to a PCell function require updates on our side.
 
 
 ## Block Diagram
