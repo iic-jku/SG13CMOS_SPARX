@@ -618,7 +618,7 @@ This target also runs automatically in continuous integration: the [`regression`
 
 To keep the runtime low while still covering most of the toolchain, the regression makes the following trade-offs:
 
-- Only the small `sparx_powdet_sbd` power-detector cell is verified, not the full six-port top cell. Magic + Netgen LVS, Magic DRC, and Magic PEX are run. KLayout LVS/DRC/PEX is currently disabled.
+- Only the small `sparx_powdet_sbd` power-detector cell is verified, not the full six-port top cell. KLayout LVS, KLayout DRC, and KLayout PEX are run. Magic + Netgen LVS, Magic DRC, and Magic PEX are run.
 - Of the three passive RF structures, only the Wilkinson power divider (WPD) is EM-simulated (with AWS Palace) and converted to a lumped-element netlist (SPICE and Spectre).
 - Only one ngspice and one VACASK testbench are simulated (the bandpass-filter AC S-parameter benches).
 - The layout is generated at a single frequency (160 GHz). No frequency sweep is run.
@@ -631,6 +631,7 @@ The following tools and flows are checked:
 | GDSFactory PDK add-on build (git clone + pip install) | `build-pdk` (via `build-top`) |
 | GDSFactory (programmatic six-port layout generation) | `build-layout` (via `build-top`) |
 | KLayout (GDS-to-image rendering) | `render-gds` (via `build-top`) |
+| Xschem netlisting, KLayout LVS, KLayout DRC, KLayout PEX | `klayout-verify CELL=sparx_powdet_sbd` |
 | Xschem netlisting, Magic + Netgen LVS, Magic DRC, Magic PEX | `magic-verify CELL=sparx_powdet_sbd` |
 | GDSFactory + gds2palace meshing + AWS Palace EM solve | `sim-wpd-em` |
 | S-parameter result copy (raw + de-embedded) | `copy-sparam SPARAM=sparx_wpd_...` |

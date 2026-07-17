@@ -525,7 +525,7 @@ regression: ## Regression test for IIC-OSIC-TOOLS (usage: make regression)
 # 	GDSFactory programmatic six-port layout generation
 	$(MAKE) build-top
 # 	KLayout LVS, DRC, and kpex PEX of the power-detector cell.
-#	$(MAKE) klayout-verify CELL=$(POWDET)
+	$(MAKE) klayout-verify CELL=$(POWDET)
 # 	Magic + Netgen LVS, Magic DRC, and Magic PEX of the power-detector cell.
 	$(MAKE) magic-verify CELL=$(POWDET)
 #	EM simulation (WPD).
