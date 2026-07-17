@@ -10,7 +10,7 @@ import gds2palace
 ihp.PDK.activate()
 
 DEFAULT_FREQUENCY = 160e9
-DEFAULT_BANDWIDTH = 20e9
+DEFAULT_BANDWIDTH = 1e9
 DEFAULT_SIGNAL_CROSS_SECTION = "TM2"
 DEFAULT_GROUND_CROSS_SECTION = "M5"
 DEFAULT_Z0 = 50
@@ -61,7 +61,7 @@ ground_cross_section = layer_dict[args.ground_cross_section]
 
 c = gf.Component("sparx_bpf_em_sim")
 hbpf_ref = c.add_ref(ihp.cells.hairpin_coupled_line_bandpass_filter(
-    connection_length=0,
+    connection_length=10,
     frequency=args.frequency,
     bandwidth=args.bandwidth,
     signal_cross_section=signal_cross_section,

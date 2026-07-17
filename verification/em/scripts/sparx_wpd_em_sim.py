@@ -14,7 +14,7 @@ DEFAULT_SIGNAL_CROSS_SECTION = "TM2"
 DEFAULT_GROUND_CROSS_SECTION = "M5"
 DEFAULT_Z0 = 50
 DEFAULT_E_R = 4.1
-DEFAULT_CONFIG = "C"
+DEFAULT_CONFIG = "U"
 
 GDS_DIR = Path(__file__).resolve().parent.parent / "layout"
 
