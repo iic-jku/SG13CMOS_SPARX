@@ -70,6 +70,8 @@ wavelength = snap_to_grid(wavelength)
 wavelength_4 = snap_to_grid(wavelength_4)  # quarter wavelength snap to grid
 
 # filter parameters
+# Note: not exposed as CLI arguments, change them here if required and apply
+# the same change in scripts/six_port_gen.py so the core matches the chip
 order = 3  # order of the band pass filter
 bandwidth = 1e9  # 1GHz bandwidth for input band pass filter
 filter_type = "butter"  # type of the band pass filter, can be "butter", "cheby",

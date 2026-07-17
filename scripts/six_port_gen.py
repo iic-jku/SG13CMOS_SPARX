@@ -2036,6 +2036,8 @@ wavelength_8 = snap_to_grid(wavelength / 8)  # eighth wavelength
 
 
 # filter parameters
+# Note: these parameters are duplicated in verification/em/scripts/sparx_core_em_sim.py,
+# any change here must also be applied there
 order = 3  # order of the band pass filter
 bandwidth = 1e9  # 1GHz bandwidth for input band pass filter
 filter_type = "butter"  # type of the band pass filter, can be "butter", "cheby",

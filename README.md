@@ -467,6 +467,8 @@ make sim-bpf-em FREQ=77 BANDWIDTH=2 FILTER_TYPE=cheby FILTER_ORDER=5 RIPPLE_DB=1
 
 Simulates the assembled six-port core. Consistent with the WPD, BLC, and BPF flows, `sparx_core_em_sim.py` first generates `verification/em/layout/sparx<FREQ>_core.gds` (the six-port network with the seven Palace port markers, assembled exactly as in `six_port_gen.py`). Since the core filename does not encode the EM parameters, the target passes them to `palace_sim.py` explicitly.
 
+The band pass filter parameters of the core (`order`, `bandwidth`, `filter_type`, `connection_length_bpf`, and `ripple_dB`) are not exposed as Python arguments. They are hardcoded in `sparx_core_em_sim.py` and must be changed in the script if required. Since the core must reflect the actual chip layout, any change there must also be applied in `scripts/six_port_gen.py`.
+
 ```sh
 make sim-sparx-core-em
 make sim-sparx-core-em FREQ=77
