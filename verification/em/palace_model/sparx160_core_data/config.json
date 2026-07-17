@@ -2,10 +2,10 @@
     "Problem": {
         "Type": "Driven",
         "Verbose": 3,
-        "Output": "output/palace_auto_sim"
+        "Output": "output/sparx160_core"
     },
     "Model": {
-        "Mesh": "palace_auto_sim.msh",
+        "Mesh": "sparx160_core.msh",
         "L0": 1e-06,
         "Refinement": {
             "UniformLevels": 0,
