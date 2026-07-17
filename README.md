@@ -455,7 +455,7 @@ make sim-wpd-em FREQ=77 CONFIG=C
 
 **Hairpin Coupled-Line Bandpass Filter (BPF):**
 
-The additional filter parameters are `BANDWIDTH` (filter bandwidth in GHz, default: `1`), `FILTER_TYPE` (`butter`, `cheby`, or `ellip`, default: `butter`), `FILTER_ORDER` (filter order, default: `3`), and `RIPPLE_DB` (passband ripple in dB for Chebyshev and elliptic filters, default: `3`).
+The additional filter parameters are `BANDWIDTH` (filter bandwidth in GHz, default: `1`), `FILTER_TYPE` (`butter`, `cheby`, or `ellip`, default: `butter`), `FILTER_ORDER` (filter order, default: `3`), and `RIPPLE_DB` (passband ripple in dB for Chebyshev and elliptic filters, default: `3`). The 10 µm connection pieces at the filter ports are not exposed as a parameter. They are hardcoded in `sparx_bpf_em_sim.py` to match the BPF instantiation in `scripts/six_port_gen.py`.
 
 ```sh
 make sim-bpf-em
@@ -568,7 +568,7 @@ The following testbenches are simulated:
 Runs the complete design flow end to end:
 
 1. `build-top` builds the PDK, generates the six-port layout, and renders the top-level GDS.
-2. Verification of the SBD-based power detector cell with Magic + Netgen LVS, Magic and KLayout DRC and Magic PEX, followed by Magic DRC and KLayout DRC of the top-level six-port.
+2. Verification of the SBD-based power detector cell with both flows, KLayout LVS, DRC, and PEX as well as Magic + Netgen LVS, Magic DRC, and Magic PEX, followed by KLayout DRC and Magic DRC of the top-level six-port.
 3. EM simulation of the passive RF structures with AWS Palace (`sim-bpf-em`, `sim-wpd-em`, `sim-blc-em`).
 4. Copying of the raw and de-embedded EM S-parameter results to `verification/em/s-parameter/` (`copy-sparam` for BPF, WPD, and BLC).
 5. De-embedded S-parameter to lumped element netlist conversion with snp2le, in both SPICE and Spectre netlists, for the BPF, WPD, and BLC.
