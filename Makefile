@@ -379,6 +379,26 @@ sim-bpf-em: ## Run the BPF EM simulation with AWS Palace (usage: make sim-bpf-em
 		palace -np $(NP) config.json && \
 		python3 $(PALACE_SCRIPTS_DIR)/combine_extend_snp.py
 .PHONY: sim-bpf-em
+
+sim-sparx-core-em: ## Run the six-port core EM simulation with AWS Palace (usage: make sim-sparx-core-em [FREQ=<GHz>] [SIGNAL_CROSS_SECTION=<metal>] [GROUND_CROSS_SECTION=<metal>] [Z0=<Ohms>] [E_R=<e_r>] [NP=<num_processors>])
+# 	The core GDS filename does not encode the EM parameters, so they are passed to palace_sim.py explicitly.
+	CORE_GDS_FILENAME=sparx$(FREQ)_core; \
+	. .venv/bin/activate && \
+		python3 $(EM_RPT_DIR)/scripts/sparx_core_em_sim.py \
+			--frequency $(FREQ)e9 \
+			--signal_cross_section $(SIGNAL_CROSS_SECTION) \
+			--ground_cross_section $(GROUND_CROSS_SECTION) \
+			--Z0 $(Z0) \
+			--e_r $(E_R) && \
+		python3 $(EM_RPT_DIR)/scripts/palace_sim.py ../layout/$$CORE_GDS_FILENAME.gds \
+			--f_center $(FREQ)e9 \
+			--signal_cross_section $(SIGNAL_CROSS_SECTION) \
+			--ground_cross_section $(GROUND_CROSS_SECTION) \
+			--Z0 $(Z0) && \
+		cd $(EM_RPT_DIR)/palace_model/$${CORE_GDS_FILENAME}_data && \
+		palace -np $(NP) config.json && \
+		python3 $(PALACE_SCRIPTS_DIR)/combine_extend_snp.py
+.PHONY: sim-sparx-core-em
 # ================================================================================================
 
 
@@ -441,6 +461,18 @@ sim-all: ## Run all Xschem testbench simulations (usage: make sim-all)
 	$(MAKE) sim-xschem TB=sparx_powdet_sbd_tb_ngspice
 	$(MAKE) sim-xschem TB=sparx_powdet_sbd_tb_hb_vacask
 .PHONY: sim-all
+# ================================================================================================
+
+
+# Six-Port Core EM Flow Target
+sparx-core: ## Run the six-port core EM flow: EM simulation, S-parameter copy, LE fit with ORDER=24, and core testbench simulation (usage: make sparx-core [FREQ=<GHz>])
+	$(MAKE) sim-sparx-core-em
+	$(MAKE) copy-sparam SPARAM=sparx$(FREQ)_core
+	$(MAKE) snp2le SNP=$(EM_SPARAM_DIR)/sparx$(FREQ)_core_deembedded.s7p ORDER=24 LE_FORMAT=spice LE_OUT=netlist/spice/sparx_core_le.spice
+	$(MAKE) snp2le SNP=$(EM_SPARAM_DIR)/sparx$(FREQ)_core_deembedded.s7p ORDER=24 LE_FORMAT=spectre LE_OUT=netlist/spectre/sparx_core_le.inc
+	$(MAKE) sim-xschem TB=sparx_core_tb_acsp_ngspice
+	$(MAKE) sim-xschem TB=sparx_core_tb_acsp_vacask
+.PHONY: sparx-core
 # ================================================================================================
 
 
