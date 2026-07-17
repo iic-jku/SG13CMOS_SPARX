@@ -1,9 +1,10 @@
 # SPDX-FileCopyrightText: 2025-2026 The SPARX Team
 # SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1
 import argparse
+from pathlib import Path
+
 import gdsfactory as gf
 import ihp
-from pathlib import Path
 import gds2palace
 
 ihp.PDK.activate()
@@ -36,6 +37,7 @@ filter_type = args.filter_type.lower()
 
 
 def format_ripple(value):
+    """Format the ripple value for the filename tag, e.g. 1.5 -> '1_5'."""
     text = str(value)
     if text.endswith(".0"):
         text = text[:-2]
@@ -56,7 +58,6 @@ layer_dict = {
 
 signal_cross_section = layer_dict[args.signal_cross_section]
 ground_cross_section = layer_dict[args.ground_cross_section]
-
 
 c = gf.Component("sparx_bpf_em_sim")
 hbpf_ref = c.add_ref(ihp.cells.hairpin_coupled_line_bandpass_filter(
@@ -96,3 +97,5 @@ filename = (
 gds_path = GDS_DIR / filename
 # c.show()
 c.write_gds(str(gds_path), with_metadata=False)
+
+print(str(gds_path))

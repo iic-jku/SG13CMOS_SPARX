@@ -1,9 +1,10 @@
 # SPDX-FileCopyrightText: 2025-2026 The SPARX Team
 # SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1
 import argparse
+from pathlib import Path
+
 import gdsfactory as gf
 import ihp
-from pathlib import Path
 import gds2palace
 
 ihp.PDK.activate()
@@ -36,7 +37,6 @@ layer_dict = {
 
 signal_cross_section = layer_dict[args.signal_cross_section]
 ground_cross_section = layer_dict[args.ground_cross_section]
-
 
 c = gf.Component("sparx_blc_em_sim")
 blc_ref = c.add_ref(ihp.cells.branch_line_coupler(

@@ -1,9 +1,10 @@
 # SPDX-FileCopyrightText: 2025-2026 The SPARX Team
 # SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1
 import argparse
+from pathlib import Path
+
 import gdsfactory as gf
 import ihp
-from pathlib import Path
 import gds2palace
 
 ihp.PDK.activate()
@@ -39,7 +40,6 @@ layer_dict = {
 signal_cross_section = layer_dict[args.signal_cross_section]
 ground_cross_section = layer_dict[args.ground_cross_section]
 
-
 c = gf.Component("sparx_wpd_em_sim")
 wpd_ref = c.add_ref(ihp.cells.wilkinson_power_divider(
     connection_length=0,
@@ -68,3 +68,5 @@ filename = f"sparx_wpd_{args.frequency/1e9:.0f}GHz_{args.Z0:.0f}Ohm_{args.signal
 gds_path = GDS_DIR / filename
 # c.show()
 c.write_gds(str(gds_path), with_metadata=False)
+
+print(str(gds_path))

@@ -86,7 +86,6 @@ connection_length_bpf_wpd = snap_to_grid(connection_length_bpf_wpd)
 # branch line coupler parameters
 connection_length_blc = 0  # length of the connection piece between the branch line couplers and the rest of the circuit
 
-
 # ============================================================
 # Six-port network assembly (as in six_port_gen.py)
 # ============================================================
@@ -103,9 +102,7 @@ blc = ihp.cells.branch_line_coupler(
 )
 
 blc_1_ref = c.add_ref(blc)
-
 blc_2_ref = c.add_ref(blc)
-
 blc_3_ref = c.add_ref(blc)
 
 corner = ihp.cells.tline_corner(
@@ -126,7 +123,6 @@ corner_bot_ref.connect("e1", blc_3_ref.ports["e4"], allow_width_mismatch=True)
 
 blc_2_ref.connect("e1", corner_bot_ref.ports["e2"], allow_width_mismatch=True)
 
-
 wpd = ihp.cells.wilkinson_power_divider(
     frequency=f,
     connection_length=connection_length_wpd,
@@ -140,13 +136,11 @@ wpd = ihp.cells.wilkinson_power_divider(
 wpd.ports["e1"].orientation = 0
 wpd_ref = c.add_ref(wpd)
 
-
 connection_length_wpd_blc_one_leg = (
     blc_1_ref.ports["e1"].center[1]
     - blc_2_ref.ports["e4"].center[1]
     - (wpd_ref.ports["e2"].center[1] - wpd_ref.ports["e3"].center[1])
 )
-
 
 connection_wpd_blc = ihp.cells.tline(
     length=snap_to_grid(connection_length_wpd_blc_one_leg / 2) + ihp.tech.nm,  # one grid step of margin
@@ -157,7 +151,6 @@ connection_wpd_blc = ihp.cells.tline(
 
 connection_wpd_blc_top_ref = c.add_ref(connection_wpd_blc)
 connection_wpd_blc_top_ref.connect("e1", blc_1_ref.ports["e1"])
-
 
 wpd_ref.connect("e3", connection_wpd_blc_top_ref.ports["e2"])
 
@@ -177,7 +170,6 @@ connection_bpf_wpd = c.add_ref(
 
 connection_bpf_wpd.connect("e1", wpd_ref.ports["e1"])
 
-
 bandpass_filter = c.add_ref(
     ihp.cells.hairpin_coupled_line_bandpass_filter(
         frequency=f,
@@ -194,7 +186,6 @@ bandpass_filter = c.add_ref(
 )
 
 bandpass_filter.connect("e1", connection_bpf_wpd.ports["e2"])
-
 
 # ============================================================
 # Palace port markers (layers 201-207)
@@ -228,10 +219,12 @@ port7 = c.add_ref(gf.components.rectangle(size=(0.1, blc_3_ref.ports["e3"].width
 port7.center = (blc_3_ref.ports["e3"].center)
 port7.move((-0.05,0))
 
-
 c.xmin = 0
 c.ymin = 0
+# The name must match CORE_GDS_FILENAME in the Makefile (sim-sparx-core-em target)
 filename = f"sparx{args.frequency / 1e9:.0f}_core.gds"
 gds_path = GDS_DIR / filename
 # c.show()
 c.write_gds(str(gds_path), with_metadata=False)
+
+print(str(gds_path))
