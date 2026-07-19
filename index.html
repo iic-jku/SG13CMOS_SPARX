@@ -9,7 +9,7 @@
 <meta name="author" content="Simon Dorrer">
 <meta name="author" content="David Kellerer-Pirklbauer">
 <meta name="author" content="Harald Pretl">
-<meta name="dcterms.date" content="2026-07-17">
+<meta name="dcterms.date" content="2026-07-19">
 
 <title>SPARX: An Open-Source, Automated, Programmatically Generated, Frequency-Scalable Six-Port Receiver in 130-nm CMOS – SPARX</title>
 <style>
@@ -336,7 +336,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">July 17, 2026</p>
+      <p class="date">July 19, 2026</p>
     </div>
   </div>
   
@@ -395,7 +395,9 @@ Important
 <li>GDSFactory: https://github.com/gdsfactory/gdsfactory</li>
 <li>Updated IHP Open-PDK GDSFactory version: https://github.com/iic-jku/IHP-GDSFactory-Addon/tree/main</li>
 <li>IHP Open-PDK: https://github.com/iic-jku/IHP-Open-PDK</li>
+<li>snp2le (S-parameter to lumped element netlist conversion): https://github.com/iic-jku/snp2le, available on PyPI: https://pypi.org/project/snp2le/</li>
 </ul>
+<p>GDSFactory, the IHP Open-PDK, and snp2le are already installed in the IIC-OSIC-TOOLS container.</p>
 <p>The updated IHP Open-PDK GDSFactory version contains all self-made RF devices and wraps existing PCells provided by the IHP Open-PDK, allowing them to be used directly within the GDSFactory framework. This approach requires very little maintenance: if IHP changes the layout of a cell, no wrapper update is necessary. Only interface changes to a PCell function require updates.</p>
 </section>
 <section id="chip-specifications" class="level2" data-number="4">
