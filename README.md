@@ -71,6 +71,9 @@ To build this six-port receiver, the following tools and their respective depend
 - GDSFactory: https://github.com/gdsfactory/gdsfactory
 - Updated IHP Open-PDK GDSFactory version: https://github.com/iic-jku/IHP-GDSFactory-Addon/tree/main
 - IHP Open-PDK: https://github.com/iic-jku/IHP-Open-PDK
+- snp2le (S-parameter to lumped element netlist conversion): https://github.com/iic-jku/snp2le, available on PyPI: https://pypi.org/project/snp2le/
+
+GDSFactory, the IHP Open-PDK, and snp2le are already installed in the IIC-OSIC-TOOLS container.
 
 The updated IHP Open-PDK GDSFactory version contains all self-made RF devices and wraps existing PCells provided by the IHP Open-PDK, allowing them to be used directly within the GDSFactory framework. We choose this approach because it requires very little maintenance. If IHP changes the layout of a cell, no wrapper update is necessary. Only interface changes to a PCell function require updates on our side.
 
