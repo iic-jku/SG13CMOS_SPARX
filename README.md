@@ -69,7 +69,7 @@ To understand the principle of six-port receivers and their architectures, it is
 
 To build this six-port receiver, the following tools and their respective dependencies are required:
 - GDSFactory: https://github.com/gdsfactory/gdsfactory
-- Updated IHP Open-PDK GDSFactory version: https://github.com/iic-jku/IHP-GDSFactory-Addon/tree/main
+- IHP Open-PDK GDSFactory Addon: https://github.com/iic-jku/IHP-GDSFactory-Addon
 - IHP Open-PDK: https://github.com/iic-jku/IHP-Open-PDK
 - snp2le (S-parameter to lumped element netlist conversion): https://github.com/iic-jku/snp2le, available on PyPI: https://pypi.org/project/snp2le/
 
