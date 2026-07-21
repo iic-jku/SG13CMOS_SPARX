@@ -222,10 +222,10 @@ An overview of the open-source design flow for SPARX is shown below. The flow co
 │  └─ xschemrc
 ├─ 📁 verification/
 │  ├─ 📁 drc/
-│  │  ├─ sparx160_top.magic.drc.rpt
-│  │  ├─ sparx160_top_sparx160_top_full.lyrdb
-│  │  ├─ sparx_powdet_sbd.magic.drc.rpt
-│  │  └─ sparx_powdet_sbd_sparx_powdet_sbd_full.lyrdb
+│  │  ├─ 📁 sparx160_top.klayout.drc/
+│  │  ├─ 📁 sparx160_top.magic.drc/
+│  │  ├─ 📁 sparx_powdet_sbd.klayout.drc/
+│  │  └─ 📁 sparx_powdet_sbd.magic.drc/
 │  ├─ 📁 em/
 │  │  ├─ 📁 layout/
 │  │  ├─ 📁 palace_model/
@@ -233,8 +233,8 @@ An overview of the open-source design flow for SPARX is shown below. The flow co
 │  │  ├─ 📁 scripts/
 │  │  └─ 📁 stackups/
 │  └─ 📁 lvs/
-│     ├─ sparx_powdet_sbd.lvs.out
-│     └─ sparx_powdet_sbd.lvsdb
+│     ├─ 📁 sparx_powdet_sbd.klayout.lvs/
+│     └─ 📁 sparx_powdet_sbd.magic.lvs/
 ├─ .gitattributes
 ├─ .gitignore
 ├─ CITATION.cff
@@ -315,7 +315,7 @@ Exports the schematic netlist for LVS from Xschem and places it in `netlist/sche
 
 The `EV_PRECISION` parameter sets the number of significant digits used by Xschem's `ev` function when calculating device properties (default: 5). Increase this to avoid LVS mismatches caused by floating-point rounding differences between Xschem and KLayout (see [xschem#465](https://github.com/StefanSchippers/xschem/issues/465)).
 
-The `ntap` and `ptap` substrate contacts are ignored during LVS in both flows. KLayout LVS has to be run with the `--disable_tap_extraction` option so it does not extract `ntap` and `ptap` devices from the layout (matching Magic + Netgen LVS).
+The `ntap` and `ptap` substrate contacts are ignored during LVS in both flows. `sak-lvs.sh` runs KLayout LVS with the `--disable_tap_extraction` option so it does not extract `ntap` and `ptap` devices from the layout (matching Magic + Netgen LVS).
 
 KLayout uses CDL netlists, while Magic uses SPICE netlists. Accordingly, `klayout-lvs-netlist` uses the Xschem commands `set spiceprefix 1`, `set lvs_netlist 1`, `set top_is_subckt 1`, and `set lvs_ignore 1`, while `magic-lvs-netlist` uses `set spiceprefix 1`, `set lvs_netlist 0`, `set top_is_subckt 1`, and `set lvs_ignore 1`. Hence, switching between CDL and SPICE netlists can be done with `lvs_netlist`.
 
@@ -335,16 +335,16 @@ make magic-lvs-netlist EV_PRECISION=5
 
 ### Layout Versus Schematic (LVS)
 
-Exports the schematic netlist from Xschem, then runs LVS. Compares the GDS layout in `layout/` against the schematic netlist in `netlist/schematic/`. Reports are saved to `verification/lvs/`. The extracted layout netlist is moved to `netlist/layout/`.
+Exports the schematic netlist from Xschem, then runs LVS. Compares the GDS layout in `layout/` against the schematic netlist in `netlist/schematic/`. Both flows use `sak-lvs.sh` and write their reports into per-cell run folders: `verification/lvs/<CELL>.magic.lvs/` (Magic + Netgen) and `verification/lvs/<CELL>.klayout.lvs/` (KLayout, `.lvsdb`). The run folders are wiped at the start of each run, so they always reflect the latest run only. The extracted layout netlist is moved to `netlist/layout/`.
 
-**KLayout LVS** uses `run_lvs.py` from the IHP Open-PDK:
+**KLayout LVS** uses `sak-lvs.sh` (KLayout mode `-k`), which wraps `run_lvs.py` from the IHP Open-PDK:
 
 ```sh
 make klayout-lvs
 make klayout-lvs CELL=sparx_powdet_sbd
 ```
 
-**Magic + Netgen LVS** uses `sak-lvs.sh`:
+**Magic + Netgen LVS** uses `sak-lvs.sh` (Magic + Netgen mode `-m`, the default), which extracts the layout netlist with Magic and compares it against the schematic netlist with Netgen, using the Netgen setup from the IHP Open-PDK:
 
 ```sh
 make magic-lvs
@@ -353,22 +353,39 @@ make magic-lvs CELL=sparx_powdet_sbd
 
 ### Design Rule Check (DRC)
 
-Runs DRC on the GDS layout in `layout/`. Reports are saved to `verification/drc/`.
+Runs DRC on the GDS layout in `layout/`. Both flows use `sak-drc.sh` and write their reports into per-cell run folders: `verification/drc/<CELL>.magic.drc/` (Magic) and `verification/drc/<CELL>.klayout.drc/` (KLayout, `.lyrdb`). The run folders are wiped at the start of each run, so they always reflect the latest run only.
 
-**KLayout DRC (regular)** runs the full DRC rule set on the top-level cell:
+The `DRC_LEVEL` parameter selects the KLayout DRC level (`sak-drc.sh -l`). It is ignored by `magic-drc`, since Magic has no selectable rule decks and always runs the full rule set compiled into the PDK's Magic tech file:
+
+- `precheck` = core FEOL + BEOL manufacturing rules only (fast iteration)
+- `macro` = block-in-isolation sign-off: `precheck` plus off-grid, zero-area, and pin/label checks (default)
+- `regular` = full-chip sign-off: all checks, including density and antenna
+
+| Check | `precheck` | `macro` _(default)_ | `regular` |
+| --- | :---: | :---: | :---: |
+| FEOL + BEOL core rules | ✓ | ✓ | ✓ |
+| Off-grid / angle | – | ✓ | ✓ |
+| Zero-area / geometry | – | ✓ | ✓ |
+| Pin / label | – | ✓ | ✓ |
+| Recommended / extra rules | – | – | ✓ |
+| Density (chip-level fill) | – | – | ✓ |
+| Antenna | – | – | ✓ |
+
+**KLayout DRC (regular)** runs a full (`regular`) KLayout DRC on the top-level cell:
 
 ```sh
 make klayout-drc-regular
 ```
 
-**KLayout DRC** uses `run_drc.py` from the IHP Open-PDK with relaxed rules (FEOL, density checks, and extra rules disabled):
+**KLayout DRC** runs a KLayout DRC at the selected `DRC_LEVEL`:
 
 ```sh
 make klayout-drc
 make klayout-drc CELL=sparx_powdet_sbd
+make klayout-drc CELL=sparx_powdet_sbd DRC_LEVEL=regular
 ```
 
-**Magic DRC** uses `sak-drc.sh`:
+**Magic DRC** runs a Magic DRC with all subcells flattened (`sak-drc.sh -f "*"`):
 
 ```sh
 make magic-drc
@@ -387,7 +404,7 @@ The `EXT_MODE` parameter selects the extraction mode:
 > [!NOTE]
 > For `klayout-pex`, `EXT_MODE=1` (C-decoupled) is not yet supported by kpex and automatically falls back to `EXT_MODE=2` (CC) with a warning.
 
-The `.subckt` name in the extracted SPICE file is automatically renamed from `<CELL>` to `<CELL>_pex`.
+The `.subckt` name in the extracted SPICE file is `<CELL>_pex`: `magic-pex` sets it directly via the `sak-pex.sh` option `-n <CELL>_pex`, while for `klayout-pex` it is automatically renamed from `<CELL>` (kpex).
 
 If a matching Xschem symbol (`schematic/<CELL>_pex.sym`) exists, the `.subckt` pin order in the extracted SPICE file is automatically reordered to match the symbol's pin positions. This ensures the PEX netlist can be used directly with the corresponding Xschem symbol for simulation.
 
@@ -399,12 +416,22 @@ make klayout-pex CELL=sparx_powdet_sbd
 make klayout-pex CELL=sparx_powdet_sbd EXT_MODE=3
 ```
 
-**Magic PEX** uses `sak-pex.sh`:
+**Magic PEX** uses `sak-pex.sh`, which extracts the parasitics with Magic (C-decoupled, C-coupled, or full-RC):
 
 ```sh
 make magic-pex
 make magic-pex CELL=sparx_powdet_sbd
 make magic-pex CELL=sparx_powdet_sbd EXT_MODE=3
+```
+
+For full-RC extraction (`EXT_MODE=3`), `magic-pex` additionally exposes the `sak-pex.sh` `extresist` tuning parameters. They are ignored in `EXT_MODE=1`/`2`:
+
+- `THRESHOLD` - extresist threshold in mOhm (`-t`, default `10000` = 10 Ohm)
+- `MINRES` - extresist minimum resistance in mOhm (`-r`, default `1000` = 1 Ohm)
+- `MINDELAY` - extresist minimum delay in ps (`-y`, default `1`; `0` = gate by resistance)
+
+```sh
+make magic-pex CELL=sparx_powdet_sbd EXT_MODE=3 THRESHOLD=5000 MINRES=500 MINDELAY=2
 ```
 
 ### Verify a Specific Cell
