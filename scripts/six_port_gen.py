@@ -35,6 +35,43 @@ def snap_to_grid(value: float) -> float:
     """Snap a length in um down to the nearest PDK grid point."""
     return round(value - value % ihp.tech.nm, 3)
 
+
+def add_pad_pin(c: gf.Component, port_name: str, pad_name: str, pad_length: float ) -> None:
+    """Add a port label and pin rectangle centered on a probe pad.
+
+    Ports on pad arrays sit at the pad's outer edge rather than its
+    center (see bondpad_array), offset by half the pad size in the
+    direction the port faces. This recenters the label/pin on the pad
+    before adding it, based on the port's orientation.
+
+    Args:
+        c: Parent component (`c`) that owns the port.
+        port_name: Name of the port on `c` to label.
+        pad_name: Text to use for the port label (e.g. "VOUT"). The text
+            and pin layers are derived from the port's own drawing layer.
+    """
+    port = c.ports[port_name].copy()
+    orientation = port.orientation % 360
+
+    if orientation == 0:
+        port.center = (port.center[0] - pad_length / 2, port.center[1])
+    elif orientation == 90:
+        port.center = (port.center[0], port.center[1] - pad_length / 2)
+    elif orientation == 180:
+        port.center = (port.center[0] + pad_length / 2, port.center[1])
+    elif orientation == 270:
+        port.center = (port.center[0], port.center[1] + pad_length / 2)
+    else:
+        raise ValueError(f"Unsupported port orientation: {port.orientation}")
+
+    layer_number, _ = gf.get_layer_tuple(port.layer)
+    text_layer = (layer_number, 25)
+    pin_layer = (layer_number, 2)
+
+    gf.labels.add_port_labels(c, ports=[port], layer=text_layer, texts=[pad_name])
+    gf.add_pins.add_pin_rectangle(c, port=port, layer=pin_layer)
+
+
 # ============================================================
 # CLI parameters
 # ============================================================
@@ -2261,7 +2298,7 @@ probe_left.connect("e1", connection_bpd_pad.ports["e2"], allow_width_mismatch=Tr
 c.add_ref(
     gf.components.rectangle(size=(NOFILL_GSG_SIZE, NOFILL_GSG_SIZE), layer=ihp.tech.LAYER.Metal5nofill)
 ).center = probe_left.center
-
+c.add_ports(probe_left.ports, prefix="probe_left_")
 
 connection_blc_pad = c.add_ref(
     ihp.cells.straight(
@@ -2294,6 +2331,7 @@ probe_right.connect("e1", connection_blc_pad.ports["e2"], allow_width_mismatch=T
 c.add_ref(
     gf.components.rectangle(size=(NOFILL_GSG_SIZE, NOFILL_GSG_SIZE), layer=ihp.tech.LAYER.Metal5nofill)
 ).center = probe_right.center
+c.add_ports(probe_right.ports, prefix="probe_right_")
 
 
 # ============================================================
@@ -2335,6 +2373,9 @@ c.add_ref(
     gf.components.rectangle(size=(NOFILL_VDD_SIZE, NOFILL_VDD_SIZE), layer=ihp.tech.LAYER.Metal5nofill)
 ).center = probe_top.center
 
+c.add_ports(probe_top.ports, prefix="probe_top_")
+
+
 # no fill top
 no_fill_top_left = c.add_ref(
     gf.components.rectangle(size=(NOFILL_SIDE_WIDTH, NOFILL_VDD_SIZE), layer=ihp.tech.LAYER.Metal5nofill)
@@ -2367,6 +2408,8 @@ probe_bottom.xmin = snap_to_grid(probe_bottom.xmin)
 c.add_ref(
     gf.components.rectangle(size=(NOFILL_VDD_SIZE, NOFILL_VDD_SIZE), layer=ihp.tech.LAYER.Metal5nofill)
 ).center = probe_bottom.center
+
+c.add_ports(probe_bottom.ports, prefix="probe_bottom_")
 
 # no fill bottom
 no_fill_bottom_left = c.add_ref(
@@ -2940,6 +2983,36 @@ if do_fill:
 c.xmin = 0
 c.ymin = 0
 c.move((-25, -25))
+
+
+# add port labels for probe pads on the left side of the chip
+add_pad_pin(c = c, port_name="probe_left_e1", pad_name="vlo", pad_length=PROBE_SIGNAL_SIZE)
+add_pad_pin(c = c, port_name="probe_left_e2", pad_name="vss", pad_length=PROBE_SIGNAL_SIZE)
+add_pad_pin(c = c, port_name="probe_left_e3", pad_name="vss", pad_length=PROBE_SIGNAL_SIZE)
+
+# add port labels for probe pads on the right side of the chip
+add_pad_pin(c = c, port_name="probe_right_e1", pad_name="vrf", pad_length=PROBE_SIGNAL_SIZE)
+add_pad_pin(c = c, port_name="probe_right_e2", pad_name="vss", pad_length=PROBE_SIGNAL_SIZE)
+add_pad_pin(c = c, port_name="probe_right_e3", pad_name="vss", pad_length=PROBE_SIGNAL_SIZE)
+
+# add port labels for probe pads on the top side of the chip
+PROBE_SIGNAL_SIZE_TOP_BOTTOM = c.ports["probe_top_e1"].width  # size of the probe signal pads in um
+add_pad_pin(c = c, port_name="probe_top_e1", pad_name="vref1", pad_length=PROBE_SIGNAL_SIZE_TOP_BOTTOM)
+add_pad_pin(c = c, port_name="probe_top_e2", pad_name="vout1", pad_length=PROBE_SIGNAL_SIZE_TOP_BOTTOM)
+add_pad_pin(c = c, port_name="probe_top_e3", pad_name="vss", pad_length=PROBE_SIGNAL_SIZE_TOP_BOTTOM)
+add_pad_pin(c = c, port_name="probe_top_e4", pad_name="vdd", pad_length=PROBE_SIGNAL_SIZE_TOP_BOTTOM)
+add_pad_pin(c = c, port_name="probe_top_e5", pad_name="vss", pad_length=PROBE_SIGNAL_SIZE_TOP_BOTTOM)
+add_pad_pin(c = c, port_name="probe_top_e6", pad_name="vout2", pad_length=PROBE_SIGNAL_SIZE_TOP_BOTTOM)
+add_pad_pin(c = c, port_name="probe_top_e7", pad_name="vref2", pad_length=PROBE_SIGNAL_SIZE_TOP_BOTTOM)
+
+# add port labels for probe pads on the bottom side of the chip
+add_pad_pin(c = c, port_name="probe_bottom_e1", pad_name="vref4", pad_length=PROBE_SIGNAL_SIZE_TOP_BOTTOM)
+add_pad_pin(c = c, port_name="probe_bottom_e2", pad_name="vout4", pad_length=PROBE_SIGNAL_SIZE_TOP_BOTTOM)
+add_pad_pin(c = c, port_name="probe_bottom_e3", pad_name="vss", pad_length=PROBE_SIGNAL_SIZE_TOP_BOTTOM)
+add_pad_pin(c = c, port_name="probe_bottom_e4", pad_name="vdd", pad_length=PROBE_SIGNAL_SIZE_TOP_BOTTOM)
+add_pad_pin(c = c, port_name="probe_bottom_e5", pad_name="vss", pad_length=PROBE_SIGNAL_SIZE_TOP_BOTTOM)
+add_pad_pin(c = c, port_name="probe_bottom_e6", pad_name="vout3", pad_length=PROBE_SIGNAL_SIZE_TOP_BOTTOM)
+add_pad_pin(c = c, port_name="probe_bottom_e7", pad_name="vref3", pad_length=PROBE_SIGNAL_SIZE_TOP_BOTTOM)
 
 c.write_gds(top_gds_filename, with_metadata=False)
 c.show()
