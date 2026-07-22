@@ -52,25 +52,6 @@ include \\"cornerCAP.lib\\" section=cap_typ
 include \\"cornerDIO.lib\\" section=dio_tt
 "
       }
-C {launcher.sym} 1620 -1200 0 0 {name=h1
-descr=simulateVACASK
-tclcommand="
-# Setup the default simulation commands if not already set up
-# for example by already launched simulations.
-set_sim_defaults
-puts $sim(spectre,0,cmd) 
-
-# change the simulator to be used (#0 in spectre category is VACASK)
-set sim(spectre,default) 0
-
-# Create FET and BIP .save file
-mkdir -p $netlist_dir
-write_data [save_params] $netlist_dir/[file rootname [file tail [xschem get current_name]]].save
-
-# run netlist and simulation
-xschem netlist
-simulate
-"}
 C {simulator_commands_shown.sym} 100 -1350 0 0 {
 name=Script_VACASK
 simulator=vacask
@@ -109,10 +90,6 @@ C {capa.sym} 1660 -390 0 0 {name=C2
 m=1
 value=5p}
 C {title-3.sym} 0 0 0 0 {name=l4 author="(c) 2026 H. Pretl, ICD@JKU" rev=1.0 lock=true}
-C {devices/launcher.sym} 1620 -1320 0 0 {name=h4
-descr="simulate" 
-tclcommand="xschem save; xschem netlist; xschem simulate"
-}
 C {devices/launcher.sym} 1620 -1260 0 0 {name=h5
 descr="annotate OP" 
 tclcommand="set show_hidden_texts 1; xschem annotate_op"
@@ -132,3 +109,23 @@ C {noconn.sym} 1840 -560 0 0 {name=l7}
 C {sparx_powdet_sbd_pex.sym} 1400 -920 0 0 {name=xdemod2
 spice_ignore=true
 spectre_ignore=true}
+C {launcher.sym} 1620 -1320 0 0 {name=h2
+descr="Simulate VACASK"
+tclcommand="
+# Setup the default simulation commands if not already set up
+# for example by already launched simulations.
+set_sim_defaults
+puts $sim(spectre,0,cmd)
+
+# change the simulator to be used (#0 in spectre category is VACASK)
+set sim(spectre,default) 0
+xschem set netlist_type spectre
+
+# Create FET and BIP .save file
+mkdir -p $netlist_dir
+write_data [save_params] $netlist_dir/[file rootname [file tail [xschem get current_name]]].save
+
+# run netlist and simulation
+xschem netlist
+simulate
+"}

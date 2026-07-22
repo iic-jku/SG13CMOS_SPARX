@@ -1,384 +1,121 @@
 * NGSPICE file created from sparx_powdet_sbd.ext - technology: ihp-sg13g2
 
-.subckt cmim_W10_L10_Gnone_G1 c1_0_0# m5_n120_n120#
-X0 c1_0_0# m5_n120_n120# cap_cmim l=10u w=10u
-.ends
-
-.subckt array_gdsfactorypcomponentspcontainersparray_component__7cb987b1 cmim_W10_L10_Gnone_G1_0[5]/c1_0_0#
-+ cmim_W10_L10_Gnone_G1_0[2]/c1_0_0# cmim_W10_L10_Gnone_G1_0[3]/m5_n120_n120# cmim_W10_L10_Gnone_G1_0[3]/c1_0_0#
-+ cmim_W10_L10_Gnone_G1_0[0]/m5_n120_n120# cmim_W10_L10_Gnone_G1_0[4]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1_0[0]/c1_0_0# cmim_W10_L10_Gnone_G1_0[1]/m5_n120_n120# cmim_W10_L10_Gnone_G1_0[4]/c1_0_0#
-+ cmim_W10_L10_Gnone_G1_0[5]/m5_n120_n120# cmim_W10_L10_Gnone_G1_0[1]/c1_0_0# cmim_W10_L10_Gnone_G1_0[2]/m5_n120_n120#
-Xcmim_W10_L10_Gnone_G1_0[0] cmim_W10_L10_Gnone_G1_0[0]/c1_0_0# cmim_W10_L10_Gnone_G1_0[0]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1
-Xcmim_W10_L10_Gnone_G1_0[1] cmim_W10_L10_Gnone_G1_0[1]/c1_0_0# cmim_W10_L10_Gnone_G1_0[1]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1
-Xcmim_W10_L10_Gnone_G1_0[2] cmim_W10_L10_Gnone_G1_0[2]/c1_0_0# cmim_W10_L10_Gnone_G1_0[2]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1
-Xcmim_W10_L10_Gnone_G1_0[3] cmim_W10_L10_Gnone_G1_0[3]/c1_0_0# cmim_W10_L10_Gnone_G1_0[3]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1
-Xcmim_W10_L10_Gnone_G1_0[4] cmim_W10_L10_Gnone_G1_0[4]/c1_0_0# cmim_W10_L10_Gnone_G1_0[4]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1
-Xcmim_W10_L10_Gnone_G1_0[5] cmim_W10_L10_Gnone_G1_0[5]/c1_0_0# cmim_W10_L10_Gnone_G1_0[5]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1
-.ends
-
-.subckt array_gdsfactorypcomponentspcontainersparray_component__061cf64d cmim_W10_L10_Gnone_G1_0[2|2]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1_0[1|0]/c1_0_0# cmim_W10_L10_Gnone_G1_0[2|3]/c1_0_0# cmim_W10_L10_Gnone_G1_0[0|3]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1_0[1|1]/m5_n120_n120# cmim_W10_L10_Gnone_G1_0[2|0]/c1_0_0#
-+ cmim_W10_L10_Gnone_G1_0[0|4]/c1_0_0# cmim_W10_L10_Gnone_G1_0[1|5]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1_0[0|0]/m5_n120_n120# cmim_W10_L10_Gnone_G1_0[2|3]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1_0[0|1]/c1_0_0# cmim_W10_L10_Gnone_G1_0[1|4]/c1_0_0# cmim_W10_L10_Gnone_G1_0[0|4]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1_0[1|1]/c1_0_0# cmim_W10_L10_Gnone_G1_0[2|4]/c1_0_0# cmim_W10_L10_Gnone_G1_0[1|2]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1_0[0|5]/c1_0_0# cmim_W10_L10_Gnone_G1_0[2|1]/c1_0_0# cmim_W10_L10_Gnone_G1_0[2|0]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1_0[0|1]/m5_n120_n120# cmim_W10_L10_Gnone_G1_0[2|4]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1_0[1|5]/c1_0_0# cmim_W10_L10_Gnone_G1_0[0|2]/c1_0_0# cmim_W10_L10_Gnone_G1_0[0|5]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1_0[2|5]/c1_0_0# cmim_W10_L10_Gnone_G1_0[1|3]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1_0[1|2]/c1_0_0# cmim_W10_L10_Gnone_G1_0[2|1]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1_0[2|2]/c1_0_0# cmim_W10_L10_Gnone_G1_0[0|2]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1_0[2|5]/m5_n120_n120# cmim_W10_L10_Gnone_G1_0[0|3]/c1_0_0#
-+ cmim_W10_L10_Gnone_G1_0[1|0]/m5_n120_n120# cmim_W10_L10_Gnone_G1_0[1|4]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1_0[1|3]/c1_0_0# cmim_W10_L10_Gnone_G1_0[0|0]/c1_0_0#
-Xcmim_W10_L10_Gnone_G1_0[0|0] cmim_W10_L10_Gnone_G1_0[0|0]/c1_0_0# cmim_W10_L10_Gnone_G1_0[0|0]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1
-Xcmim_W10_L10_Gnone_G1_0[1|0] cmim_W10_L10_Gnone_G1_0[1|0]/c1_0_0# cmim_W10_L10_Gnone_G1_0[1|0]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1
-Xcmim_W10_L10_Gnone_G1_0[2|0] cmim_W10_L10_Gnone_G1_0[2|0]/c1_0_0# cmim_W10_L10_Gnone_G1_0[2|0]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1
-Xcmim_W10_L10_Gnone_G1_0[0|1] cmim_W10_L10_Gnone_G1_0[0|1]/c1_0_0# cmim_W10_L10_Gnone_G1_0[0|1]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1
-Xcmim_W10_L10_Gnone_G1_0[1|1] cmim_W10_L10_Gnone_G1_0[1|1]/c1_0_0# cmim_W10_L10_Gnone_G1_0[1|1]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1
-Xcmim_W10_L10_Gnone_G1_0[2|1] cmim_W10_L10_Gnone_G1_0[2|1]/c1_0_0# cmim_W10_L10_Gnone_G1_0[2|1]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1
-Xcmim_W10_L10_Gnone_G1_0[0|2] cmim_W10_L10_Gnone_G1_0[0|2]/c1_0_0# cmim_W10_L10_Gnone_G1_0[0|2]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1
-Xcmim_W10_L10_Gnone_G1_0[1|2] cmim_W10_L10_Gnone_G1_0[1|2]/c1_0_0# cmim_W10_L10_Gnone_G1_0[1|2]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1
-Xcmim_W10_L10_Gnone_G1_0[2|2] cmim_W10_L10_Gnone_G1_0[2|2]/c1_0_0# cmim_W10_L10_Gnone_G1_0[2|2]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1
-Xcmim_W10_L10_Gnone_G1_0[0|3] cmim_W10_L10_Gnone_G1_0[0|3]/c1_0_0# cmim_W10_L10_Gnone_G1_0[0|3]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1
-Xcmim_W10_L10_Gnone_G1_0[1|3] cmim_W10_L10_Gnone_G1_0[1|3]/c1_0_0# cmim_W10_L10_Gnone_G1_0[1|3]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1
-Xcmim_W10_L10_Gnone_G1_0[2|3] cmim_W10_L10_Gnone_G1_0[2|3]/c1_0_0# cmim_W10_L10_Gnone_G1_0[2|3]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1
-Xcmim_W10_L10_Gnone_G1_0[0|4] cmim_W10_L10_Gnone_G1_0[0|4]/c1_0_0# cmim_W10_L10_Gnone_G1_0[0|4]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1
-Xcmim_W10_L10_Gnone_G1_0[1|4] cmim_W10_L10_Gnone_G1_0[1|4]/c1_0_0# cmim_W10_L10_Gnone_G1_0[1|4]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1
-Xcmim_W10_L10_Gnone_G1_0[2|4] cmim_W10_L10_Gnone_G1_0[2|4]/c1_0_0# cmim_W10_L10_Gnone_G1_0[2|4]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1
-Xcmim_W10_L10_Gnone_G1_0[0|5] cmim_W10_L10_Gnone_G1_0[0|5]/c1_0_0# cmim_W10_L10_Gnone_G1_0[0|5]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1
-Xcmim_W10_L10_Gnone_G1_0[1|5] cmim_W10_L10_Gnone_G1_0[1|5]/c1_0_0# cmim_W10_L10_Gnone_G1_0[1|5]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1
-Xcmim_W10_L10_Gnone_G1_0[2|5] cmim_W10_L10_Gnone_G1_0[2|5]/c1_0_0# cmim_W10_L10_Gnone_G1_0[2|5]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1
-.ends
-
-.subckt C2 straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_66be2a92_4/m6_0_n400#
-+ straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_3e3cdc33_4/m5_0_n400#
-Xarray_gdsfactorypcomponentspcontainersparray_component__7cb987b1_0 straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_66be2a92_4/m6_0_n400#
-+ straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_66be2a92_4/m6_0_n400# straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_3e3cdc33_4/m5_0_n400#
-+ straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_66be2a92_4/m6_0_n400# straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_3e3cdc33_4/m5_0_n400#
-+ straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_3e3cdc33_4/m5_0_n400# straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_66be2a92_4/m6_0_n400#
-+ straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_3e3cdc33_4/m5_0_n400# straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_66be2a92_4/m6_0_n400#
-+ straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_3e3cdc33_4/m5_0_n400# straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_66be2a92_4/m6_0_n400#
-+ straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_3e3cdc33_4/m5_0_n400# array_gdsfactorypcomponentspcontainersparray_component__7cb987b1
-Xarray_gdsfactorypcomponentspcontainersparray_component__7cb987b1_1 straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_66be2a92_4/m6_0_n400#
-+ straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_66be2a92_4/m6_0_n400# straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_3e3cdc33_4/m5_0_n400#
-+ straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_66be2a92_4/m6_0_n400# straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_3e3cdc33_4/m5_0_n400#
-+ straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_3e3cdc33_4/m5_0_n400# straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_66be2a92_4/m6_0_n400#
-+ straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_3e3cdc33_4/m5_0_n400# straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_66be2a92_4/m6_0_n400#
-+ straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_3e3cdc33_4/m5_0_n400# straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_66be2a92_4/m6_0_n400#
-+ straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_3e3cdc33_4/m5_0_n400# array_gdsfactorypcomponentspcontainersparray_component__7cb987b1
-Xarray_gdsfactorypcomponentspcontainersparray_component__061cf64d_0 straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_3e3cdc33_4/m5_0_n400#
-+ straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_66be2a92_4/m6_0_n400# straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_66be2a92_4/m6_0_n400#
-+ straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_3e3cdc33_4/m5_0_n400# straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_3e3cdc33_4/m5_0_n400#
-+ straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_66be2a92_4/m6_0_n400# straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_66be2a92_4/m6_0_n400#
-+ straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_3e3cdc33_4/m5_0_n400# straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_3e3cdc33_4/m5_0_n400#
-+ straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_3e3cdc33_4/m5_0_n400# straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_66be2a92_4/m6_0_n400#
-+ straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_66be2a92_4/m6_0_n400# straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_3e3cdc33_4/m5_0_n400#
-+ straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_66be2a92_4/m6_0_n400# straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_66be2a92_4/m6_0_n400#
-+ straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_3e3cdc33_4/m5_0_n400# straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_66be2a92_4/m6_0_n400#
-+ straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_66be2a92_4/m6_0_n400# straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_3e3cdc33_4/m5_0_n400#
-+ straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_3e3cdc33_4/m5_0_n400# straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_3e3cdc33_4/m5_0_n400#
-+ straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_66be2a92_4/m6_0_n400# straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_66be2a92_4/m6_0_n400#
-+ straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_3e3cdc33_4/m5_0_n400# straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_66be2a92_4/m6_0_n400#
-+ straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_3e3cdc33_4/m5_0_n400# straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_66be2a92_4/m6_0_n400#
-+ straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_3e3cdc33_4/m5_0_n400# straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_66be2a92_4/m6_0_n400#
-+ straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_3e3cdc33_4/m5_0_n400# straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_3e3cdc33_4/m5_0_n400#
-+ straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_66be2a92_4/m6_0_n400# straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_3e3cdc33_4/m5_0_n400#
-+ straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_3e3cdc33_4/m5_0_n400# straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_66be2a92_4/m6_0_n400#
-+ straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_66be2a92_4/m6_0_n400# array_gdsfactorypcomponentspcontainersparray_component__061cf64d
-.ends
-
-.subckt schottky_W1_L0p3_N1_N1 a_n460_n476# dw_n110_n84# a_0_0#
-X0 a_0_0# dw_n110_n84# a_n460_n476# schottky_nbl1 l=1.2u w=2.655u
-.ends
-
-.subckt rhigh_L2_W0p5_B0_P0p18_N1_SSerial_S2_Gnone_G1 sub a_0_n86# a_0_400#
-X0 a_0_400# a_0_n86# sub rhigh l=2u w=0.5u
-.ends
-
-.subckt rsil_L2p5_W0p5_P0p18_R24p9_N1_SSerial_S2_Gnone_G1$1 sub a_0_500# a_0_n70#
-X0 a_0_500# a_0_n70# sub rsil l=2.5u w=0.5u
-.ends
-
-.subckt pmos_W120_L0p13_N24_Gnwell_G2 a_94_0# a_1318_0# a_2134_0# a_0_0# a_1114_0#
-+ a_1930_0# a_502_0# a_68_n36# a_910_0# a_1726_0# a_2440_0# a_298_0# a_706_0# a_1522_0#
-+ a_986_n36# a_1216_0# a_2338_0# a_808_0# a_1292_n36#
-X0 a_1522_0# a_986_n36# a_808_0# a_68_n36# sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
-X1 a_808_0# a_986_n36# a_298_0# a_68_n36# sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
-X2 a_2338_0# a_986_n36# a_808_0# a_68_n36# sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
-X3 a_808_0# a_986_n36# a_502_0# a_68_n36# sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
-X4 a_808_0# a_986_n36# a_1726_0# a_68_n36# sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
-X5 a_1216_0# a_1292_n36# a_1114_0# a_68_n36# sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
-X6 a_808_0# a_986_n36# a_706_0# a_68_n36# sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
-X7 a_808_0# a_986_n36# a_1930_0# a_68_n36# sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
-X8 a_808_0# a_986_n36# a_1318_0# a_68_n36# sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
-X9 a_808_0# a_986_n36# a_910_0# a_68_n36# sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
-X10 a_298_0# a_986_n36# a_808_0# a_68_n36# sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
-X11 a_808_0# a_986_n36# a_2134_0# a_68_n36# sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
-X12 a_808_0# a_986_n36# a_1522_0# a_68_n36# sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
-X13 a_502_0# a_986_n36# a_808_0# a_68_n36# sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
-X14 a_2440_0# a_68_n36# a_2338_0# a_68_n36# sg13_lv_pmos ad=1.7p pd=10.68u as=0.95p ps=5.38u w=5u l=0.13u
-X15 a_1114_0# a_986_n36# a_808_0# a_68_n36# sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
-X16 a_1726_0# a_986_n36# a_808_0# a_68_n36# sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
-X17 a_94_0# a_68_n36# a_0_0# a_68_n36# sg13_lv_pmos ad=0.95p pd=5.38u as=1.7p ps=10.68u w=5u l=0.13u
-X18 a_706_0# a_986_n36# a_808_0# a_68_n36# sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
-X19 a_1930_0# a_986_n36# a_808_0# a_68_n36# sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
-X20 a_1318_0# a_1292_n36# a_1216_0# a_68_n36# sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
-X21 a_910_0# a_986_n36# a_808_0# a_68_n36# sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
-X22 a_2134_0# a_986_n36# a_808_0# a_68_n36# sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
-X23 a_808_0# a_986_n36# a_94_0# a_68_n36# sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
-.ends
-
-.subckt rppd_L1p5_W0p5_B0_P0p18_N1_SSerial_S2_Gnone_G1 a_0_300# sub a_0_n86#
-X0 a_0_300# a_0_n86# sub rppd l=1.5u w=0.5u
-.ends
-
-.subckt nmos_W60_L0p13_N24_Gpsub_G2 a_808_0# a_1726_0# a_2440_0# a_1216_0# a_706_0#
-+ a_298_0# a_2338_0# a_94_0# a_1522_0# a_1318_0# a_2134_0# a_0_0# a_1114_0# a_1930_0#
-+ a_986_n36# straight_L3p28_CSmetal2_routing_W0p26_N2_9/sub a_1292_n36# a_910_0# a_502_0#
-X0 a_1522_0# a_986_n36# a_808_0# straight_L3p28_CSmetal2_routing_W0p26_N2_9/sub sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
-X1 a_808_0# a_986_n36# a_298_0# straight_L3p28_CSmetal2_routing_W0p26_N2_9/sub sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
-X2 a_2338_0# a_986_n36# a_808_0# straight_L3p28_CSmetal2_routing_W0p26_N2_9/sub sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
-X3 a_808_0# a_986_n36# a_502_0# straight_L3p28_CSmetal2_routing_W0p26_N2_9/sub sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
-X4 a_808_0# a_986_n36# a_1726_0# straight_L3p28_CSmetal2_routing_W0p26_N2_9/sub sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
-X5 a_1216_0# a_1292_n36# a_1114_0# straight_L3p28_CSmetal2_routing_W0p26_N2_9/sub sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
-X6 a_808_0# a_986_n36# a_706_0# straight_L3p28_CSmetal2_routing_W0p26_N2_9/sub sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
-X7 a_808_0# a_986_n36# a_1930_0# straight_L3p28_CSmetal2_routing_W0p26_N2_9/sub sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
-X8 a_808_0# a_986_n36# a_1318_0# straight_L3p28_CSmetal2_routing_W0p26_N2_9/sub sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
-X9 a_808_0# a_986_n36# a_910_0# straight_L3p28_CSmetal2_routing_W0p26_N2_9/sub sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
-X10 a_298_0# a_986_n36# a_808_0# straight_L3p28_CSmetal2_routing_W0p26_N2_9/sub sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
-X11 a_808_0# a_986_n36# a_2134_0# straight_L3p28_CSmetal2_routing_W0p26_N2_9/sub sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
-X12 a_808_0# a_986_n36# a_1522_0# straight_L3p28_CSmetal2_routing_W0p26_N2_9/sub sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
-X13 a_502_0# a_986_n36# a_808_0# straight_L3p28_CSmetal2_routing_W0p26_N2_9/sub sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
-X14 a_2440_0# straight_L3p28_CSmetal2_routing_W0p26_N2_9/sub a_2338_0# straight_L3p28_CSmetal2_routing_W0p26_N2_9/sub sg13_lv_nmos ad=0.85p pd=5.68u as=0.475p ps=2.88u w=2.5u l=0.13u
-X15 a_1114_0# a_986_n36# a_808_0# straight_L3p28_CSmetal2_routing_W0p26_N2_9/sub sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
-X16 a_1726_0# a_986_n36# a_808_0# straight_L3p28_CSmetal2_routing_W0p26_N2_9/sub sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
-X17 a_94_0# straight_L3p28_CSmetal2_routing_W0p26_N2_9/sub a_0_0# straight_L3p28_CSmetal2_routing_W0p26_N2_9/sub sg13_lv_nmos ad=0.475p pd=2.88u as=0.85p ps=5.68u w=2.5u l=0.13u
-X18 a_706_0# a_986_n36# a_808_0# straight_L3p28_CSmetal2_routing_W0p26_N2_9/sub sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
-X19 a_1930_0# a_986_n36# a_808_0# straight_L3p28_CSmetal2_routing_W0p26_N2_9/sub sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
-X20 a_1318_0# a_1292_n36# a_1216_0# straight_L3p28_CSmetal2_routing_W0p26_N2_9/sub sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
-X21 a_910_0# a_986_n36# a_808_0# straight_L3p28_CSmetal2_routing_W0p26_N2_9/sub sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
-X22 a_2134_0# a_986_n36# a_808_0# straight_L3p28_CSmetal2_routing_W0p26_N2_9/sub sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
-X23 a_808_0# a_986_n36# a_94_0# straight_L3p28_CSmetal2_routing_W0p26_N2_9/sub sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
-.ends
-
-.subckt output_stage nmos_W60_L0p13_N24_Gpsub_G2_0/a_986_n36# nmos_W60_L0p13_N24_Gpsub_G2_0/a_0_0#
-+ nmos_W60_L0p13_N24_Gpsub_G2_0/a_808_0# nmos_W60_L0p13_N24_Gpsub_G2_0/a_1292_n36#
-+ pmos_W120_L0p13_N24_Gnwell_G2_0/a_94_0# nmos_W60_L0p13_N24_Gpsub_G2_0/a_1216_0#
-+ nmos_W60_L0p13_N24_Gpsub_G2_0/a_1318_0# nmos_W60_L0p13_N24_Gpsub_G2_0/a_2134_0#
-+ pmos_W120_L0p13_N24_Gnwell_G2_0/a_910_0# pmos_W120_L0p13_N24_Gnwell_G2_0/a_1726_0#
-+ pmos_W120_L0p13_N24_Gnwell_G2_0/a_2440_0# nmos_W60_L0p13_N24_Gpsub_G2_0/a_502_0#
-+ pmos_W120_L0p13_N24_Gnwell_G2_0/a_0_0# nmos_W60_L0p13_N24_Gpsub_G2_0/a_1114_0# nmos_W60_L0p13_N24_Gpsub_G2_0/a_1930_0#
-+ pmos_W120_L0p13_N24_Gnwell_G2_0/a_706_0# pmos_W120_L0p13_N24_Gnwell_G2_0/a_1292_n36#
-+ pmos_W120_L0p13_N24_Gnwell_G2_0/a_2338_0# nmos_W60_L0p13_N24_Gpsub_G2_0/a_298_0#
-+ pmos_W120_L0p13_N24_Gnwell_G2_0/a_502_0# nmos_W60_L0p13_N24_Gpsub_G2_0/a_910_0#
-+ nmos_W60_L0p13_N24_Gpsub_G2_0/a_1726_0# nmos_W60_L0p13_N24_Gpsub_G2_0/a_2440_0#
-+ pmos_W120_L0p13_N24_Gnwell_G2_0/a_1318_0# pmos_W120_L0p13_N24_Gnwell_G2_0/a_2134_0#
-+ nmos_W60_L0p13_N24_Gpsub_G2_0/a_94_0# pmos_W120_L0p13_N24_Gnwell_G2_0/a_298_0# nmos_W60_L0p13_N24_Gpsub_G2_0/a_706_0#
-+ nmos_W60_L0p13_N24_Gpsub_G2_0/a_1522_0# nmos_W60_L0p13_N24_Gpsub_G2_0/a_2338_0#
-+ pmos_W120_L0p13_N24_Gnwell_G2_0/a_68_n36# pmos_W120_L0p13_N24_Gnwell_G2_0/a_1522_0#
-+ pmos_W120_L0p13_N24_Gnwell_G2_0/a_1114_0# sub pmos_W120_L0p13_N24_Gnwell_G2_0/a_1930_0#
-Xpmos_W120_L0p13_N24_Gnwell_G2_0 pmos_W120_L0p13_N24_Gnwell_G2_0/a_94_0# pmos_W120_L0p13_N24_Gnwell_G2_0/a_1318_0#
-+ pmos_W120_L0p13_N24_Gnwell_G2_0/a_2134_0# pmos_W120_L0p13_N24_Gnwell_G2_0/a_0_0#
-+ pmos_W120_L0p13_N24_Gnwell_G2_0/a_1114_0# pmos_W120_L0p13_N24_Gnwell_G2_0/a_1930_0#
-+ pmos_W120_L0p13_N24_Gnwell_G2_0/a_502_0# pmos_W120_L0p13_N24_Gnwell_G2_0/a_68_n36#
-+ pmos_W120_L0p13_N24_Gnwell_G2_0/a_910_0# pmos_W120_L0p13_N24_Gnwell_G2_0/a_1726_0#
-+ pmos_W120_L0p13_N24_Gnwell_G2_0/a_2440_0# pmos_W120_L0p13_N24_Gnwell_G2_0/a_298_0#
-+ pmos_W120_L0p13_N24_Gnwell_G2_0/a_706_0# pmos_W120_L0p13_N24_Gnwell_G2_0/a_1522_0#
-+ nmos_W60_L0p13_N24_Gpsub_G2_0/a_986_n36# nmos_W60_L0p13_N24_Gpsub_G2_0/a_1216_0#
-+ pmos_W120_L0p13_N24_Gnwell_G2_0/a_2338_0# nmos_W60_L0p13_N24_Gpsub_G2_0/a_808_0#
-+ pmos_W120_L0p13_N24_Gnwell_G2_0/a_1292_n36# pmos_W120_L0p13_N24_Gnwell_G2
-Xrppd_L1p5_W0p5_B0_P0p18_N1_SSerial_S2_Gnone_G1_1 nmos_W60_L0p13_N24_Gpsub_G2_0/a_1216_0#
-+ sub nmos_W60_L0p13_N24_Gpsub_G2_0/a_1292_n36# rppd_L1p5_W0p5_B0_P0p18_N1_SSerial_S2_Gnone_G1
-Xrppd_L1p5_W0p5_B0_P0p18_N1_SSerial_S2_Gnone_G1_0 nmos_W60_L0p13_N24_Gpsub_G2_0/a_986_n36#
-+ sub nmos_W60_L0p13_N24_Gpsub_G2_0/a_808_0# rppd_L1p5_W0p5_B0_P0p18_N1_SSerial_S2_Gnone_G1
-Xnmos_W60_L0p13_N24_Gpsub_G2_0 nmos_W60_L0p13_N24_Gpsub_G2_0/a_808_0# nmos_W60_L0p13_N24_Gpsub_G2_0/a_1726_0#
-+ nmos_W60_L0p13_N24_Gpsub_G2_0/a_2440_0# nmos_W60_L0p13_N24_Gpsub_G2_0/a_1216_0#
-+ nmos_W60_L0p13_N24_Gpsub_G2_0/a_706_0# nmos_W60_L0p13_N24_Gpsub_G2_0/a_298_0# nmos_W60_L0p13_N24_Gpsub_G2_0/a_2338_0#
-+ nmos_W60_L0p13_N24_Gpsub_G2_0/a_94_0# nmos_W60_L0p13_N24_Gpsub_G2_0/a_1522_0# nmos_W60_L0p13_N24_Gpsub_G2_0/a_1318_0#
-+ nmos_W60_L0p13_N24_Gpsub_G2_0/a_2134_0# nmos_W60_L0p13_N24_Gpsub_G2_0/a_0_0# nmos_W60_L0p13_N24_Gpsub_G2_0/a_1114_0#
-+ nmos_W60_L0p13_N24_Gpsub_G2_0/a_1930_0# nmos_W60_L0p13_N24_Gpsub_G2_0/a_986_n36#
-+ sub nmos_W60_L0p13_N24_Gpsub_G2_0/a_1292_n36# nmos_W60_L0p13_N24_Gpsub_G2_0/a_910_0#
-+ nmos_W60_L0p13_N24_Gpsub_G2_0/a_502_0# nmos_W60_L0p13_N24_Gpsub_G2
-.ends
-
-.subckt array_gdsfactorypcomponentspcontainersparray_component__3e7d8b3e cmim_W10_L10_Gnone_G1_0[1|0]/c1_0_0#
-+ cmim_W10_L10_Gnone_G1_0[3|0]/m5_n120_n120# cmim_W10_L10_Gnone_G1_0[2|0]/c1_0_0#
-+ cmim_W10_L10_Gnone_G1_0[1|1]/m5_n120_n120# cmim_W10_L10_Gnone_G1_0[3|0]/c1_0_0#
-+ cmim_W10_L10_Gnone_G1_0[0|1]/c1_0_0# cmim_W10_L10_Gnone_G1_0[0|0]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1_0[3|1]/m5_n120_n120# cmim_W10_L10_Gnone_G1_0[1|1]/c1_0_0#
-+ cmim_W10_L10_Gnone_G1_0[2|1]/c1_0_0# cmim_W10_L10_Gnone_G1_0[2|0]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1_0[3|1]/c1_0_0# cmim_W10_L10_Gnone_G1_0[0|1]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1_0[2|1]/m5_n120_n120# cmim_W10_L10_Gnone_G1_0[1|0]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1_0[0|0]/c1_0_0#
-Xcmim_W10_L10_Gnone_G1_0[0|0] cmim_W10_L10_Gnone_G1_0[0|0]/c1_0_0# cmim_W10_L10_Gnone_G1_0[0|0]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1
-Xcmim_W10_L10_Gnone_G1_0[1|0] cmim_W10_L10_Gnone_G1_0[1|0]/c1_0_0# cmim_W10_L10_Gnone_G1_0[1|0]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1
-Xcmim_W10_L10_Gnone_G1_0[2|0] cmim_W10_L10_Gnone_G1_0[2|0]/c1_0_0# cmim_W10_L10_Gnone_G1_0[2|0]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1
-Xcmim_W10_L10_Gnone_G1_0[3|0] cmim_W10_L10_Gnone_G1_0[3|0]/c1_0_0# cmim_W10_L10_Gnone_G1_0[3|0]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1
-Xcmim_W10_L10_Gnone_G1_0[0|1] cmim_W10_L10_Gnone_G1_0[0|1]/c1_0_0# cmim_W10_L10_Gnone_G1_0[0|1]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1
-Xcmim_W10_L10_Gnone_G1_0[1|1] cmim_W10_L10_Gnone_G1_0[1|1]/c1_0_0# cmim_W10_L10_Gnone_G1_0[1|1]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1
-Xcmim_W10_L10_Gnone_G1_0[2|1] cmim_W10_L10_Gnone_G1_0[2|1]/c1_0_0# cmim_W10_L10_Gnone_G1_0[2|1]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1
-Xcmim_W10_L10_Gnone_G1_0[3|1] cmim_W10_L10_Gnone_G1_0[3|1]/c1_0_0# cmim_W10_L10_Gnone_G1_0[3|1]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1
-.ends
-
-.subckt array_gdsfactorypcomponentspcontainersparray_component__e54567cf cmim_W10_L10_Gnone_G1_0[2|2]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1_0[1|0]/c1_0_0# cmim_W10_L10_Gnone_G1_0[3|0]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1_0[2|0]/c1_0_0# cmim_W10_L10_Gnone_G1_0[1|1]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1_0[4|2]/m5_n120_n120# cmim_W10_L10_Gnone_G1_0[3|0]/c1_0_0#
-+ cmim_W10_L10_Gnone_G1_0[0|1]/c1_0_0# cmim_W10_L10_Gnone_G1_0[0|0]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1_0[4|0]/c1_0_0# cmim_W10_L10_Gnone_G1_0[3|1]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1_0[1|1]/c1_0_0# cmim_W10_L10_Gnone_G1_0[1|2]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1_0[2|1]/c1_0_0# cmim_W10_L10_Gnone_G1_0[2|0]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1_0[3|1]/c1_0_0# cmim_W10_L10_Gnone_G1_0[0|1]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1_0[0|2]/c1_0_0# cmim_W10_L10_Gnone_G1_0[3|2]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1_0[4|1]/c1_0_0# cmim_W10_L10_Gnone_G1_0[1|2]/c1_0_0# cmim_W10_L10_Gnone_G1_0[4|0]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1_0[2|2]/c1_0_0# cmim_W10_L10_Gnone_G1_0[2|1]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1_0[0|2]/m5_n120_n120# cmim_W10_L10_Gnone_G1_0[3|2]/c1_0_0#
-+ cmim_W10_L10_Gnone_G1_0[1|0]/m5_n120_n120# cmim_W10_L10_Gnone_G1_0[4|2]/c1_0_0#
-+ cmim_W10_L10_Gnone_G1_0[4|1]/m5_n120_n120# cmim_W10_L10_Gnone_G1_0[0|0]/c1_0_0#
-Xcmim_W10_L10_Gnone_G1_0[0|0] cmim_W10_L10_Gnone_G1_0[0|0]/c1_0_0# cmim_W10_L10_Gnone_G1_0[0|0]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1
-Xcmim_W10_L10_Gnone_G1_0[1|0] cmim_W10_L10_Gnone_G1_0[1|0]/c1_0_0# cmim_W10_L10_Gnone_G1_0[1|0]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1
-Xcmim_W10_L10_Gnone_G1_0[2|0] cmim_W10_L10_Gnone_G1_0[2|0]/c1_0_0# cmim_W10_L10_Gnone_G1_0[2|0]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1
-Xcmim_W10_L10_Gnone_G1_0[3|0] cmim_W10_L10_Gnone_G1_0[3|0]/c1_0_0# cmim_W10_L10_Gnone_G1_0[3|0]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1
-Xcmim_W10_L10_Gnone_G1_0[4|0] cmim_W10_L10_Gnone_G1_0[4|0]/c1_0_0# cmim_W10_L10_Gnone_G1_0[4|0]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1
-Xcmim_W10_L10_Gnone_G1_0[0|1] cmim_W10_L10_Gnone_G1_0[0|1]/c1_0_0# cmim_W10_L10_Gnone_G1_0[0|1]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1
-Xcmim_W10_L10_Gnone_G1_0[1|1] cmim_W10_L10_Gnone_G1_0[1|1]/c1_0_0# cmim_W10_L10_Gnone_G1_0[1|1]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1
-Xcmim_W10_L10_Gnone_G1_0[2|1] cmim_W10_L10_Gnone_G1_0[2|1]/c1_0_0# cmim_W10_L10_Gnone_G1_0[2|1]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1
-Xcmim_W10_L10_Gnone_G1_0[3|1] cmim_W10_L10_Gnone_G1_0[3|1]/c1_0_0# cmim_W10_L10_Gnone_G1_0[3|1]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1
-Xcmim_W10_L10_Gnone_G1_0[4|1] cmim_W10_L10_Gnone_G1_0[4|1]/c1_0_0# cmim_W10_L10_Gnone_G1_0[4|1]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1
-Xcmim_W10_L10_Gnone_G1_0[0|2] cmim_W10_L10_Gnone_G1_0[0|2]/c1_0_0# cmim_W10_L10_Gnone_G1_0[0|2]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1
-Xcmim_W10_L10_Gnone_G1_0[1|2] cmim_W10_L10_Gnone_G1_0[1|2]/c1_0_0# cmim_W10_L10_Gnone_G1_0[1|2]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1
-Xcmim_W10_L10_Gnone_G1_0[2|2] cmim_W10_L10_Gnone_G1_0[2|2]/c1_0_0# cmim_W10_L10_Gnone_G1_0[2|2]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1
-Xcmim_W10_L10_Gnone_G1_0[3|2] cmim_W10_L10_Gnone_G1_0[3|2]/c1_0_0# cmim_W10_L10_Gnone_G1_0[3|2]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1
-Xcmim_W10_L10_Gnone_G1_0[4|2] cmim_W10_L10_Gnone_G1_0[4|2]/c1_0_0# cmim_W10_L10_Gnone_G1_0[4|2]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1
-.ends
-
-.subckt array_gdsfactorypcomponentspcontainersparray_component__89c70ba2 cmim_W10_L10_Gnone_G1_0[2]/c1_0_0#
-+ cmim_W10_L10_Gnone_G1_0[3]/m5_n120_n120# cmim_W10_L10_Gnone_G1_0[3]/c1_0_0# cmim_W10_L10_Gnone_G1_0[0]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1_0[0]/c1_0_0# cmim_W10_L10_Gnone_G1_0[4]/m5_n120_n120# cmim_W10_L10_Gnone_G1_0[4]/c1_0_0#
-+ cmim_W10_L10_Gnone_G1_0[1]/m5_n120_n120# cmim_W10_L10_Gnone_G1_0[1]/c1_0_0# cmim_W10_L10_Gnone_G1_0[2]/m5_n120_n120#
-Xcmim_W10_L10_Gnone_G1_0[0] cmim_W10_L10_Gnone_G1_0[0]/c1_0_0# cmim_W10_L10_Gnone_G1_0[0]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1
-Xcmim_W10_L10_Gnone_G1_0[1] cmim_W10_L10_Gnone_G1_0[1]/c1_0_0# cmim_W10_L10_Gnone_G1_0[1]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1
-Xcmim_W10_L10_Gnone_G1_0[2] cmim_W10_L10_Gnone_G1_0[2]/c1_0_0# cmim_W10_L10_Gnone_G1_0[2]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1
-Xcmim_W10_L10_Gnone_G1_0[3] cmim_W10_L10_Gnone_G1_0[3]/c1_0_0# cmim_W10_L10_Gnone_G1_0[3]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1
-Xcmim_W10_L10_Gnone_G1_0[4] cmim_W10_L10_Gnone_G1_0[4]/c1_0_0# cmim_W10_L10_Gnone_G1_0[4]/m5_n120_n120#
-+ cmim_W10_L10_Gnone_G1
-.ends
-
-.subckt C3 straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_66be2a92_3/m6_0_n400#
-+ straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_3e3cdc33_3/m5_0_n400#
-Xarray_gdsfactorypcomponentspcontainersparray_component__3e7d8b3e_0 straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_66be2a92_3/m6_0_n400#
-+ straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_3e3cdc33_3/m5_0_n400# straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_66be2a92_3/m6_0_n400#
-+ straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_3e3cdc33_3/m5_0_n400# straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_66be2a92_3/m6_0_n400#
-+ straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_66be2a92_3/m6_0_n400# straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_3e3cdc33_3/m5_0_n400#
-+ straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_3e3cdc33_3/m5_0_n400# straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_66be2a92_3/m6_0_n400#
-+ straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_66be2a92_3/m6_0_n400# straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_3e3cdc33_3/m5_0_n400#
-+ straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_66be2a92_3/m6_0_n400# straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_3e3cdc33_3/m5_0_n400#
-+ straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_3e3cdc33_3/m5_0_n400# straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_3e3cdc33_3/m5_0_n400#
-+ straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_66be2a92_3/m6_0_n400# array_gdsfactorypcomponentspcontainersparray_component__3e7d8b3e
-Xarray_gdsfactorypcomponentspcontainersparray_component__e54567cf_0 straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_3e3cdc33_3/m5_0_n400#
-+ straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_66be2a92_3/m6_0_n400# straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_3e3cdc33_3/m5_0_n400#
-+ straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_66be2a92_3/m6_0_n400# straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_3e3cdc33_3/m5_0_n400#
-+ straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_3e3cdc33_3/m5_0_n400# straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_66be2a92_3/m6_0_n400#
-+ straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_66be2a92_3/m6_0_n400# straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_3e3cdc33_3/m5_0_n400#
-+ straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_66be2a92_3/m6_0_n400# straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_3e3cdc33_3/m5_0_n400#
-+ straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_66be2a92_3/m6_0_n400# straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_3e3cdc33_3/m5_0_n400#
-+ straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_66be2a92_3/m6_0_n400# straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_3e3cdc33_3/m5_0_n400#
-+ straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_66be2a92_3/m6_0_n400# straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_3e3cdc33_3/m5_0_n400#
-+ straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_66be2a92_3/m6_0_n400# straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_3e3cdc33_3/m5_0_n400#
-+ straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_66be2a92_3/m6_0_n400# straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_66be2a92_3/m6_0_n400#
-+ straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_3e3cdc33_3/m5_0_n400# straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_66be2a92_3/m6_0_n400#
-+ straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_3e3cdc33_3/m5_0_n400# straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_3e3cdc33_3/m5_0_n400#
-+ straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_66be2a92_3/m6_0_n400# straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_3e3cdc33_3/m5_0_n400#
-+ straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_66be2a92_3/m6_0_n400# straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_3e3cdc33_3/m5_0_n400#
-+ straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_66be2a92_3/m6_0_n400# array_gdsfactorypcomponentspcontainersparray_component__e54567cf
-Xarray_gdsfactorypcomponentspcontainersparray_component__89c70ba2_0 straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_66be2a92_3/m6_0_n400#
-+ straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_3e3cdc33_3/m5_0_n400# straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_66be2a92_3/m6_0_n400#
-+ straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_3e3cdc33_3/m5_0_n400# straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_66be2a92_3/m6_0_n400#
-+ straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_3e3cdc33_3/m5_0_n400# straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_66be2a92_3/m6_0_n400#
-+ straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_3e3cdc33_3/m5_0_n400# straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_66be2a92_3/m6_0_n400#
-+ straight_L58p6_CSFcross_section_Mgdsfactorypcross_secti_3e3cdc33_3/m5_0_n400# array_gdsfactorypcomponentspcontainersparray_component__89c70ba2
-.ends
-
-.subckt cmim_W6p8_L9_Gnone_G1 c1_0_0# m5_n120_n120#
-X0 c1_0_0# m5_n120_n120# cap_cmim l=9u w=6.8u
-.ends
-
-.subckt rsil_L2p5_W0p5_P0p18_R24p9_N1_SSerial_S2_Gnone_G1$2 sub a_0_500# a_0_n70#
-X0 a_0_500# a_0_n70# sub rsil l=2.5u w=0.5u
-.ends
-
 .subckt sparx_powdet_sbd vref vout vss vdd rfin
-XC2_0 rhigh_L2_W0p5_B0_P0p18_N1_SSerial_S2_Gnone_G1_0/a_0_400# vss C2
-Xschottky_W1_L0p3_N1_N1_0 vss schottky_W1_L0p3_N1_N1_0/dw_n110_n84# schottky_W1_L0p3_N1_N1_0/a_0_0#
-+ schottky_W1_L0p3_N1_N1
-Xschottky_W1_L0p3_N1_N1_1 vss schottky_W1_L0p3_N1_N1_1/dw_n110_n84# schottky_W1_L0p3_N1_N1_1/a_0_0#
-+ schottky_W1_L0p3_N1_N1
-Xrhigh_L2_W0p5_B0_P0p18_N1_SSerial_S2_Gnone_G1_0 vss vdd rhigh_L2_W0p5_B0_P0p18_N1_SSerial_S2_Gnone_G1_0/a_0_400#
-+ rhigh_L2_W0p5_B0_P0p18_N1_SSerial_S2_Gnone_G1
-Xrsil_L2p5_W0p5_P0p18_R24p9_N1_SSerial_S2_Gnone_G1$1_0 vss schottky_W1_L0p3_N1_N1_1/a_0_0#
-+ rhigh_L2_W0p5_B0_P0p18_N1_SSerial_S2_Gnone_G1_0/a_0_400# rsil_L2p5_W0p5_P0p18_R24p9_N1_SSerial_S2_Gnone_G1$1
-Xoutput_stage_0 schottky_W1_L0p3_N1_N1_1/dw_n110_n84# vss vout schottky_W1_L0p3_N1_N1_0/dw_n110_n84#
-+ vdd vref vss vss vdd vdd vdd vss vdd vss vss vdd schottky_W1_L0p3_N1_N1_0/dw_n110_n84#
-+ vdd vss vdd vss vss vss vdd vdd vss vdd vss vss vss vdd vdd vdd vss vdd output_stage
-XC3_0 vdd vss C3
-Xcmim_W6p8_L9_Gnone_G1_0 vdd vss cmim_W6p8_L9_Gnone_G1
-Xcmim_W6p8_L9_Gnone_G1_1 vdd vss cmim_W6p8_L9_Gnone_G1
-Xrsil_L2p5_W0p5_P0p18_R24p9_N1_SSerial_S2_Gnone_G1$2_0 vss schottky_W1_L0p3_N1_N1_0/a_0_0#
-+ rhigh_L2_W0p5_B0_P0p18_N1_SSerial_S2_Gnone_G1_0/a_0_400# rsil_L2p5_W0p5_P0p18_R24p9_N1_SSerial_S2_Gnone_G1$2
-Xcmim_W10_L10_Gnone_G1_0 rfin schottky_W1_L0p3_N1_N1_1/a_0_0# cmim_W10_L10_Gnone_G1
+X0 vdd vss cap_cmim l=10u w=10u
+X1 vss dw_8122_3287# vout vss sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
+X2 vout dw_8122_3287# vdd vdd sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
+X3 vss dw_8122_3287# vout vss sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
+X4 vdd vss cap_cmim l=10u w=10u
+X5 a_8474_1965# vss cap_cmim l=10u w=10u
+X6 vout dw_8122_3287# vdd vdd sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
+X7 vdd dw_9390_3287# vref vdd sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
+X8 vss dw_8122_3287# vout vss sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
+X9 a_9398_2535# dw_9390_3287# vss schottky_nbl1 l=1.2u w=2.655u
+X10 vout dw_8122_3287# vdd vdd sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
+X11 a_8474_1965# vss cap_cmim l=10u w=10u
+X12 vdd vss cap_cmim l=10u w=10u
+X13 vdd vss cap_cmim l=10u w=10u
+X14 vdd vss cap_cmim l=10u w=10u
+X15 a_8474_1965# vss cap_cmim l=10u w=10u
+X16 vout dw_8122_3287# vss vss sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
+X17 a_8474_1965# vss cap_cmim l=10u w=10u
+X18 vout dw_8122_3287# vdd vdd sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
+X19 vdd vss cap_cmim l=10u w=10u
+X20 vdd vss cap_cmim l=10u w=10u
+X21 a_8474_1965# vss cap_cmim l=10u w=10u
+X22 vout dw_8122_3287# vss vss sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
+X23 vdd vss cap_cmim l=9u w=6.8u
+X24 vdd vss cap_cmim l=10u w=10u
+X25 vdd vss cap_cmim l=10u w=10u
+X26 vss dw_8122_3287# vout vss sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
+X27 a_8474_1965# vss cap_cmim l=10u w=10u
+X28 a_8474_1965# vss cap_cmim l=10u w=10u
+X29 a_8474_1965# vss cap_cmim l=10u w=10u
+X30 vout dw_8122_3287# vdd vdd sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
+X31 a_8474_1965# vss cap_cmim l=10u w=10u
+X32 vss vss vss vss sg13_lv_nmos ad=0.475p pd=2.88u as=46.1791p ps=0.2399m w=2.5u l=0.13u
+X33 vdd vss cap_cmim l=9u w=6.8u
+X34 vdd vss cap_cmim l=10u w=10u
+X35 vdd vss cap_cmim l=10u w=10u
+X36 vdd dw_8122_3287# vout vdd sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
+X37 vdd vss cap_cmim l=10u w=10u
+X38 a_8474_1965# vss cap_cmim l=10u w=10u
+X39 vss dw_8122_3287# vout vss sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
+X40 a_8474_1965# vdd vss rhigh l=2u w=0.5u
+X41 vdd dw_8122_3287# vout vdd sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
+X42 vout dw_8122_3287# vss vss sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
+X43 a_8474_1965# vss cap_cmim l=10u w=10u
+X44 vdd vss cap_cmim l=10u w=10u
+X45 vdd vss cap_cmim l=10u w=10u
+X46 vss dw_8122_3287# vout vss sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
+X47 a_8474_1965# vss cap_cmim l=10u w=10u
+X48 vdd vss cap_cmim l=10u w=10u
+X49 a_8474_1965# vss cap_cmim l=10u w=10u
+X50 vref dw_9390_3287# vss vss sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
+X51 a_8474_1965# vss cap_cmim l=10u w=10u
+X52 vdd vss cap_cmim l=10u w=10u
+X53 vout dw_8122_3287# vss vss sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
+X54 rfin a_8232_3371# cap_cmim l=10u w=10u
+X55 dw_9390_3287# vref vss rppd l=1.5u w=0.5u
+X56 vdd vss cap_cmim l=10u w=10u
+X57 vdd dw_8122_3287# vout vdd sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
+X58 a_9398_2535# a_8474_1965# vss rsil l=2.5u w=0.5u
+X59 vss dw_8122_3287# vout vss sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
+X60 a_8474_1965# vss cap_cmim l=10u w=10u
+X61 vdd vss cap_cmim l=10u w=10u
+X62 vdd dw_8122_3287# vout vdd sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
+X63 vout dw_8122_3287# vdd vdd sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
+X64 vss vss vss vss sg13_lv_nmos ad=0.85p pd=5.68u as=0 ps=0 w=2.5u l=0.13u
+X65 vdd vss cap_cmim l=10u w=10u
+X66 vdd vss cap_cmim l=10u w=10u
+X67 a_8232_3371# dw_8122_3287# vss schottky_nbl1 l=1.2u w=2.655u
+X68 vout dw_8122_3287# vss rppd l=1.5u w=0.5u
+X69 vout dw_8122_3287# vdd vdd sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
+X70 vss dw_8122_3287# vout vss sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
+X71 a_8474_1965# vss cap_cmim l=10u w=10u
+X72 vdd dw_8122_3287# vout vdd sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
+X73 a_8474_1965# vss cap_cmim l=10u w=10u
+X74 vss dw_8122_3287# vout vss sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
+X75 vout dw_8122_3287# vss vss sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
+X76 a_8474_1965# vss cap_cmim l=10u w=10u
+X77 a_8474_1965# vss cap_cmim l=10u w=10u
+X78 vdd vss cap_cmim l=10u w=10u
+X79 a_8474_1965# vss cap_cmim l=10u w=10u
+X80 a_8474_1965# vss cap_cmim l=10u w=10u
+X81 vout dw_8122_3287# vss vss sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
+X82 vdd dw_8122_3287# vout vdd sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
+X83 vdd vss cap_cmim l=10u w=10u
+X84 vout dw_8122_3287# vdd vdd sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
+X85 vout dw_8122_3287# vss vss sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
+X86 vdd dw_8122_3287# vout vdd sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
+X87 a_8474_1965# vss cap_cmim l=10u w=10u
+X88 a_8474_1965# vss cap_cmim l=10u w=10u
+X89 vref dw_9390_3287# vdd vdd sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
+X90 vout dw_8122_3287# vss vss sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
+X91 vdd vdd vdd vdd sg13_lv_pmos ad=0.95p pd=5.38u as=43.4451p ps=0.26832m w=5u l=0.13u
+X92 vss dw_9390_3287# vref vss sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
+X93 vdd vss cap_cmim l=10u w=10u
+X94 vdd dw_8122_3287# vout vdd sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
+X95 a_8474_1965# vss cap_cmim l=10u w=10u
+X96 a_8474_1965# vss cap_cmim l=10u w=10u
+X97 vdd vss cap_cmim l=10u w=10u
+X98 a_8474_1965# vss cap_cmim l=10u w=10u
+X99 a_8474_1965# vss cap_cmim l=10u w=10u
+X100 a_8474_1965# vss cap_cmim l=10u w=10u
+X101 vdd vss cap_cmim l=10u w=10u
+X102 vdd vdd vdd vdd sg13_lv_pmos ad=1.7p pd=10.68u as=0 ps=0 w=5u l=0.13u
+X103 vout dw_8122_3287# vdd vdd sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
+X104 vout dw_8122_3287# vss vss sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
+X105 vdd dw_8122_3287# vout vdd sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
+X106 vdd vss cap_cmim l=10u w=10u
+X107 a_8474_1965# vss cap_cmim l=10u w=10u
+X108 a_8232_3371# a_8474_1965# vss rsil l=2.5u w=0.5u
+X109 vdd vss cap_cmim l=10u w=10u
+X110 vdd dw_8122_3287# vout vdd sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
+X111 vout dw_8122_3287# vdd vdd sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
+X112 vout dw_8122_3287# vss vss sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
+X113 a_8474_1965# vss cap_cmim l=10u w=10u
+X114 vdd vss cap_cmim l=10u w=10u
+X115 vss dw_8122_3287# vout vss sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
 .ends
 

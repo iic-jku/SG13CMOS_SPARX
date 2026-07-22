@@ -12,35 +12,6 @@ Circuit 1: cap_cmim                        |Circuit 2: cap_cmim
 Cell pin lists are equivalent.
 Device classes cap_cmim and cap_cmim are equivalent.
 
-Circuit 1 cell sg13_lv_pmos and Circuit 2 cell sg13_lv_pmos are black boxes.
-Warning: Equate pins:  cell sg13_lv_pmos is a placeholder, treated as a black box.
-Warning: Equate pins:  cell sg13_lv_pmos is a placeholder, treated as a black box.
-
-Subcircuit pins:
-Circuit 1: sg13_lv_pmos                    |Circuit 2: sg13_lv_pmos                    
--------------------------------------------|-------------------------------------------
-1                                          |1                                          
-2                                          |2                                          
-3                                          |3                                          
-4                                          |4                                          
----------------------------------------------------------------------------------------
-Cell pin lists are equivalent.
-Device classes sg13_lv_pmos and sg13_lv_pmos are equivalent.
-
-Circuit 1 cell rppd and Circuit 2 cell rppd are black boxes.
-Warning: Equate pins:  cell rppd is a placeholder, treated as a black box.
-Warning: Equate pins:  cell rppd is a placeholder, treated as a black box.
-
-Subcircuit pins:
-Circuit 1: rppd                            |Circuit 2: rppd                            
--------------------------------------------|-------------------------------------------
-1                                          |1                                          
-2                                          |2                                          
-3                                          |3                                          
----------------------------------------------------------------------------------------
-Cell pin lists are equivalent.
-Device classes rppd and rppd are equivalent.
-
 Circuit 1 cell sg13_lv_nmos and Circuit 2 cell sg13_lv_nmos are black boxes.
 Warning: Equate pins:  cell sg13_lv_nmos is a placeholder, treated as a black box.
 Warning: Equate pins:  cell sg13_lv_nmos is a placeholder, treated as a black box.
@@ -55,6 +26,21 @@ Circuit 1: sg13_lv_nmos                    |Circuit 2: sg13_lv_nmos
 ---------------------------------------------------------------------------------------
 Cell pin lists are equivalent.
 Device classes sg13_lv_nmos and sg13_lv_nmos are equivalent.
+
+Circuit 1 cell sg13_lv_pmos and Circuit 2 cell sg13_lv_pmos are black boxes.
+Warning: Equate pins:  cell sg13_lv_pmos is a placeholder, treated as a black box.
+Warning: Equate pins:  cell sg13_lv_pmos is a placeholder, treated as a black box.
+
+Subcircuit pins:
+Circuit 1: sg13_lv_pmos                    |Circuit 2: sg13_lv_pmos                    
+-------------------------------------------|-------------------------------------------
+1                                          |1                                          
+2                                          |2                                          
+3                                          |3                                          
+4                                          |4                                          
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes sg13_lv_pmos and sg13_lv_pmos are equivalent.
 
 Circuit 1 cell schottky_nbl1 and Circuit 2 cell schottky_nbl1 are black boxes.
 Warning: Equate pins:  cell schottky_nbl1 is a placeholder, treated as a black box.
@@ -84,6 +70,20 @@ Circuit 1: rhigh                           |Circuit 2: rhigh
 Cell pin lists are equivalent.
 Device classes rhigh and rhigh are equivalent.
 
+Circuit 1 cell rppd and Circuit 2 cell rppd are black boxes.
+Warning: Equate pins:  cell rppd is a placeholder, treated as a black box.
+Warning: Equate pins:  cell rppd is a placeholder, treated as a black box.
+
+Subcircuit pins:
+Circuit 1: rppd                            |Circuit 2: rppd                            
+-------------------------------------------|-------------------------------------------
+1                                          |1                                          
+2                                          |2                                          
+3                                          |3                                          
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes rppd and rppd are equivalent.
+
 Circuit 1 cell rsil and Circuit 2 cell rsil are black boxes.
 Warning: Equate pins:  cell rsil is a placeholder, treated as a black box.
 Warning: Equate pins:  cell rsil is a placeholder, treated as a black box.
@@ -97,27 +97,6 @@ Circuit 1: rsil                            |Circuit 2: rsil
 ---------------------------------------------------------------------------------------
 Cell pin lists are equivalent.
 Device classes rsil and rsil are equivalent.
-Flattening unmatched subcell C2 in circuit sparx_powdet_sbd (0)(1 instance)
-Flattening unmatched subcell array_gdsfactorypcomponentspcontainersparray_component__7cb987b1 in circuit sparx_powdet_sbd (0)(2 instances)
-Flattening unmatched subcell cmim_W10_L10_Gnone_G1 in circuit sparx_powdet_sbd (0)(13 instances)
-Flattening unmatched subcell array_gdsfactorypcomponentspcontainersparray_component__061cf64d in circuit sparx_powdet_sbd (0)(1 instance)
-Flattening unmatched subcell cmim_W10_L10_Gnone_G1 in circuit sparx_powdet_sbd (0)(18 instances)
-Flattening unmatched subcell schottky_W1_L0p3_N1_N1 in circuit sparx_powdet_sbd (0)(2 instances)
-Flattening unmatched subcell rhigh_L2_W0p5_B0_P0p18_N1_SSerial_S2_Gnone_G1 in circuit sparx_powdet_sbd (0)(1 instance)
-Flattening unmatched subcell rsil_L2p5_W0p5_P0p18_R24p9_N1_SSerial_S2_Gnone_G1$1 in circuit sparx_powdet_sbd (0)(1 instance)
-Flattening unmatched subcell output_stage in circuit sparx_powdet_sbd (0)(1 instance)
-Flattening unmatched subcell pmos_W120_L0p13_N24_Gnwell_G2 in circuit sparx_powdet_sbd (0)(1 instance)
-Flattening unmatched subcell rppd_L1p5_W0p5_B0_P0p18_N1_SSerial_S2_Gnone_G1 in circuit sparx_powdet_sbd (0)(2 instances)
-Flattening unmatched subcell nmos_W60_L0p13_N24_Gpsub_G2 in circuit sparx_powdet_sbd (0)(1 instance)
-Flattening unmatched subcell C3 in circuit sparx_powdet_sbd (0)(1 instance)
-Flattening unmatched subcell array_gdsfactorypcomponentspcontainersparray_component__3e7d8b3e in circuit sparx_powdet_sbd (0)(1 instance)
-Flattening unmatched subcell cmim_W10_L10_Gnone_G1 in circuit sparx_powdet_sbd (0)(8 instances)
-Flattening unmatched subcell array_gdsfactorypcomponentspcontainersparray_component__e54567cf in circuit sparx_powdet_sbd (0)(1 instance)
-Flattening unmatched subcell cmim_W10_L10_Gnone_G1 in circuit sparx_powdet_sbd (0)(15 instances)
-Flattening unmatched subcell array_gdsfactorypcomponentspcontainersparray_component__89c70ba2 in circuit sparx_powdet_sbd (0)(1 instance)
-Flattening unmatched subcell cmim_W10_L10_Gnone_G1 in circuit sparx_powdet_sbd (0)(5 instances)
-Flattening unmatched subcell cmim_W6p8_L9_Gnone_G1 in circuit sparx_powdet_sbd (0)(2 instances)
-Flattening unmatched subcell rsil_L2p5_W0p5_P0p18_R24p9_N1_SSerial_S2_Gnone_G1$2 in circuit sparx_powdet_sbd (0)(1 instance)
 
 Class sparx_powdet_sbd (0):  Merged 100 parallel devices.
 Class sparx_powdet_sbd (1):  Merged 1 parallel devices.
@@ -125,81 +104,81 @@ Subcircuit summary:
 Circuit 1: sparx_powdet_sbd                |Circuit 2: sparx_powdet_sbd                
 -------------------------------------------|-------------------------------------------
 cap_cmim (61->3)                           |cap_cmim (61->3)                           
+sg13_lv_nmos (24->3)                       |sg13_lv_nmos (3)                           
+sg13_lv_pmos (24->3)                       |sg13_lv_pmos (3)                           
 schottky_nbl1 (2)                          |schottky_nbl1 (2)                          
 rhigh (1)                                  |rhigh (1)                                  
-rsil (2)                                   |rsil (2)                                   
-sg13_lv_pmos (24->3)                       |sg13_lv_pmos (3)                           
 rppd (2)                                   |rppd (2)                                   
-sg13_lv_nmos (24->3)                       |sg13_lv_nmos (3)                           
+rsil (2)                                   |rsil (2)                                   
 Number of devices: 16                      |Number of devices: 16                      
 Number of nets: 10                         |Number of nets: 10                         
 ---------------------------------------------------------------------------------------
 Netlists match uniquely with property errors.
-output_stage_0//nmos_W60_L0p13_N24_Gpsub_G2_0/sg13_lv_nmos:5 vs. sg13_lv_nmos:M1:
+rsil:108 vs. rsil:R1:
 Property mm_ok in circuit2 has no matching property in circuit1
-output_stage_0//nmos_W60_L0p13_N24_Gpsub_G2_0/sg13_lv_nmos:0 vs. sg13_lv_nmos:M3:
+rsil:108 vs. rsil:R1:
 Property mm_ok in circuit2 has no matching property in circuit1
-output_stage_0//nmos_W60_L0p13_N24_Gpsub_G2_0/sg13_lv_nmos:14 vs. sg13_lv_nmos:Mdummy1:
+rsil:58 vs. rsil:R5:
 Property mm_ok in circuit2 has no matching property in circuit1
-output_stage_0//rppd_L1p5_W0p5_B0_P0p18_N1_SSerial_S2_Gnone_G1_0/rppd:0 vs. rppd:R2:
+rsil:58 vs. rsil:R5:
 Property mm_ok in circuit2 has no matching property in circuit1
-output_stage_0//rppd_L1p5_W0p5_B0_P0p18_N1_SSerial_S2_Gnone_G1_0/rppd:0 vs. rppd:R2:
+rppd:68 vs. rppd:R2:
 Property mm_ok in circuit2 has no matching property in circuit1
-output_stage_0//rppd_L1p5_W0p5_B0_P0p18_N1_SSerial_S2_Gnone_G1_1/rppd:0 vs. rppd:R4:
+rppd:68 vs. rppd:R2:
 Property mm_ok in circuit2 has no matching property in circuit1
-output_stage_0//rppd_L1p5_W0p5_B0_P0p18_N1_SSerial_S2_Gnone_G1_1/rppd:0 vs. rppd:R4:
+rppd:55 vs. rppd:R4:
 Property mm_ok in circuit2 has no matching property in circuit1
-output_stage_0//pmos_W120_L0p13_N24_Gnwell_G2_0/sg13_lv_pmos:5 vs. sg13_lv_pmos:M2:
+rppd:55 vs. rppd:R4:
 Property mm_ok in circuit2 has no matching property in circuit1
-output_stage_0//pmos_W120_L0p13_N24_Gnwell_G2_0/sg13_lv_pmos:0 vs. sg13_lv_pmos:M4:
+rhigh:40 vs. rhigh:R3:
 Property mm_ok in circuit2 has no matching property in circuit1
-output_stage_0//pmos_W120_L0p13_N24_Gnwell_G2_0/sg13_lv_pmos:14 vs. sg13_lv_pmos:Mdummy2:
+rhigh:40 vs. rhigh:R3:
 Property mm_ok in circuit2 has no matching property in circuit1
-rsil_L2p5_W0p5_P0p18_R24p9_N1_SSerial_S2_Gnone_G1$1_0/rsil:0 vs. rsil:R1:
-Property mm_ok in circuit2 has no matching property in circuit1
-rsil_L2p5_W0p5_P0p18_R24p9_N1_SSerial_S2_Gnone_G1$1_0/rsil:0 vs. rsil:R1:
-Property mm_ok in circuit2 has no matching property in circuit1
-rsil_L2p5_W0p5_P0p18_R24p9_N1_SSerial_S2_Gnone_G1$2_0/rsil:0 vs. rsil:R5:
-Property mm_ok in circuit2 has no matching property in circuit1
-rsil_L2p5_W0p5_P0p18_R24p9_N1_SSerial_S2_Gnone_G1$2_0/rsil:0 vs. rsil:R5:
-Property mm_ok in circuit2 has no matching property in circuit1
-rhigh_L2_W0p5_B0_P0p18_N1_SSerial_S2_Gnone_G1_0/rhigh:0 vs. rhigh:R3:
-Property mm_ok in circuit2 has no matching property in circuit1
-rhigh_L2_W0p5_B0_P0p18_N1_SSerial_S2_Gnone_G1_0/rhigh:0 vs. rhigh:R3:
-Property mm_ok in circuit2 has no matching property in circuit1
-schottky_W1_L0p3_N1_N1_1/schottky_nbl1:0 vs. schottky_nbl1:D1:
+schottky_nbl1:67 vs. schottky_nbl1:D1:
 Property w in circuit1 has no matching property in circuit2
-schottky_W1_L0p3_N1_N1_1/schottky_nbl1:0 vs. schottky_nbl1:D1:
+schottky_nbl1:67 vs. schottky_nbl1:D1:
 Property l in circuit1 has no matching property in circuit2
-schottky_W1_L0p3_N1_N1_1/schottky_nbl1:0 vs. schottky_nbl1:D1:
+schottky_nbl1:67 vs. schottky_nbl1:D1:
 Property Ny in circuit2 has no matching property in circuit1
-schottky_W1_L0p3_N1_N1_1/schottky_nbl1:0 vs. schottky_nbl1:D1:
+schottky_nbl1:67 vs. schottky_nbl1:D1:
 Property Nx in circuit2 has no matching property in circuit1
-schottky_W1_L0p3_N1_N1_0/schottky_nbl1:0 vs. schottky_nbl1:D2:
+schottky_nbl1:9 vs. schottky_nbl1:D2:
 Property w in circuit1 has no matching property in circuit2
-schottky_W1_L0p3_N1_N1_0/schottky_nbl1:0 vs. schottky_nbl1:D2:
+schottky_nbl1:9 vs. schottky_nbl1:D2:
 Property l in circuit1 has no matching property in circuit2
-schottky_W1_L0p3_N1_N1_0/schottky_nbl1:0 vs. schottky_nbl1:D2:
+schottky_nbl1:9 vs. schottky_nbl1:D2:
 Property Ny in circuit2 has no matching property in circuit1
-schottky_W1_L0p3_N1_N1_0/schottky_nbl1:0 vs. schottky_nbl1:D2:
+schottky_nbl1:9 vs. schottky_nbl1:D2:
 Property Nx in circuit2 has no matching property in circuit1
-C2_0//array_gdsfactorypcomponentspcontainersparray_component__7cb987b1_0//cmim_W10_L10_Gnone_G1_0[0]/cap_cmim:0 vs. cap_cmim:C2:
+sg13_lv_pmos:7 vs. sg13_lv_pmos:M2:
 Property mm_ok in circuit2 has no matching property in circuit1
-C3_0//array_gdsfactorypcomponentspcontainersparray_component__3e7d8b3e_0//cmim_W10_L10_Gnone_G1_0[0|0]/cap_cmim:0 vs. cap_cmim:C3:
+sg13_lv_pmos:2 vs. sg13_lv_pmos:M4:
 Property mm_ok in circuit2 has no matching property in circuit1
-cmim_W10_L10_Gnone_G1_0/cap_cmim:0 vs. cap_cmim:C1:
+sg13_lv_pmos:91 vs. sg13_lv_pmos:Mdummy2:
 Property mm_ok in circuit2 has no matching property in circuit1
-cmim_W10_L10_Gnone_G1_0/cap_cmim:0 vs. cap_cmim:C1:
+sg13_lv_nmos:50 vs. sg13_lv_nmos:M1:
+Property mm_ok in circuit2 has no matching property in circuit1
+sg13_lv_nmos:1 vs. sg13_lv_nmos:M3:
+Property mm_ok in circuit2 has no matching property in circuit1
+sg13_lv_nmos:32 vs. sg13_lv_nmos:Mdummy1:
+Property mm_ok in circuit2 has no matching property in circuit1
+cap_cmim:5 vs. cap_cmim:C2:
+Property mm_ok in circuit2 has no matching property in circuit1
+cap_cmim:0 vs. cap_cmim:C3:
+Property mm_ok in circuit2 has no matching property in circuit1
+cap_cmim:54 vs. cap_cmim:C1:
+Property mm_ok in circuit2 has no matching property in circuit1
+cap_cmim:54 vs. cap_cmim:C1:
 Property mm_ok in circuit2 has no matching property in circuit1
 
 Subcircuit pins:
 Circuit 1: sparx_powdet_sbd                |Circuit 2: sparx_powdet_sbd                
 -------------------------------------------|-------------------------------------------
 rfin                                       |rfin                                       
-vdd                                        |vdd                                        
 vref                                       |vref                                       
 vout                                       |vout                                       
 vss                                        |vss                                        
+vdd                                        |vdd                                        
 ---------------------------------------------------------------------------------------
 Cell pin lists are equivalent.
 Device classes sparx_powdet_sbd and sparx_powdet_sbd are equivalent.
