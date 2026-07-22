@@ -1,248 +1,261 @@
 * NGSPICE file created from sparx_powdet_sbd_pex.ext - technology: ihp-sg13g2
 
 .subckt sparx_powdet_sbd_pex vout vref vdd rfin vss
-X0 vdd vss.t1 cap_cmim l=10u w=10u
+X0 vdd vss.t29 cap_cmim l=10u w=10u
 X1 vss.t1 dw_8122_3287# vout vss.t13 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
 X2 vout dw_8122_3287# vdd vdd sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
 X3 vss.t1 dw_8122_3287# vout vss.t21 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
-X4 vdd vss.t1 cap_cmim l=10u w=10u
-X5 a_8474_1965# vss.t1 cap_cmim l=10u w=10u
+X4 vdd vss.t29 cap_cmim l=10u w=10u
+X5 a_8474_1965# vss.t29 cap_cmim l=10u w=10u
 X6 vout dw_8122_3287# vdd vdd sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
 X7 vdd dw_9390_3287# vref vdd sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
 X8 vss.t1 dw_8122_3287# vout vss.t3 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
 X9 a_9398_2535# dw_9390_3287# vss schottky_nbl1 l=1.2u w=2.655u
 X10 vout dw_8122_3287# vdd vdd sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
-X11 a_8474_1965# vss.t1 cap_cmim l=10u w=10u
-X12 vdd vss.t1 cap_cmim l=10u w=10u
-X13 vdd vss.t1 cap_cmim l=10u w=10u
-X14 vdd vss.t1 cap_cmim l=10u w=10u
-X15 a_8474_1965# vss.t1 cap_cmim l=10u w=10u
+X11 a_8474_1965# vss.t29 cap_cmim l=10u w=10u
+X12 vdd vss.t29 cap_cmim l=10u w=10u
+X13 vdd vss.t29 cap_cmim l=10u w=10u
+X14 vdd vss.t29 cap_cmim l=10u w=10u
+X15 a_8474_1965# vss.t29 cap_cmim l=10u w=10u
 X16 vout dw_8122_3287# vss.t1 vss.t12 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
-X17 a_8474_1965# vss.t1 cap_cmim l=10u w=10u
+X17 a_8474_1965# vss.t29 cap_cmim l=10u w=10u
 X18 vout dw_8122_3287# vdd vdd sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
-X19 vdd vss.t1 cap_cmim l=10u w=10u
-X20 vdd vss.t1 cap_cmim l=10u w=10u
-X21 a_8474_1965# vss.t1 cap_cmim l=10u w=10u
+X19 vdd vss.t29 cap_cmim l=10u w=10u
+X20 vdd vss.t29 cap_cmim l=10u w=10u
+X21 a_8474_1965# vss.t29 cap_cmim l=10u w=10u
 X22 vout dw_8122_3287# vss.t1 vss.t10 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
-X23 vdd vss.t1 cap_cmim l=9u w=6.8u
-X24 vdd vss.t1 cap_cmim l=10u w=10u
-X25 vdd vss.t1 cap_cmim l=10u w=10u
+X23 vdd vss.t29 cap_cmim l=9u w=6.8u
+X24 vdd vss.t29 cap_cmim l=10u w=10u
+X25 vdd vss.t29 cap_cmim l=10u w=10u
 X26 vss.t1 dw_8122_3287# vout vss.t17 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
-X27 a_8474_1965# vss.t1 cap_cmim l=10u w=10u
-X28 a_8474_1965# vss.t1 cap_cmim l=10u w=10u
-X29 a_8474_1965# vss.t1 cap_cmim l=10u w=10u
+X27 a_8474_1965# vss.t29 cap_cmim l=10u w=10u
+X28 a_8474_1965# vss.t29 cap_cmim l=10u w=10u
+X29 a_8474_1965# vss.t29 cap_cmim l=10u w=10u
 X30 vout dw_8122_3287# vdd vdd sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
-X31 a_8474_1965# vss.t1 cap_cmim l=10u w=10u
-X32 vss.t1 vss.t1 vss.t1 vss.t26 sg13_lv_nmos ad=0.475p pd=2.88u as=0 ps=0 w=2.5u l=0.13u
-X33 vdd vss.t1 cap_cmim l=9u w=6.8u
-X34 vdd vss.t1 cap_cmim l=10u w=10u
-X35 vdd vss.t1 cap_cmim l=10u w=10u
+X31 a_8474_1965# vss.t29 cap_cmim l=10u w=10u
+X32 vss.t1 vss.t26 vss.t1 vss.t27 sg13_lv_nmos ad=0.475p pd=2.88u as=0 ps=0 w=2.5u l=0.13u
+X33 vdd vss.t29 cap_cmim l=9u w=6.8u
+X34 vdd vss.t29 cap_cmim l=10u w=10u
+X35 vdd vss.t29 cap_cmim l=10u w=10u
 X36 vdd dw_8122_3287# vout vdd sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
-X37 vdd vss.t1 cap_cmim l=10u w=10u
-X38 a_8474_1965# vss.t1 cap_cmim l=10u w=10u
+X37 vdd vss.t29 cap_cmim l=10u w=10u
+X38 a_8474_1965# vss.t29 cap_cmim l=10u w=10u
 X39 vss.t1 dw_8122_3287# vout vss.t7 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
 X40 a_8474_1965# vdd vss.t28 rhigh l=2u w=0.5u
 X41 vdd dw_8122_3287# vout vdd sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
 X42 vout dw_8122_3287# vss.t1 vss.t14 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
-X43 a_8474_1965# vss.t1 cap_cmim l=10u w=10u
-X44 vdd vss.t1 cap_cmim l=10u w=10u
-X45 vdd vss.t1 cap_cmim l=10u w=10u
+X43 a_8474_1965# vss.t29 cap_cmim l=10u w=10u
+X44 vdd vss.t29 cap_cmim l=10u w=10u
+X45 vdd vss.t29 cap_cmim l=10u w=10u
 X46 vss.t1 dw_8122_3287# vout vss.t5 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
-X47 a_8474_1965# vss.t1 cap_cmim l=10u w=10u
-X48 vdd vss.t1 cap_cmim l=10u w=10u
-X49 a_8474_1965# vss.t1 cap_cmim l=10u w=10u
+X47 a_8474_1965# vss.t29 cap_cmim l=10u w=10u
+X48 vdd vss.t29 cap_cmim l=10u w=10u
+X49 a_8474_1965# vss.t29 cap_cmim l=10u w=10u
 X50 vref dw_9390_3287# vss.t1 vss.t2 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
-X51 a_8474_1965# vss.t1 cap_cmim l=10u w=10u
-X52 vdd vss.t1 cap_cmim l=10u w=10u
+X51 a_8474_1965# vss.t29 cap_cmim l=10u w=10u
+X52 vdd vss.t29 cap_cmim l=10u w=10u
 X53 vout dw_8122_3287# vss.t1 vss.t20 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
 X54 rfin a_8232_3371# cap_cmim l=10u w=10u
 X55 dw_9390_3287# vref vss.t23 rppd l=1.5u w=0.5u
-X56 vdd vss.t1 cap_cmim l=10u w=10u
+X56 vdd vss.t29 cap_cmim l=10u w=10u
 X57 vdd dw_8122_3287# vout vdd sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
-X58 a_9398_2535# a_8474_1965# vss.t59 rsil l=2.5u w=0.5u
+X58 a_9398_2535# a_8474_1965# vss.t60 rsil l=2.5u w=0.5u
 X59 vss.t1 dw_8122_3287# vout vss.t19 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
-X60 a_8474_1965# vss.t1 cap_cmim l=10u w=10u
-X61 vdd vss.t1 cap_cmim l=10u w=10u
+X60 a_8474_1965# vss.t29 cap_cmim l=10u w=10u
+X61 vdd vss.t29 cap_cmim l=10u w=10u
 X62 vdd dw_8122_3287# vout vdd sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
 X63 vout dw_8122_3287# vdd vdd sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
-X64 vss.t1 vss.t1 vss.t1 vss.t24 sg13_lv_nmos ad=0.85p pd=5.68u as=0 ps=0 w=2.5u l=0.13u
-X65 vdd vss.t1 cap_cmim l=10u w=10u
-X66 vdd vss.t1 cap_cmim l=10u w=10u
+X64 vss.t1 vss.t24 vss.t1 vss.t25 sg13_lv_nmos ad=0.85p pd=5.68u as=0 ps=0 w=2.5u l=0.13u
+X65 vdd vss.t29 cap_cmim l=10u w=10u
+X66 vdd vss.t29 cap_cmim l=10u w=10u
 X67 a_8232_3371# dw_8122_3287# vss schottky_nbl1 l=1.2u w=2.655u
 X68 vout dw_8122_3287# vss.t23 rppd l=1.5u w=0.5u
 X69 vout dw_8122_3287# vdd vdd sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
 X70 vss.t1 dw_8122_3287# vout vss.t11 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
-X71 a_8474_1965# vss.t1 cap_cmim l=10u w=10u
+X71 a_8474_1965# vss.t29 cap_cmim l=10u w=10u
 X72 vdd dw_8122_3287# vout vdd sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
-X73 a_8474_1965# vss.t1 cap_cmim l=10u w=10u
+X73 a_8474_1965# vss.t29 cap_cmim l=10u w=10u
 X74 vss.t1 dw_8122_3287# vout vss.t9 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
 X75 vout dw_8122_3287# vss.t1 vss.t16 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
-X76 a_8474_1965# vss.t1 cap_cmim l=10u w=10u
-X77 a_8474_1965# vss.t1 cap_cmim l=10u w=10u
-X78 vdd vss.t1 cap_cmim l=10u w=10u
-X79 a_8474_1965# vss.t1 cap_cmim l=10u w=10u
-X80 a_8474_1965# vss.t1 cap_cmim l=10u w=10u
+X76 a_8474_1965# vss.t29 cap_cmim l=10u w=10u
+X77 a_8474_1965# vss.t29 cap_cmim l=10u w=10u
+X78 vdd vss.t29 cap_cmim l=10u w=10u
+X79 a_8474_1965# vss.t29 cap_cmim l=10u w=10u
+X80 a_8474_1965# vss.t29 cap_cmim l=10u w=10u
 X81 vout dw_8122_3287# vss.t1 vss.t22 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
 X82 vdd dw_8122_3287# vout vdd sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
-X83 vdd vss.t1 cap_cmim l=10u w=10u
+X83 vdd vss.t29 cap_cmim l=10u w=10u
 X84 vout dw_8122_3287# vdd vdd sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
 X85 vout dw_8122_3287# vss.t1 vss.t6 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
 X86 vdd dw_8122_3287# vout vdd sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
-X87 a_8474_1965# vss.t1 cap_cmim l=10u w=10u
-X88 a_8474_1965# vss.t1 cap_cmim l=10u w=10u
+X87 a_8474_1965# vss.t29 cap_cmim l=10u w=10u
+X88 a_8474_1965# vss.t29 cap_cmim l=10u w=10u
 X89 vref dw_9390_3287# vdd vdd sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
 X90 vout dw_8122_3287# vss.t1 vss.t4 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
 X91 vdd vdd vdd vdd sg13_lv_pmos ad=0.95p pd=5.38u as=43.4451p ps=0.26832m w=5u l=0.13u
 X92 vss.t1 dw_9390_3287# vref vss.t0 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
-X93 vdd vss.t1 cap_cmim l=10u w=10u
+X93 vdd vss.t29 cap_cmim l=10u w=10u
 X94 vdd dw_8122_3287# vout vdd sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
-X95 a_8474_1965# vss.t1 cap_cmim l=10u w=10u
-X96 a_8474_1965# vss.t1 cap_cmim l=10u w=10u
-X97 vdd vss.t1 cap_cmim l=10u w=10u
-X98 a_8474_1965# vss.t1 cap_cmim l=10u w=10u
-X99 a_8474_1965# vss.t1 cap_cmim l=10u w=10u
-X100 a_8474_1965# vss.t1 cap_cmim l=10u w=10u
-X101 vdd vss.t1 cap_cmim l=10u w=10u
+X95 a_8474_1965# vss.t29 cap_cmim l=10u w=10u
+X96 a_8474_1965# vss.t29 cap_cmim l=10u w=10u
+X97 vdd vss.t29 cap_cmim l=10u w=10u
+X98 a_8474_1965# vss.t29 cap_cmim l=10u w=10u
+X99 a_8474_1965# vss.t29 cap_cmim l=10u w=10u
+X100 a_8474_1965# vss.t29 cap_cmim l=10u w=10u
+X101 vdd vss.t29 cap_cmim l=10u w=10u
 X102 vdd vdd vdd vdd sg13_lv_pmos ad=1.7p pd=10.68u as=0 ps=0 w=5u l=0.13u
 X103 vout dw_8122_3287# vdd vdd sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
 X104 vout dw_8122_3287# vss.t1 vss.t18 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
 X105 vdd dw_8122_3287# vout vdd sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
-X106 vdd vss.t1 cap_cmim l=10u w=10u
-X107 a_8474_1965# vss.t1 cap_cmim l=10u w=10u
-X108 a_8232_3371# a_8474_1965# vss.t90 rsil l=2.5u w=0.5u
-X109 vdd vss.t1 cap_cmim l=10u w=10u
+X106 vdd vss.t29 cap_cmim l=10u w=10u
+X107 a_8474_1965# vss.t29 cap_cmim l=10u w=10u
+X108 a_8232_3371# a_8474_1965# vss.t91 rsil l=2.5u w=0.5u
+X109 vdd vss.t29 cap_cmim l=10u w=10u
 X110 vdd dw_8122_3287# vout vdd sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
 X111 vout dw_8122_3287# vdd vdd sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
 X112 vout dw_8122_3287# vss.t1 vss.t8 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
-X113 a_8474_1965# vss.t1 cap_cmim l=10u w=10u
-X114 vdd vss.t1 cap_cmim l=10u w=10u
+X113 a_8474_1965# vss.t29 cap_cmim l=10u w=10u
+X114 vdd vss.t29 cap_cmim l=10u w=10u
 X115 vss.t1 dw_8122_3287# vout vss.t15 sg13_lv_nmos ad=0.475p pd=2.88u as=0.475p ps=2.88u w=2.5u l=0.13u
-C0 a_8474_1965# a_8474_2035# 0.02075f
-C1 a_9776_10932# a_9396_10932# 0.01274f
-C2 a_9398_2535# a_8232_3371# 0.1825f
-C3 a_8474_1965# a_9398_2035# 0.02416f
+C0 a_8232_3371# dw_8122_3287# 1.06735f
+C1 a_8232_3371# dw_9390_3287# 0.10207f
+C2 vdd vref 2.17332f
+C3 a_8474_1965# vdd 5.19837f
 C4 vdd vout 33.1585f
-C5 a_9396_10932# dw_9390_3287# 0.03652f
-C6 a_9398_2535# dw_9390_3287# 0.54686f
-C7 a_8474_1965# a_9398_2535# 0.03586f
-C8 a_9398_2535# rfin 0.05177f
-C9 vref dw_9390_3287# 0.66034f
-C10 a_8474_1965# vref 0.19179f
-C11 vref dw_8122_3287# 0.77553f
-C12 a_8232_3371# dw_9390_3287# 0.10207f
-C13 vdd vref 2.17332f
-C14 a_8474_1965# a_8232_3371# 0.06382f
-C15 a_9776_10932# dw_8122_3287# 0.03763f
-C16 a_9398_2535# a_9398_2035# 0.02622f
-C17 a_8232_3371# dw_8122_3287# 1.06735f
-C18 a_8474_1965# dw_9390_3287# 0.06199f
-C19 a_8474_1965# a_12042_5026# 0.01902f
-C20 dw_8122_3287# dw_9390_3287# 2.48837f
-C21 vout vref 2.97107f
-C22 a_9776_10932# vdd 0.0126f
-C23 a_8474_1965# dw_8122_3287# 0.11747f
-C24 a_8232_3371# rfin 1.14761f
-C25 vdd dw_9390_3287# 0.73047f
-C26 rfin dw_9390_3287# 0.0415f
-C27 vdd a_12042_5026# 0.0653f
-C28 a_8474_1965# vdd 5.19837f
-C29 a_8474_1965# rfin 0.01614f
-C30 a_9776_10932# vout 0.03993f
-C31 vdd dw_8122_3287# 6.31825f
-C32 rfin dw_8122_3287# 0.07528f
-C33 vref a_9396_10932# 0.04195f
-C34 a_8474_2035# a_8232_3371# 0.05211f
-C35 vout dw_9390_3287# 0.24433f
-C36 a_8474_1965# vout 1.11736f
-C37 a_9398_2035# a_8232_3371# 0.01213f
-C38 vout dw_8122_3287# 4.29311f
-R0 vss.n30 vss.t59 5876.96
-R1 vss.n4 vss.t28 1640.15
-R2 vss.t28 vss.n30 3087.21
-R3 vss.n2 vss.t90 1589.9
-R4 vss.n4 vss.n28 901.754
-R5 vss.t90 vss.n29 931.034
-R6 vss.t59 vss.n3 933.874
-R7 vss.n0 vss.n30 446.897
-R8 vss.n4 vss.t1 558.465
-R9 vss.n29 vss.n3 307.425
-R10 vss.t2 vss.t0 30.5029
-R11 vss.n5 vss.t24 7.01146
-R12 vss.t22 vss.n10 17.644
-R13 vss.n20 vss.t20 17.644
-R14 vss.n12 vss.t18 17.644
-R15 vss.n21 vss.t16 17.644
-R16 vss.t14 vss.n14 17.644
-R17 vss.t9 vss.n16 17.644
-R18 vss.n25 vss.t7 17.644
-R19 vss.t5 vss.n18 17.644
-R20 vss.n26 vss.t3 17.644
-R21 vss.t23 vss.t11 14.6536
-R22 vss.n10 vss.t21 12.8594
-R23 vss.n20 vss.t19 12.8594
-R24 vss.t17 vss.n12 12.8594
-R25 vss.t15 vss.n21 12.8594
-R26 vss.t13 vss.n14 12.8594
-R27 vss.n24 vss.t12 12.8594
-R28 vss.n16 vss.t10 12.8594
-R29 vss.n25 vss.t8 12.8594
-R30 vss.n18 vss.t6 12.8594
-R31 vss.n26 vss.t4 12.8594
-R32 vss.n23 vss.t13 12.1076
-R33 vss.t12 vss.n8 12.1076
-R34 vss.t10 vss.n15 12.1076
-R35 vss.t8 vss.n17 12.1076
-R36 vss.t4 vss.n19 12.1076
-R37 vss.n22 vss.t15 12.1071
-R38 vss.n13 vss.t17 12.1071
-R39 vss.t19 vss.n11 12.1071
-R40 vss.t21 vss.n9 12.1071
-R41 vss.n6 vss.t26 7.01089
-R42 vss.t6 vss.n7 12.1071
-R43 vss.n1 vss.n28 8.501
-R44 vss.t1 vss.n26 8.5005
-R45 vss.t1 vss.n25 8.5005
-R46 vss.t1 vss.n24 8.5005
-R47 vss.t1 vss.n21 8.5005
-R48 vss.t1 vss.n20 8.5005
-R49 vss.t1 vss.n10 8.5005
-R50 vss.t1 vss.n12 8.5005
-R51 vss.t1 vss.n14 8.5005
-R52 vss.t1 vss.n16 8.5005
-R53 vss.t1 vss.n18 8.5005
-R54 vss.n0 vss.n3 2.75633
-R55 vss.t20 vss.n9 7.32294
-R56 vss.n22 vss.t14 7.32294
-R57 vss.t7 vss.n7 7.32294
-R58 vss.t3 vss.n5 8.02602
-R59 vss.t18 vss.n11 7.32294
-R60 vss.t16 vss.n13 7.32294
-R61 vss.n19 vss.t5 7.32242
-R62 vss.n17 vss.t9 7.32242
-R63 vss.t11 vss.n15 7.32242
-R64 vss.t0 vss.n8 7.32242
-R65 vss.n23 vss.t2 7.32242
-R66 vss.n29 vss.n1 5.6686
-R67 vss.n28 vss.n27 4.75145
-R68 vss.n2 vss.n27 12.787
-R69 vss.n24 vss.t23 2.99093
-R70 vss.t1 vss.n5 1.12205
-R71 vss.t1 vss.n7 1.93648
-R72 vss.t1 vss.n8 1.93648
-R73 vss.t1 vss.n23 1.93648
-R74 vss.t1 vss.n22 1.93648
-R75 vss.t1 vss.n9 1.93648
-R76 vss.n6 vss.t22 8.0261
-R77 vss.t1 vss.n11 1.93648
-R78 vss.t1 vss.n13 1.93648
-R79 vss.t1 vss.n15 1.93648
-R80 vss.t1 vss.n17 1.93648
-R81 vss.t1 vss.n19 1.93648
-R82 vss.n0 vss.n27 1.87635
-R83 vss.n2 vss.n1 0.00266778
-R84 vss.n6 vss.t1 1.12196
-R85 vss.n1 vss.n0 1.08482
-R86 vss vss.n0 0.0005
+C5 a_9776_10932# vout 0.03993f
+C6 a_9398_2035# a_8474_1965# 0.02416f
+C7 a_8474_1965# vref 0.19179f
+C8 vref vout 2.97107f
+C9 rfin a_9398_2535# 0.05177f
+C10 a_8232_3371# a_9398_2035# 0.01213f
+C11 a_8474_2035# a_8474_1965# 0.02075f
+C12 rfin dw_8122_3287# 0.07528f
+C13 a_8474_1965# vout 1.11736f
+C14 rfin dw_9390_3287# 0.0415f
+C15 dw_9390_3287# a_9398_2535# 0.54686f
+C16 dw_8122_3287# dw_9390_3287# 2.48837f
+C17 a_8474_2035# a_8232_3371# 0.05211f
+C18 a_8232_3371# a_8474_1965# 0.06382f
+C19 a_9396_10932# dw_9390_3287# 0.03652f
+C20 vdd a_12042_5026# 0.0653f
+C21 dw_8122_3287# vdd 6.31825f
+C22 dw_8122_3287# a_9776_10932# 0.03763f
+C23 dw_9390_3287# vdd 0.73047f
+C24 a_9398_2035# a_9398_2535# 0.02622f
+C25 a_9396_10932# a_9776_10932# 0.01274f
+C26 a_8474_1965# a_12042_5026# 0.01902f
+C27 dw_8122_3287# vref 0.77553f
+C28 dw_9390_3287# vref 0.66034f
+C29 rfin a_8474_1965# 0.01614f
+C30 a_8474_1965# a_9398_2535# 0.03586f
+C31 dw_8122_3287# a_8474_1965# 0.11747f
+C32 vdd a_9776_10932# 0.0126f
+C33 dw_8122_3287# vout 4.29311f
+C34 a_9396_10932# vref 0.04195f
+C35 a_8474_1965# dw_9390_3287# 0.06199f
+C36 dw_9390_3287# vout 0.24433f
+C37 a_8232_3371# rfin 1.14761f
+C38 a_8232_3371# a_9398_2535# 0.1825f
+R0 vss.n36 vss.t60 5876.96
+R1 vss.n33 vss.n32 5537.89
+R2 vss.n5 vss.t28 1640.15
+R3 vss.t28 vss.n36 3087.21
+R4 vss.n32 vss.t91 1588.69
+R5 vss.n5 vss.n30 901.754
+R6 vss.t91 vss.n31 931.034
+R7 vss.t60 vss.n35 931.034
+R8 vss.n5 vss.n4 558.465
+R9 vss.n33 vss.n1 140.404
+R10 vss.n36 vss.n2 446.897
+R11 vss.n31 vss.n28 206.898
+R12 vss.n35 vss.n28 206.898
+R13 vss.n1 vss.n0 2.49596
+R14 vss.t0 vss.t2 30.5029
+R15 vss.n7 vss.n4 1.12196
+R16 vss.n6 vss.n4 1.12194
+R17 vss.t22 vss.n10 17.644
+R18 vss.n21 vss.t20 17.644
+R19 vss.n12 vss.t18 17.644
+R20 vss.n23 vss.t16 17.644
+R21 vss.n14 vss.t14 17.644
+R22 vss.t9 vss.n16 17.644
+R23 vss.n26 vss.t7 17.644
+R24 vss.t5 vss.n18 17.644
+R25 vss.n27 vss.t3 17.644
+R26 vss.n34 vss.n0 8.50058
+R27 vss.n3 vss.n28 200.8
+R28 vss.t23 vss.t11 14.6536
+R29 vss.t21 vss.n10 12.8594
+R30 vss.n21 vss.t19 12.8594
+R31 vss.t17 vss.n12 12.8594
+R32 vss.n23 vss.t15 12.8594
+R33 vss.n14 vss.t13 12.8594
+R34 vss.n24 vss.t12 12.8594
+R35 vss.n16 vss.t10 12.8594
+R36 vss.n26 vss.t8 12.8594
+R37 vss.n18 vss.t6 12.8594
+R38 vss.n27 vss.t4 12.8594
+R39 vss.n20 vss.t21 12.1076
+R40 vss.n22 vss.t17 12.1076
+R41 vss.t12 vss.n15 12.1076
+R42 vss.t6 vss.n17 12.1076
+R43 vss.t4 vss.n19 12.1076
+R44 vss.t13 vss.n9 12.1071
+R45 vss.t15 vss.n13 12.1071
+R46 vss.t19 vss.n11 12.1071
+R47 vss.n7 vss.t27 7.01089
+R48 vss.t10 vss.n8 12.1071
+R49 vss.t8 vss.n25 12.1071
+R50 vss.n6 vss.t25 7.01079
+R51 vss.n34 vss.n33 10.168
+R52 vss.n0 vss.n30 8.501
+R53 vss.n4 vss.n27 8.5005
+R54 vss.n4 vss.n26 8.5005
+R55 vss.n4 vss.n24 8.5005
+R56 vss.n4 vss.n23 8.5005
+R57 vss.n4 vss.n21 8.5005
+R58 vss.n4 vss.n10 8.5005
+R59 vss.n4 vss.n12 8.5005
+R60 vss.n4 vss.n14 8.5005
+R61 vss.n4 vss.n16 8.5005
+R62 vss.n4 vss.n18 8.5005
+R63 vss.n3 vss.n2 0.752146
+R64 vss.t2 vss.n9 7.32294
+R65 vss.t11 vss.n8 7.32294
+R66 vss.n25 vss.t9 7.32294
+R67 vss.t18 vss.n11 7.32294
+R68 vss.t14 vss.n13 7.32294
+R69 vss.n19 vss.t5 7.32242
+R70 vss.t7 vss.n17 7.32242
+R71 vss.n15 vss.t0 7.32242
+R72 vss.t20 vss.n20 7.32242
+R73 vss.t16 vss.n22 7.32242
+R74 vss.n31 vss.n0 5.6686
+R75 vss.n35 vss.n2 5.66767
+R76 vss.n30 vss.n29 4.75145
+R77 vss.n34 vss.n29 4.75092
+R78 vss.t1 vss.t24 0.701408
+R79 vss.n24 vss.t23 2.99093
+R80 vss.n6 vss.t3 8.02612
+R81 vss.n4 vss.n25 1.93648
+R82 vss.n4 vss.n8 1.93648
+R83 vss.n4 vss.n9 1.93648
+R84 vss.n4 vss.n22 1.93648
+R85 vss.n4 vss.n20 1.93648
+R86 vss.n7 vss.t22 8.0261
+R87 vss.n4 vss.n11 1.93648
+R88 vss.n4 vss.n13 1.93648
+R89 vss.n4 vss.n15 1.93648
+R90 vss.n4 vss.n17 1.93648
+R91 vss.n4 vss.n19 1.93648
+R92 vss.n2 vss.n29 1.87635
+R93 vss.n4 vss.t26 0.627665
+R94 vss.t1 vss.n4 0.0809614
+R95 vss.n32 vss.n0 1.21479
+R96 vss.t29 vss.t1 0.747115
+R97 vss.n0 vss.n3 0.754084
+R98 vss.n2 vss.n1 1.29793
+R99 vss vss.n0 0.0005
 C39 rfin vss 2.00521f
 C40 vref vss 4.17184f
 C41 vout vss 31.95111f

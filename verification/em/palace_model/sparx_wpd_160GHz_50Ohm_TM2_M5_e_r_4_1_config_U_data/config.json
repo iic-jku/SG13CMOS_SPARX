@@ -43,31 +43,37 @@
         "Materials": [
             {
                 "Attributes": [
-                    18
+                    5
                 ],
                 "Permittivity": 1.0,
-                "LossTan": 0.0
+                "Conductivity": 0.0
             },
             {
                 "Attributes": [
-                    19
+                    6
                 ],
                 "Permittivity": 6.6,
-                "LossTan": 0.0
+                "Conductivity": 0.0
             },
             {
                 "Attributes": [
-                    20
+                    7
                 ],
                 "Permittivity": 4.1,
-                "LossTan": 0.0
+                "Conductivity": 0.0
             },
             {
                 "Attributes": [
-                    21
+                    8
                 ],
-                "Permittivity": 1.0,
-                "LossTan": 0.0
+                "Permittivity": 4.1,
+                "Conductivity": 0.0
+            },
+            {
+                "Attributes": [
+                    9
+                ],
+                "Permittivity": 1.0
             }
         ],
         "Postprocessing": {
@@ -79,28 +85,28 @@
         "Conductivity": [
             {
                 "Attributes": [
-                    22
+                    1
                 ],
                 "Conductivity": 23190000.0,
                 "Thickness": 0.4900000000000002
             },
             {
                 "Attributes": [
-                    23
+                    2
                 ],
                 "Conductivity": 23190000.0,
                 "Thickness": 0.4900000000000002
             },
             {
                 "Attributes": [
-                    24
+                    3
                 ],
                 "Conductivity": 30300000.0,
                 "Thickness": 3.0
             },
             {
                 "Attributes": [
-                    25
+                    4
                 ],
                 "Conductivity": 30300000.0,
                 "Thickness": 3.0
@@ -113,7 +119,7 @@
                 "Direction": "Z",
                 "Excitation": 1,
                 "Attributes": [
-                    26
+                    10
                 ]
             },
             {
@@ -122,7 +128,7 @@
                 "Direction": "Z",
                 "Excitation": 2,
                 "Attributes": [
-                    27
+                    11
                 ]
             },
             {
@@ -131,13 +137,13 @@
                 "Direction": "Z",
                 "Excitation": 3,
                 "Attributes": [
-                    28
+                    12
                 ]
             }
         ],
         "Absorbing": {
             "Attributes": [
-                29
+                13
             ],
             "Order": 2
         }
