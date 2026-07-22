@@ -93,22 +93,22 @@ LE_OUT ?= netlist/spice/sparx_bpf_le.spice
 SPARAM ?= sparx_blc_$(FREQ)GHz_$(Z0)Ohm_$(SIGNAL_CROSS_SECTION)_$(GROUND_CROSS_SECTION)_e_r_$(subst .,_,$(E_R))
 
 # Folder structure
-SCH_DIR     	:= schematic
-LAY_DIR     	:= layout
-SCRIPTS_DIR     := scripts
-XSCHEM_TB_DIR   := testbenches
-RELEASE_DIR		:= release
-RENDER_IMG_DIR  := render/img
-NET_SCH_DIR 	:= netlist/schematic
-NET_LAY_DIR 	:= netlist/layout
-NET_PEX_DIR 	:= netlist/pex
-NET_SPICE_DIR 	:= netlist/spice
-NET_SPECTRE_DIR := netlist/spectre
-LVS_RPT_DIR 	:= verification/lvs
-DRC_RPT_DIR 	:= verification/drc
-EM_RPT_DIR 		:= verification/em
-EM_SPARAM_DIR 	:= verification/em/s-parameter
-PALACE_SCRIPTS_DIR := $(PDK_ROOT)/$(PDK)/libs.tech/palace/scripts
+SCH_DIR     		:= schematic
+LAY_DIR     		:= layout
+SCRIPTS_DIR     	:= scripts
+XSCHEM_TB_DIR   	:= testbenches
+RELEASE_DIR			:= release
+RENDER_IMG_DIR  	:= render/img
+NET_SCH_DIR 		:= netlist/schematic
+NET_LAY_DIR 		:= netlist/layout
+NET_PEX_DIR 		:= netlist/pex
+NET_SPICE_DIR 		:= netlist/spice
+NET_SPECTRE_DIR 	:= netlist/spectre
+LVS_RPT_DIR 		:= verification/lvs
+DRC_RPT_DIR 		:= verification/drc
+EM_RPT_DIR 			:= verification/em
+EM_SPARAM_DIR 		:= verification/em/s-parameter
+PALACE_SCRIPTS_DIR 	:= $(PDK_ROOT)/$(PDK)/libs.tech/palace/scripts
 
 
 # Help target
