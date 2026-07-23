@@ -139,7 +139,7 @@ help: ## Show this help message
 # Build Targets
 build-pdk: ## Clone and install the GDSFactory PDK add-on (usage: make build-pdk)
 	rm -rf IHP/
-	git clone -b main https://github.com/iic-jku/IHP-GDSFactory-Addon.git IHP
+	git clone --depth 1 -b main https://github.com/iic-jku/IHP-GDSFactory-Addon.git IHP
 	rm -rf .venv/
 	/usr/bin/python3 -m venv --system-site-packages .venv
 	. .venv/bin/activate && cd IHP && pip install .
