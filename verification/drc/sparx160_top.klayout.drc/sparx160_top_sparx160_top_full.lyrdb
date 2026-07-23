@@ -8,14 +8,32 @@
  </tags>
  <categories>
   <category>
+   <name>TGO.f</name>
+   <description>5.7. TGO.f : Min. ThickGateOx width: 0.86 µm</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
    <name>pSD.c1</name>
    <description>5.10. pSD.c1 Min. pSD enclosure of P+Activ in PWell is 0.03 um</description>
    <categories>
    </categories>
   </category>
  <category>
-   <name>TGO.f</name>
-   <description>5.7. TGO.f : Min. ThickGateOx width: 0.86 µm</description>
+   <name>GFil.d</name>
+   <description>5.9. GFil.d : Min. GatPoly:filler space to Activ, GatPoly, Cont, pSD, nSD:block, SalBlock is 1.1 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>GFil.e</name>
+   <description>5.9. GFil.e Min. GatPoly:filler space to NWell, nBuLay is 1.1 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>GFil.i</name>
+   <description>5.9. GFil.i Max. GatPoly:nofill area (µm²) is 400.0 um x 400.0 um</description>
    <categories>
    </categories>
   </category>
@@ -40,48 +58,6 @@
   <category>
    <name>PWB.f1</name>
    <description>5.2. PWB.f1 Min. PWell:block space to (P+Activ inside ThickGateOx) in PWell 0.62 um</description>
-   <categories>
-   </categories>
-  </category>
- <category>
-   <name>GFil.d</name>
-   <description>5.9. GFil.d : Min. GatPoly:filler space to Activ, GatPoly, Cont, pSD, nSD:block, SalBlock is 1.1 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>GFil.e</name>
-   <description>5.9. GFil.e Min. GatPoly:filler space to NWell, nBuLay is 1.1 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>GFil.i</name>
-   <description>5.9. GFil.i Max. GatPoly:nofill area (µm²) is 400.0 um x 400.0 um</description>
-   <categories>
-   </categories>
-  </category>
- <category>
-   <name>Sdiod.b</name>
-   <description>6.7. Sdiod.b : Min. and max. nSD:block enclosure of ContBar = 0.4 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Sdiod.c</name>
-   <description>6.7. Sdiod.c : Min. and max. SalBlock enclosure of ContBar = 0.45 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Sdiod.d</name>
-   <description>6.7. Sdiod.d : Min. and max. ContBar width inside nBuLay is 0.3 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>Sdiod.e</name>
-   <description>6.7. Sdiod.e : Min. and max. ContBar length inside nBuLay is 1.0 um</description>
    <categories>
    </categories>
   </category>
@@ -140,6 +116,30 @@
    </categories>
   </category>
  <category>
+   <name>Sdiod.b</name>
+   <description>6.7. Sdiod.b : Min. and max. nSD:block enclosure of ContBar = 0.4 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Sdiod.c</name>
+   <description>6.7. Sdiod.c : Min. and max. SalBlock enclosure of ContBar = 0.45 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Sdiod.d</name>
+   <description>6.7. Sdiod.d : Min. and max. ContBar width inside nBuLay is 0.3 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>Sdiod.e</name>
+   <description>6.7. Sdiod.e : Min. and max. ContBar length inside nBuLay is 1.0 um</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
    <name>LU.b</name>
    <description>7.2. LU.b : Max. space from any portion of N+Activ inside PWell to an pSD-PWell tie is 20.0 um</description>
    <categories>
@@ -172,60 +172,6 @@
   <category>
    <name>Act.b</name>
    <description>5.5. Act.b : Min. Activ (drawing + filler) space or notch: 0.21 µm.</description>
-   <categories>
-   </categories>
-  </category>
- <category>
-   <name>AFil.c1</name>
-   <description>5.6. AFil.c1 Min. Activ:filler space to Activ is 0.42 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>AFil.c</name>
-   <description>5.6. AFil.c Min. Activ:filler space to Cont, GatPoly is 1.1 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>AFil.d</name>
-   <description>5.6. AFil.d Min. Activ:filler space to NWell, nBuLay is 1.0 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>AFil.e</name>
-   <description>5.6. AFil.e Min. Activ:filler space to TRANS is 1.0 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>AFil.j</name>
-   <description>5.6. AFil.j Min. nSD:block and SalBlock enclosure of Activ:filler inside PWell:block is 0.25 um</description>
-   <categories>
-   </categories>
-  </category>
- <category>
-   <name>CntB.a</name>
-   <description>5.15. CntB.a Min. and max. ContBar width is 0.16 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>CntB.a1</name>
-   <description>5.15. CntB.a1 Min. ContBar length is 0.34 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>CntB.b1</name>
-   <description>5.15. CntB.b1 Min. ContBar space with common run &gt; 5.0 µm is 0.36 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>CntB.h1</name>
-   <description>5.15. CntB.h1 Min. Metal1 enclosure of ContBar is 0.05 um</description>
    <categories>
    </categories>
   </category>
@@ -272,6 +218,36 @@
    </categories>
   </category>
  <category>
+   <name>AFil.c1</name>
+   <description>5.6. AFil.c1 Min. Activ:filler space to Activ is 0.42 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>AFil.c</name>
+   <description>5.6. AFil.c Min. Activ:filler space to Cont, GatPoly is 1.1 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>AFil.d</name>
+   <description>5.6. AFil.d Min. Activ:filler space to NWell, nBuLay is 1.0 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>AFil.e</name>
+   <description>5.6. AFil.e Min. Activ:filler space to TRANS is 1.0 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>AFil.j</name>
+   <description>5.6. AFil.j Min. nSD:block and SalBlock enclosure of Activ:filler inside PWell:block is 0.25 um</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
    <name>Gat.a</name>
    <description>5.8. Gat.a : Min. GatPoly width: 0.13 µm</description>
    <categories>
@@ -304,6 +280,30 @@
   <category>
    <name>Gat.g</name>
    <description>5.8. Gat.g Min. GatPoly width for 45-degree bent shapes if the bend GatPoly,length is &gt; 0.39 µm is 0.16 um</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>CntB.a</name>
+   <description>5.15. CntB.a Min. and max. ContBar width is 0.16 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>CntB.a1</name>
+   <description>5.15. CntB.a1 Min. ContBar length is 0.34 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>CntB.b1</name>
+   <description>5.15. CntB.b1 Min. ContBar space with common run &gt; 5.0 µm is 0.36 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>CntB.h1</name>
+   <description>5.15. CntB.h1 Min. Metal1 enclosure of ContBar is 0.05 um</description>
    <categories>
    </categories>
   </category>
@@ -380,18 +380,6 @@
    </categories>
   </category>
  <category>
-   <name>MIM.c</name>
-   <description>6.11. MIM.c : Min. Metal5 enclosure of MIM is 0.6 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>MIM.d</name>
-   <description>6.11. MIM.d : Min. MIM enclosure of TopVia1 is 0.36 um</description>
-   <categories>
-   </categories>
-  </category>
- <category>
    <name>TM1.a</name>
    <description>5.22. TM1.a: Min. TopMetal1 width: 1.64 μm.</description>
    <categories>
@@ -400,18 +388,6 @@
   <category>
    <name>TM1.b</name>
    <description>5.22. TM1.b: Min. TopMetal1 (drawing + filler) space or notch: 1.64 μm.</description>
-   <categories>
-   </categories>
-  </category>
- <category>
-   <name>TM2Fil.c</name>
-   <description>5.26. TM2Fil.c : Min. TopMetal2:filler space to TopMetal2 is 3.0 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>TM2Fil.a1</name>
-   <description>5.26. TM2Fil.a1 : Max. TopMetal2:filler width is 10.0 um</description>
    <categories>
    </categories>
   </category>
@@ -430,6 +406,18 @@
   <category>
    <name>Pas.c</name>
    <description>5.27. Pas.c : Min. TopMetal2 enclosure of Passiv [Not checked outside of sealring (edge-seal-passive)] is 2.1 um </description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>MIM.c</name>
+   <description>6.11. MIM.c : Min. Metal5 enclosure of MIM is 0.6 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>MIM.d</name>
+   <description>6.11. MIM.d : Min. MIM enclosure of TopVia1 is 0.36 um</description>
    <categories>
    </categories>
   </category>
@@ -458,26 +446,14 @@
    </categories>
   </category>
  <category>
-   <name>TV1.a</name>
-   <description>5.21. TV1.a : Min. and max. TopVia1 width: 0.42 µm</description>
+   <name>TM2Fil.c</name>
+   <description>5.26. TM2Fil.c : Min. TopMetal2:filler space to TopMetal2 is 3.0 um</description>
    <categories>
    </categories>
   </category>
   <category>
-   <name>TV1.b</name>
-   <description>5.21. TV1.b : Min. TopVia1 space: 0.42 µm</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>TV1.c</name>
-   <description>5.21. TV1.c : Min. Metal5 enclosure of TopVia1 is 0.1 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>TV1.d</name>
-   <description>5.21. TV1.d : Min. TopMetal1 enclosure of TopVia1 is 0.42 um</description>
+   <name>TM2Fil.a1</name>
+   <description>5.26. TM2Fil.a1 : Max. TopMetal2:filler width is 10.0 um</description>
    <categories>
    </categories>
   </category>
@@ -550,6 +526,30 @@
   <category>
    <name>V1.c</name>
    <description>5.19.  V1.c Min. Metal1 enclosure of Via1 is 0.01 um</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>TV1.a</name>
+   <description>5.21. TV1.a : Min. and max. TopVia1 width: 0.42 µm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>TV1.b</name>
+   <description>5.21. TV1.b : Min. TopVia1 space: 0.42 µm</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>TV1.c</name>
+   <description>5.21. TV1.c : Min. Metal5 enclosure of TopVia1 is 0.1 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>TV1.d</name>
+   <description>5.21. TV1.d : Min. TopMetal1 enclosure of TopVia1 is 0.42 um</description>
    <categories>
    </categories>
   </category>
@@ -633,18 +633,6 @@
    </categories>
   </category>
  <category>
-   <name>TM1Fil.c</name>
-   <description>5.23. TM1Fil.c : Min. TopMetal1:filler space to TopMetal1 is 3.0 um</description>
-   <categories>
-   </categories>
-  </category>
-  <category>
-   <name>TM1Fil.a1</name>
-   <description>5.23. TM1Fil.a1 : Max. TopMetal1:filler width is 10.0 um</description>
-   <categories>
-   </categories>
-  </category>
- <category>
    <name>V2.a</name>
    <description>5.20. V2.a : Min. and max. Via2 width: 0.19 µm</description>
    <categories>
@@ -695,6 +683,18 @@
   <category>
    <name>V4.c</name>
    <description>5.20. V4.c : Min. Metal4 enclosure of Via4 is 0.005 µm</description>
+   <categories>
+   </categories>
+  </category>
+ <category>
+   <name>TM1Fil.c</name>
+   <description>5.23. TM1Fil.c : Min. TopMetal1:filler space to TopMetal1 is 3.0 um</description>
+   <categories>
+   </categories>
+  </category>
+  <category>
+   <name>TM1Fil.a1</name>
+   <description>5.23. TM1Fil.a1 : Max. TopMetal1:filler width is 10.0 um</description>
    <categories>
    </categories>
   </category>
@@ -3575,324 +3575,7 @@
    <references>
    </references>
   </cell>
- <cell>
-   <name>powdet_sbd</name>
-   <variant />
-   <layout-name>powdet_sbd</layout-name>
-   <references>
-    <ref>
-     <parent>sparx160_top</parent>
-     <trans>r0 *1 564.63,1059.045</trans>
-    </ref>
-   </references>
-  </cell>
-  <cell>
-   <name>rsil_L2p5_W0p5_P0p18_R24p9_N1_SSerial_S2_Gnone_G1$1</name>
-   <variant />
-   <layout-name>rsil_L2p5_W0p5_P0p18_R24p9_N1_SSerial_S2_Gnone_G1$1</layout-name>
-   <references>
-    <ref>
-     <parent>sparx160_top</parent>
-     <trans>r0 *1 606,1059.575</trans>
-    </ref>
-   </references>
-  </cell>
-  <cell>
-   <name>rsil_L2p5_W0p5_P0p18_R24p9_N1_SSerial_S2_Gnone_G1$2</name>
-   <variant />
-   <layout-name>rsil_L2p5_W0p5_P0p18_R24p9_N1_SSerial_S2_Gnone_G1$2</layout-name>
-   <references>
-    <ref>
-     <parent>sparx160_top</parent>
-     <trans>r0 *1 610.62,1059.575</trans>
-    </ref>
-   </references>
-  </cell>
-  <cell>
-   <name>output_stage</name>
-   <variant />
-   <layout-name>output_stage</layout-name>
-   <references>
-    <ref>
-     <parent>sparx160_top</parent>
-     <trans>r0 *1 636.2,1097.51</trans>
-    </ref>
-   </references>
-  </cell>
-  <cell>
-   <name>rppd_L1p5_W0p5_B0_P0p18_N1_SSerial_S2_Gnone_G1</name>
-   <variant />
-   <layout-name>rppd_L1p5_W0p5_B0_P0p18_N1_SSerial_S2_Gnone_G1</layout-name>
-   <references>
-    <ref>
-     <parent>sparx160_top</parent>
-     <trans>r180 *1 611.11,1105.56</trans>
-    </ref>
-   </references>
-  </cell>
-  <cell>
-   <name>rhigh_L2_W0p5_B0_P0p18_N1_SSerial_S2_Gnone_G1</name>
-   <variant />
-   <layout-name>rhigh_L2_W0p5_B0_P0p18_N1_SSerial_S2_Gnone_G1</layout-name>
-   <references>
-    <ref>
-     <parent>sparx160_top</parent>
-     <trans>r90 *1 625.84,1074.53</trans>
-    </ref>
-   </references>
-  </cell>
-  <cell>
-   <name>rsil_L2p5_W0p5_P0p18_R50_N1_SSerial_S2_Gnone_G1</name>
-   <variant />
-   <layout-name>rsil_L2p5_W0p5_P0p18_R50_N1_SSerial_S2_Gnone_G1</layout-name>
-   <references>
-    <ref>
-     <parent>sparx160_top</parent>
-     <trans>r270 *1 880.43,543.99</trans>
-    </ref>
-   </references>
-  </cell>
  </cells>
  <items>
- <item>
-   <tags />
-   <category>'Sdiod.d'</category>
-   <cell>rsil_L2p5_W0p5_P0p18_R24p9_N1_SSerial_S2_Gnone_G1$1</cell>
-   <visited>false</visited>
-   <multiplicity>1</multiplicity>
-   <comment />
-   <image />
-   <values>
-    <value>polygon: (0.07,2.62;0.07,2.78;0.43,2.78;0.43,2.62)</value>
-   </values>
-  </item>
-  <item>
-   <tags />
-   <category>'Sdiod.d'</category>
-   <cell>rsil_L2p5_W0p5_P0p18_R24p9_N1_SSerial_S2_Gnone_G1$1</cell>
-   <visited>false</visited>
-   <multiplicity>1</multiplicity>
-   <comment />
-   <image />
-   <values>
-    <value>polygon: (0.07,-0.28;0.07,-0.12;0.43,-0.12;0.43,-0.28)</value>
-   </values>
-  </item>
-  <item>
-   <tags />
-   <category>'Sdiod.d'</category>
-   <cell>rsil_L2p5_W0p5_P0p18_R24p9_N1_SSerial_S2_Gnone_G1$2</cell>
-   <visited>false</visited>
-   <multiplicity>1</multiplicity>
-   <comment />
-   <image />
-   <values>
-    <value>polygon: (0.07,2.62;0.07,2.78;0.43,2.78;0.43,2.62)</value>
-   </values>
-  </item>
-  <item>
-   <tags />
-   <category>'Sdiod.d'</category>
-   <cell>rsil_L2p5_W0p5_P0p18_R24p9_N1_SSerial_S2_Gnone_G1$2</cell>
-   <visited>false</visited>
-   <multiplicity>1</multiplicity>
-   <comment />
-   <image />
-   <values>
-    <value>polygon: (0.07,-0.28;0.07,-0.12;0.43,-0.12;0.43,-0.28)</value>
-   </values>
-  </item>
-  <item>
-   <tags />
-   <category>'Sdiod.d'</category>
-   <cell>rppd_L1p5_W0p5_B0_P0p18_N1_SSerial_S2_Gnone_G1</cell>
-   <visited>false</visited>
-   <multiplicity>1</multiplicity>
-   <comment />
-   <image />
-   <values>
-    <value>polygon: (0.07,1.7;0.07,1.86;0.43,1.86;0.43,1.7)</value>
-   </values>
-  </item>
-  <item>
-   <tags />
-   <category>'Sdiod.d'</category>
-   <cell>rppd_L1p5_W0p5_B0_P0p18_N1_SSerial_S2_Gnone_G1</cell>
-   <visited>false</visited>
-   <multiplicity>1</multiplicity>
-   <comment />
-   <image />
-   <values>
-    <value>polygon: (0.07,-0.36;0.07,-0.2;0.43,-0.2;0.43,-0.36)</value>
-   </values>
-  </item>
-  <item>
-   <tags />
-   <category>'Sdiod.d'</category>
-   <cell>rhigh_L2_W0p5_B0_P0p18_N1_SSerial_S2_Gnone_G1</cell>
-   <visited>false</visited>
-   <multiplicity>1</multiplicity>
-   <comment />
-   <image />
-   <values>
-    <value>polygon: (0.07,2.2;0.07,2.36;0.43,2.36;0.43,2.2)</value>
-   </values>
-  </item>
-  <item>
-   <tags />
-   <category>'Sdiod.d'</category>
-   <cell>rhigh_L2_W0p5_B0_P0p18_N1_SSerial_S2_Gnone_G1</cell>
-   <visited>false</visited>
-   <multiplicity>1</multiplicity>
-   <comment />
-   <image />
-   <values>
-    <value>polygon: (0.07,-0.36;0.07,-0.2;0.43,-0.2;0.43,-0.36)</value>
-   </values>
-  </item>
-  <item>
-   <tags />
-   <category>'Sdiod.d'</category>
-   <cell>rsil_L2p5_W0p5_P0p18_R50_N1_SSerial_S2_Gnone_G1</cell>
-   <visited>false</visited>
-   <multiplicity>1</multiplicity>
-   <comment />
-   <image />
-   <values>
-    <value>polygon: (0.07,2.62;0.07,2.78;0.43,2.78;0.43,2.62)</value>
-   </values>
-  </item>
-  <item>
-   <tags />
-   <category>'Sdiod.d'</category>
-   <cell>rsil_L2p5_W0p5_P0p18_R50_N1_SSerial_S2_Gnone_G1</cell>
-   <visited>false</visited>
-   <multiplicity>1</multiplicity>
-   <comment />
-   <image />
-   <values>
-    <value>polygon: (0.07,-0.28;0.07,-0.12;0.43,-0.12;0.43,-0.28)</value>
-   </values>
-  </item>
-  <item>
-   <tags />
-   <category>'Sdiod.e'</category>
-   <cell>rsil_L2p5_W0p5_P0p18_R24p9_N1_SSerial_S2_Gnone_G1$1</cell>
-   <visited>false</visited>
-   <multiplicity>1</multiplicity>
-   <comment />
-   <image />
-   <values>
-    <value>polygon: (0.07,2.62;0.07,2.78;0.43,2.78;0.43,2.62)</value>
-   </values>
-  </item>
-  <item>
-   <tags />
-   <category>'Sdiod.e'</category>
-   <cell>rsil_L2p5_W0p5_P0p18_R24p9_N1_SSerial_S2_Gnone_G1$1</cell>
-   <visited>false</visited>
-   <multiplicity>1</multiplicity>
-   <comment />
-   <image />
-   <values>
-    <value>polygon: (0.07,-0.28;0.07,-0.12;0.43,-0.12;0.43,-0.28)</value>
-   </values>
-  </item>
-  <item>
-   <tags />
-   <category>'Sdiod.e'</category>
-   <cell>rsil_L2p5_W0p5_P0p18_R24p9_N1_SSerial_S2_Gnone_G1$2</cell>
-   <visited>false</visited>
-   <multiplicity>1</multiplicity>
-   <comment />
-   <image />
-   <values>
-    <value>polygon: (0.07,2.62;0.07,2.78;0.43,2.78;0.43,2.62)</value>
-   </values>
-  </item>
-  <item>
-   <tags />
-   <category>'Sdiod.e'</category>
-   <cell>rsil_L2p5_W0p5_P0p18_R24p9_N1_SSerial_S2_Gnone_G1$2</cell>
-   <visited>false</visited>
-   <multiplicity>1</multiplicity>
-   <comment />
-   <image />
-   <values>
-    <value>polygon: (0.07,-0.28;0.07,-0.12;0.43,-0.12;0.43,-0.28)</value>
-   </values>
-  </item>
-  <item>
-   <tags />
-   <category>'Sdiod.e'</category>
-   <cell>rppd_L1p5_W0p5_B0_P0p18_N1_SSerial_S2_Gnone_G1</cell>
-   <visited>false</visited>
-   <multiplicity>1</multiplicity>
-   <comment />
-   <image />
-   <values>
-    <value>polygon: (0.07,1.7;0.07,1.86;0.43,1.86;0.43,1.7)</value>
-   </values>
-  </item>
-  <item>
-   <tags />
-   <category>'Sdiod.e'</category>
-   <cell>rppd_L1p5_W0p5_B0_P0p18_N1_SSerial_S2_Gnone_G1</cell>
-   <visited>false</visited>
-   <multiplicity>1</multiplicity>
-   <comment />
-   <image />
-   <values>
-    <value>polygon: (0.07,-0.36;0.07,-0.2;0.43,-0.2;0.43,-0.36)</value>
-   </values>
-  </item>
-  <item>
-   <tags />
-   <category>'Sdiod.e'</category>
-   <cell>rhigh_L2_W0p5_B0_P0p18_N1_SSerial_S2_Gnone_G1</cell>
-   <visited>false</visited>
-   <multiplicity>1</multiplicity>
-   <comment />
-   <image />
-   <values>
-    <value>polygon: (0.07,2.2;0.07,2.36;0.43,2.36;0.43,2.2)</value>
-   </values>
-  </item>
-  <item>
-   <tags />
-   <category>'Sdiod.e'</category>
-   <cell>rhigh_L2_W0p5_B0_P0p18_N1_SSerial_S2_Gnone_G1</cell>
-   <visited>false</visited>
-   <multiplicity>1</multiplicity>
-   <comment />
-   <image />
-   <values>
-    <value>polygon: (0.07,-0.36;0.07,-0.2;0.43,-0.2;0.43,-0.36)</value>
-   </values>
-  </item>
-  <item>
-   <tags />
-   <category>'Sdiod.e'</category>
-   <cell>rsil_L2p5_W0p5_P0p18_R50_N1_SSerial_S2_Gnone_G1</cell>
-   <visited>false</visited>
-   <multiplicity>1</multiplicity>
-   <comment />
-   <image />
-   <values>
-    <value>polygon: (0.07,2.62;0.07,2.78;0.43,2.78;0.43,2.62)</value>
-   </values>
-  </item>
-  <item>
-   <tags />
-   <category>'Sdiod.e'</category>
-   <cell>rsil_L2p5_W0p5_P0p18_R50_N1_SSerial_S2_Gnone_G1</cell>
-   <visited>false</visited>
-   <multiplicity>1</multiplicity>
-   <comment />
-   <image />
-   <values>
-    <value>polygon: (0.07,-0.28;0.07,-0.12;0.43,-0.12;0.43,-0.28)</value>
-   </values>
-  </item>
  </items>
 </report-database>
