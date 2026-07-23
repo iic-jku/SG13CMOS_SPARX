@@ -238,6 +238,7 @@ An overview of the open-source design flow for SPARX is shown below. The flow co
 ├─ .gitattributes
 ├─ .gitignore
 ├─ CITATION.cff
+├─ KNOWN_ISSUES.md
 ├─ LICENSE
 ├─ Makefile
 ├─ README.md
@@ -391,6 +392,9 @@ make klayout-drc CELL=sparx_powdet_sbd DRC_LEVEL=regular
 make magic-drc
 make magic-drc CELL=sparx_powdet_sbd
 ```
+
+> [!NOTE]
+> `make klayout-drc` (`macro` level) is clean. `make klayout-drc-regular` reports antenna violations that were waived by IHP for the tapeout. See [`KNOWN_ISSUES.md`](KNOWN_ISSUES.md) for the full breakdown.
 
 ### Parasitic Extraction (PEX)
 
