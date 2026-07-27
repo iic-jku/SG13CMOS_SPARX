@@ -650,7 +650,7 @@ make regression
 
 The default `regression` is run manually and as part of the IIC-OSIC-TOOLS release regression tests ([`_tests/22`](https://github.com/iic-jku/IIC-OSIC-TOOLS/tree/next_release/_tests/22)), which validate each IIC-OSIC-TOOLS release against real designs.
 
-By default (`EM_REGRESSION=0`), `regression` reuses the committed WPD Palace results and does not re-run the slow full-wave EM solve. The `regression-nightly` target is the full variant: it runs everything `regression` does **plus** the WPD AWS Palace EM solve (`sim-wpd-em`), so the copy, snp2le, and Xschem steps run on freshly generated EM data. Internally, `regression-nightly` just calls `regression` with `EM_REGRESSION=1`, so `make regression-nightly` and `make regression EM_REGRESSION=1` are equivalent.
+By default (`NIGHTLY_REGRESSION=0`), `regression` reuses the committed WPD Palace results and does not re-run the slow full-wave EM solve. The `regression-nightly` target is the full variant: it runs everything `regression` does **plus** the WPD AWS Palace EM solve (`sim-wpd-em`), so the copy, snp2le, and Xschem steps run on freshly generated EM data. Internally, `regression-nightly` just calls `regression` with `NIGHTLY_REGRESSION=1`, so `make regression-nightly` and `make regression NIGHTLY_REGRESSION=1` are equivalent.
 
 ```sh
 make regression-nightly

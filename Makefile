@@ -507,21 +507,23 @@ release: ## Copy the gds, netlist files and chip renders to the release folder (
 
 
 # Regression Targets
-# EM_REGRESSION toggles the WPD AWS Palace EM solve inside `regression`: 0 (default) reuses the committed EM result, 1 runs sim-wpd-em first.
+# NIGHTLY_REGRESSION toggles the WPD AWS Palace EM solve inside `regression`:
+# - 0 (default) reuses the committed EM result
+# - 1 runs sim-wpd-em first.
 # The regression-nightly target sets it to 1.
-EM_REGRESSION ?= 0
+NIGHTLY_REGRESSION ?= 0
 
-regression: ## Tool/flow regression for IIC-OSIC-TOOLS, committed EM result reused (usage: make regression [EM_REGRESSION=1])
+regression: ## Regression test target for IIC-OSIC-TOOLS (usage: make regression [NIGHTLY_REGRESSION=1])
 # 	GDSFactory programmatic six-port layout generation
 	$(MAKE) build-top
 # 	KLayout LVS, DRC, and kpex PEX of the power-detector cell.
 	$(MAKE) klayout-verify CELL=$(POWDET)
 # 	Magic + Netgen LVS, Magic DRC, and Magic PEX of the power-detector cell.
 	$(MAKE) magic-verify CELL=$(POWDET)
-# 	Optional AWS Palace EM solve (WPD), run only when EM_REGRESSION=1 (regression-nightly).
-	$(if $(filter 1,$(EM_REGRESSION)),$(MAKE) sim-wpd-em)
+# 	Optional AWS Palace EM solve (WPD), run only when NIGHTLY_REGRESSION=1 (regression-nightly).
+	$(if $(filter 1,$(NIGHTLY_REGRESSION)),$(MAKE) sim-wpd-em)
 # 	Copy the raw and de-embedded S-parameter results (WPD): the fresh sim-wpd-em output when
-# 	EM_REGRESSION=1, otherwise the committed Palace output.
+# 	NIGHTLY_REGRESSION=1, otherwise the committed Palace output.
 	$(MAKE) copy-sparam SPARAM=sparx_wpd_160GHz_50Ohm_TM2_M5_e_r_4_1_config_U
 # 	De-embedded S-parameter to lumped-element netlist conversion (WPD).
 	$(MAKE) snp2le SNP=verification/em/s-parameter/sparx_wpd_160GHz_50Ohm_TM2_M5_e_r_4_1_config_U_deembedded.s3p ORDER=10 LE_FORMAT=spice LE_OUT=netlist/spice/sparx_wpd_le.spice
@@ -531,7 +533,7 @@ regression: ## Tool/flow regression for IIC-OSIC-TOOLS, committed EM result reus
 	$(MAKE) sim-xschem TB=sparx_wpd_le_tb_acsp_vacask
 .PHONY: regression
 
-regression-nightly: ## Nightly regression: the default regression plus the WPD AWS Palace EM solve (usage: make regression-nightly)
-	$(MAKE) regression EM_REGRESSION=1
+regression-nightly: ## Nightly regression test target for IIC-OSIC-TOOLS (usage: make regression-nightly)
+	$(MAKE) regression NIGHTLY_REGRESSION=1
 .PHONY: regression-nightly
 # ================================================================================================
