@@ -648,12 +648,20 @@ The `regression` target is the project's smoke test for the [IIC-OSIC-TOOLS](htt
 make regression
 ```
 
-This target also runs automatically in continuous integration: the [`regression`](.github/workflows/regression.yml) GitHub Actions workflow runs `make regression` inside the `hpretl/iic-osic-tools` container nightly (and on manual dispatch), and its status is shown by the *Regression* badge at the top of this README. The scheduled run is gated so it only executes when there have been changes since the previous night.
+The default `regression` is run manually and as part of the IIC-OSIC-TOOLS release regression tests ([`_tests/22`](https://github.com/iic-jku/IIC-OSIC-TOOLS/tree/next_release/_tests/22)), which validate each IIC-OSIC-TOOLS release against real designs.
+
+By default (`EM_REGRESSION=0`), `regression` reuses the committed WPD Palace results and does not re-run the slow full-wave EM solve. The `regression-nightly` target is the full variant: it runs everything `regression` does **plus** the WPD AWS Palace EM solve (`sim-wpd-em`), so the copy, snp2le, and Xschem steps run on freshly generated EM data. Internally, `regression-nightly` just calls `regression` with `EM_REGRESSION=1`, so `make regression-nightly` and `make regression EM_REGRESSION=1` are equivalent.
+
+```sh
+make regression-nightly
+```
+
+This project's own continuous integration runs the full variant: the [`regression`](.github/workflows/regression.yml) GitHub Actions workflow runs `make regression-nightly` (including the EM solve) inside the `hpretl/iic-osic-tools` container nightly (and on manual dispatch), and its status is shown by the *Regression* badge at the top of this README. The scheduled run is gated so it only executes when there have been changes since the previous night.
 
 To keep the runtime low while still covering most of the toolchain, the regression makes the following trade-offs:
 
 - Only the small `sparx_powdet_sbd` power-detector cell is verified, not the full six-port top cell. KLayout LVS, KLayout DRC, and KLayout PEX are run. Magic + Netgen LVS, Magic DRC, and Magic PEX are run.
-- The full-wave EM solve is not re-run. The AWS Palace EM simulation of the Wilkinson power divider (WPD) is the slowest step, so the regression reuses the committed WPD Palace results and only exercises the downstream flow: S-parameter copy and lumped-element conversion (SPICE and Spectre). Run `make sim-wpd-em` to regenerate the EM results.
+- The full-wave EM solve is not re-run by the default `regression`. The AWS Palace EM simulation of the Wilkinson power divider (WPD) is the slowest step, so `regression` reuses the committed WPD Palace results and only exercises the downstream flow: S-parameter copy and lumped-element conversion (SPICE and Spectre). Use `regression-nightly` (or `make sim-wpd-em`) to regenerate the EM results.
 - Only one ngspice and one VACASK testbench are simulated (the bandpass-filter AC S-parameter benches).
 - The layout is generated at a single frequency (160 GHz). No frequency sweep is run.
 - Top-level LVS is not run (work in progress).
@@ -667,6 +675,7 @@ The following tools and flows are checked:
 | KLayout (GDS-to-image rendering) | `render-gds` (via `build-top`) |
 | Xschem netlisting, KLayout LVS, KLayout DRC, KLayout PEX | `klayout-verify CELL=sparx_powdet_sbd` |
 | Xschem netlisting, Magic + Netgen LVS, Magic DRC, Magic PEX | `magic-verify CELL=sparx_powdet_sbd` |
+| GDSFactory + gds2palace meshing + AWS Palace EM solve | `sim-wpd-em` (`regression-nightly` only) |
 | S-parameter result copy (raw + de-embedded) | `copy-sparam SPARAM=sparx_wpd_...` |
 | snp2le (de-embedded S-parameter to lumped element, SPICE + Spectre) | `snp2le SNP=..._deembedded.s3p ...` |
 | Xschem netlisting + ngspice | `sim-xschem TB=sparx_wpd_le_tb_acsp_ngspice` |

@@ -132,6 +132,7 @@ help: ## Show this help message
 	@echo 'EM sim: NP=<procs> Z0=<Ohms> E_R=<e_r> SIGNAL_CROSS_SECTION=<metal> GROUND_CROSS_SECTION=<metal>.'
 	@echo 'sim-bpf-em: BANDWIDTH=<GHz> FILTER_TYPE=<butter|cheby|ellip> FILTER_ORDER=<N> RIPPLE_DB=<dB>. sim-wpd-em: CONFIG=<C|U>.'
 	@echo 'view-em-sim: FILE_NAME=<name_with_extension>. copy-sparam: SPARAM=<em_run_name>. release: VERSION=<version>.'
+	@echo 'regression is the fast tool/flow smoke test (committed EM result). regression-nightly also runs the WPD AWS Palace EM solve.'
 .PHONY: help
 # ================================================================================================
 
@@ -505,15 +506,22 @@ release: ## Copy the gds, netlist files and chip renders to the release folder (
 # ================================================================================================
 
 
-# Regression Target
-regression: ## Regression test for IIC-OSIC-TOOLS (usage: make regression)
+# Regression Targets
+# EM_REGRESSION toggles the WPD AWS Palace EM solve inside `regression`: 0 (default) reuses the committed EM result, 1 runs sim-wpd-em first.
+# The regression-nightly target sets it to 1.
+EM_REGRESSION ?= 0
+
+regression: ## Tool/flow regression for IIC-OSIC-TOOLS, committed EM result reused (usage: make regression [EM_REGRESSION=1])
 # 	GDSFactory programmatic six-port layout generation
 	$(MAKE) build-top
 # 	KLayout LVS, DRC, and kpex PEX of the power-detector cell.
 	$(MAKE) klayout-verify CELL=$(POWDET)
 # 	Magic + Netgen LVS, Magic DRC, and Magic PEX of the power-detector cell.
 	$(MAKE) magic-verify CELL=$(POWDET)
-# 	Copy the raw and de-embedded S-parameter results (WPD) from the committed Palace output.
+# 	Optional AWS Palace EM solve (WPD), run only when EM_REGRESSION=1 (regression-nightly).
+	$(if $(filter 1,$(EM_REGRESSION)),$(MAKE) sim-wpd-em)
+# 	Copy the raw and de-embedded S-parameter results (WPD): the fresh sim-wpd-em output when
+# 	EM_REGRESSION=1, otherwise the committed Palace output.
 	$(MAKE) copy-sparam SPARAM=sparx_wpd_160GHz_50Ohm_TM2_M5_e_r_4_1_config_U
 # 	De-embedded S-parameter to lumped-element netlist conversion (WPD).
 	$(MAKE) snp2le SNP=verification/em/s-parameter/sparx_wpd_160GHz_50Ohm_TM2_M5_e_r_4_1_config_U_deembedded.s3p ORDER=10 LE_FORMAT=spice LE_OUT=netlist/spice/sparx_wpd_le.spice
@@ -522,4 +530,8 @@ regression: ## Regression test for IIC-OSIC-TOOLS (usage: make regression)
 	$(MAKE) sim-xschem TB=sparx_wpd_le_tb_acsp_ngspice
 	$(MAKE) sim-xschem TB=sparx_wpd_le_tb_acsp_vacask
 .PHONY: regression
+
+regression-nightly: ## Nightly regression: the default regression plus the WPD AWS Palace EM solve (usage: make regression-nightly)
+	$(MAKE) regression EM_REGRESSION=1
+.PHONY: regression-nightly
 # ================================================================================================

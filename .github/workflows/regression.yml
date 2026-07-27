@@ -51,7 +51,7 @@ jobs:
           fi
 
   regression:
-    name: Run make regression
+    name: Run make regression-nightly
     needs: gate
     if: needs.gate.outputs.should_run == 'true'
     runs-on: ubuntu-latest
@@ -117,10 +117,12 @@ jobs:
           ls "$PDK_ROOT" || true
 
       - name: Run regression
-        # `make regression` is self-contained: it builds the GDSFactory PDK
-        # add-on into a project-local .venv (via `build-top`), then runs the
-        # verification, EM, snp2le and Xschem simulation flows.
-        run: make regression
+        # `make regression-nightly` is self-contained: it builds the GDSFactory
+        # PDK add-on into a project-local .venv (via `build-top`), then runs the
+        # verification, EM (WPD AWS Palace solve), snp2le and Xschem simulation
+        # flows. It is the full variant of `make regression`, which by default
+        # reuses the committed EM result instead of re-running the Palace solve.
+        run: make regression-nightly
 
       - name: Upload regression logs
         if: always()
