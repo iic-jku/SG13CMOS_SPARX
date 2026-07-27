@@ -6,7 +6,7 @@ version = 1
 # source files without licensing information.
 
 [[annotations]]
-path = [".gitattributes", ".gitignore", "CITATION.cff", "README.md", "ToDo.md"]
+path = [".gitattributes", ".gitignore", "CITATION.cff", "KNOWN_ISSUES.md", "README.md", "ToDo.md"]
 SPDX-FileCopyrightText = "2025-2026 The SPARX Team"
 SPDX-License-Identifier = "Apache-2.0 WITH SHL-2.1"
 
