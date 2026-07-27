@@ -653,7 +653,7 @@ This target also runs automatically in continuous integration: the [`regression`
 To keep the runtime low while still covering most of the toolchain, the regression makes the following trade-offs:
 
 - Only the small `sparx_powdet_sbd` power-detector cell is verified, not the full six-port top cell. KLayout LVS, KLayout DRC, and KLayout PEX are run. Magic + Netgen LVS, Magic DRC, and Magic PEX are run.
-- Of the three passive RF structures, only the Wilkinson power divider (WPD) is EM-simulated (with AWS Palace) and converted to a lumped-element netlist (SPICE and Spectre).
+- The full-wave EM solve is not re-run. The AWS Palace EM simulation of the Wilkinson power divider (WPD) is the slowest step, so the regression reuses the committed WPD Palace results and only exercises the downstream flow: S-parameter copy and lumped-element conversion (SPICE and Spectre). Run `make sim-wpd-em` to regenerate the EM results.
 - Only one ngspice and one VACASK testbench are simulated (the bandpass-filter AC S-parameter benches).
 - The layout is generated at a single frequency (160 GHz). No frequency sweep is run.
 - Top-level LVS is not run (work in progress).
@@ -667,7 +667,6 @@ The following tools and flows are checked:
 | KLayout (GDS-to-image rendering) | `render-gds` (via `build-top`) |
 | Xschem netlisting, KLayout LVS, KLayout DRC, KLayout PEX | `klayout-verify CELL=sparx_powdet_sbd` |
 | Xschem netlisting, Magic + Netgen LVS, Magic DRC, Magic PEX | `magic-verify CELL=sparx_powdet_sbd` |
-| GDSFactory + gds2palace meshing + AWS Palace EM solve | `sim-wpd-em` |
 | S-parameter result copy (raw + de-embedded) | `copy-sparam SPARAM=sparx_wpd_...` |
 | snp2le (de-embedded S-parameter to lumped element, SPICE + Spectre) | `snp2le SNP=..._deembedded.s3p ...` |
 | Xschem netlisting + ngspice | `sim-xschem TB=sparx_wpd_le_tb_acsp_ngspice` |

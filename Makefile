@@ -513,9 +513,7 @@ regression: ## Regression test for IIC-OSIC-TOOLS (usage: make regression)
 	$(MAKE) klayout-verify CELL=$(POWDET)
 # 	Magic + Netgen LVS, Magic DRC, and Magic PEX of the power-detector cell.
 	$(MAKE) magic-verify CELL=$(POWDET)
-#	EM simulation (WPD).
-	$(MAKE) sim-wpd-em
-# 	Copy the raw and de-embedded S-parameter results (WPD).
+# 	Copy the raw and de-embedded S-parameter results (WPD) from the committed Palace output.
 	$(MAKE) copy-sparam SPARAM=sparx_wpd_160GHz_50Ohm_TM2_M5_e_r_4_1_config_U
 # 	De-embedded S-parameter to lumped-element netlist conversion (WPD).
 	$(MAKE) snp2le SNP=verification/em/s-parameter/sparx_wpd_160GHz_50Ohm_TM2_M5_e_r_4_1_config_U_deembedded.s3p ORDER=10 LE_FORMAT=spice LE_OUT=netlist/spice/sparx_wpd_le.spice
