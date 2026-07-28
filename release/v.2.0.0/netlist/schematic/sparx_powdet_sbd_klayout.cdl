@@ -1,4 +1,4 @@
-** sch_path: /foss/designs/SG13CMOS_SPARX/schematic/sparx_powdet_sbd.sch
+** sch_path: /foss/designs/SG13CMOS_SPARX/schematic/xschem/sparx_powdet_sbd.sch
 .subckt sparx_powdet_sbd vout vref vdd rfin vss
 *.PININFO rfin:I vout:O vss:B vdd:B vref:O
 RR1 bias1 rfin_int 52.314 $SUB=vss $[rsil] w=0.5e-6 l=2.5e-6
