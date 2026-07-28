@@ -169,7 +169,7 @@ def main():
                                                 # matplotlib import and plotting
 
     import matplotlib
-    if not os.environ.get("SHOW_PLOTS"):        # headless under VACASK's run loop
+    if not os.environ.get("SHOW_PLOTS"):        # headless when run from the Makefile
         matplotlib.use("Agg")
     import matplotlib.pyplot as plt
 
