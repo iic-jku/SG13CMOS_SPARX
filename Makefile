@@ -433,7 +433,10 @@ sim-xschem: ## Run a testbench simulation with Xschem in batch mode (usage: make
 		xschem netlist \
 	' $(TB).sch
 	cd $(XSCHEM_TB_DIR)/simulations && $(if $(findstring _vacask,$(TB)),vacask -qp -sp $(TB).spectre </dev/null,ngspice -b $(TB).spice)
-	@case '$(TB)' in *_vacask) cd $(XSCHEM_TB_DIR)/simulations && for s in $$(grep -v '^[[:space:]]*//' $(TB).spectre | sed -n 's/.*postprocess( *PYTHON *, *"\([^"]*\)".*/\1/p'); do echo "postprocess: $$s"; python3 "$$s" || exit 1; done ;; esac
+# 	VACASK runs with -sp, so its postprocess scripts are run here instead.
+	$(if $(findstring _acsp_vacask,$(TB)),python3 $(SIM_PLOT_DIR)/plot_n_port_tb_acsp_vacask.py)
+	$(if $(findstring _hb_vacask,$(TB)),python3 $(SIM_PLOT_DIR)/plot_sparx_powdet_sbd_tb_hb_dBV-dBV_vacask.py)
+	$(if $(findstring _hb_vacask,$(TB)),python3 $(SIM_PLOT_DIR)/plot_sparx_powdet_sbd_tb_hb_V-W_vacask.py)
 .PHONY: sim-xschem
 
 sim-view-xschem: ## Plot Xschem simulation results (usage: make sim-view-xschem SCRIPT=<scriptname>)
