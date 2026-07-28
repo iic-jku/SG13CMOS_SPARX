@@ -41,4 +41,4 @@ if {![llength [info commands append_xschem_library_path_unique]]} {
 
 # Add current directory to xschem library path
 append_xschem_library_path_unique [file dirname [info script]]
-append_xschem_library_path_unique [file join [file dirname [info script]] ../testbenches]
+append_xschem_library_path_unique [file join [file dirname [info script]] ../../testbenches/xschem]

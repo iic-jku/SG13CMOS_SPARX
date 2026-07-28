@@ -6,15 +6,15 @@ S {}
 F {}
 E {}
 B 2 880 -1400 1680 -1000 {flags=graph
-y1=-32
-y2=-2.2
+y1=-27
+y2=-0.18
 ypos1=0
 ypos2=2
 divy=5
 subdivy=4
 unity=1
-x1=1.2e+11
-x2=2e+11
+x1=1.5289113e+11
+x2=1.7007099e+11
 divx=5
 subdivx=8
 xlabmag=1.0
@@ -33,15 +33,15 @@ logx=0
 logy=0
 linewidth_mult=4}
 B 2 880 -980 1680 -580 {flags=graph
-y1=-44
-y2=190
+y1=-520
+y2=220
 ypos1=0
 ypos2=2
 divy=5
 subdivy=4
 unity=1
-x1=1.2e+11
-x2=2e+11
+x1=1.5289113e+11
+x2=1.7007099e+11
 divx=5
 subdivx=8
 xlabmag=1.0
@@ -60,15 +60,15 @@ logx=0
 logy=0
 linewidth_mult=4}
 B 2 1740 -1400 2540 -1000 {flags=graph
-y1=0.00033
-y2=11
+y1=0.0022
+y2=7.1
 ypos1=0
 ypos2=2
 divy=5
 subdivy=4
 unity=1
-x1=1.2e+11
-x2=2e+11
+x1=1.5289113e+11
+x2=1.7007099e+11
 divx=5
 subdivx=8
 xlabmag=1.0
@@ -84,15 +84,15 @@ logx=0
 logy=0
 linewidth_mult=4}
 B 2 1740 -980 2540 -580 {flags=graph
-y1=-140
-y2=-11
+y1=-160
+y2=-25
 ypos1=0
 ypos2=2
 divy=5
 subdivy=4
 unity=1
-x1=1.2e+11
-x2=2e+11
+x1=1.5289113e+11
+x2=1.7007099e+11
 divx=5
 subdivx=8
 xlabmag=1.0
@@ -107,10 +107,10 @@ unitx=1
 logx=0
 logy=0
 linewidth_mult=4}
-T {Ngspice Testbench for AC S-parameter analysis - Six-Port Core LE} 790 -2380 0 0 1 1 {}
+T {Ngspice Testbench for AC S-parameter analysis - Six-Port Core} 830 -2380 0 0 1 1 {}
 T {SPDX-FileCopyrightText: 2025-2026 The SPARX Team
 SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1
-} 2850 -220 0 0 0.4 0.4 {}
+} 2840 -220 0 0 0.4 0.4 {}
 N 1920 -1780 1920 -1680 {lab=v7}
 N 1920 -1620 1920 -1580 {lab=GND}
 N 1920 -1780 1960 -1780 {lab=v7}
@@ -135,7 +135,9 @@ C {devices/code.sym} 110 -2060 0 0 {name=NGSPICE
 only_toplevel=true
 lock=false
 value="
-.include ../../netlist/spice/sparx_core_le.spice
+.include ../../../netlist/spice/sparx_bpf_le.spice
+.include ../../../netlist/spice/sparx_wpd_le.spice
+.include ../../../netlist/spice/sparx_blc_le.spice
 .include ../sim_range.spice
 .param temp=27
 .options savecurrents klu method=gear reltol=1e-3 abstol=1e-15 gmin=1e-15
@@ -337,6 +339,7 @@ C {lab_pin.sym} 2160 -1860 0 1 {name=p1 sig_type=std_logic lab=v2}
 C {devices/gnd.sym} 2120 -1580 0 0 {name=l1 lab=GND}
 C {devices/vsource.sym} 2120 -1650 0 0 {name=v2 value="dc 0 ac 1 portnum 2 z0 50"
 }
+C {sparx_core.sym} 1660 -1820 0 0 {name=x1}
 C {lab_pin.sym} 1620 -1700 0 0 {name=p4 sig_type=std_logic lab=v6}
 C {devices/gnd.sym} 1620 -1580 0 1 {name=l5 lab=GND}
 C {devices/vsource.sym} 1620 -1650 0 1 {name=v6 value="dc 0 ac 1 portnum 6 z0 50"
@@ -357,4 +360,3 @@ C {lab_pin.sym} 1620 -1940 2 1 {name=p8 sig_type=std_logic lab=v3}
 C {devices/gnd.sym} 1620 -2060 2 0 {name=l9 lab=GND}
 C {devices/vsource.sym} 1620 -1990 2 0 {name=v3 value="dc 0 ac 1 portnum 3 z0 50"
 }
-C {sparx_core_le.sym} 1660 -1820 0 0 {name=x1}

@@ -1,27 +1,17 @@
 # SPDX-FileCopyrightText: 2025-2026 The SPARX Team
 # SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1
 
-# ANALYZE HB TWO-TONE SWEEP for the SBD power detector (V vs W).
+# ANALYZE HB TWO-TONE SWEEP for the SBD power detector (dBV vs dBV).
 #
-# Same data as plot_sparx_powdet_sbd_tb_hb_dBV-dBV_vacask.py, but plotted in the
-# units a power-detector publication expects:
-#   x-axis: RF input power  P_rf  [W]   (log scale)
-#   y-axis: IF output voltage      [V]  (log scale, this IS a voltage)
-#
-# Power conversion: the testbench drives the input with an ideal voltage
-# source, so power must be referred to a reference impedance Z0. We report
-# the equivalent input power referred to Z0:
-#       P_rf = Vrms^2 / Z0 = (a_rf / sqrt(2))^2 / Z0 = a_rf^2 / (2 * Z0)
-# (Set Z0 to your system/port impedance. If your HB phasor magnitudes are
-#  already RMS rather than peak, drop the 1/2 factor below.)
-#
-# Reference slope: for the two-tone difference method the IF amplitude is
-#   V_if ~ a_lo * a_rf ~ sqrt(P_rf), i.e. a slope of 1/2 (decade/decade) on
-#   this log-log V-vs-P plot. (A true single-tone detector output V_dc ~ P_rf
-#   would instead have slope 1.)
+# Method: difference-frequency (two-tone) detector characterization.
+#   Two tones (LO at freq_lo, RF at freq_rf) are summed into the detector
+#   input. A square-law detector produces a beat at the IF = |f_rf - f_lo|.
+#   For a fixed LO amplitude the IF amplitude is proportional to the RF
+#   amplitude (1 dB/dB), which is the signature plotted here.
 #
 #   Outer sweep: ampl_lo (LO tone amplitude)
 #   Inner sweep: ampl_rf (RF tone amplitude)
+#   Extracted node: 'out' (differential detector output), IF spectral line.
 
 from rawfile import rawread
 import numpy as np
@@ -37,15 +27,10 @@ if not SHOW_PLOTS:
 import matplotlib.pyplot as plt
 import re
 
-# Reference impedance for the voltage -> power conversion [Ohm]
-Z0 = 50.0
-# Set False if the HB spectral magnitudes are already RMS (then P = V^2 / Z0)
-AMPL_IS_PEAK = True
-
 
 # ---------------------------------------------------------------------------
-# Robust path resolution (VACASK postprocess cwd=testbenches/simulations,
-# or standalone from anywhere).
+# Robust path resolution: works whether the script is run as a VACASK
+# postprocess (cwd = testbenches/xschem/simulations) or standalone from anywhere.
 # ---------------------------------------------------------------------------
 def find_design_root():
     cands = [os.getcwd()]
@@ -56,18 +41,18 @@ def find_design_root():
     for start in cands:
         d = start
         while True:
-            if os.path.isdir(os.path.join(d, 'testbenches', 'simulations')):
+            if os.path.isdir(os.path.join(d, 'testbenches', 'xschem', 'simulations')):
                 return d
             parent = os.path.dirname(d)
             if parent == d:
                 break
             d = parent
-    raise RuntimeError('Could not locate design root (need testbenches/simulations)')
+    raise RuntimeError('Could not locate design root (need testbenches/xschem/simulations)')
 
 
 DESIGN_ROOT = find_design_root()
-SIM_DIR = os.path.join(DESIGN_ROOT, 'testbenches', 'simulations')
-FIG_DIR = os.path.join(DESIGN_ROOT, 'testbenches', 'plot_simulations', 'figures')
+SIM_DIR = os.path.join(DESIGN_ROOT, 'testbenches', 'xschem', 'simulations')
+FIG_DIR = os.path.join(DESIGN_ROOT, 'testbenches', 'xschem', 'plot_simulations', 'figures')
 RAW_FILE = os.path.join(SIM_DIR, 'powdet_hb1.raw')   # named after the HB analysis 'powdet_hb1'
 
 
@@ -77,13 +62,6 @@ def parse_freq(netlist, name):
     for suf, exp in (('G', 'e9'), ('M', 'e6'), ('K', 'e3'), ('k', 'e3'), ('T', 'e12')):
         val = val.replace(suf, exp)
     return float(val)
-
-
-def ampl_to_power(a):
-    """Equivalent input power [W] referred to Z0."""
-    if AMPL_IS_PEAK:
-        return a ** 2 / (2.0 * Z0)
-    return a ** 2 / Z0
 
 
 # Parse LO and RF frequencies from the spectre netlist
@@ -117,7 +95,7 @@ for g in range(hb.sweepGroups):
     data[a_lo]['a_rf'].append(a_rf)
     data[a_lo]['mag_if'].append(np.abs(out[idx_if]))
 
-# Collect curves (x = RF input power [W], y = IF output voltage [V])
+# Collect curves (x = RF input in dBV, y = IF output in dBV), one per LO amplitude
 curves = []
 for a_lo in sorted(data.keys()):
     d = data[a_lo]
@@ -128,28 +106,30 @@ for a_lo in sorted(data.keys()):
     a_rf = a_rf[order]
     mag_if = mag_if[order]
 
-    p_rf = ampl_to_power(a_rf)            # [W]
-    v_if = mag_if                         # [V]
+    a_rf_db = 20 * np.log10(a_rf + 1e-30)
+    mag_if_db = 20 * np.log10(mag_if + 1e-30)
     label = f'A(LO {freq_lo/1e9:.0f} GHz) = {a_lo*1e3:.0f} mV'
+    # slug used for the per-curve CSV filename
     slug = f'alo_{a_lo*1e3:.0f}mV'
-    curves.append({'label': label, 'slug': slug, 'x': p_rf, 'y': v_if})
+    curves.append({'label': label, 'slug': slug, 'x': a_rf_db, 'y': mag_if_db})
 
-# Build 1/2-slope reference curve (V ~ sqrt(P) for the two-tone difference method)
-p_all = []
+# Build 1 dB/dB reference slope curve (signature of the square-law beat term)
+a_rf_all = []
 for a_lo in sorted(data.keys()):
-    p_all.extend(ampl_to_power(np.array(data[a_lo]['a_rf'])))
-p_ref = np.array(sorted(set(p_all)))
+    d = data[a_lo]
+    a_rf_all.extend(d['a_rf'])
+a_rf_ref = np.array(sorted(set(a_rf_all)))
+a_rf_ref_db = 20 * np.log10(a_rf_ref + 1e-30)
 first_key = sorted(data.keys())[0]
 d0 = data[first_key]
-p0 = ampl_to_power(np.array(d0['a_rf']))
-v0 = np.array(d0['mag_if'])
-idx0 = np.argmin(p0)
-# log10(V) = 0.5*log10(P) + c, anchored at the lowest-power point of curve 0
-c_off = np.log10(v0[idx0] + 1e-30) - 0.5 * np.log10(p0[idx0] + 1e-30)
-v_ref = 10 ** (0.5 * np.log10(p_ref + 1e-30) + c_off)
-curves.append({'label': '1/2 slope (V ∝ √P)', 'slug': 'ref', 'x': p_ref, 'y': v_ref})
+a0 = np.array(d0['a_rf'])
+m0 = np.array(d0['mag_if'])
+idx0 = np.argmin(a0)
+ref_offset = 20 * np.log10(m0[idx0] + 1e-30) - 20 * np.log10(a0[idx0] + 1e-30)
+ref_db = a_rf_ref_db + ref_offset
+curves.append({'label': '1 dB/dB slope', 'slug': 'ref', 'x': a_rf_ref_db, 'y': ref_db})
 
-# Plot (log-log)
+# Plot
 fig, ax = plt.subplots(figsize=(8, 5), constrained_layout=True)
 fig.suptitle(f'Power Detector SBD - IF at {freq_if/1e9:.1f} GHz')
 
@@ -158,33 +138,31 @@ for c in curves[:-1]:
 ref = curves[-1]
 ax.plot(ref['x'], ref['y'], 'k--', alpha=0.5, label=ref['label'])
 
-ax.set_xscale('log')
-ax.set_yscale('log')
-ax.set_xlabel(f'RF Input Power at {freq_rf/1e9:.0f} GHz (W, ref. {Z0:.0f} Ω)')
-ax.set_ylabel(f'IF Output Voltage at {freq_if/1e9:.1f} GHz (V)')
+ax.set_xlabel(f'RF Input Amplitude at {freq_rf/1e9:.0f} GHz (dBV)')
+ax.set_ylabel(f'IF Output at {freq_if/1e9:.1f} GHz (dBV)')
 ax.legend()
-ax.grid(True, which='both')
+ax.grid(True)
 
 os.makedirs(FIG_DIR, exist_ok=True)
-plt.savefig(os.path.join(FIG_DIR, 'sparx_powdet_sbd_hb_sweep_V-W.png'), dpi=150)
+plt.savefig(os.path.join(FIG_DIR, 'sparx_powdet_sbd_hb_sweep.png'), dpi=150)
 
 # ----------------------------------------------------------------------------
 # Export plotting data as CSV files (one per curve) for use in PGFPlots
 # ----------------------------------------------------------------------------
-basename = 'sparx_powdet_sbd_hb_sweep_V-W'
+basename = 'sparx_powdet_sbd_hb_sweep'
 csv_dir = os.path.join(FIG_DIR, f'{basename}_csv')
 os.makedirs(csv_dir, exist_ok=True)
 
-# One CSV per curve, columns: x (input power [W]), v (output voltage [V])
+# One CSV per curve, columns: x (RF input dBV), mag_db (IF output dBV)
 for c in curves:
     csv_path = os.path.join(csv_dir, f'{basename}_{c["slug"]}.csv')
     np.savetxt(
         csv_path,
         np.column_stack((c['x'], c['y'])),
         delimiter=',',
-        header='x,v',
+        header='x,mag_db',
         comments='',
-        fmt='%.6e',
+        fmt='%.6f',
     )
     print(f'Wrote {csv_path}')
 

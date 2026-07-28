@@ -20,8 +20,8 @@ venv/
 /sscs-ose-code-a-chip/IHP
 /sscs-ose-code-a-chip/pdk
 /sscs-ose-code-a-chip/magic
-/schematic/simulations
-/testbenches/simulations
+/schematic/xschem/simulations
+/testbenches/xschem/simulations
 /testbenches/archive
 /doc/.quarto/
 /doc/_site/

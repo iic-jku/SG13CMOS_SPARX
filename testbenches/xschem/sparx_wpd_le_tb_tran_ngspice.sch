@@ -48,7 +48,7 @@ C {devices/code_shown.sym} 120 -1230 0 0 {name=NGSPICE
 only_toplevel=true
 lock=false
 value="
-.include ../../netlist/spice/sparx_wpd_le.spice
+.include ../../../netlist/spice/sparx_wpd_le.spice
 .include ../sim_range.spice
 .param temp=27
 .options savecurrents klu method=gear reltol=1e-3 abstol=1e-15 gmin=1e-15

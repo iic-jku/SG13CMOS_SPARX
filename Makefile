@@ -93,11 +93,11 @@ LE_OUT ?= netlist/spice/sparx_bpf_le.spice
 SPARAM ?= sparx_blc_$(FREQ)GHz_$(Z0)Ohm_$(SIGNAL_CROSS_SECTION)_$(GROUND_CROSS_SECTION)_e_r_$(subst .,_,$(E_R))
 
 # Folder structure
-SCH_DIR     		:= schematic
+XSCHEM_SCH_DIR  	:= schematic/xschem
 LAY_DIR     		:= layout
 SCRIPTS_DIR     	:= scripts
-XSCHEM_TB_DIR   	:= testbenches
-SIM_PLOT_DIR    	:= testbenches/plot_simulations
+XSCHEM_TB_DIR   	:= testbenches/xschem
+SIM_PLOT_DIR    	:= testbenches/xschem/plot_simulations
 RELEASE_DIR			:= release
 RENDER_IMG_DIR  	:= render/img
 NET_SCH_DIR 		:= netlist/schematic
@@ -203,7 +203,7 @@ magic-drc: ## Run Magic DRC of the CELL cell (usage: make magic-drc [CELL=<celln
 # LVS Targets
 klayout-lvs-netlist: ## Export CDL schematic netlist from Xschem for KLayout LVS (usage: make klayout-lvs-netlist [CELL=<cellname>] [EV_PRECISION=<digits>])
 	mkdir -p $(NET_SCH_DIR)
-	xschem -s -r -x -q --rcfile $(SCH_DIR)/xschemrc --command ' \
+	xschem -s -r -x -q --rcfile $(XSCHEM_SCH_DIR)/xschemrc --command ' \
 		set spiceprefix 1; \
 		set lvs_netlist 1; \
 		set top_is_subckt 1; \
@@ -212,7 +212,7 @@ klayout-lvs-netlist: ## Export CDL schematic netlist from Xschem for KLayout LVS
 		set netlist_dir $(NET_SCH_DIR); \
 		xschem set netlist_name [file tail [file rootname [xschem get current_name]]]_klayout.cdl; \
 		xschem netlist \
-	' $(SCH_DIR)/$(CELL).sch
+	' $(XSCHEM_SCH_DIR)/$(CELL).sch
 .PHONY: klayout-lvs-netlist
 
 klayout-lvs: ## Run KLayout LVS of the CELL cell (usage: make klayout-lvs [CELL=<cellname>])
@@ -225,7 +225,7 @@ klayout-lvs: ## Run KLayout LVS of the CELL cell (usage: make klayout-lvs [CELL=
 
 magic-lvs-netlist: ## Export SPICE schematic netlist from Xschem for Magic + Netgen LVS (usage: make magic-lvs-netlist [CELL=<cellname>] [EV_PRECISION=<digits>])
 	mkdir -p $(NET_SCH_DIR)
-	xschem -s -r -x -q --rcfile $(SCH_DIR)/xschemrc --command ' \
+	xschem -s -r -x -q --rcfile $(XSCHEM_SCH_DIR)/xschemrc --command ' \
 		set spiceprefix 1; \
 		set lvs_netlist 0; \
 		set top_is_subckt 1; \
@@ -234,7 +234,7 @@ magic-lvs-netlist: ## Export SPICE schematic netlist from Xschem for Magic + Net
 		set netlist_dir $(NET_SCH_DIR); \
 		xschem set netlist_name [file tail [file rootname [xschem get current_name]]]_magic.spice; \
 		xschem netlist \
-	' $(SCH_DIR)/$(CELL).sch
+	' $(XSCHEM_SCH_DIR)/$(CELL).sch
 .PHONY: magic-lvs-netlist
 
 magic-lvs: ## Run Magic + Netgen LVS of the CELL cell (usage: make magic-lvs [CELL=<cellname>])
@@ -260,7 +260,7 @@ klayout-pex: ## Run Parasitic Extraction with KPEX of the CELL cell (usage: make
 	kpex \
 	--pdk $$PDK_UNDERSCORED \
 	--cell $(CELL) \
-	--schematic $(SCH_DIR)/$(CELL).sch \
+	--schematic $(XSCHEM_SCH_DIR)/$(CELL).sch \
 	--gds $(LAY_DIR)/$(CELL).gds \
 	--magic \
 	--magic_mode $$KPEX_MODE \
@@ -272,11 +272,11 @@ klayout-pex: ## Run Parasitic Extraction with KPEX of the CELL cell (usage: make
 	rm -rf $(NET_PEX_DIR)/$(CELL)__$(CELL)
 	rm -f $(CELL).nodes $(CELL).sim $(NET_PEX_DIR)/$(CELL).nodes $(NET_PEX_DIR)/$(CELL).sim
 	rm -f $(NET_PEX_DIR)/$(CELL).ext $(NET_PEX_DIR)/$(CELL).res.ext
-	@if [ -f $(SCH_DIR)/$(CELL)_pex.sym ]; then \
+	@if [ -f $(XSCHEM_SCH_DIR)/$(CELL)_pex.sym ]; then \
 		echo "Reordering pins in $(CELL)_klayout_pex.spice to match $(CELL)_pex.sym..."; \
-		sak-pin-reorder.py $(SCH_DIR)/$(CELL)_pex.sym $(NET_PEX_DIR)/$(CELL)_klayout_pex.spice --format spice; \
+		sak-pin-reorder.py $(XSCHEM_SCH_DIR)/$(CELL)_pex.sym $(NET_PEX_DIR)/$(CELL)_klayout_pex.spice --format spice; \
 	else \
-		echo "No symbol $(SCH_DIR)/$(CELL)_pex.sym found, skipping pin reorder."; \
+		echo "No symbol $(XSCHEM_SCH_DIR)/$(CELL)_pex.sym found, skipping pin reorder."; \
 	fi
 .PHONY: klayout-pex
 
@@ -285,11 +285,11 @@ magic-pex: ## Run Parasitic Extraction with Magic of the CELL cell (usage: make 
 	sak-pex.sh -d -m $(EXT_MODE) -n $(CELL)_pex -t $(THRESHOLD) -r $(MINRES) -y $(MINDELAY) -w $(NET_PEX_DIR) $(LAY_DIR)/$(CELL).gds
 	mv $(NET_PEX_DIR)/$(CELL).pex.spice $(NET_PEX_DIR)/$(CELL)_magic_pex.spice
 	rm -f $(NET_PEX_DIR)/pex_$(CELL).tcl
-	@if [ -f $(SCH_DIR)/$(CELL)_pex.sym ]; then \
+	@if [ -f $(XSCHEM_SCH_DIR)/$(CELL)_pex.sym ]; then \
 		echo "Reordering pins in $(CELL)_magic_pex.spice to match $(CELL)_pex.sym..."; \
-		sak-pin-reorder.py $(SCH_DIR)/$(CELL)_pex.sym $(NET_PEX_DIR)/$(CELL)_magic_pex.spice --format spice; \
+		sak-pin-reorder.py $(XSCHEM_SCH_DIR)/$(CELL)_pex.sym $(NET_PEX_DIR)/$(CELL)_magic_pex.spice --format spice; \
 	else \
-		echo "No symbol $(SCH_DIR)/$(CELL)_pex.sym found, skipping pin reorder."; \
+		echo "No symbol $(XSCHEM_SCH_DIR)/$(CELL)_pex.sym found, skipping pin reorder."; \
 	fi
 .PHONY: magic-pex
 # ================================================================================================

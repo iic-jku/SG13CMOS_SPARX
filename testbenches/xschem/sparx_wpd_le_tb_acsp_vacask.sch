@@ -63,7 +63,7 @@ model vccs vccs
 model cccs cccs
 load \\"capacitor.osdi\\"
 load \\"inductor.osdi\\"
-include \\"../../netlist/spectre/sparx_wpd_le.inc\\"
+include \\"../../../netlist/spectre/sparx_wpd_le.inc\\"
 "}
 C {launcher.sym} 1380 -1330 0 0 {name=h1
 descr="Simulate VACASK"

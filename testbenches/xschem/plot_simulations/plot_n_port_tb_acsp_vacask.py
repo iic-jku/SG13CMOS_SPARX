@@ -33,28 +33,28 @@ except NameError:                              # exec'd without __file__
 
 
 def _find_design_root():
-    """Walk up from cwd (VACASK postprocess runs in testbenches/simulations) and from this
-    script's dir until a folder containing testbenches/simulations is found.  Robust whether
+    """Walk up from cwd (VACASK postprocess runs in testbenches/xschem/simulations) and from this
+    script's dir until a folder containing testbenches/xschem/simulations is found.  Robust whether
     the script is exec'd with or without __file__ and from any cwd."""
     for start in (os.getcwd(), HERE):
         d = start
         while True:
-            if os.path.isdir(os.path.join(d, "testbenches", "simulations")):
+            if os.path.isdir(os.path.join(d, "testbenches", "xschem", "simulations")):
                 return d
             parent = os.path.dirname(d)
             if parent == d:
                 break
             d = parent
-    # Last resort: HERE is <root>/testbenches/plot_simulations, two levels below the root.
-    return os.path.abspath(os.path.join(HERE, "..", ".."))
+    # Last resort: HERE is <root>/testbenches/xschem/plot_simulations, three levels below the root.
+    return os.path.abspath(os.path.join(HERE, "..", "..", ".."))
 
 
 DESIGN_ROOT = _find_design_root()
-# The ngspice testbenches write their result tables to testbenches/plot_simulations/data;
+# The ngspice testbenches write their result tables to testbenches/xschem/plot_simulations/data;
 # VACASK must match so snp2le finds both flows' outputs in the same place.  The figures
-# go to testbenches/plot_simulations/figures like those of the plot_*_ngspice.py scripts.
-DATA_DIR = os.path.join(DESIGN_ROOT, "testbenches", "plot_simulations", "data")
-FIGURES_DIR = os.path.join(DESIGN_ROOT, "testbenches", "plot_simulations", "figures")
+# go to testbenches/xschem/plot_simulations/figures like those of the plot_*_ngspice.py scripts.
+DATA_DIR = os.path.join(DESIGN_ROOT, "testbenches", "xschem", "plot_simulations", "data")
+FIGURES_DIR = os.path.join(DESIGN_ROOT, "testbenches", "xschem", "plot_simulations", "figures")
 
 _spec = (glob.glob(os.path.join(os.getcwd(), "*.spectre"))
          or glob.glob(os.path.join(HERE, "..", "simulations", "*.spectre"))

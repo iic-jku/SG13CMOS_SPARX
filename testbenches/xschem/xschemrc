@@ -21,4 +21,4 @@ if {![info exists PDK]} {
 }
 
 # Source top-level schematic xschemrc to pull in canonical library paths and macro libraries.
-source [file normalize [file join [file dirname [info script]] ../schematic/xschemrc]]
+source [file normalize [file join [file dirname [info script]] ../../schematic/xschem/xschemrc]]

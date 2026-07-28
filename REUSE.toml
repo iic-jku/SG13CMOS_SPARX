@@ -61,7 +61,7 @@ SPDX-FileCopyrightText = "2025-2026 The SPARX Team"
 SPDX-License-Identifier = "Apache-2.0 WITH SHL-2.1"
 
 [[annotations]]
-path = ["testbenches/*.sch", "testbenches/xschemrc", "testbenches/sim_range.inc", "testbenches/sim_range.spice", "testbenches/plot_simulations/data/**", "testbenches/plot_simulations/figures/**"]
+path = ["testbenches/xschem/*.sch", "testbenches/xschem/xschemrc", "testbenches/xschem/sim_range.inc", "testbenches/xschem/sim_range.spice", "testbenches/xschem/plot_simulations/data/**", "testbenches/xschem/plot_simulations/figures/**"]
 SPDX-FileCopyrightText = "2025-2026 The SPARX Team"
 SPDX-License-Identifier = "Apache-2.0 WITH SHL-2.1"
 

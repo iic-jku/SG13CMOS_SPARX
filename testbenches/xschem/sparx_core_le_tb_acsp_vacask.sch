@@ -12,7 +12,7 @@ B 4 1110 -440 1250 -260 {fill = false}
 B 4 1350 -440 1490 -260 {fill = false}
 B 4 1590 -440 1730 -260 {fill = false}
 B 4 1830 -440 1970 -260 {fill = false}
-T {VACASK Testbench for AC S-parameter analysis - Six-Port Core} 390 -1705 0 0 1 1 {}
+T {VACASK Testbench for AC S-parameter analysis - Six-Port Core LE} 390 -1705 0 0 1 1 {}
 T {Port 1} 395 -435 0 0 0.3 0.3 {}
 T {Port 2} 635 -435 0 0 0.3 0.3 {}
 T {Port 3} 875 -435 0 0 0.3 0.3 {}
@@ -22,7 +22,7 @@ T {Port 6} 1595 -435 0 0 0.3 0.3 {}
 T {Port 7} 1835 -435 0 0 0.3 0.3 {}
 T {SPDX-FileCopyrightText: 2025-2026 The SPARX Team
 SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1
-} 600 -60 0 0 0.4 0.4 {}
+} 610 -50 0 0 0.4 0.4 {}
 N 460 -460 460 -420 {lab=v1}
 N 460 -360 460 -340 {lab=#net1}
 N 460 -280 460 -240 {lab=GND}
@@ -80,9 +80,7 @@ model vccs vccs
 model cccs cccs
 load \\"capacitor.osdi\\"
 load \\"inductor.osdi\\"
-include \\"../../netlist/spectre/sparx_bpf_le.inc\\"
-include \\"../../netlist/spectre/sparx_wpd_le.inc\\"
-include \\"../../netlist/spectre/sparx_blc_le.inc\\"
+include \\"../../../netlist/spectre/sparx_core_le.inc\\"
 "}
 C {launcher.sym} 1740 -1340 0 0 {name=h1
 descr="Simulate VACASK"
@@ -139,4 +137,4 @@ C {devices/lab_pin.sym} 1200 -960 1 0 {name=lv4 sig_type=std_logic lab=v4}
 C {devices/lab_pin.sym} 1200 -680 3 0 {name=lv5 sig_type=std_logic lab=v5}
 C {devices/lab_pin.sym} 1120 -680 3 0 {name=lv6 sig_type=std_logic lab=v6}
 C {devices/lab_pin.sym} 1320 -780 0 1 {name=lv7 sig_type=std_logic lab=v7}
-C {sparx_core.sym} 1160 -820 0 0 {name=x1}
+C {sparx_core_le.sym} 1160 -820 0 0 {name=x1}
