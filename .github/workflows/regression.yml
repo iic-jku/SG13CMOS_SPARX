@@ -86,6 +86,12 @@ jobs:
       # so without this the EM solve in sim-wpd-em aborts.
       OMPI_ALLOW_RUN_AS_ROOT: 1
       OMPI_ALLOW_RUN_AS_ROOT_CONFIRM: 1
+      # A GitHub-hosted runner has 4 vCPUs, but those are SMT threads on 2
+      # physical cores, and Open MPI sizes its slots by physical core. The
+      # Makefile's default NP=4 then aborts with "There are not enough slots
+      # available in the system". Count hardware threads as slots instead, so
+      # the four Palace ranks fit without oversubscribing.
+      OMPI_MCA_hwloc_base_use_hwthreads_as_cpus: 1
       # Every stage appends here; the log is uploaded as a build artifact so a
       # failure is diagnosable without access to the Actions console log.
       REG_LOG: regression.log
