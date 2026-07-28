@@ -432,7 +432,7 @@ sim-xschem: ## Run a testbench simulation with Xschem in batch mode (usage: make
 		xschem save; \
 		xschem netlist \
 	' $(TB).sch
-	cd $(XSCHEM_TB_DIR)/simulations && $(if $(findstring _vacask,$(TB)),vacask $(TB).spectre,ngspice -b $(TB).spice)
+	cd $(XSCHEM_TB_DIR)/simulations && $(if $(findstring _vacask,$(TB)),vacask -qp $(TB).spectre </dev/null,ngspice -b $(TB).spice)
 .PHONY: sim-xschem
 
 sim-view-xschem: ## Plot Xschem simulation results (usage: make sim-view-xschem SCRIPT=<scriptname>)
