@@ -197,7 +197,6 @@ An overview of the open-source design flow for SPARX is shown below. The flow co
 │  ├─ 📁 assets/
 │  ├─ lay2img.py
 │  ├─ make_gds.py
-│  ├─ reorder_spice_pins.py
 │  ├─ six_port_gen.py
 │  └─ sparx_powdet_sbd_circuit.ipynb
 ├─ 📁 sscs-ose-code-a-chip/
@@ -410,7 +409,7 @@ The `EXT_MODE` parameter selects the extraction mode:
 
 The `.subckt` name in the extracted SPICE file is `<CELL>_pex`: `magic-pex` sets it directly via the `sak-pex.sh` option `-n <CELL>_pex`, while for `klayout-pex` it is automatically renamed from `<CELL>` (kpex).
 
-If a matching Xschem symbol (`schematic/<CELL>_pex.sym`) exists, the `.subckt` pin order in the extracted SPICE file is automatically reordered to match the symbol's pin positions. This ensures the PEX netlist can be used directly with the corresponding Xschem symbol for simulation.
+If a matching Xschem symbol (`schematic/<CELL>_pex.sym`) exists, the `.subckt` pin order in the extracted SPICE file is automatically reordered with `sak-pin-reorder.py` (installed in the IIC-OSIC-TOOLS container) to match the symbol's pin positions. This ensures the PEX netlist can be used directly with the corresponding Xschem symbol for simulation.
 
 **KLayout PEX** uses `kpex` with the Magic extraction engine (the 2.5D engine is work in progress):
 
