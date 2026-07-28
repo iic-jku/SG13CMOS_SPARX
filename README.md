@@ -48,7 +48,7 @@ The full documentation of SPARX is available [here](https://iic-jku.github.io/SG
 
 ## Overview
 
-The complete layout is generated in Python using self-made RF devices as a GDSFactory IHP PDK add-on. S-parameter simulation of the passive RF structures (BPF, WPD, and BLC) is performed with AWS Palace. The de-embedded EM results are then fitted to passivity-enforced lumped element models with [snp2le](https://github.com/iic-jku/snp2le), in both SPICE and Spectre dialects, and resimulated in Xschem testbenches with ngspice and VACASK. The six-port core is verified in two ways: as a single fitted model of the full-core EM simulation and as a composition of the individual BPF, WPD, and BLC models. With KLayout, Magic, and Netgen, a complete LVS, DRC, and PEX verification flow is implemented. The SBD-based power detector is designed in Xschem and simulated with ngspice and VACASK. This repository is controlled by a Makefile. Just clone it and run `make all` to build the six-port receiver at 160 GHz, verify it, run the EM simulations, extract the lumped element models, and simulate all testbenches. To generate a frequency-scalable layout at a different target frequency, for example 77 GHz, run `make build-layout FREQ=77`. A nightly [regression](#regression) exercises the complete tool flow in GitHub Actions inside the IIC-OSIC-TOOLS container. The following video demonstrates the generation of six-port receivers from 60 GHz to 300 GHz in under one minute.
+The complete layout is generated in Python using self-made RF devices as a GDSFactory IHP PDK add-on. S-parameter simulation of the passive RF structures (BPF, WPD, and BLC) is performed with AWS Palace. The de-embedded EM results are then fitted to passivity-enforced lumped element models with [snp2le](https://github.com/iic-jku/snp2le), in both SPICE and Spectre dialects, and resimulated in Xschem testbenches with ngspice and VACASK. The six-port core is verified in two ways: as a single fitted model of the full-core EM simulation and as a composition of the individual BPF, WPD, and BLC models. With KLayout, Magic, and Netgen, a complete DRC, LVS, and PEX verification flow is implemented. The SBD-based power detector is designed in Xschem and simulated with ngspice and VACASK. This repository is controlled by a Makefile. Just clone it and run `make all` to build the six-port receiver at 160 GHz, verify it, run the EM simulations, extract the lumped element models, and simulate all testbenches. To generate a frequency-scalable layout at a different target frequency, for example 77 GHz, run `make build-layout FREQ=77`. A nightly [regression](#regression) exercises the complete tool flow in GitHub Actions inside the IIC-OSIC-TOOLS container. The following video demonstrates the generation of six-port receivers from 60 GHz to 300 GHz in under one minute.
 
 **Index Terms:** Branch-line coupler, frequency-scalable layout, GDSFactory, hairpin coupled-line bandpass filter, IHP Open-PDK, mmWave, open-source EDA, power detector, programmatic layout, Schottky barrier diode, six-port receiver, Wilkinson power divider.
 
@@ -313,48 +313,6 @@ Renders the top-level GDS and saves it in the `render/img/` folder:
 make render-gds
 ```
 
-### Export Schematic Netlist for LVS
-
-Exports the schematic netlist for LVS from Xschem and places it in `netlist/schematic/`.
-
-The `EV_PRECISION` parameter sets the number of significant digits used by Xschem's `ev` function when calculating device properties (default: 5). Increase this to avoid LVS mismatches caused by floating-point rounding differences between Xschem and KLayout (see [xschem#465](https://github.com/StefanSchippers/xschem/issues/465)).
-
-The `ntap` and `ptap` substrate contacts are ignored during LVS in both flows. `sak-lvs.sh` runs KLayout LVS with the `--disable_tap_extraction` option so it does not extract `ntap` and `ptap` devices from the layout (matching Magic + Netgen LVS).
-
-KLayout uses CDL netlists, while Magic uses SPICE netlists. Accordingly, `klayout-lvs-netlist` uses the Xschem commands `set spiceprefix 1`, `set lvs_netlist 1`, `set top_is_subckt 1`, and `set lvs_ignore 1`, while `magic-lvs-netlist` uses `set spiceprefix 1`, `set lvs_netlist 0`, `set top_is_subckt 1`, and `set lvs_ignore 1`. Hence, switching between CDL and SPICE netlists can be done with `lvs_netlist`.
-
-To extract a CDL schematic netlist for KLayout LVS, use the following target:
-```sh
-make klayout-lvs-netlist
-make klayout-lvs-netlist CELL=sparx_powdet_sbd
-make klayout-lvs-netlist EV_PRECISION=5
-```
-
-To extract a SPICE schematic netlist for Magic + Netgen LVS, use the following target:
-```sh
-make magic-lvs-netlist
-make magic-lvs-netlist CELL=sparx_powdet_sbd
-make magic-lvs-netlist EV_PRECISION=5
-```
-
-### Layout Versus Schematic (LVS)
-
-Exports the schematic netlist from Xschem, then runs LVS. Compares the GDS layout in `layout/` against the schematic netlist in `netlist/schematic/`. Both flows use `sak-lvs.sh` and write their reports into per-cell run folders: `verification/lvs/<CELL>.magic.lvs/` (Magic + Netgen) and `verification/lvs/<CELL>.klayout.lvs/` (KLayout, `.lvsdb`). The run folders are wiped at the start of each run, so they always reflect the latest run only. The extracted layout netlist is moved to `netlist/layout/`.
-
-**KLayout LVS** uses `sak-lvs.sh` (KLayout mode `-k`), which wraps `run_lvs.py` from the IHP Open-PDK:
-
-```sh
-make klayout-lvs
-make klayout-lvs CELL=sparx_powdet_sbd
-```
-
-**Magic + Netgen LVS** uses `sak-lvs.sh` (Magic + Netgen mode `-m`, the default), which extracts the layout netlist with Magic and compares it against the schematic netlist with Netgen, using the Netgen setup from the IHP Open-PDK:
-
-```sh
-make magic-lvs
-make magic-lvs CELL=sparx_powdet_sbd
-```
-
 ### Design Rule Check (DRC)
 
 Runs DRC on the GDS layout in `layout/`. Both flows use `sak-drc.sh` and write their reports into per-cell run folders: `verification/drc/<CELL>.magic.drc/` (Magic) and `verification/drc/<CELL>.klayout.drc/` (KLayout, `.lyrdb`). The run folders are wiped at the start of each run, so they always reflect the latest run only.
@@ -398,6 +356,48 @@ make magic-drc CELL=sparx_powdet_sbd
 
 > [!NOTE]
 > `make klayout-drc` (`macro` level) is clean. `make klayout-drc-regular` reports antenna violations that were waived by IHP for the tapeout. See [`KNOWN_ISSUES.md`](KNOWN_ISSUES.md) for the full breakdown.
+
+### Export Schematic Netlist for LVS
+
+Exports the schematic netlist for LVS from Xschem and places it in `netlist/schematic/`.
+
+The `EV_PRECISION` parameter sets the number of significant digits used by Xschem's `ev` function when calculating device properties (default: 5). Increase this to avoid LVS mismatches caused by floating-point rounding differences between Xschem and KLayout (see [xschem#465](https://github.com/StefanSchippers/xschem/issues/465)).
+
+The `ntap` and `ptap` substrate contacts are ignored during LVS in both flows. `sak-lvs.sh` runs KLayout LVS with the `--disable_tap_extraction` option so it does not extract `ntap` and `ptap` devices from the layout (matching Magic + Netgen LVS).
+
+KLayout uses CDL netlists, while Magic uses SPICE netlists. Accordingly, `klayout-lvs-netlist` uses the Xschem commands `set spiceprefix 1`, `set lvs_netlist 1`, `set top_is_subckt 1`, and `set lvs_ignore 1`, while `magic-lvs-netlist` uses `set spiceprefix 1`, `set lvs_netlist 0`, `set top_is_subckt 1`, and `set lvs_ignore 1`. Hence, switching between CDL and SPICE netlists can be done with `lvs_netlist`.
+
+To extract a CDL schematic netlist for KLayout LVS, use the following target:
+```sh
+make klayout-lvs-netlist
+make klayout-lvs-netlist CELL=sparx_powdet_sbd
+make klayout-lvs-netlist EV_PRECISION=5
+```
+
+To extract a SPICE schematic netlist for Magic + Netgen LVS, use the following target:
+```sh
+make magic-lvs-netlist
+make magic-lvs-netlist CELL=sparx_powdet_sbd
+make magic-lvs-netlist EV_PRECISION=5
+```
+
+### Layout Versus Schematic (LVS)
+
+Exports the schematic netlist from Xschem, then runs LVS. Compares the GDS layout in `layout/` against the schematic netlist in `netlist/schematic/`. Both flows use `sak-lvs.sh` and write their reports into per-cell run folders: `verification/lvs/<CELL>.magic.lvs/` (Magic + Netgen) and `verification/lvs/<CELL>.klayout.lvs/` (KLayout, `.lvsdb`). The run folders are wiped at the start of each run, so they always reflect the latest run only. The extracted layout netlist is moved to `netlist/layout/`.
+
+**KLayout LVS** uses `sak-lvs.sh` (KLayout mode `-k`), which wraps `run_lvs.py` from the IHP Open-PDK:
+
+```sh
+make klayout-lvs
+make klayout-lvs CELL=sparx_powdet_sbd
+```
+
+**Magic + Netgen LVS** uses `sak-lvs.sh` (Magic + Netgen mode `-m`, the default), which extracts the layout netlist with Magic and compares it against the schematic netlist with Netgen, using the Netgen setup from the IHP Open-PDK:
+
+```sh
+make magic-lvs
+make magic-lvs CELL=sparx_powdet_sbd
+```
 
 ### Parasitic Extraction (PEX)
 
@@ -443,7 +443,7 @@ make magic-pex CELL=sparx_powdet_sbd EXT_MODE=3 THRESHOLD=5000 MINRES=500 MINDEL
 
 ### Verify a Specific Cell
 
-Runs LVS, DRC, and PEX for a specific cell (e.g. `sparx_powdet_sbd`):
+Runs DRC, LVS, and PEX for a specific cell (e.g. `sparx_powdet_sbd`):
 
 ```sh
 make klayout-verify CELL=sparx_powdet_sbd
@@ -452,7 +452,7 @@ make magic-verify CELL=sparx_powdet_sbd
 
 ### Verify Top Cell
 
-Runs LVS, DRC, and PEX for the top cell:
+Runs DRC, LVS, and PEX for the top cell:
 
 ```sh
 make klayout-verify
@@ -625,7 +625,7 @@ The following testbenches are simulated:
 Runs the complete design flow end to end:
 
 1. `build-top` builds the PDK, generates the six-port layout, and renders the top-level GDS.
-2. Verification of the SBD-based power detector cell with both flows, KLayout LVS, DRC, and PEX as well as Magic + Netgen LVS, Magic DRC, and Magic PEX, followed by KLayout DRC and Magic DRC of the top-level six-port.
+2. Verification of the SBD-based power detector cell with both flows, KLayout DRC, LVS, and PEX as well as Magic DRC, Magic + Netgen LVS, and Magic PEX, followed by KLayout DRC and Magic DRC of the top-level six-port.
 3. EM simulation of the passive RF structures with AWS Palace (`sim-bpf-em`, `sim-wpd-em`, `sim-blc-em`).
 4. Copying of the raw and de-embedded EM S-parameter results to `verification/em/s-parameter/` (`copy-sparam` for BPF, WPD, and BLC).
 5. De-embedded S-parameter to lumped element netlist conversion with snp2le, in both SPICE and Spectre netlists, for the BPF, WPD, and BLC.
@@ -683,7 +683,7 @@ This project's own continuous integration runs the full variant: the [`regressio
 
 To keep the runtime low while still covering most of the toolchain, the regression makes the following trade-offs:
 
-- Only the small `sparx_powdet_sbd` power-detector cell is verified, not the full six-port top cell. KLayout LVS, KLayout DRC, and KLayout PEX are run. Magic + Netgen LVS, Magic DRC, and Magic PEX are run.
+- Only the small `sparx_powdet_sbd` power-detector cell is verified, not the full six-port top cell. KLayout DRC, KLayout LVS, and KLayout PEX are run. Magic DRC, Magic + Netgen LVS, and Magic PEX are run.
 - The full-wave EM solve is not re-run by the default `regression`. The AWS Palace EM simulation of the Wilkinson power divider (WPD) is the slowest step, so `regression` reuses the committed WPD Palace results and only exercises the downstream flow: S-parameter copy and lumped-element conversion (SPICE and Spectre). Use `regression-nightly` (or `make sim-wpd-em`) to regenerate the EM results.
 - Only one ngspice and one VACASK testbench are simulated (the bandpass-filter AC S-parameter benches).
 - The layout is generated at a single frequency (160 GHz). No frequency sweep is run.
@@ -696,8 +696,8 @@ The following tools and flows are checked:
 | GDSFactory PDK add-on build (git clone + pip install) | `build-pdk` (via `build-top`) |
 | GDSFactory (programmatic six-port layout generation) | `build-layout` (via `build-top`) |
 | KLayout (GDS-to-image rendering) | `render-gds` (via `build-top`) |
-| Xschem netlisting, KLayout LVS, KLayout DRC, KLayout PEX | `klayout-verify CELL=sparx_powdet_sbd` |
-| Xschem netlisting, Magic + Netgen LVS, Magic DRC, Magic PEX | `magic-verify CELL=sparx_powdet_sbd` |
+| Xschem netlisting, KLayout DRC, KLayout LVS, KLayout PEX | `klayout-verify CELL=sparx_powdet_sbd` |
+| Xschem netlisting, Magic DRC, Magic + Netgen LVS, Magic PEX | `magic-verify CELL=sparx_powdet_sbd` |
 | GDSFactory + gds2palace meshing + AWS Palace EM solve | `sim-wpd-em` (`regression-nightly` only) |
 | S-parameter result copy (raw + de-embedded) | `copy-sparam SPARAM=sparx_wpd_...` |
 | snp2le (de-embedded S-parameter to lumped element, SPICE + Spectre) | `snp2le SNP=..._deembedded.s3p ...` |

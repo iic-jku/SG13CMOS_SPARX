@@ -181,6 +181,24 @@ render-gds: ## Render an image from the GDS of the TOP cell (usage: make render-
 # ================================================================================================
 
 
+# DRC Targets
+klayout-drc-regular: ## Run regular DRC of the TOP cell (usage: make klayout-drc-regular)
+	mkdir -p $(DRC_RPT_DIR)
+	sak-drc.sh -d -k -l regular -w $(DRC_RPT_DIR) $(LAY_DIR)/$(TOP).gds
+.PHONY: klayout-drc-regular
+
+klayout-drc: ## Run KLayout DRC of the CELL cell (usage: make klayout-drc [CELL=<cellname>] [DRC_LEVEL=<precheck|macro|regular>])
+	mkdir -p $(DRC_RPT_DIR)
+	sak-drc.sh -d -k -l $(DRC_LEVEL) -w $(DRC_RPT_DIR) $(LAY_DIR)/$(CELL).gds
+.PHONY: klayout-drc
+
+magic-drc: ## Run Magic DRC of the CELL cell (usage: make magic-drc [CELL=<cellname>])
+	mkdir -p $(DRC_RPT_DIR)
+	sak-drc.sh -d -m -f "*" -w $(DRC_RPT_DIR) $(LAY_DIR)/$(CELL).gds
+.PHONY: magic-drc
+# ================================================================================================
+
+
 # LVS Targets
 klayout-lvs-netlist: ## Export CDL schematic netlist from Xschem for KLayout LVS (usage: make klayout-lvs-netlist [CELL=<cellname>] [EV_PRECISION=<digits>])
 	mkdir -p $(NET_SCH_DIR)
@@ -225,24 +243,6 @@ magic-lvs: ## Run Magic + Netgen LVS of the CELL cell (usage: make magic-lvs [CE
 	sak-lvs.sh -d -w $(LVS_RPT_DIR) -s $(NET_SCH_DIR)/$(CELL)_magic.spice -l $(LAY_DIR)/$(CELL).gds -c $(CELL)
 	mv $(LVS_RPT_DIR)/$(CELL).magic.lvs/$(CELL).ext.spc $(NET_LAY_DIR)/$(CELL)_magic.ext.spc
 .PHONY: magic-lvs
-# ================================================================================================
-
-
-# DRC Targets
-klayout-drc-regular: ## Run regular DRC of the TOP cell (usage: make klayout-drc-regular)
-	mkdir -p $(DRC_RPT_DIR)
-	sak-drc.sh -d -k -l regular -w $(DRC_RPT_DIR) $(LAY_DIR)/$(TOP).gds
-.PHONY: klayout-drc-regular
-
-klayout-drc: ## Run KLayout DRC of the CELL cell (usage: make klayout-drc [CELL=<cellname>] [DRC_LEVEL=<precheck|macro|regular>])
-	mkdir -p $(DRC_RPT_DIR)
-	sak-drc.sh -d -k -l $(DRC_LEVEL) -w $(DRC_RPT_DIR) $(LAY_DIR)/$(CELL).gds
-.PHONY: klayout-drc
-
-magic-drc: ## Run Magic DRC of the CELL cell (usage: make magic-drc [CELL=<cellname>])
-	mkdir -p $(DRC_RPT_DIR)
-	sak-drc.sh -d -m -f "*" -w $(DRC_RPT_DIR) $(LAY_DIR)/$(CELL).gds
-.PHONY: magic-drc
 # ================================================================================================
 
 
@@ -296,14 +296,14 @@ magic-pex: ## Run Parasitic Extraction with Magic of the CELL cell (usage: make 
 
 # Verify Targets
 klayout-verify: ## Verify the CELL cell with KLayout (usage: make klayout-verify [CELL=<cellname>])
-	$(MAKE) klayout-lvs CELL=$(CELL)
 	$(MAKE) klayout-drc CELL=$(CELL)
+	$(MAKE) klayout-lvs CELL=$(CELL)
 	$(MAKE) klayout-pex CELL=$(CELL)
 .PHONY: klayout-verify
 
 magic-verify: ## Verify the CELL cell with Magic (usage: make magic-verify [CELL=<cellname>])
-	$(MAKE) magic-lvs CELL=$(CELL)
 	$(MAKE) magic-drc CELL=$(CELL)
+	$(MAKE) magic-lvs CELL=$(CELL)
 	$(MAKE) magic-pex CELL=$(CELL)
 .PHONY: magic-verify
 # ================================================================================================
@@ -521,9 +521,9 @@ NIGHTLY_REGRESSION ?= 0
 regression: ## Regression test target for IIC-OSIC-TOOLS (usage: make regression [NIGHTLY_REGRESSION=1])
 # 	GDSFactory programmatic six-port layout generation
 	$(MAKE) build-top
-# 	KLayout LVS, DRC, and kpex PEX of the power-detector cell.
+# 	KLayout DRC, LVS, and kpex PEX of the power-detector cell.
 	$(MAKE) klayout-verify CELL=$(POWDET)
-# 	Magic + Netgen LVS, Magic DRC, and Magic PEX of the power-detector cell.
+# 	Magic DRC, Magic + Netgen LVS, and Magic PEX of the power-detector cell.
 	$(MAKE) magic-verify CELL=$(POWDET)
 # 	Optional AWS Palace EM solve (WPD), run only when NIGHTLY_REGRESSION=1 (regression-nightly).
 	$(if $(filter 1,$(NIGHTLY_REGRESSION)),$(MAKE) sim-wpd-em)

@@ -58,7 +58,7 @@ jobs:
     if: needs.gate.outputs.should_run == 'true'
     runs-on: ubuntu-latest
     # The tool/flow regression builds the PDK add-on, generates a six-port
-    # layout, runs LVS/DRC/PEX, an EM simulation, and ngspice/VACASK simulations;
+    # layout, runs DRC/LVS/PEX, an EM simulation, and ngspice/VACASK simulations;
     # give it headroom.
     timeout-minutes: 180
     container:
