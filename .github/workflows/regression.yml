@@ -6,11 +6,6 @@ name: regression
 
 on:
   workflow_dispatch:
-    inputs:
-      run_em:
-        description: 'Run the WPD AWS Palace EM solve (the slow part of regression-nightly)'
-        type: boolean
-        default: true
   schedule:
     # Nightly at 02:00 UTC. Scheduled runs only ever trigger on the default
     # branch (main). The "gate" job below skips the heavy regression when
@@ -58,7 +53,7 @@ jobs:
           fi
 
   regression:
-    name: Run the nightly regression
+    name: Run make regression-nightly
     needs: gate
     if: needs.gate.outputs.should_run == 'true'
     runs-on: ubuntu-latest
@@ -72,33 +67,17 @@ jobs:
       # gdsfactory, ...) together with the IHP SG13G2 PDK.
       image: hpretl/iic-osic-tools:latest
       options: --user root
-    defaults:
-      run:
-        # Not the default `bash -e {0}`: pipefail is required so that a failing
-        # make in `make ... | tee` fails the step instead of reporting tee's
-        # exit code.
-        shell: bash
     env:
       PDK: ihp-sg13g2
       PDK_ROOT: /foss/pdks
-      # Open MPI refuses to run as root, and the job runs the container as root
-      # (the checkout is owned by a different UID). Palace shells out to mpirun,
-      # so without this the EM solve in sim-wpd-em aborts.
+      # The EM simulation runs Palace via mpirun, which needs two overrides on a
+      # GitHub-hosted runner: Open MPI refuses to run as root (the container runs
+      # as root because the checkout is owned by a different UID), and it counts
+      # slots by physical core, while the 4 vCPUs are 2 cores plus SMT siblings,
+      # so the Makefile's default NP=4 aborts with "not enough slots".
       OMPI_ALLOW_RUN_AS_ROOT: 1
       OMPI_ALLOW_RUN_AS_ROOT_CONFIRM: 1
-      # A GitHub-hosted runner has 4 vCPUs, but those are SMT threads on 2
-      # physical cores, and Open MPI sizes its slots by physical core. The
-      # Makefile's default NP=4 then aborts with "There are not enough slots
-      # available in the system". Count hardware threads as slots instead, so
-      # the four Palace ranks fit without oversubscribing.
       OMPI_MCA_hwloc_base_use_hwthreads_as_cpus: 1
-      # Every stage appends here; the log is uploaded as a build artifact so a
-      # failure is diagnosable without access to the Actions console log.
-      REG_LOG: regression.log
-      # Mirrors POWDET / the copy-sparam and snp2le arguments of the `regression`
-      # target in the Makefile. Keep in sync when that target changes.
-      POWDET: sparx_powdet_sbd
-      WPD_SPARAM: sparx_wpd_160GHz_50Ohm_TM2_M5_e_r_4_1_config_U
     steps:
       - name: Check out repository
         uses: actions/checkout@v5
@@ -140,117 +119,27 @@ jobs:
           } >> "$GITHUB_ENV"
 
       - name: Show tool environment
-        # Also goes into the uploaded log, so an artifact download is enough to
-        # tell a tool/PDK resolution problem from a design problem.
         run: |
-          {
-            echo "=== environment $(date -u +%FT%TZ) ==="
-            echo "PDK=$PDK  PDK_ROOT=$PDK_ROOT"
-            for tool in xschem ngspice vacask magic netgen klayout kpex palace snp2le mpirun; do
-              echo "$tool -> $(command -v "$tool" || echo NOT FOUND)"
-            done
-            ls "$PDK_ROOT" || true
-            df -h .
-          } 2>&1 | tee -a "$REG_LOG"
+          echo "PDK=$PDK  PDK_ROOT=$PDK_ROOT"
+          for tool in xschem ngspice vacask magic netgen klayout palace snp2le; do
+            echo "$tool -> $(command -v "$tool" || echo NOT FOUND)"
+          done
+          ls "$PDK_ROOT" || true
 
-      # The stages below are `make regression-nightly` broken up into one step
-      # per sub-target, in the order the `regression` target runs them. Running
-      # them individually costs nothing (the targets are .PHONY and share the
-      # workspace) and makes the failing stage visible in the job's step list
-      # instead of hiding behind a single "exit code 2".
-      - name: Stage build-pdk (GDSFactory PDK add-on into .venv)
-        run: |
-          echo "=== build-pdk $(date -u +%FT%TZ) ===" | tee -a "$REG_LOG"
-          make build-pdk 2>&1 | tee -a "$REG_LOG"
-
-      - name: Stage build-layout (programmatic six-port layout)
-        run: |
-          echo "=== build-layout $(date -u +%FT%TZ) ===" | tee -a "$REG_LOG"
-          make build-layout 2>&1 | tee -a "$REG_LOG"
-
-      - name: Stage render-gds
-        run: |
-          echo "=== render-gds $(date -u +%FT%TZ) ===" | tee -a "$REG_LOG"
-          make render-gds 2>&1 | tee -a "$REG_LOG"
-
-      - name: Stage klayout-lvs
-        run: |
-          echo "=== klayout-lvs $(date -u +%FT%TZ) ===" | tee -a "$REG_LOG"
-          make klayout-lvs CELL="$POWDET" 2>&1 | tee -a "$REG_LOG"
-
-      - name: Stage klayout-drc
-        run: |
-          echo "=== klayout-drc $(date -u +%FT%TZ) ===" | tee -a "$REG_LOG"
-          make klayout-drc CELL="$POWDET" 2>&1 | tee -a "$REG_LOG"
-
-      - name: Stage klayout-pex
-        run: |
-          echo "=== klayout-pex $(date -u +%FT%TZ) ===" | tee -a "$REG_LOG"
-          make klayout-pex CELL="$POWDET" 2>&1 | tee -a "$REG_LOG"
-
-      - name: Stage magic-verify (LVS, DRC, PEX)
-        run: |
-          echo "=== magic-verify $(date -u +%FT%TZ) ===" | tee -a "$REG_LOG"
-          make magic-verify CELL="$POWDET" 2>&1 | tee -a "$REG_LOG"
-
-      - name: Stage sim-wpd-em (AWS Palace EM solve)
-        # The nightly part: scheduled runs always solve, a manual dispatch can
-        # skip the multi-hour solve and reuse the committed Palace result.
-        if: github.event_name != 'workflow_dispatch' || inputs.run_em
-        run: |
-          echo "=== sim-wpd-em $(date -u +%FT%TZ) ===" | tee -a "$REG_LOG"
-          make sim-wpd-em 2>&1 | tee -a "$REG_LOG"
-
-      - name: Stage copy-sparam
-        run: |
-          echo "=== copy-sparam $(date -u +%FT%TZ) ===" | tee -a "$REG_LOG"
-          make copy-sparam SPARAM="$WPD_SPARAM" 2>&1 | tee -a "$REG_LOG"
-
-      - name: Stage snp2le (SPICE and Spectre lumped-element netlists)
-        run: |
-          echo "=== snp2le $(date -u +%FT%TZ) ===" | tee -a "$REG_LOG"
-          make snp2le SNP="verification/em/s-parameter/${WPD_SPARAM}_deembedded.s3p" \
-            ORDER=10 LE_FORMAT=spice LE_OUT=netlist/spice/sparx_wpd_le.spice 2>&1 | tee -a "$REG_LOG"
-          make snp2le SNP="verification/em/s-parameter/${WPD_SPARAM}_deembedded.s3p" \
-            ORDER=10 LE_FORMAT=spectre LE_OUT=netlist/spectre/sparx_wpd_le.inc 2>&1 | tee -a "$REG_LOG"
-
-      - name: Stage sim-xschem (ngspice and VACASK AC S-parameter benches)
-        run: |
-          echo "=== sim-xschem $(date -u +%FT%TZ) ===" | tee -a "$REG_LOG"
-          make sim-xschem TB=sparx_wpd_le_tb_acsp_ngspice 2>&1 | tee -a "$REG_LOG"
-          make sim-xschem TB=sparx_wpd_le_tb_acsp_vacask 2>&1 | tee -a "$REG_LOG"
-
-      - name: Collect diagnostics
-        # Runner-side state that a failing make does not report but that has
-        # explained failures here before (disk pressure, OOM, a tool missing
-        # from the bypassed container entrypoint, a drifting PyPI resolve).
-        if: failure()
-        run: |
-          set +e
-          {
-            echo "=== diagnostics $(date -u +%FT%TZ) ==="
-            echo "--- df -h ---";     df -h
-            echo "--- free -m ---";   free -m
-            echo "--- nproc ---";     nproc
-            echo "--- tools ---"
-            for t in xschem ngspice vacask magic netgen klayout kpex palace snp2le mpirun; do
-              echo "$t -> $(command -v "$t" || echo NOT FOUND)"
-            done
-            echo "--- python ---"
-            /usr/bin/python3 -VV
-            .venv/bin/python3 -VV
-            .venv/bin/python3 -m pip list
-            echo "--- IHP add-on revision ---"
-            git -C IHP log -1 --oneline
-          } 2>&1 | tee -a "$REG_LOG"
+      - name: Run regression
+        # `make regression-nightly` is self-contained: it builds the GDSFactory
+        # PDK add-on into a project-local .venv (via `build-top`), then runs the
+        # verification, EM (WPD AWS Palace solve), snp2le and Xschem simulation
+        # flows. It is the full variant of `make regression`, which by default
+        # reuses the committed EM result instead of re-running the Palace solve.
+        run: make regression-nightly
 
       - name: Upload regression logs
         if: always()
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v4
         with:
           name: regression-logs
           path: |
-            regression.log
             verification/lvs/**
             verification/drc/**
             netlist/**
