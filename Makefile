@@ -428,9 +428,9 @@ sim-xschem: ## Run a testbench simulation with Xschem in batch mode (usage: make
 		xschem set netlist_type $(if $(findstring _vacask,$(TB)),spectre,spice); \
 		set netlist_dir $(abspath $(XSCHEM_TB_DIR)/simulations); \
 		xschem save; \
-		xschem netlist; \
-		xschem simulate \
+		xschem netlist \
 	' $(TB).sch
+	cd $(XSCHEM_TB_DIR)/simulations && $(if $(findstring _vacask,$(TB)),vacask $(TB).spectre,ngspice -b $(TB).spice)
 .PHONY: sim-xschem
 
 sim-all: ## Run all Xschem testbench simulations (usage: make sim-all)
