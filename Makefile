@@ -112,7 +112,7 @@ EM_SPARAM_DIR 		:= verification/em/s-parameter
 PALACE_SCRIPTS_DIR 	:= $(PDK_ROOT)/$(PDK)/libs.tech/palace/scripts
 
 
-# Help target
+# Help Target
 help: ## Show this help message
 	@echo 'Usage: make <target> [CELL=<cellname>] [EXT_MODE=<1|2|3>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>] [DRC_LEVEL=<precheck|macro|regular>] [EV_PRECISION=<digits>] [FREQ=<GHz>] [START_FREQ=<GHz>] [STOP_FREQ=<GHz>] [STEP_FREQ=<GHz>] [NO_FILL=0|1] [NO_FILL_M5=0|1]'
 	@echo ''
@@ -129,6 +129,7 @@ help: ## Show this help message
 	@echo 'START_FREQ, STOP_FREQ, STEP_FREQ default to 60, 300, and 20 (GHz) for build-layout-sweep.'
 	@echo 'EV_PRECISION defaults to 5 significant digits for Xschem ev function.'
 	@echo 'TB selects the Xschem testbench for sim-xschem (e.g. sparx_bpf_le_tb_acsp_ngspice).'
+	@echo 'SCRIPT selects the plotting script for sim-view-xschem (e.g. plot_n_port_tb_acsp_ngspice).'
 	@echo 'snp2le: SNP=<file.sNp> ORDER=<N> LE_FORMAT=<spice|spectre> LE_OUT=<path>.'
 	@echo 'EM sim: NP=<procs> Z0=<Ohms> E_R=<e_r> SIGNAL_CROSS_SECTION=<metal> GROUND_CROSS_SECTION=<metal>.'
 	@echo 'sim-bpf-em: BANDWIDTH=<GHz> FILTER_TYPE=<butter|cheby|ellip> FILTER_ORDER=<N> RIPPLE_DB=<dB>. sim-wpd-em: CONFIG=<C|U>.'

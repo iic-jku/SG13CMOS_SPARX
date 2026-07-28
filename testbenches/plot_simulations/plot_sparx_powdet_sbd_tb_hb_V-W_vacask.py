@@ -35,7 +35,7 @@ SHOW_PLOTS = os.environ.get('SHOW_PLOTS', '0') == '1'
 if not SHOW_PLOTS:
     matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-import re, glob
+import re
 
 # Reference impedance for the voltage -> power conversion [Ohm]
 Z0 = 50.0

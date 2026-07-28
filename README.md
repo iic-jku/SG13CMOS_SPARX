@@ -170,10 +170,14 @@ An overview of the open-source design flow for SPARX is shown below. The flow co
 │     ├─ sparx_core_le.spice
 │     └─ sparx_wpd_le.spice
 ├─ 📁 release/
-│  └─ 📁 v.1.0.0/
+│  ├─ 📁 v.1.0.0/
+│  │  ├─ 📁 gds/
+│  │  ├─ 📁 img/
+│  │  └─ ReleaseNote.md
+│  └─ 📁 v.2.0.0/
 │     ├─ 📁 gds/
 │     ├─ 📁 img/
-│     └─ ReleaseNote.md
+│     └─ 📁 netlist/
 ├─ 📁 render/
 │  ├─ 📁 blender/
 │  └─ 📁 img/
