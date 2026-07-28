@@ -33,7 +33,7 @@ Institute for Integrated Circuits and Quantum Computing, Johannes Kepler Univers
 
 | Parameter           | Value                                                                             |
 | ------------------- | --------------------------------------------------------------------------------- |
-| Technology          | IHP SG13CMOS (130 nm CMOS)                                                          |
+| Technology          | IHP SG13CMOS (130 nm CMOS)                                                        |
 | Die Area            | 1000 × 1400 µm (1.4 mm²)                                                          |
 | Supply Voltage      | 1.5 V                                                                             |
 
