@@ -199,8 +199,8 @@ An overview of the open-source design flow for SPARX is shown below. The flow co
 │  └─ xschemrc
 ├─ 📁 scripts/
 │  ├─ 📁 assets/
+│  ├─ img2lay.py
 │  ├─ lay2img.py
-│  ├─ make_gds.py
 │  ├─ six_port_gen.py
 │  └─ sparx_powdet_sbd_circuit.ipynb
 ├─ 📁 sscs-ose-code-a-chip/
@@ -311,7 +311,7 @@ make build-top
 
 ### Render Top Layout
 
-Renders the top-level GDS and saves it in the `render/img/` folder:
+Renders the top-level GDS by calling `lay2img.py` and saves the images (`<TOP>_black.png` and `<TOP>_white.png`) in the `render/img/` folder:
 
 ```sh
 make render-gds

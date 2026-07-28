@@ -15,7 +15,7 @@ from pathlib import Path
 
 import gdsfactory as gf
 import ihp
-import make_gds
+import img2lay
 import scipy
 ihp.PDK.activate()
 
@@ -2776,7 +2776,7 @@ tm2_foreground = f"{tm2_layer[0]}/{tm2_layer[1]}"
 
 
 if not logo_gds_path.exists():
-    make_gds.convert_to_gds(
+    img2lay.convert_to_gds(
         input_filepath=str(logo_png_path),
         output_filepath=str(logo_gds_path),
         cellname="JKU_LOGO",
@@ -2790,7 +2790,7 @@ if not logo_gds_path.exists():
     )
 
 if not kellerer_gds_path.exists():
-    make_gds.convert_to_gds(
+    img2lay.convert_to_gds(
         input_filepath=str(kellerer_png_path),
         output_filepath=str(kellerer_gds_path),
         cellname="Name_D",
@@ -2804,7 +2804,7 @@ if not kellerer_gds_path.exists():
     )
 
 if not iws_gds_path.exists():
-    make_gds.convert_to_gds(
+    img2lay.convert_to_gds(
         input_filepath=str(iws_png_path),
         output_filepath=str(iws_gds_path),
         cellname="Logo_IWS",
@@ -2818,7 +2818,7 @@ if not iws_gds_path.exists():
     )
 
 if not supervisors_gds_path.exists():
-    make_gds.convert_to_gds(
+    img2lay.convert_to_gds(
         input_filepath=str(supervisors_png_path),
         output_filepath=str(supervisors_gds_path),
         cellname="supervisors",
