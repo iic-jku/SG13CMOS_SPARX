@@ -83,7 +83,7 @@ plot v1 v2 v3
 unset appendwrite
 set wr_vecnames
 set wr_singlescale
-wrdata ../sim_data/@schname\\\\.txt v1 v2 v3
+wrdata ../plot_simulations/data/@schname\\\\.txt v1 v2 v3
 
 *quit
 .endc

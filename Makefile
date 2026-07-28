@@ -97,6 +97,7 @@ SCH_DIR     		:= schematic
 LAY_DIR     		:= layout
 SCRIPTS_DIR     	:= scripts
 XSCHEM_TB_DIR   	:= testbenches
+SIM_PLOT_DIR    	:= testbenches/plot_simulations
 RELEASE_DIR			:= release
 RENDER_IMG_DIR  	:= render/img
 NET_SCH_DIR 		:= netlist/schematic
@@ -432,6 +433,10 @@ sim-xschem: ## Run a testbench simulation with Xschem in batch mode (usage: make
 	' $(TB).sch
 	cd $(XSCHEM_TB_DIR)/simulations && $(if $(findstring _vacask,$(TB)),vacask $(TB).spectre,ngspice -b $(TB).spice)
 .PHONY: sim-xschem
+
+sim-view-xschem: ## Plot Xschem simulation results (usage: make sim-view-xschem SCRIPT=<scriptname>)
+	python3 $(SIM_PLOT_DIR)/$(SCRIPT).py
+.PHONY: sim-view-xschem
 
 sim-all: ## Run all Xschem testbench simulations (usage: make sim-all)
 	$(MAKE) sim-xschem TB=sparx_bpf_le_tb_acsp_ngspice

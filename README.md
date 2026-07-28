@@ -204,11 +204,15 @@ An overview of the open-source design flow for SPARX is shown below. The flow co
 │  ├─ README.md
 │  └─ SPARX_JKU_VLSI2026.ipynb
 ├─ 📁 testbenches/
-│  ├─ 📁 scripts/
-│  │  ├─ n_port_acsp_vacask_eval.py
-│  │  ├─ sparx_powdet_sbd_eval_hb_V-W.py
-│  │  └─ sparx_powdet_sbd_eval_hb_dBV-dBV.py
-│  ├─ 📁 sim_data/
+│  ├─ 📁 plot_simulations/
+│  │  ├─ 📁 data/
+│  │  ├─ 📁 figures/
+│  │  ├─ ngspice2python.py
+│  │  ├─ plot_n_port_tb_acsp_ngspice.py
+│  │  ├─ plot_n_port_tb_acsp_vacask.py
+│  │  ├─ plot_n_port_tb_tran_ngspice.py
+│  │  ├─ plot_sparx_powdet_sbd_tb_hb_V-W_vacask.py
+│  │  └─ plot_sparx_powdet_sbd_tb_hb_dBV-dBV_vacask.py
 │  ├─ sparx_blc_le_tb_acsp_ngspice.sch
 │  ├─ ...
 │  ├─ sparx_core_tb_acsp_ngspice.sch
@@ -570,12 +574,32 @@ make sparx-core FREQ=77
 
 Runs a single Xschem testbench in batch mode (no display): it saves the schematic, exports the netlist to `testbenches/simulations/`, and runs the simulator. The testbench is selected with the `TB` variable (given without the `.sch` extension). The netlist format and simulator are derived automatically from the testbench name: names ending in `_ngspice` are netlisted as SPICE and simulated with ngspice, while names ending in `_vacask` are netlisted as Spectre and simulated with VACASK.
 
+The target netlists with `xschem netlist` and then invokes the simulator directly in batch mode (`ngspice -b` for the `.spice` benches, `vacask` for the `.spectre` benches) instead of `xschem simulate`. For ngspice, `xschem simulate` would launch an interactive ngspice in a terminal detached from make (`$terminal -e 'ngspice -i ...'`): the target would return while ngspice waits at its prompt, the result would never be checked, and the process (with its X server) would leak. Running the simulator directly makes `make` block until the run finishes and see its exit status.
+
 ```sh
 make sim-xschem TB=sparx_bpf_le_tb_acsp_ngspice
 make sim-xschem TB=sparx_bpf_le_tb_acsp_vacask
 make sim-xschem TB=sparx_powdet_sbd_tb_ngspice
 make sim-xschem TB=sparx_powdet_sbd_tb_hb_vacask
 ```
+
+Because `sim-xschem` runs headless, ngspice runs in batch mode (`ngspice -b`), where the `plot` commands in a testbench's `.control` block are a no-op, so no plot windows appear. Every testbench instead exports its result table to `testbenches/plot_simulations/data/`. The VACASK testbenches additionally write PNG plots to `testbenches/plot_simulations/figures/` during `sim-xschem` via their postprocess scripts.
+
+### View Xschem Testbench Results
+
+To visualize an **ngspice** testbench's results, use `sim-view-xschem` after running the simulation with `sim-xschem`. It runs a plotting script from `testbenches/plot_simulations/` (`SIM_PLOT_DIR`), selected with the `SCRIPT` variable (given without the `.py` extension), and reproduces the plots of the testbenches' `.control` blocks with matplotlib from the exported data in `plot_simulations/data/`, following the `plot_simulations` structure of the [ihp-sg13g2-ams-chip-template](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template):
+
+```sh
+make sim-view-xschem SCRIPT=plot_n_port_tb_acsp_ngspice
+make sim-view-xschem SCRIPT=plot_n_port_tb_tran_ngspice
+```
+
+- `plot_n_port_tb_acsp_ngspice.py` serves every acsp (AC S-parameter) testbench regardless of port count: it reads the wrdata tables `plot_simulations/data/*_tb_acsp_ngspice.txt` that the testbenches export and plots every S-parameter as magnitude/phase over frequency (the same layout as the VACASK acsp plots), one figure per testbench.
+- `plot_n_port_tb_tran_ngspice.py` serves the tran testbenches analogously, plotting every exported voltage over time.
+
+Both load the wrdata columns with `ngspice2python.py` (the same helper module the [ihp-sg13g2-ams-chip-template](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template) plotting scripts use), and both accept an optional testbench name to plot a single bench instead of all of them (e.g. `python3 testbenches/plot_simulations/plot_n_port_tb_acsp_ngspice.py sparx_wpd_le_tb_acsp_ngspice`). The VACASK counterparts (`plot_n_port_tb_acsp_vacask.py` and the `plot_sparx_powdet_sbd_tb_hb_*_vacask.py` scripts) run automatically as VACASK postprocess steps during `sim-xschem`.
+
+Each script writes its figures to `testbenches/plot_simulations/figures/` and opens the plot windows when a display is available (i.e. the container's X/VNC session; without a display the scripts still write the PNGs).
 
 ### Simulate All Testbenches
 

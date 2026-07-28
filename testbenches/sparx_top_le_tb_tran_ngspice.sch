@@ -159,7 +159,7 @@ plot vout1 vout2 vout3 vout4
 unset appendwrite
 set wr_vecnames
 set wr_singlescale
-wrdata ../sim_data/@schname\\\\.txt
+wrdata ../plot_simulations/data/@schname\\\\.txt
 + vref1 vref2 vref3 vref4
 + vout1 vout2 vout3 vout4
 

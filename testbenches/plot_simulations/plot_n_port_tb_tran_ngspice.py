@@ -1,0 +1,79 @@
+# SPDX-FileCopyrightText: 2026 The SPARX Team
+# SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1
+# Description: Plot the transient tables of the ngspice tran testbenches.
+#
+# plot_n_port_tb_tran_ngspice.py [testbenchname]
+#
+# In batch mode (ngspice -b, see the sim-xschem Makefile target) the `plot` commands in a
+# testbench's .control block are a no-op, so nothing is displayed during the run.  Every
+# ngspice tran testbench instead exports its results with wrdata to data/<TB>.txt
+# (`wr_vecnames` + `wr_singlescale`: a header line with vector names, then a time column
+# plus one column per voltage).  This one script serves all of them: it reads the header
+# to discover the exported vectors (loaded with ngspice2python.loadngspicecol) and plots
+# every voltage over time, one figure per testbench.
+#
+# Without an argument (the sim-view-xschem Makefile target) every *_tb_tran_ngspice table
+# in data/ is plotted; with a testbench name only that one.  Each figure is written to
+# figures/<TB>.png and the plot windows are opened when a display is available (i.e. the
+# container's X/VNC session; headless, only the PNGs are written).
+import glob
+import os
+import sys
+
+import ngspice2python as ng
+
+# Data and output paths relative to this script (testbenches/plot_simulations)
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_DIR = os.path.join(SCRIPT_DIR, "data")
+FIGURES_DIR = os.path.join(SCRIPT_DIR, "figures")
+
+
+def plot_table(tb, plt):
+    table = os.path.join(DATA_DIR, tb + ".txt")
+    if not os.path.isfile(table):
+        sys.exit(f"{table} not found - run `make sim-xschem TB={tb}` first")
+    with open(table) as fh:                     # header line holds the vector names
+        names = fh.readline().split()
+    if not names or names[0].lower() != "time":
+        sys.exit(f"{table} has scale column '{names[0] if names else ''}', not 'time' - "
+                 "use plot_n_port_tb_acsp_ngspice.py for S-parameter tables")
+
+    tns = ng.loadngspicecol(table, names[0]) * 1e9
+
+    fig, ax = plt.subplots(figsize=(8, 5))
+    for n in names[1:]:
+        ax.plot(tns, ng.loadngspicecol(table, n), label=n)
+    ax.set_title(f"{tb} - ngspice transient")
+    ax.set_xlabel("time (ns)")
+    ax.set_ylabel("voltage (V)")
+    ax.grid(True, alpha=0.3)
+    ax.legend(ncol=max(1, min(4, len(names) - 1)), fontsize=8)
+    fig.tight_layout()
+
+    png = os.path.join(FIGURES_DIR, tb + ".png")
+    fig.savefig(png, dpi=130)
+    print(f"plot: wrote {png}")
+
+
+def main():
+    if len(sys.argv) > 2:
+        sys.exit(f"usage: {os.path.basename(sys.argv[0])} [testbenchname]")
+
+    if len(sys.argv) == 2:
+        tbs = [sys.argv[1]]
+    else:                                       # all tran ngspice result tables
+        tbs = sorted(os.path.splitext(os.path.basename(t))[0] for t in
+                     glob.glob(os.path.join(DATA_DIR, "*_tb_tran_ngspice.txt")))
+        if not tbs:
+            sys.exit(f"no *_tb_tran_ngspice.txt tables in {DATA_DIR} - "
+                     "run `make sim-xschem TB=<testbenchname>` first")
+
+    os.makedirs(FIGURES_DIR, exist_ok=True)
+    import matplotlib.pyplot as plt
+    for tb in tbs:
+        plot_table(tb, plt)
+    plt.show()
+
+
+if __name__ == "__main__":
+    main()

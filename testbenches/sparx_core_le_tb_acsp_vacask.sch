@@ -65,7 +65,7 @@ control
   // AC S-parameter sweep across the sim_range.
   analysis sp1 acsp ports=[\\"V1\\", \\"R1\\", \\"V2\\", \\"R2\\", \\"V3\\", \\"R3\\", \\"V4\\", \\"R4\\", \\"V5\\", \\"R5\\", \\"V6\\", \\"R6\\", \\"V7\\", \\"R7\\"] from=f_min to=f_max mode=\\"lin\\" points=1001
 
-  postprocess(PYTHON, \\"../scripts/n_port_acsp_vacask_eval.py\\")
+  postprocess(PYTHON, \\"../plot_simulations/plot_n_port_tb_acsp_vacask.py\\")
 endc
 "}
 C {simulator_commands_shown.sym} 1680 -1235 0 0 {name=Libs_VACASK

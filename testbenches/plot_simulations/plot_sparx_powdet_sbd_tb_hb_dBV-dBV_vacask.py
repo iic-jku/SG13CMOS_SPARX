@@ -52,7 +52,7 @@ def find_design_root():
 
 DESIGN_ROOT = find_design_root()
 SIM_DIR = os.path.join(DESIGN_ROOT, 'testbenches', 'simulations')
-FIG_DIR = os.path.join(DESIGN_ROOT, 'doc', 'fig', 'sparx_sim')
+FIG_DIR = os.path.join(DESIGN_ROOT, 'testbenches', 'plot_simulations', 'figures')
 RAW_FILE = os.path.join(SIM_DIR, 'powdet_hb1.raw')   # named after the HB analysis 'powdet_hb1'
 
 
@@ -65,7 +65,9 @@ def parse_freq(netlist, name):
 
 
 # Parse LO and RF frequencies from the spectre netlist
-spectre_file = glob.glob(os.path.join(SIM_DIR, '*.spectre'))[0]
+# The HB testbench netlist by name: a *.spectre glob would pick an arbitrary one
+# of the acsp bench netlists (which define no freq_lo/freq_rf) once several exist.
+spectre_file = os.path.join(SIM_DIR, 'sparx_powdet_sbd_tb_hb_vacask.spectre')
 with open(spectre_file) as f:
     netlist = f.read()
 freq_lo = parse_freq(netlist, 'freq_lo')

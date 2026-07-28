@@ -285,7 +285,7 @@ plot s41_31_deg s51_61_deg s32_42_deg s62_52_deg
 unset appendwrite
 set wr_vecnames
 set wr_singlescale
-wrdata ../sim_data/@schname\\\\.txt
+wrdata ../plot_simulations/data/@schname\\\\.txt
 + s11_dB s12_dB s13_dB s14_dB s15_dB s16_dB s17_dB
 + s21_dB s22_dB s23_dB s24_dB s25_dB s26_dB s27_dB
 + s31_dB s32_dB s33_dB s34_dB s35_dB s36_dB s37_dB

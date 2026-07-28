@@ -66,7 +66,7 @@ value="
 .temp 27
 .option method=gear
 .save all
-.include sparx_powdet_sbd_tb.save
+* .include sparx_powdet_sbd_tb.save
 .param lo_freq=149G
 .param lo_lev=100m
 .param rf_freq=151G

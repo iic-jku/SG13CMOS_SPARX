@@ -158,7 +158,7 @@ plot s12_deg s21_deg
 unset appendwrite
 set wr_vecnames
 set wr_singlescale
-wrdata ../sim_data/@schname\\\\.txt
+wrdata ../plot_simulations/data/@schname\\\\.txt
 + s11_dB s22_dB s12_dB s21_dB
 + s11_deg s22_deg s12_deg s21_deg
 

@@ -1,17 +1,17 @@
 # SPDX-FileCopyrightText: 2025-2026 The SPARX Team
 # SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1
-# n_port_acsp_vacask_eval.py
+# plot_n_port_tb_acsp_vacask.py
 #
 # Universal VACASK postprocessing script for the acsp (AC S-parameter) testbenches.  One
 # script serves the 2-, 3- and 4-port testbenches: it reads VACASK's raw output, discovers
 # the port count from the s(i,j) vector names, and processes the full N x N S-matrix.  Each
-# testbench calls it with postprocess(PYTHON, "../scripts/n_port_acsp_vacask_eval.py").
+# testbench calls it with postprocess(PYTHON, "../plot_simulations/plot_n_port_tb_acsp_vacask.py").
 #
 # It then:
-#   * writes sim_data/<TB>.txt with a frequency column plus s{i}{j}_db and s{i}{j}_deg for
+#   * writes data/<TB>.txt with a frequency column plus s{i}{j}_db and s{i}{j}_deg for
 #     every port pair (the same column naming the ngspice testbench uses), which snp2le
 #     imports, and
-#   * plots every |S(i,j)| in dB and its unwrapped phase to a PNG.
+#   * plots every |S(i,j)| in dB and its unwrapped phase to figures/<TB>.png.
 #
 # VACASK ships rawfile.py on the postprocess Python path (the IIC reference scripts also do
 # `from rawfile import rawread`).
@@ -23,7 +23,7 @@ import numpy as np
 from rawfile import rawread
 
 # The result and the abort marker are named after the testbench, so a run of
-# three_port_tb_acsp_vacask.sch writes sim_data/three_port_tb_acsp_vacask.txt.  This one
+# three_port_tb_acsp_vacask.sch writes data/three_port_tb_acsp_vacask.txt.  This one
 # script is shared by every N-port testbench, so the name comes from the running netlist
 # (<TB>.spectre in the netlist dir), not from this generic file name.
 try:
@@ -45,24 +45,26 @@ def _find_design_root():
             if parent == d:
                 break
             d = parent
-    # Last resort: HERE is <root>/scripts, so its parent is the design root.
-    return os.path.abspath(os.path.join(HERE, ".."))
+    # Last resort: HERE is <root>/testbenches/plot_simulations, two levels below the root.
+    return os.path.abspath(os.path.join(HERE, "..", ".."))
 
 
 DESIGN_ROOT = _find_design_root()
-# The ngspice eval writes its result tables to testbenches/sim_data; VACASK must match so
-# snp2le finds both flows' outputs in the same place.
-SIM_DATA_DIR = os.path.join(DESIGN_ROOT, "testbenches", "sim_data")
+# The ngspice testbenches write their result tables to testbenches/plot_simulations/data;
+# VACASK must match so snp2le finds both flows' outputs in the same place.  The figures
+# go to testbenches/plot_simulations/figures like those of the plot_*_ngspice.py scripts.
+DATA_DIR = os.path.join(DESIGN_ROOT, "testbenches", "plot_simulations", "data")
+FIGURES_DIR = os.path.join(DESIGN_ROOT, "testbenches", "plot_simulations", "figures")
 
 _spec = (glob.glob(os.path.join(os.getcwd(), "*.spectre"))
-         or glob.glob(os.path.join(HERE, "simulations", "*.spectre"))
+         or glob.glob(os.path.join(HERE, "..", "simulations", "*.spectre"))
          or glob.glob(os.path.join(HERE, "*.spectre")))
 TB = (os.path.splitext(os.path.basename(max(_spec, key=os.path.getmtime)))[0]
       if _spec else "n_port_tb_acsp_vacask")
 
 
 def _abort_marker():
-    return os.path.join(SIM_DATA_DIR, TB + ".aborted")
+    return os.path.join(DATA_DIR, TB + ".aborted")
 
 
 def mark_aborted(reason):
@@ -79,7 +81,7 @@ def mark_aborted(reason):
 def find_raw():
     """Newest .raw VACASK wrote (cwd is the netlist dir during the run)."""
     cands = []
-    for d in (os.getcwd(), os.path.join(HERE, "simulations"), HERE):
+    for d in (os.getcwd(), os.path.join(HERE, "..", "simulations"), HERE):
         cands += glob.glob(os.path.join(d, "*.raw"))
     cands = [c for c in cands if os.path.isfile(c)]
     if not cands:
@@ -131,9 +133,9 @@ def load_acsp(raw):
 
 
 def write_table(f, n, dB, deg):
-    """Write sim_data/<TB>.txt: a frequency column plus s{i}{j}_db and s{i}{j}_deg for every
+    """Write data/<TB>.txt: a frequency column plus s{i}{j}_db and s{i}{j}_deg for every
     port pair.  snp2le maps columns by name, so any port count imports."""
-    out_dir = SIM_DATA_DIR
+    out_dir = DATA_DIR
     os.makedirs(out_dir, exist_ok=True)
     pairs = [(i, j) for i in range(1, n + 1) for j in range(1, n + 1)]
     cols = ["frequency"] + [f"s{i}{j}_db" for i, j in pairs] + [f"s{i}{j}_deg" for i, j in pairs]
@@ -186,7 +188,8 @@ def main():
     axp.set_xlabel("frequency (GHz)")
     axp.grid(True, alpha=0.3)
     fig.tight_layout()
-    png = os.path.join(os.path.dirname(table), TB + ".png")
+    os.makedirs(FIGURES_DIR, exist_ok=True)
+    png = os.path.join(FIGURES_DIR, TB + ".png")
     fig.savefig(png, dpi=130)
     print(f"postprocess: wrote {png}")
     if os.environ.get("SHOW_PLOTS"):
