@@ -600,7 +600,7 @@ Because `sim-xschem` runs headless, ngspice runs in batch mode (`ngspice -b`), w
 
 ### View Xschem Testbench Results
 
-To visualize an **ngspice** testbench's results, use `sim-view-xschem` after running the simulation with `sim-xschem`. It runs a plotting script from `testbenches/xschem/plot_simulations/` (`SIM_PLOT_DIR`), selected with the `SCRIPT` variable (given without the `.py` extension), and reproduces the plots of the testbenches' `.control` blocks with matplotlib from the exported data in `xschem/plot_simulations/data/`, following the `plot_simulations` structure of the [ihp-sg13g2-ams-chip-template](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template):
+To view a testbench's results on screen, use `sim-view-xschem` after running the simulation with `sim-xschem`. It runs a plotting script from `testbenches/xschem/plot_simulations/` (`SIM_PLOT_DIR`), selected with the `SCRIPT` variable (given without the `.py` extension), and reproduces the plots of the testbenches' `.control` blocks with matplotlib from the exported data in `xschem/plot_simulations/data/`, following the `plot_simulations` structure of the [ihp-sg13g2-ams-chip-template](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template):
 
 ```sh
 make sim-view-xschem SCRIPT=plot_n_port_tb_acsp_ngspice
@@ -617,7 +617,7 @@ make sim-view-xschem SCRIPT=plot_n_port_tb_acsp_vacask
 make sim-view-xschem SCRIPT=plot_sparx_powdet_sbd_tb_hb_dBV-dBV_vacask
 ```
 
-Each script writes its figures to `testbenches/xschem/plot_simulations/figures/` and opens the plot windows when a display is available (i.e. the container's X/VNC session, without a display the scripts still write the PNGs).
+Every script writes its figures to `testbenches/xschem/plot_simulations/figures/`. Run through `sim-view-xschem`, the plot windows additionally open when a display is available (i.e. the container's X/VNC session). Headless, only the PNGs are written.
 
 ### Simulate All Testbenches
 
