@@ -1,4 +1,4 @@
-* Extracted by KLayout with SG13G2 LVS runset on : 22/07/2026 12:03
+* Extracted by KLayout with SG13G2 LVS runset on : 29/07/2026 02:54
 
 .SUBCKT sparx_powdet_sbd rfin vdd vout vref vss
 R$1 vdd \$I52 vss rhigh w=0.5u l=2u ps=0u b=0 m=1
