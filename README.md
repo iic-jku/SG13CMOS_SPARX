@@ -587,6 +587,8 @@ The target netlists with `xschem netlist` and then invokes the simulator directl
 
 VACASK is run with `-qp` (quiet progress, appropriate for a batch run) and `-sp` (skip postprocessing): the postprocess scripts that the VACASK testbenches declare are run by the Makefile right after the simulation instead. This bypasses VACASK's own subprocess launcher, which aborts with a `boost::asio` "Bad file descriptor" error on hosts whose kernel or container runtime blocks the syscalls it uses to spawn and await a child process. The `postprocess(PYTHON, ...)` lines stay in the testbenches, so running them from the Xschem GUI still postprocesses as usual.
 
+For the VACASK testbenches, `sim-xschem` also writes the operating-point save file `simulations/<TB>.save` (`write_data [save_params]`) while netlisting. The VACASK testbenches contain the same call in their Xschem launcher, but that runs only when the testbench is started from the Xschem GUI, and `simulations/` is not tracked by git. Without this step, a testbench that includes its save file (`include "<TB>.save"`, e.g. the power-detector harmonic-balance testbench) aborts with `File not found` on a fresh clone.
+
 ```sh
 make sim-xschem TB=sparx_bpf_le_tb_acsp_ngspice
 make sim-xschem TB=sparx_bpf_le_tb_acsp_vacask

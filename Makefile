@@ -430,6 +430,7 @@ sim-xschem: ## Run a testbench simulation with Xschem in batch mode (usage: make
 		xschem set netlist_type $(if $(findstring _vacask,$(TB)),spectre,spice); \
 		set netlist_dir $(abspath $(XSCHEM_TB_DIR)/simulations); \
 		xschem save; \
+		$(if $(findstring _vacask,$(TB)),write_data [save_params] $(abspath $(XSCHEM_TB_DIR)/simulations)/$(TB).save;) \
 		xschem netlist \
 	' $(TB).sch
 	cd $(XSCHEM_TB_DIR)/simulations && $(if $(findstring _vacask,$(TB)),vacask -qp -sp $(TB).spectre </dev/null,ngspice -b $(TB).spice)
