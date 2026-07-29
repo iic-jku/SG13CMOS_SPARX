@@ -69,10 +69,12 @@ def main():
                      "run `make sim-xschem TB=<testbenchname>` first")
 
     os.makedirs(FIGURES_DIR, exist_ok=True)
+    import matplotlib
     import matplotlib.pyplot as plt
     for tb in tbs:
         plot_table(tb, plt)
-    plt.show()
+    if matplotlib.get_backend().lower() != "agg":   # no window without a display
+        plt.show()
 
 
 if __name__ == "__main__":

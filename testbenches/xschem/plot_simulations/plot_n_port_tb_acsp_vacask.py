@@ -173,24 +173,12 @@ def main():
         matplotlib.use("Agg")
     import matplotlib.pyplot as plt
 
-    fig, (axm, axp) = plt.subplots(2, 1, figsize=(8, 7), sharex=True)
-    fghz = f / 1e9
-    for i in range(1, n + 1):
-        for j in range(1, n + 1):
-            lab = f"S{i}{j}"
-            axm.plot(fghz, dB[(i, j)], label=lab)
-            axp.plot(fghz, deg[(i, j)], label=lab)
-    axm.set_title(f"{n}-port, VACASK acsp S-parameters")
-    axm.set_ylabel("magnitude (dB)")
-    axm.grid(True, alpha=0.3)
-    axm.legend(ncol=min(n, 4), fontsize=7)
-    axp.set_ylabel("phase (deg)")
-    axp.set_xlabel("frequency (GHz)")
-    axp.grid(True, alpha=0.3)
-    fig.tight_layout()
-    os.makedirs(FIGURES_DIR, exist_ok=True)
-    png = os.path.join(FIGURES_DIR, TB + ".png")
-    fig.savefig(png, dpi=130)
+    sys.path.insert(0, HERE)                # exec'd by VACASK: no script dir on sys.path
+    import sparam_plot as sp
+    sp.set_style(plt)
+    png = sp.plot_sgrid(plt, os.path.join(FIGURES_DIR, TB + ".png"),
+                        f"{TB} - VACASK acsp S-parameters", f / 1e9, n,
+                        lambda i, j: dB[(i, j)], lambda i, j: deg[(i, j)])
     print(f"postprocess: wrote {png}")
     if os.environ.get("SHOW_PLOTS"):
         plt.show()

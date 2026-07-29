@@ -168,25 +168,5 @@ ax.grid(True, which='both')
 os.makedirs(FIG_DIR, exist_ok=True)
 plt.savefig(os.path.join(FIG_DIR, 'sparx_powdet_sbd_hb_sweep_V-W.png'), dpi=150)
 
-# ----------------------------------------------------------------------------
-# Export plotting data as CSV files (one per curve) for use in PGFPlots
-# ----------------------------------------------------------------------------
-basename = 'sparx_powdet_sbd_hb_sweep_V-W'
-csv_dir = os.path.join(FIG_DIR, f'{basename}_csv')
-os.makedirs(csv_dir, exist_ok=True)
-
-# One CSV per curve, columns: x (input power [W]), v (output voltage [V])
-for c in curves:
-    csv_path = os.path.join(csv_dir, f'{basename}_{c["slug"]}.csv')
-    np.savetxt(
-        csv_path,
-        np.column_stack((c['x'], c['y'])),
-        delimiter=',',
-        header='x,v',
-        comments='',
-        fmt='%.6e',
-    )
-    print(f'Wrote {csv_path}')
-
 if SHOW_PLOTS:
     plt.show()

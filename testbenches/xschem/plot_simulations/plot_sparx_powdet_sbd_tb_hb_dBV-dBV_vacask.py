@@ -146,25 +146,5 @@ ax.grid(True)
 os.makedirs(FIG_DIR, exist_ok=True)
 plt.savefig(os.path.join(FIG_DIR, 'sparx_powdet_sbd_hb_sweep.png'), dpi=150)
 
-# ----------------------------------------------------------------------------
-# Export plotting data as CSV files (one per curve) for use in PGFPlots
-# ----------------------------------------------------------------------------
-basename = 'sparx_powdet_sbd_hb_sweep'
-csv_dir = os.path.join(FIG_DIR, f'{basename}_csv')
-os.makedirs(csv_dir, exist_ok=True)
-
-# One CSV per curve, columns: x (RF input dBV), mag_db (IF output dBV)
-for c in curves:
-    csv_path = os.path.join(csv_dir, f'{basename}_{c["slug"]}.csv')
-    np.savetxt(
-        csv_path,
-        np.column_stack((c['x'], c['y'])),
-        delimiter=',',
-        header='x,mag_db',
-        comments='',
-        fmt='%.6f',
-    )
-    print(f'Wrote {csv_path}')
-
 if SHOW_PLOTS:
     plt.show()

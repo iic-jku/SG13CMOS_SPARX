@@ -220,7 +220,8 @@ An overview of the open-source design flow for SPARX is shown below. The flow co
 │     │  ├─ plot_n_port_tb_acsp_vacask.py
 │     │  ├─ plot_n_port_tb_tran_ngspice.py
 │     │  ├─ plot_sparx_powdet_sbd_tb_hb_V-W_vacask.py
-│     │  └─ plot_sparx_powdet_sbd_tb_hb_dBV-dBV_vacask.py
+│     │  ├─ plot_sparx_powdet_sbd_tb_hb_dBV-dBV_vacask.py
+│     │  └─ sparam_plot.py
 │     ├─ sparx_blc_le_tb_acsp_ngspice.sch
 │     ├─ ...
 │     ├─ sparx_core_tb_acsp_ngspice.sch
@@ -604,7 +605,7 @@ make sim-view-xschem SCRIPT=plot_n_port_tb_acsp_ngspice
 make sim-view-xschem SCRIPT=plot_n_port_tb_tran_ngspice
 ```
 
-- `plot_n_port_tb_acsp_ngspice.py` serves every acsp (AC S-parameter) testbench regardless of port count: it reads the wrdata tables `xschem/plot_simulations/data/*_tb_acsp_ngspice.txt` that the testbenches export and plots every S-parameter as magnitude/phase over frequency (the same layout as the VACASK acsp plots), one figure per testbench.
+- `plot_n_port_tb_acsp_ngspice.py` serves every acsp (AC S-parameter) testbench regardless of port count: it reads the wrdata tables `xschem/plot_simulations/data/*_tb_acsp_ngspice.txt` that the testbenches export and plots every S-parameter as magnitude/phase over frequency, one figure per testbench. An N-port testbench has N x N S-parameters (49 for the six-port core), which is unreadable in a single pair of axes, so the figure is **split by excitation port**: one column of axes per driven port j, magnitude on top and phase below, leaving only N traces per panel. The color encodes the receiving port i and is the same in every panel, so one legend serves the whole figure. Columns that are not a plain S(i,j), such as the differential combinations of the six-port core, are drawn in one extra panel on the right. The layout lives in `sparam_plot.py` and is shared with the VACASK script, so both flows are directly comparable.
 - `plot_n_port_tb_tran_ngspice.py` serves the tran testbenches analogously, plotting every exported voltage over time.
 
 Both load the wrdata columns with `ngspice2python.py` (the same helper module the [ihp-sg13g2-ams-chip-template](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template) plotting scripts use), and both accept an optional testbench name to plot a single bench instead of all of them (e.g. `python3 testbenches/xschem/plot_simulations/plot_n_port_tb_acsp_ngspice.py sparx_wpd_le_tb_acsp_ngspice`). The VACASK counterparts (`plot_n_port_tb_acsp_vacask.py` and the `plot_sparx_powdet_sbd_tb_hb_*_vacask.py` scripts) need no separate call to produce their figures: `sim-xschem` already runs them right after the VACASK simulation (see above), but **headless**, so they only write the PNGs. Selecting them here is what actually opens the plot windows on screen, because `sim-view-xschem` runs the script with `SHOW_PLOTS=1`:

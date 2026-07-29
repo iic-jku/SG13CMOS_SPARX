@@ -20,9 +20,11 @@
 # container's X/VNC session; headless, only the PNGs are written).
 import glob
 import os
+import re
 import sys
 
 import ngspice2python as ng
+import sparam_plot as sp
 
 # Data and output paths relative to this script (testbenches/plot_simulations)
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -41,26 +43,32 @@ def plot_table(tb, plt):
                  "'frequency' - use plot_n_port_tb_tran_ngspice.py for transient tables")
 
     fghz = ng.loadngspicecol(table, names[0]) / 1e9
-    db_names = [n for n in names[1:] if n.endswith("_db")]
-    deg_names = [n for n in names[1:] if n.endswith("_deg")]
+    bases = [n[:-3] for n in names[1:] if n.endswith("_db")]
 
-    fig, (ax_mag, ax_phase) = plt.subplots(2, 1, figsize=(8, 7), sharex=True)
-    for n in db_names:
-        ax_mag.plot(fghz, ng.loadngspicecol(table, n), label=n[:-3].upper())
-    for n in deg_names:
-        ax_phase.plot(fghz, ng.loadngspicecol(table, n), label=n[:-4].upper())
-    ncol = max(1, min(7, (len(db_names) + 6) // 7))
-    ax_mag.set_title(f"{tb} - ngspice acsp S-parameters")
-    ax_mag.set_ylabel("magnitude (dB)")
-    ax_mag.grid(True, alpha=0.3)
-    ax_mag.legend(ncol=ncol, fontsize=6)
-    ax_phase.set_ylabel("phase (deg)")
-    ax_phase.set_xlabel("frequency (GHz)")
-    ax_phase.grid(True, alpha=0.3)
-    fig.tight_layout()
+    def col(base, suffix):
+        name = base + suffix
+        return ng.loadngspicecol(table, name) if name in names else None
 
-    png = os.path.join(FIGURES_DIR, tb + ".png")
-    fig.savefig(png, dpi=130)
+    # Sort the S-parameters into an S(i,j) grid; columns that are not a plain sIJ
+    # (e.g. the differential combinations s41_31 of the core) go to the extra panel.
+    grid, extra = {}, []
+    for base in bases:
+        m = re.fullmatch(r"s(\d)(\d)", base)
+        if m:
+            grid[(int(m.group(1)), int(m.group(2)))] = base
+        else:
+            extra.append((base.upper(), col(base, "_db"), col(base, "_deg")))
+    n_ports = max((i for i, _ in grid), default=0)
+
+    def mag(i, j):
+        return col(grid[(i, j)], "_db") if (i, j) in grid else None
+
+    def phase(i, j):
+        return col(grid[(i, j)], "_deg") if (i, j) in grid else None
+
+    png = sp.plot_sgrid(plt, os.path.join(FIGURES_DIR, tb + ".png"),
+                        f"{tb} - ngspice acsp S-parameters", fghz, n_ports,
+                        mag, phase, extra)
     print(f"plot: wrote {png}")
 
 
@@ -78,10 +86,13 @@ def main():
                      "run `make sim-xschem TB=<testbenchname>` first")
 
     os.makedirs(FIGURES_DIR, exist_ok=True)
+    import matplotlib
     import matplotlib.pyplot as plt
+    sp.set_style(plt)
     for tb in tbs:
         plot_table(tb, plt)
-    plt.show()
+    if matplotlib.get_backend().lower() != "agg":   # no window without a display
+        plt.show()
 
 
 if __name__ == "__main__":
