@@ -424,6 +424,9 @@ snp2le: ## Convert an S-parameter Touchstone file to a lumped element netlist vi
 
 
 # Xschem Simulation Targets
+TB ?= $(error TB is not set. Usage: make sim-xschem TB=<testbenchname>)
+SCRIPT ?= $(error SCRIPT is not set. Usage: make sim-view-xschem SCRIPT=<scriptname>)
+
 sim-xschem: ## Run a testbench simulation with Xschem in batch mode (usage: make sim-xschem TB=<testbenchname>)
 	mkdir -p $(XSCHEM_TB_DIR)/simulations
 	cd $(XSCHEM_TB_DIR) && xschem -x -q --rcfile xschemrc --command ' \
