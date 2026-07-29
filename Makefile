@@ -440,7 +440,7 @@ sim-xschem: ## Run a testbench simulation with Xschem in batch mode (usage: make
 .PHONY: sim-xschem
 
 sim-view-xschem: ## Plot Xschem simulation results (usage: make sim-view-xschem SCRIPT=<scriptname>)
-	python3 $(SIM_PLOT_DIR)/$(SCRIPT).py
+	SHOW_PLOTS=1 python3 $(SIM_PLOT_DIR)/$(SCRIPT).py
 .PHONY: sim-view-xschem
 
 sim-all: ## Run all Xschem testbench simulations (usage: make sim-all)

@@ -607,9 +607,14 @@ make sim-view-xschem SCRIPT=plot_n_port_tb_tran_ngspice
 - `plot_n_port_tb_acsp_ngspice.py` serves every acsp (AC S-parameter) testbench regardless of port count: it reads the wrdata tables `xschem/plot_simulations/data/*_tb_acsp_ngspice.txt` that the testbenches export and plots every S-parameter as magnitude/phase over frequency (the same layout as the VACASK acsp plots), one figure per testbench.
 - `plot_n_port_tb_tran_ngspice.py` serves the tran testbenches analogously, plotting every exported voltage over time.
 
-Both load the wrdata columns with `ngspice2python.py` (the same helper module the [ihp-sg13g2-ams-chip-template](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template) plotting scripts use), and both accept an optional testbench name to plot a single bench instead of all of them (e.g. `python3 testbenches/xschem/plot_simulations/plot_n_port_tb_acsp_ngspice.py sparx_wpd_le_tb_acsp_ngspice`). The VACASK counterparts (`plot_n_port_tb_acsp_vacask.py` and the `plot_sparx_powdet_sbd_tb_hb_*_vacask.py` scripts) run automatically as VACASK postprocess steps during `sim-xschem`.
+Both load the wrdata columns with `ngspice2python.py` (the same helper module the [ihp-sg13g2-ams-chip-template](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template) plotting scripts use), and both accept an optional testbench name to plot a single bench instead of all of them (e.g. `python3 testbenches/xschem/plot_simulations/plot_n_port_tb_acsp_ngspice.py sparx_wpd_le_tb_acsp_ngspice`). The VACASK counterparts (`plot_n_port_tb_acsp_vacask.py` and the `plot_sparx_powdet_sbd_tb_hb_*_vacask.py` scripts) need no separate call to produce their figures: `sim-xschem` already runs them right after the VACASK simulation (see above), but **headless**, so they only write the PNGs. Selecting them here is what actually opens the plot windows on screen, because `sim-view-xschem` runs the script with `SHOW_PLOTS=1`:
 
-Each script writes its figures to `testbenches/xschem/plot_simulations/figures/` and opens the plot windows when a display is available (i.e. the container's X/VNC session; without a display the scripts still write the PNGs).
+```sh
+make sim-view-xschem SCRIPT=plot_n_port_tb_acsp_vacask
+make sim-view-xschem SCRIPT=plot_sparx_powdet_sbd_tb_hb_dBV-dBV_vacask
+```
+
+Each script writes its figures to `testbenches/xschem/plot_simulations/figures/` and opens the plot windows when a display is available (i.e. the container's X/VNC session, without a display the scripts still write the PNGs).
 
 ### Simulate All Testbenches
 
