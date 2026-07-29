@@ -8,234 +8,234 @@
 subckt sparx_blc_le (p1 p2 p3 p4)
   V1 (p1 s1) vsource dc=0
   R1 (s1 GND) resistor r=50
-  Gd1_1 (GND s1 p1 GND) vccs gain=-0.008233022459
-  Fd1_1 (GND s1) cccs ctlinst="V1" gain=-0.4116511229
-  Gr1_1_1 (GND s1 x1_a1 GND) vccs gain=-1.368093368
-  Gr2_1_1 (GND s1 x2_a1 GND) vccs gain=1.392213877
-  Gr3_re_1_1 (GND s1 x3_re_a1 GND) vccs gain=9262.6336
-  Gr3_im_1_1 (GND s1 x3_im_a1 GND) vccs gain=155476.8645
-  Gr4_re_1_1 (GND s1 x4_re_a1 GND) vccs gain=596902.9139
-  Gr4_im_1_1 (GND s1 x4_im_a1 GND) vccs gain=36186.75536
-  Gd1_2 (GND s1 p2 GND) vccs gain=0.007915674462
-  Fd1_2 (GND s1) cccs ctlinst="V2" gain=0.3957837231
-  Gr1_1_2 (GND s1 x1_a2 GND) vccs gain=-3.223493627
-  Gr2_1_2 (GND s1 x2_a2 GND) vccs gain=3.090224135
-  Gr3_re_1_2 (GND s1 x3_re_a2 GND) vccs gain=637057.0154
-  Gr3_im_1_2 (GND s1 x3_im_a2 GND) vccs gain=60642.96124
-  Gr4_re_1_2 (GND s1 x4_re_a2 GND) vccs gain=177914.0332
-  Gr4_im_1_2 (GND s1 x4_im_a2 GND) vccs gain=-536797.3379
-  Gd1_3 (GND s1 p3 GND) vccs gain=-0.00395554718
-  Fd1_3 (GND s1) cccs ctlinst="V3" gain=-0.197777359
-  Gr1_1_3 (GND s1 x1_a3 GND) vccs gain=0.6162839852
-  Gr2_1_3 (GND s1 x2_a3 GND) vccs gain=-0.246148593
-  Gr3_re_1_3 (GND s1 x3_re_a3 GND) vccs gain=-72101.85221
-  Gr3_im_1_3 (GND s1 x3_im_a3 GND) vccs gain=291309.9196
-  Gr4_re_1_3 (GND s1 x4_re_a3 GND) vccs gain=-495740.9549
-  Gr4_im_1_3 (GND s1 x4_im_a3 GND) vccs gain=72973.72777
-  Gd1_4 (GND s1 p4 GND) vccs gain=-0.002901723494
-  Fd1_4 (GND s1) cccs ctlinst="V4" gain=-0.1450861747
-  Gr1_1_4 (GND s1 x1_a4 GND) vccs gain=0.4280974323
-  Gr2_1_4 (GND s1 x2_a4 GND) vccs gain=-0.210112819
-  Gr3_re_1_4 (GND s1 x3_re_a4 GND) vccs gain=-352528.3432
-  Gr3_im_1_4 (GND s1 x3_im_a4 GND) vccs gain=-546859.601
-  Gr4_re_1_4 (GND s1 x4_re_a4 GND) vccs gain=-237547.515
-  Gr4_im_1_4 (GND s1 x4_im_a4 GND) vccs gain=419483.4231
-  Cx1_a1 (x1_a1 GND) capacitor c=7.197135224e-13
-  Gx1_a1 (GND x1_a1 p1 GND) vccs gain=0.06446987254
-  Fx1_a1 (GND x1_a1) cccs ctlinst="V1" gain=3.223493627
+  Gd1_1 (GND s1 p1 GND) vccs gain=-0.008233022819
+  Fd1_1 (GND s1) cccs ctlinst="V1" gain=-0.411651141
+  Gr1_1_1 (GND s1 x1_a1 GND) vccs gain=-1.368097155
+  Gr2_1_1 (GND s1 x2_a1 GND) vccs gain=1.392217506
+  Gr3_re_1_1 (GND s1 x3_re_a1 GND) vccs gain=9263.05253
+  Gr3_im_1_1 (GND s1 x3_im_a1 GND) vccs gain=155476.8632
+  Gr4_re_1_1 (GND s1 x4_re_a1 GND) vccs gain=596902.8723
+  Gr4_im_1_1 (GND s1 x4_im_a1 GND) vccs gain=36186.50124
+  Gd1_2 (GND s1 p2 GND) vccs gain=0.007915670847
+  Fd1_2 (GND s1) cccs ctlinst="V2" gain=0.3957835423
+  Gr1_1_2 (GND s1 x1_a2 GND) vccs gain=-3.223500662
+  Gr2_1_2 (GND s1 x2_a2 GND) vccs gain=3.090231479
+  Gr3_re_1_2 (GND s1 x3_re_a2 GND) vccs gain=637057.0772
+  Gr3_im_1_2 (GND s1 x3_im_a2 GND) vccs gain=60642.33186
+  Gr4_re_1_2 (GND s1 x4_re_a2 GND) vccs gain=177913.7535
+  Gr4_im_1_2 (GND s1 x4_im_a2 GND) vccs gain=-536797.2301
+  Gd1_3 (GND s1 p3 GND) vccs gain=-0.003955546335
+  Fd1_3 (GND s1) cccs ctlinst="V3" gain=-0.1977773167
+  Gr1_1_3 (GND s1 x1_a3 GND) vccs gain=0.6162843468
+  Gr2_1_3 (GND s1 x2_a3 GND) vccs gain=-0.2461497764
+  Gr3_re_1_3 (GND s1 x3_re_a3 GND) vccs gain=-72101.94779
+  Gr3_im_1_3 (GND s1 x3_im_a3 GND) vccs gain=291310.1968
+  Gr4_re_1_3 (GND s1 x4_re_a3 GND) vccs gain=-495740.8679
+  Gr4_im_1_3 (GND s1 x4_im_a3 GND) vccs gain=72973.83289
+  Gd1_4 (GND s1 p4 GND) vccs gain=-0.002901725268
+  Fd1_4 (GND s1) cccs ctlinst="V4" gain=-0.1450862634
+  Gr1_1_4 (GND s1 x1_a4 GND) vccs gain=0.4280981397
+  Gr2_1_4 (GND s1 x2_a4 GND) vccs gain=-0.2101139346
+  Gr3_re_1_4 (GND s1 x3_re_a4 GND) vccs gain=-352528.7394
+  Gr3_im_1_4 (GND s1 x3_im_a4 GND) vccs gain=-546859.2093
+  Gr4_re_1_4 (GND s1 x4_re_a4 GND) vccs gain=-237547.2079
+  Gr4_im_1_4 (GND s1 x4_im_a4 GND) vccs gain=419483.4831
+  Cx1_a1 (x1_a1 GND) capacitor c=7.197139996e-13
+  Gx1_a1 (GND x1_a1 p1 GND) vccs gain=0.06447001325
+  Fx1_a1 (GND x1_a1) cccs ctlinst="V1" gain=3.223500662
   Rp1_a1 (GND x1_a1) resistor r=1
-  Cx2_a1 (x2_a1 GND) capacitor c=9.08867254e-13
-  Gx2_a1 (GND x2_a1 p1 GND) vccs gain=0.06180448271
-  Fx2_a1 (GND x2_a1) cccs ctlinst="V1" gain=3.090224135
+  Cx2_a1 (x2_a1 GND) capacitor c=9.088668115e-13
+  Gx2_a1 (GND x2_a1 p1 GND) vccs gain=0.06180462959
+  Fx2_a1 (GND x2_a1) cccs ctlinst="V1" gain=3.090231479
   Rp2_a1 (GND x2_a1) resistor r=1
-  Cx3_re_a1 (x3_re_a1 GND) capacitor c=1.675443854e-12
-  Gx3_re_a1 (GND x3_re_a1 p1 GND) vccs gain=6.025835651e-08
-  Fx3_re_a1 (GND x3_re_a1) cccs ctlinst="V1" gain=3.012917826e-06
+  Cx3_re_a1 (x3_re_a1 GND) capacitor c=1.675443512e-12
+  Gx3_re_a1 (GND x3_re_a1 p1 GND) vccs gain=6.02583377e-08
+  Fx3_re_a1 (GND x3_re_a1) cccs ctlinst="V1" gain=3.012916885e-06
   Rp3_re_re_a1 (GND x3_re_a1) resistor r=1
-  Gp3_re_im_a1 (GND x3_re_a1 x3_im_a1 GND) vccs gain=2.355968302
-  Cx3_im_a1 (x3_im_a1 GND) capacitor c=1.675443854e-12
-  Gp3_im_re_a1 (GND x3_im_a1 x3_re_a1 GND) vccs gain=-2.355968302
+  Gp3_re_im_a1 (GND x3_re_a1 x3_im_a1 GND) vccs gain=2.355967946
+  Cx3_im_a1 (x3_im_a1 GND) capacitor c=1.675443512e-12
+  Gp3_im_re_a1 (GND x3_im_a1 x3_re_a1 GND) vccs gain=-2.355967946
   Rp3_im_im_a1 (GND x3_im_a1) resistor r=1
-  Cx4_re_a1 (x4_re_a1 GND) capacitor c=2.635686044e-12
-  Gx4_re_a1 (GND x4_re_a1 p1 GND) vccs gain=7.742163207e-08
-  Fx4_re_a1 (GND x4_re_a1) cccs ctlinst="V1" gain=3.871081603e-06
+  Cx4_re_a1 (x4_re_a1 GND) capacitor c=2.635686614e-12
+  Gx4_re_a1 (GND x4_re_a1 p1 GND) vccs gain=7.742161785e-08
+  Fx4_re_a1 (GND x4_re_a1) cccs ctlinst="V1" gain=3.871080893e-06
   Rp4_re_re_a1 (GND x4_re_a1) resistor r=1
-  Gp4_re_im_a1 (GND x4_re_a1 x4_im_a1 GND) vccs gain=2.720411116
-  Cx4_im_a1 (x4_im_a1 GND) capacitor c=2.635686044e-12
-  Gp4_im_re_a1 (GND x4_im_a1 x4_re_a1 GND) vccs gain=-2.720411116
+  Gp4_re_im_a1 (GND x4_re_a1 x4_im_a1 GND) vccs gain=2.720411743
+  Cx4_im_a1 (x4_im_a1 GND) capacitor c=2.635686614e-12
+  Gp4_im_re_a1 (GND x4_im_a1 x4_re_a1 GND) vccs gain=-2.720411743
   Rp4_im_im_a1 (GND x4_im_a1) resistor r=1
   V2 (p2 s2) vsource dc=0
   R2 (s2 GND) resistor r=50
-  Gd2_1 (GND s2 p1 GND) vccs gain=0.007915674462
-  Fd2_1 (GND s2) cccs ctlinst="V1" gain=0.3957837231
-  Gr1_2_1 (GND s2 x1_a1 GND) vccs gain=-3.223493627
-  Gr2_2_1 (GND s2 x2_a1 GND) vccs gain=3.090224135
-  Gr3_re_2_1 (GND s2 x3_re_a1 GND) vccs gain=640855.7773
-  Gr3_im_2_1 (GND s2 x3_im_a1 GND) vccs gain=61004.57436
-  Gr4_re_2_1 (GND s2 x4_re_a1 GND) vccs gain=177285.2192
-  Gr4_im_2_1 (GND s2 x4_im_a1 GND) vccs gain=-534900.0976
-  Gd2_2 (GND s2 p2 GND) vccs gain=3.636339669e-05
-  Fd2_2 (GND s2) cccs ctlinst="V2" gain=0.001818169834
-  Gr1_2_2 (GND s2 x1_a2 GND) vccs gain=-1.692455578
-  Gr2_2_2 (GND s2 x2_a2 GND) vccs gain=1.555594164
-  Gr3_re_2_2 (GND s2 x3_re_a2 GND) vccs gain=-76604.75865
-  Gr3_im_2_2 (GND s2 x3_im_a2 GND) vccs gain=54332.71117
-  Gr4_re_2_2 (GND s2 x4_re_a2 GND) vccs gain=590596.2299
-  Gr4_im_2_2 (GND s2 x4_im_a2 GND) vccs gain=2694.017214
-  Gd2_3 (GND s2 p3 GND) vccs gain=-0.002075885978
-  Fd2_3 (GND s2) cccs ctlinst="V3" gain=-0.1037942989
-  Gr1_2_3 (GND s2 x1_a3 GND) vccs gain=0.4236100291
-  Gr2_2_3 (GND s2 x2_a3 GND) vccs gain=-0.1877683593
-  Gr3_re_2_3 (GND s2 x3_re_a3 GND) vccs gain=-488559.3921
-  Gr3_im_2_3 (GND s2 x3_im_a3 GND) vccs gain=-556700.7994
-  Gr4_re_2_3 (GND s2 x4_re_a3 GND) vccs gain=-178299.9681
-  Gr4_im_2_3 (GND s2 x4_im_a3 GND) vccs gain=472025.8102
-  Gd2_4 (GND s2 p4 GND) vccs gain=-0.003648447943
-  Fd2_4 (GND s2) cccs ctlinst="V4" gain=-0.1824223972
-  Gr1_2_4 (GND s2 x1_a4 GND) vccs gain=0.2305844385
-  Gr2_2_4 (GND s2 x2_a4 GND) vccs gain=0.1404264941
-  Gr3_re_2_4 (GND s2 x3_re_a4 GND) vccs gain=78237.58647
-  Gr3_im_2_4 (GND s2 x3_im_a4 GND) vccs gain=359561.4878
-  Gr4_re_2_4 (GND s2 x4_re_a4 GND) vccs gain=-481712.6777
-  Gr4_im_2_4 (GND s2 x4_im_a4 GND) vccs gain=40601.71636
-  Cx1_a2 (x1_a2 GND) capacitor c=7.197135224e-13
-  Gx1_a2 (GND x1_a2 p2 GND) vccs gain=0.06446987254
-  Fx1_a2 (GND x1_a2) cccs ctlinst="V2" gain=3.223493627
+  Gd2_1 (GND s2 p1 GND) vccs gain=0.007915670847
+  Fd2_1 (GND s2) cccs ctlinst="V1" gain=0.3957835423
+  Gr1_2_1 (GND s2 x1_a1 GND) vccs gain=-3.223500662
+  Gr2_2_1 (GND s2 x2_a1 GND) vccs gain=3.090231479
+  Gr3_re_2_1 (GND s2 x3_re_a1 GND) vccs gain=640855.8283
+  Gr3_im_2_1 (GND s2 x3_im_a1 GND) vccs gain=61003.94016
+  Gr4_re_2_1 (GND s2 x4_re_a1 GND) vccs gain=177284.9283
+  Gr4_im_2_1 (GND s2 x4_im_a1 GND) vccs gain=-534899.9535
+  Gd2_2 (GND s2 p2 GND) vccs gain=3.636417936e-05
+  Fd2_2 (GND s2) cccs ctlinst="V2" gain=0.001818208968
+  Gr1_2_2 (GND s2 x1_a2 GND) vccs gain=-1.69245914
+  Gr2_2_2 (GND s2 x2_a2 GND) vccs gain=1.555597899
+  Gr3_re_2_2 (GND s2 x3_re_a2 GND) vccs gain=-76604.60606
+  Gr3_im_2_2 (GND s2 x3_im_a2 GND) vccs gain=54332.36406
+  Gr4_re_2_2 (GND s2 x4_re_a2 GND) vccs gain=590596.0671
+  Gr4_im_2_2 (GND s2 x4_im_a2 GND) vccs gain=2693.919074
+  Gd2_3 (GND s2 p3 GND) vccs gain=-0.002075881252
+  Fd2_3 (GND s2) cccs ctlinst="V3" gain=-0.1037940626
+  Gr1_2_3 (GND s2 x1_a3 GND) vccs gain=0.42360923
+  Gr2_2_3 (GND s2 x2_a3 GND) vccs gain=-0.1877681489
+  Gr3_re_2_3 (GND s2 x3_re_a3 GND) vccs gain=-488559.4183
+  Gr3_im_2_3 (GND s2 x3_im_a3 GND) vccs gain=-556700.3716
+  Gr4_re_2_3 (GND s2 x4_re_a3 GND) vccs gain=-178299.6104
+  Gr4_im_2_3 (GND s2 x4_im_a3 GND) vccs gain=472025.6427
+  Gd2_4 (GND s2 p4 GND) vccs gain=-0.003648445403
+  Fd2_4 (GND s2) cccs ctlinst="V4" gain=-0.1824222702
+  Gr1_2_4 (GND s2 x1_a4 GND) vccs gain=0.230582956
+  Gr2_2_4 (GND s2 x2_a4 GND) vccs gain=0.1404271023
+  Gr3_re_2_4 (GND s2 x3_re_a4 GND) vccs gain=78237.81256
+  Gr3_im_2_4 (GND s2 x3_im_a4 GND) vccs gain=359561.8135
+  Gr4_re_2_4 (GND s2 x4_re_a4 GND) vccs gain=-481712.5494
+  Gr4_im_2_4 (GND s2 x4_im_a4 GND) vccs gain=40601.67372
+  Cx1_a2 (x1_a2 GND) capacitor c=7.197139996e-13
+  Gx1_a2 (GND x1_a2 p2 GND) vccs gain=0.06447001325
+  Fx1_a2 (GND x1_a2) cccs ctlinst="V2" gain=3.223500662
   Rp1_a2 (GND x1_a2) resistor r=1
-  Cx2_a2 (x2_a2 GND) capacitor c=9.08867254e-13
-  Gx2_a2 (GND x2_a2 p2 GND) vccs gain=0.06180448271
-  Fx2_a2 (GND x2_a2) cccs ctlinst="V2" gain=3.090224135
+  Cx2_a2 (x2_a2 GND) capacitor c=9.088668115e-13
+  Gx2_a2 (GND x2_a2 p2 GND) vccs gain=0.06180462959
+  Fx2_a2 (GND x2_a2) cccs ctlinst="V2" gain=3.090231479
   Rp2_a2 (GND x2_a2) resistor r=1
-  Cx3_re_a2 (x3_re_a2 GND) capacitor c=1.675443854e-12
-  Gx3_re_a2 (GND x3_re_a2 p2 GND) vccs gain=6.061767624e-08
-  Fx3_re_a2 (GND x3_re_a2) cccs ctlinst="V2" gain=3.030883812e-06
+  Cx3_re_a2 (x3_re_a2 GND) capacitor c=1.675443512e-12
+  Gx3_re_a2 (GND x3_re_a2 p2 GND) vccs gain=6.061765626e-08
+  Fx3_re_a2 (GND x3_re_a2) cccs ctlinst="V2" gain=3.030882813e-06
   Rp3_re_re_a2 (GND x3_re_a2) resistor r=1
-  Gp3_re_im_a2 (GND x3_re_a2 x3_im_a2 GND) vccs gain=2.355968302
-  Cx3_im_a2 (x3_im_a2 GND) capacitor c=1.675443854e-12
-  Gp3_im_re_a2 (GND x3_im_a2 x3_re_a2 GND) vccs gain=-2.355968302
+  Gp3_re_im_a2 (GND x3_re_a2 x3_im_a2 GND) vccs gain=2.355967946
+  Cx3_im_a2 (x3_im_a2 GND) capacitor c=1.675443512e-12
+  Gp3_im_re_a2 (GND x3_im_a2 x3_re_a2 GND) vccs gain=-2.355967946
   Rp3_im_im_a2 (GND x3_im_a2) resistor r=1
-  Cx4_re_a2 (x4_re_a2 GND) capacitor c=2.635686044e-12
-  Gx4_re_a2 (GND x4_re_a2 p2 GND) vccs gain=7.714799539e-08
-  Fx4_re_a2 (GND x4_re_a2) cccs ctlinst="V2" gain=3.857399769e-06
+  Cx4_re_a2 (x4_re_a2 GND) capacitor c=2.635686614e-12
+  Gx4_re_a2 (GND x4_re_a2 p2 GND) vccs gain=7.714797593e-08
+  Fx4_re_a2 (GND x4_re_a2) cccs ctlinst="V2" gain=3.857398797e-06
   Rp4_re_re_a2 (GND x4_re_a2) resistor r=1
-  Gp4_re_im_a2 (GND x4_re_a2 x4_im_a2 GND) vccs gain=2.720411116
-  Cx4_im_a2 (x4_im_a2 GND) capacitor c=2.635686044e-12
-  Gp4_im_re_a2 (GND x4_im_a2 x4_re_a2 GND) vccs gain=-2.720411116
+  Gp4_re_im_a2 (GND x4_re_a2 x4_im_a2 GND) vccs gain=2.720411743
+  Cx4_im_a2 (x4_im_a2 GND) capacitor c=2.635686614e-12
+  Gp4_im_re_a2 (GND x4_im_a2 x4_re_a2 GND) vccs gain=-2.720411743
   Rp4_im_im_a2 (GND x4_im_a2) resistor r=1
   V3 (p3 s3) vsource dc=0
   R3 (s3 GND) resistor r=50
-  Gd3_1 (GND s3 p1 GND) vccs gain=-0.00395554718
-  Fd3_1 (GND s3) cccs ctlinst="V1" gain=-0.197777359
-  Gr1_3_1 (GND s3 x1_a1 GND) vccs gain=0.6560970244
-  Gr2_3_1 (GND s3 x2_a1 GND) vccs gain=-0.2608458657
-  Gr3_re_3_1 (GND s3 x3_re_a1 GND) vccs gain=-74297.80367
-  Gr3_im_3_1 (GND s3 x3_im_a1 GND) vccs gain=300182.125
-  Gr4_re_3_1 (GND s3 x4_re_a1 GND) vccs gain=-518386.2003
-  Gr4_im_3_1 (GND s3 x4_im_a1 GND) vccs gain=76307.138
-  Gd3_2 (GND s3 p2 GND) vccs gain=-0.002075885978
-  Fd3_2 (GND s3) cccs ctlinst="V2" gain=-0.1037942989
-  Gr1_3_2 (GND s3 x1_a2 GND) vccs gain=0.4509759888
-  Gr2_3_2 (GND s3 x2_a2 GND) vccs gain=-0.1989798099
-  Gr3_re_3_2 (GND s3 x3_re_a2 GND) vccs gain=-500454.8699
-  Gr3_im_3_2 (GND s3 x3_im_a2 GND) vccs gain=-570255.3889
-  Gr4_re_3_2 (GND s3 x4_re_a2 GND) vccs gain=-187105.9398
-  Gr4_im_3_2 (GND s3 x4_im_a2 GND) vccs gain=495338.4667
-  Gd3_3 (GND s3 p3 GND) vccs gain=0.001554515221
-  Fd3_3 (GND s3) cccs ctlinst="V3" gain=0.07772576107
-  Gr1_3_3 (GND s3 x1_a3 GND) vccs gain=-2.166014543
-  Gr2_3_3 (GND s3 x2_a3 GND) vccs gain=2.011066543
-  Gr3_re_3_3 (GND s3 x3_re_a3 GND) vccs gain=86030.18214
-  Gr3_im_3_3 (GND s3 x3_im_a3 GND) vccs gain=178763.848
-  Gr4_re_3_3 (GND s3 x4_re_a3 GND) vccs gain=634888.709
-  Gr4_im_3_3 (GND s3 x4_im_a3 GND) vccs gain=-131630.1636
-  Gd3_4 (GND s3 p4 GND) vccs gain=0.01012511688
-  Fd3_4 (GND s3) cccs ctlinst="V4" gain=0.5062558439
-  Gr1_3_4 (GND s3 x1_a4 GND) vccs gain=-3.431737036
-  Gr2_3_4 (GND s3 x2_a4 GND) vccs gain=3.274738157
-  Gr3_re_3_4 (GND s3 x3_re_a4 GND) vccs gain=688815.5822
-  Gr3_im_3_4 (GND s3 x3_im_a4 GND) vccs gain=39526.85079
-  Gr4_re_3_4 (GND s3 x4_re_a4 GND) vccs gain=186408.4513
-  Gr4_im_3_4 (GND s3 x4_im_a4 GND) vccs gain=-558165.7981
-  Cx1_a3 (x1_a3 GND) capacitor c=7.197135224e-13
-  Gx1_a3 (GND x1_a3 p3 GND) vccs gain=0.06863474072
-  Fx1_a3 (GND x1_a3) cccs ctlinst="V3" gain=3.431737036
+  Gd3_1 (GND s3 p1 GND) vccs gain=-0.003955546335
+  Fd3_1 (GND s3) cccs ctlinst="V1" gain=-0.1977773167
+  Gr1_3_1 (GND s3 x1_a1 GND) vccs gain=0.6560974966
+  Gr2_3_1 (GND s3 x2_a1 GND) vccs gain=-0.2608471515
+  Gr3_re_3_1 (GND s3 x3_re_a1 GND) vccs gain=-74297.90962
+  Gr3_im_3_1 (GND s3 x3_im_a1 GND) vccs gain=300182.4407
+  Gr4_re_3_1 (GND s3 x4_re_a1 GND) vccs gain=-518386.1198
+  Gr4_im_3_1 (GND s3 x4_im_a1 GND) vccs gain=76307.24947
+  Gd3_2 (GND s3 p2 GND) vccs gain=-0.002075881252
+  Fd3_2 (GND s3) cccs ctlinst="V2" gain=-0.1037940626
+  Gr1_3_2 (GND s3 x1_a2 GND) vccs gain=0.450975198
+  Gr2_3_2 (GND s3 x2_a2 GND) vccs gain=-0.1989796111
+  Gr3_re_3_2 (GND s3 x3_re_a2 GND) vccs gain=-500454.9557
+  Gr3_im_3_2 (GND s3 x3_im_a2 GND) vccs gain=-570255.0179
+  Gr4_re_3_2 (GND s3 x4_re_a2 GND) vccs gain=-187105.581
+  Gr4_im_3_2 (GND s3 x4_im_a2 GND) vccs gain=495338.3349
+  Gd3_3 (GND s3 p3 GND) vccs gain=0.001554504052
+  Fd3_3 (GND s3) cccs ctlinst="V3" gain=0.07772520258
+  Gr1_3_3 (GND s3 x1_a3 GND) vccs gain=-2.166017253
+  Gr2_3_3 (GND s3 x2_a3 GND) vccs gain=2.011069858
+  Gr3_re_3_3 (GND s3 x3_re_a3 GND) vccs gain=86029.96062
+  Gr3_im_3_3 (GND s3 x3_im_a3 GND) vccs gain=178763.7132
+  Gr4_re_3_3 (GND s3 x4_re_a3 GND) vccs gain=634888.5363
+  Gr4_im_3_3 (GND s3 x4_im_a3 GND) vccs gain=-131630.0878
+  Gd3_4 (GND s3 p4 GND) vccs gain=0.0101251198
+  Fd3_4 (GND s3) cccs ctlinst="V4" gain=0.5062559898
+  Gr1_3_4 (GND s3 x1_a4 GND) vccs gain=-3.431744982
+  Gr2_3_4 (GND s3 x2_a4 GND) vccs gain=3.274746339
+  Gr3_re_3_4 (GND s3 x3_re_a4 GND) vccs gain=688815.8806
+  Gr3_im_3_4 (GND s3 x3_im_a4 GND) vccs gain=39525.87721
+  Gr4_re_3_4 (GND s3 x4_re_a4 GND) vccs gain=186408.02
+  Gr4_im_3_4 (GND s3 x4_im_a4 GND) vccs gain=-558165.792
+  Cx1_a3 (x1_a3 GND) capacitor c=7.197139996e-13
+  Gx1_a3 (GND x1_a3 p3 GND) vccs gain=0.06863489965
+  Fx1_a3 (GND x1_a3) cccs ctlinst="V3" gain=3.431744982
   Rp1_a3 (GND x1_a3) resistor r=1
-  Cx2_a3 (x2_a3 GND) capacitor c=9.08867254e-13
-  Gx2_a3 (GND x2_a3 p3 GND) vccs gain=0.06549476315
-  Fx2_a3 (GND x2_a3) cccs ctlinst="V3" gain=3.274738157
+  Cx2_a3 (x2_a3 GND) capacitor c=9.088668115e-13
+  Gx2_a3 (GND x2_a3 p3 GND) vccs gain=0.06549492677
+  Fx2_a3 (GND x2_a3) cccs ctlinst="V3" gain=3.274746339
   Rp2_a3 (GND x2_a3) resistor r=1
-  Cx3_re_a3 (x3_re_a3 GND) capacitor c=1.675443854e-12
-  Gx3_re_a3 (GND x3_re_a3 p3 GND) vccs gain=6.20935996e-08
-  Fx3_re_a3 (GND x3_re_a3) cccs ctlinst="V3" gain=3.10467998e-06
+  Cx3_re_a3 (x3_re_a3 GND) capacitor c=1.675443512e-12
+  Gx3_re_a3 (GND x3_re_a3 p3 GND) vccs gain=6.209358645e-08
+  Fx3_re_a3 (GND x3_re_a3) cccs ctlinst="V3" gain=3.104679322e-06
   Rp3_re_re_a3 (GND x3_re_a3) resistor r=1
-  Gp3_re_im_a3 (GND x3_re_a3 x3_im_a3 GND) vccs gain=2.355968302
-  Cx3_im_a3 (x3_im_a3 GND) capacitor c=1.675443854e-12
-  Gp3_im_re_a3 (GND x3_im_a3 x3_re_a3 GND) vccs gain=-2.355968302
+  Gp3_re_im_a3 (GND x3_re_a3 x3_im_a3 GND) vccs gain=2.355967946
+  Cx3_im_a3 (x3_im_a3 GND) capacitor c=1.675443512e-12
+  Gp3_im_re_a3 (GND x3_im_a3 x3_re_a3 GND) vccs gain=-2.355967946
   Rp3_im_im_a3 (GND x3_im_a3) resistor r=1
-  Cx4_re_a3 (x4_re_a3 GND) capacitor c=2.635686044e-12
-  Gx4_re_a3 (GND x4_re_a3 p3 GND) vccs gain=8.095822076e-08
-  Fx4_re_a3 (GND x4_re_a3) cccs ctlinst="V3" gain=4.047911038e-06
+  Cx4_re_a3 (x4_re_a3 GND) capacitor c=2.635686614e-12
+  Gx4_re_a3 (GND x4_re_a3 p3 GND) vccs gain=8.095820754e-08
+  Fx4_re_a3 (GND x4_re_a3) cccs ctlinst="V3" gain=4.047910377e-06
   Rp4_re_re_a3 (GND x4_re_a3) resistor r=1
-  Gp4_re_im_a3 (GND x4_re_a3 x4_im_a3 GND) vccs gain=2.720411116
-  Cx4_im_a3 (x4_im_a3 GND) capacitor c=2.635686044e-12
-  Gp4_im_re_a3 (GND x4_im_a3 x4_re_a3 GND) vccs gain=-2.720411116
+  Gp4_re_im_a3 (GND x4_re_a3 x4_im_a3 GND) vccs gain=2.720411743
+  Cx4_im_a3 (x4_im_a3 GND) capacitor c=2.635686614e-12
+  Gp4_im_re_a3 (GND x4_im_a3 x4_re_a3 GND) vccs gain=-2.720411743
   Rp4_im_im_a3 (GND x4_im_a3) resistor r=1
   V4 (p4 s4) vsource dc=0
   R4 (s4 GND) resistor r=50
-  Gd4_1 (GND s4 p1 GND) vccs gain=-0.002901723494
-  Fd4_1 (GND s4) cccs ctlinst="V1" gain=-0.1450861747
-  Gr1_4_1 (GND s4 x1_a1 GND) vccs gain=0.4557532862
-  Gr2_4_1 (GND s4 x2_a1 GND) vccs gain=-0.2226584337
-  Gr3_re_4_1 (GND s4 x3_re_a1 GND) vccs gain=-361111.7277
-  Gr3_im_4_1 (GND s4 x3_im_a1 GND) vccs gain=-560174.5763
-  Gr4_re_4_1 (GND s4 x4_re_a1 GND) vccs gain=-244715.7613
-  Gr4_im_4_1 (GND s4 x4_im_a1 GND) vccs gain=432141.7769
-  Gd4_2 (GND s4 p2 GND) vccs gain=-0.003648447943
-  Fd4_2 (GND s4) cccs ctlinst="V2" gain=-0.1824223972
-  Gr1_4_2 (GND s4 x1_a2 GND) vccs gain=0.2454806024
-  Gr2_4_2 (GND s4 x2_a2 GND) vccs gain=0.1488112119
-  Gr3_re_4_2 (GND s4 x3_re_a2 GND) vccs gain=79667.46466
-  Gr3_im_4_2 (GND s4 x3_im_a2 GND) vccs gain=366132.8706
-  Gr4_re_4_2 (GND s4 x4_re_a2 GND) vccs gain=-498009.0128
-  Gr4_im_4_2 (GND s4 x4_im_a2 GND) vccs gain=41975.27202
-  Gd4_3 (GND s4 p3 GND) vccs gain=0.01012511688
-  Fd4_3 (GND s4) cccs ctlinst="V3" gain=0.5062558439
-  Gr1_4_3 (GND s4 x1_a3 GND) vccs gain=-3.431737036
-  Gr2_4_3 (GND s4 x2_a3 GND) vccs gain=3.274738157
-  Gr3_re_4_3 (GND s4 x3_re_a3 GND) vccs gain=684732.5318
-  Gr3_im_4_3 (GND s4 x3_im_a3 GND) vccs gain=39292.54988
-  Gr4_re_4_3 (GND s4 x4_re_a3 GND) vccs gain=183644.707
-  Gr4_im_4_3 (GND s4 x4_im_a3 GND) vccs gain=-549890.2742
-  Gd4_4 (GND s4 p4 GND) vccs gain=0.0005503852415
-  Fd4_4 (GND s4) cccs ctlinst="V4" gain=0.02751926208
-  Gr1_4_4 (GND s4 x1_a4 GND) vccs gain=-1.788499471
-  Gr2_4_4 (GND s4 x2_a4 GND) vccs gain=1.662748359
-  Gr3_re_4_4 (GND s4 x3_re_a4 GND) vccs gain=-29462.0711
-  Gr3_im_4_4 (GND s4 x3_im_a4 GND) vccs gain=116383.2237
-  Gr4_re_4_4 (GND s4 x4_re_a4 GND) vccs gain=607066.2026
-  Gr4_im_4_4 (GND s4 x4_im_a4 GND) vccs gain=-45337.46476
-  Cx1_a4 (x1_a4 GND) capacitor c=7.197135224e-13
-  Gx1_a4 (GND x1_a4 p4 GND) vccs gain=0.06863474072
-  Fx1_a4 (GND x1_a4) cccs ctlinst="V4" gain=3.431737036
+  Gd4_1 (GND s4 p1 GND) vccs gain=-0.002901725268
+  Fd4_1 (GND s4) cccs ctlinst="V1" gain=-0.1450862634
+  Gr1_4_1 (GND s4 x1_a1 GND) vccs gain=0.4557540999
+  Gr2_4_1 (GND s4 x2_a1 GND) vccs gain=-0.222659643
+  Gr3_re_4_1 (GND s4 x3_re_a1 GND) vccs gain=-361112.1761
+  Gr3_im_4_1 (GND s4 x3_im_a1 GND) vccs gain=-560174.2411
+  Gr4_re_4_1 (GND s4 x4_re_a1 GND) vccs gain=-244715.446
+  Gr4_im_4_1 (GND s4 x4_im_a1 GND) vccs gain=432141.8405
+  Gd4_2 (GND s4 p2 GND) vccs gain=-0.003648445403
+  Fd4_2 (GND s4) cccs ctlinst="V2" gain=-0.1824222702
+  Gr1_4_2 (GND s4 x1_a2 GND) vccs gain=0.2454790568
+  Gr2_4_2 (GND s4 x2_a2 GND) vccs gain=0.1488118745
+  Gr3_re_4_2 (GND s4 x3_re_a2 GND) vccs gain=79667.70566
+  Gr3_im_4_2 (GND s4 x3_im_a2 GND) vccs gain=366133.2517
+  Gr4_re_4_2 (GND s4 x4_re_a2 GND) vccs gain=-498008.9164
+  Gr4_im_4_2 (GND s4 x4_im_a2 GND) vccs gain=41975.23099
+  Gd4_3 (GND s4 p3 GND) vccs gain=0.0101251198
+  Fd4_3 (GND s4) cccs ctlinst="V3" gain=0.5062559898
+  Gr1_4_3 (GND s4 x1_a3 GND) vccs gain=-3.431744982
+  Gr2_4_3 (GND s4 x2_a3 GND) vccs gain=3.274746339
+  Gr3_re_4_3 (GND s4 x3_re_a3 GND) vccs gain=684732.8404
+  Gr3_im_4_3 (GND s4 x3_im_a3 GND) vccs gain=39291.58275
+  Gr4_re_4_3 (GND s4 x4_re_a3 GND) vccs gain=183644.279
+  Gr4_im_4_3 (GND s4 x4_im_a3 GND) vccs gain=-549890.2594
+  Gd4_4 (GND s4 p4 GND) vccs gain=0.0005503788413
+  Fd4_4 (GND s4) cccs ctlinst="V4" gain=0.02751894207
+  Gr1_4_4 (GND s4 x1_a4 GND) vccs gain=-1.788501914
+  Gr2_4_4 (GND s4 x2_a4 GND) vccs gain=1.662751226
+  Gr3_re_4_4 (GND s4 x3_re_a4 GND) vccs gain=-29462.18238
+  Gr3_im_4_4 (GND s4 x3_im_a4 GND) vccs gain=116382.9898
+  Gr4_re_4_4 (GND s4 x4_re_a4 GND) vccs gain=607066.0084
+  Gr4_im_4_4 (GND s4 x4_im_a4 GND) vccs gain=-45337.40843
+  Cx1_a4 (x1_a4 GND) capacitor c=7.197139996e-13
+  Gx1_a4 (GND x1_a4 p4 GND) vccs gain=0.06863489965
+  Fx1_a4 (GND x1_a4) cccs ctlinst="V4" gain=3.431744982
   Rp1_a4 (GND x1_a4) resistor r=1
-  Cx2_a4 (x2_a4 GND) capacitor c=9.08867254e-13
-  Gx2_a4 (GND x2_a4 p4 GND) vccs gain=0.06549476315
-  Fx2_a4 (GND x2_a4) cccs ctlinst="V4" gain=3.274738157
+  Cx2_a4 (x2_a4 GND) capacitor c=9.088668115e-13
+  Gx2_a4 (GND x2_a4 p4 GND) vccs gain=0.06549492677
+  Fx2_a4 (GND x2_a4) cccs ctlinst="V4" gain=3.274746339
   Rp2_a4 (GND x2_a4) resistor r=1
-  Cx3_re_a4 (x3_re_a4 GND) capacitor c=1.675443854e-12
-  Gx3_re_a4 (GND x3_re_a4 p4 GND) vccs gain=6.172553113e-08
-  Fx3_re_a4 (GND x3_re_a4) cccs ctlinst="V4" gain=3.086276557e-06
+  Cx3_re_a4 (x3_re_a4 GND) capacitor c=1.675443512e-12
+  Gx3_re_a4 (GND x3_re_a4 p4 GND) vccs gain=6.172551914e-08
+  Fx3_re_a4 (GND x3_re_a4) cccs ctlinst="V4" gain=3.086275957e-06
   Rp3_re_re_a4 (GND x3_re_a4) resistor r=1
-  Gp3_re_im_a4 (GND x3_re_a4 x3_im_a4 GND) vccs gain=2.355968302
-  Cx3_im_a4 (x3_im_a4 GND) capacitor c=1.675443854e-12
-  Gp3_im_re_a4 (GND x3_im_a4 x3_re_a4 GND) vccs gain=-2.355968302
+  Gp3_re_im_a4 (GND x3_re_a4 x3_im_a4 GND) vccs gain=2.355967946
+  Cx3_im_a4 (x3_im_a4 GND) capacitor c=1.675443512e-12
+  Gp3_im_re_a4 (GND x3_im_a4 x3_re_a4 GND) vccs gain=-2.355967946
   Rp3_im_im_a4 (GND x3_im_a4) resistor r=1
-  Cx4_re_a4 (x4_re_a4 GND) capacitor c=2.635686044e-12
-  Gx4_re_a4 (GND x4_re_a4 p4 GND) vccs gain=7.97579113e-08
-  Fx4_re_a4 (GND x4_re_a4) cccs ctlinst="V4" gain=3.987895565e-06
+  Cx4_re_a4 (x4_re_a4 GND) capacitor c=2.635686614e-12
+  Gx4_re_a4 (GND x4_re_a4 p4 GND) vccs gain=7.9757897e-08
+  Fx4_re_a4 (GND x4_re_a4) cccs ctlinst="V4" gain=3.98789485e-06
   Rp4_re_re_a4 (GND x4_re_a4) resistor r=1
-  Gp4_re_im_a4 (GND x4_re_a4 x4_im_a4 GND) vccs gain=2.720411116
-  Cx4_im_a4 (x4_im_a4 GND) capacitor c=2.635686044e-12
-  Gp4_im_re_a4 (GND x4_im_a4 x4_re_a4 GND) vccs gain=-2.720411116
+  Gp4_re_im_a4 (GND x4_re_a4 x4_im_a4 GND) vccs gain=2.720411743
+  Cx4_im_a4 (x4_im_a4 GND) capacitor c=2.635686614e-12
+  Gp4_im_re_a4 (GND x4_im_a4 x4_re_a4 GND) vccs gain=-2.720411743
   Rp4_im_im_a4 (GND x4_im_a4) resistor r=1
 ends

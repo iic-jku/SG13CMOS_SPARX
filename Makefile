@@ -73,7 +73,7 @@ CONFIG ?= U
 
 # Palace number of processors for EM simulation
 # Override with: make sim-blc-em NP=<num_processors>
-NP ?= 4
+NP ?= 12
 
 # Frequency sweep in GHz
 # Override with: make build-layout-sweep START_FREQ=<GHz> STOP_FREQ=<GHz> STEP_FREQ=<GHz>
