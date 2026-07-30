@@ -124,6 +124,9 @@ An overview of the open-source design flow for SPARX is shown below. The flow co
 
 ## Directory Structure
 
+<details>
+<summary>Show Directory Structure</summary>
+
 ```text
 📁 SG13CMOS_SPARX/
 ├─ 📁 .github/
@@ -256,6 +259,8 @@ An overview of the open-source design flow for SPARX is shown below. The flow co
 ├─ README.md
 └─ REUSE.toml
 ```
+
+</details>
 
 
 ## Makefile Targets
