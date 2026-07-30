@@ -429,7 +429,7 @@ SCRIPT ?= $(error SCRIPT is not set. Usage: make sim-view-xschem SCRIPT=<scriptn
 
 sim-xschem: ## Run a testbench simulation with Xschem in batch mode (usage: make sim-xschem TB=<testbenchname>)
 	mkdir -p $(XSCHEM_TB_DIR)/simulations
-	cd $(XSCHEM_TB_DIR) && xschem -x -q --rcfile xschemrc --command ' \
+	cd $(XSCHEM_TB_DIR) && xschem -r -x -q --rcfile xschemrc --command ' \
 		xschem set netlist_type $(if $(findstring _vacask,$(TB)),spectre,spice); \
 		set netlist_dir $(abspath $(XSCHEM_TB_DIR)/simulations); \
 		xschem save; \
