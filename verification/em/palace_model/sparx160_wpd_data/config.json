@@ -2,10 +2,10 @@
     "Problem": {
         "Type": "Driven",
         "Verbose": 3,
-        "Output": "output/sparx_wpd_160GHz"
+        "Output": "output/sparx160_wpd"
     },
     "Model": {
-        "Mesh": "sparx_wpd_160GHz.msh",
+        "Mesh": "sparx160_wpd.msh",
         "L0": 1e-06,
         "Refinement": {
             "UniformLevels": 0,

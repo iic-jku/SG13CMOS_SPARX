@@ -2,7 +2,7 @@
   "Boundaries": {
     "Absorbing": {
       "Attributes": [
-        14
+        13
       ],
       "Order": 2
     },
@@ -92,22 +92,6 @@
         "Ls": 0.0,
         "R": 50.0,
         "Rs": 0.0
-      },
-      {
-        "Active": true,
-        "Attributes": [
-          13
-        ],
-        "C": 0.0,
-        "Cs": 0.0,
-        "Direction": "Z",
-        "Excitation": 4,
-        "IncludeInSynthesis": true,
-        "Index": 4,
-        "L": 0.0,
-        "Ls": 0.0,
-        "R": 50.0,
-        "Rs": 0.0
       }
     ]
   },
@@ -178,7 +162,7 @@
     "L0": 1e-06,
     "MakeHexahedral": false,
     "MakeSimplex": false,
-    "Mesh": "sparx_blc_160GHz.msh",
+    "Mesh": "sparx160_wpd.msh",
     "RefineCrackElements": true,
     "Refinement": {
       "MaxIts": 0,
@@ -198,7 +182,7 @@
     "ReorientTetMesh": false
   },
   "Problem": {
-    "Output": "output/sparx_blc_160GHz",
+    "Output": "output/sparx160_wpd",
     "OutputFormats": {
       "GridFunction": false,
       "Paraview": true

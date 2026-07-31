@@ -2,7 +2,7 @@
   "Boundaries": {
     "Absorbing": {
       "Attributes": [
-        13
+        20
       ],
       "Order": 2
     },
@@ -42,13 +42,85 @@
         "External": false,
         "Permeability": 1.0,
         "Thickness": 3.0
+      },
+      {
+        "Attributes": [
+          5
+        ],
+        "Conductivity": 30300000.0,
+        "External": false,
+        "Permeability": 1.0,
+        "Thickness": 3.0
+      },
+      {
+        "Attributes": [
+          6
+        ],
+        "Conductivity": 30300000.0,
+        "External": false,
+        "Permeability": 1.0,
+        "Thickness": 3.0
+      },
+      {
+        "Attributes": [
+          7
+        ],
+        "Conductivity": 30300000.0,
+        "External": false,
+        "Permeability": 1.0,
+        "Thickness": 3.0
+      },
+      {
+        "Attributes": [
+          8
+        ],
+        "Conductivity": 30300000.0,
+        "External": false,
+        "Permeability": 1.0,
+        "Thickness": 3.0
+      },
+      {
+        "Attributes": [
+          9
+        ],
+        "Conductivity": 30300000.0,
+        "External": false,
+        "Permeability": 1.0,
+        "Thickness": 3.0
+      },
+      {
+        "Attributes": [
+          10
+        ],
+        "Conductivity": 30300000.0,
+        "External": false,
+        "Permeability": 1.0,
+        "Thickness": 3.0
+      },
+      {
+        "Attributes": [
+          11
+        ],
+        "Conductivity": 30300000.0,
+        "External": false,
+        "Permeability": 1.0,
+        "Thickness": 3.0
+      },
+      {
+        "Attributes": [
+          12
+        ],
+        "Conductivity": 30300000.0,
+        "External": false,
+        "Permeability": 1.0,
+        "Thickness": 3.0
       }
     ],
     "LumpedPort": [
       {
         "Active": true,
         "Attributes": [
-          10
+          18
         ],
         "C": 0.0,
         "Cs": 0.0,
@@ -64,7 +136,7 @@
       {
         "Active": true,
         "Attributes": [
-          11
+          19
         ],
         "C": 0.0,
         "Cs": 0.0,
@@ -76,22 +148,6 @@
         "Ls": 0.0,
         "R": 50.0,
         "Rs": 0.0
-      },
-      {
-        "Active": true,
-        "Attributes": [
-          12
-        ],
-        "C": 0.0,
-        "Cs": 0.0,
-        "Direction": "Z",
-        "Excitation": 3,
-        "IncludeInSynthesis": true,
-        "Index": 3,
-        "L": 0.0,
-        "Ls": 0.0,
-        "R": 50.0,
-        "Rs": 0.0
       }
     ]
   },
@@ -99,7 +155,7 @@
     "Materials": [
       {
         "Attributes": [
-          5
+          13
         ],
         "Conductivity": 0.0,
         "LondonDepth": 0.0,
@@ -109,7 +165,7 @@
       },
       {
         "Attributes": [
-          6
+          14
         ],
         "Conductivity": 0.0,
         "LondonDepth": 0.0,
@@ -119,7 +175,7 @@
       },
       {
         "Attributes": [
-          7
+          15
         ],
         "Conductivity": 0.0,
         "LondonDepth": 0.0,
@@ -129,7 +185,7 @@
       },
       {
         "Attributes": [
-          8
+          16
         ],
         "Conductivity": 0.0,
         "LondonDepth": 0.0,
@@ -139,7 +195,7 @@
       },
       {
         "Attributes": [
-          9
+          17
         ],
         "Conductivity": 0.0,
         "LondonDepth": 0.0,
@@ -162,7 +218,7 @@
     "L0": 1e-06,
     "MakeHexahedral": false,
     "MakeSimplex": false,
-    "Mesh": "sparx_wpd_160GHz.msh",
+    "Mesh": "sparx160_bpf.msh",
     "RefineCrackElements": true,
     "Refinement": {
       "MaxIts": 0,
@@ -182,7 +238,7 @@
     "ReorientTetMesh": false
   },
   "Problem": {
-    "Output": "output/sparx_wpd_160GHz",
+    "Output": "output/sparx160_bpf",
     "OutputFormats": {
       "GridFunction": false,
       "Paraview": true

@@ -3149,19 +3149,19 @@ pd.write_gds(powdet_gds_filename, with_metadata=False)
 # Makefile. 
 write_em_gds(
     blc_em,
-    f"sparx_blc_{f / 1e9:.0f}GHz.gds",
+    f"sparx{f / 1e9:.0f}_blc.gds",
     cell_name="sparx_blc_em_sim",
 )
 
 write_em_gds(
     wpd_em,
-    f"sparx_wpd_{f / 1e9:.0f}GHz.gds",
+    f"sparx{f / 1e9:.0f}_wpd.gds",
     cell_name="sparx_wpd_em_sim",
 )
 
 write_em_gds(
     bpf_em,
-    f"sparx_bpf_{f / 1e9:.0f}GHz.gds",
+    f"sparx{f / 1e9:.0f}_bpf.gds",
     cell_name="sparx_bpf_em_sim",
 )
 

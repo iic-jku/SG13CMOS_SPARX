@@ -75,9 +75,9 @@ STEP_FREQ ?= 20
 # and of every Palace output derived from them. Only the design frequency is encoded,
 # so re-parametrizing a structure in scripts/six_port_gen.py does not rename anything.
 # These must stay in sync with the write_em_gds() calls in scripts/six_port_gen.py.
-BLC_EM_NAME  := sparx_blc_$(FREQ)GHz
-WPD_EM_NAME  := sparx_wpd_$(FREQ)GHz
-BPF_EM_NAME  := sparx_bpf_$(FREQ)GHz
+BLC_EM_NAME  := sparx$(FREQ)_blc
+WPD_EM_NAME  := sparx$(FREQ)_wpd
+BPF_EM_NAME  := sparx$(FREQ)_bpf
 CORE_EM_NAME := sparx$(FREQ)_core
 
 # S-parameter to lumped element netlist conversion with snp2le (always the de-embedded EM result)
@@ -371,7 +371,7 @@ copy-sparam: ## Copy the raw and de-embedded Touchstone files of an EM run to ve
 
 # Netlist Conversion Target
 snp2le: ## Convert an S-parameter Touchstone file to a lumped element netlist via a universal fit (usage: make snp2le SNP=<file.sNp> [ORDER=<N>] [LE_FORMAT=<spice|spectre>] [LE_OUT=<path>])
-	@if [ -z "$(SNP)" ]; then echo "ERROR: set the input Touchstone file, e.g. make snp2le SNP=verification/em/s-parameter/sparx_blc_160GHz_deembedded.s4p"; exit 1; fi
+	@if [ -z "$(SNP)" ]; then echo "ERROR: set the input Touchstone file, e.g. make snp2le SNP=verification/em/s-parameter/sparx160_blc_deembedded.s4p"; exit 1; fi
 	case "$(LE_FORMAT)" in \
 		spice)   SNP2LE_FORMAT=ngspice; DEFAULT_OUT=$(NET_SPICE_DIR)/$$(basename $(SNP) | sed -E 's/\.s[0-9]+p$$//I')_le.spice ;; \
 		spectre) SNP2LE_FORMAT=vacask;  DEFAULT_OUT=$(NET_SPECTRE_DIR)/$$(basename $(SNP) | sed -E 's/\.s[0-9]+p$$//I')_le.inc ;; \

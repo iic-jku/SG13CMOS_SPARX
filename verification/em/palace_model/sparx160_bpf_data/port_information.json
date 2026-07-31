@@ -18,28 +18,15 @@
             "Z0": 50.0,
             "direction": "Z",
             "length": 5.6503,
-            "width": 7.200000000000003,
-            "xmin": 155.52,
-            "xmax": 155.62,
-            "ymin": 76.01,
-            "ymax": 83.21000000000001,
-            "zmin": 7.58,
-            "zmax": 13.2303
-        },
-        {
-            "portnumber": 3,
-            "Z0": 50.0,
-            "direction": "Z",
-            "length": 5.6503,
-            "width": 7.200000000000003,
-            "xmin": 155.52,
-            "xmax": 155.62,
-            "ymin": -83.21000000000001,
-            "ymax": -76.01,
+            "width": 7.2,
+            "xmin": 195.34,
+            "xmax": 195.44,
+            "ymin": -3.6,
+            "ymax": 3.6,
             "zmin": 7.58,
             "zmax": 13.2303
         }
     ],
     "unit": 1e-06,
-    "name": "sparx_wpd_160GHz"
+    "name": "sparx160_bpf"
 }
