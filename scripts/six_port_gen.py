@@ -26,17 +26,6 @@ DEFAULT_FREQUENCY = 160e9  # design frequency in Hz
 # EM sub-structures (BLC, WPD, BPF) are exported here for the Palace flow
 EM_LAYOUT_DIR = PROJECT_ROOT / "verification" / "em" / "layout"
 
-# short cross-section tags used in the EM filenames, must match
-# SIGNAL_CROSS_SECTION/GROUND_CROSS_SECTION in the Makefile
-CROSS_SECTION_TAGS = {
-    "topmetal2_routing": "TM2",
-    "topmetal1_routing": "TM1",
-    "metal5_routing": "M5",
-    "metal4_routing": "M4",
-    "metal3_routing": "M3",
-    "metal2_routing": "M2",
-    "metal1_routing": "M1",
-}
 
 def resolve_output_path(path_value: str) -> Path:
     """Resolve output path relative to project root unless absolute."""
@@ -54,15 +43,14 @@ def snap_to_grid(value: float) -> float:
 def write_em_gds(component: gf.Component, filename: str, cell_name: str) -> Path:
     """Write an EM sub-structure to verification/em/layout for the Palace flow.
 
-    The filename encodes the design parameters and must match the
-    corresponding <CELL>_EM_NAME in the Makefile, since palace_sim.py
-    derives frequency, layers and impedance from it.
+    The filename encodes the design frequency and must match the
+    corresponding <CELL>_EM_NAME in the Makefile, which is how the EM
+    targets pick the structure to simulate.
 
     Args:
         component: Component carrying the Palace port markers (layers 201..).
         filename: File name including the .gds suffix.
-        cell_name: Top cell name, kept short to stay within the GDS name
-            limit (the parametrized file names are longer than that).
+        cell_name: Top cell name
 
     Returns:
         Path of the written GDS file.
@@ -3156,34 +3144,24 @@ pd.write_gds(powdet_gds_filename, with_metadata=False)
 # Write the BLC, WPD, BPF and six-port core copies prepared above (Palace port
 # markers on layers 201..207) to verification/em/layout, so the EM flow
 # simulates the same structures that are instantiated in the top-level layout.
-# The file names must match the BLC_EM_NAME, WPD_EM_NAME, BPF_EM_NAME and
-# CORE_EM_NAME variables in the Makefile, which the sim-blc-em, sim-wpd-em,
-# sim-bpf-em and sim-sparx-core-em targets look up here, since
-# verification/em/scripts/palace_sim.py derives the frequency, the signal and
-# ground layers and the reference impedance from the file name.
-signal_tag = CROSS_SECTION_TAGS[signal_cross_section]
-ground_tag = CROSS_SECTION_TAGS[ground_cross_section]
-e_r_tag = str(e_r).replace(".", "_")
-# the ripple only appears in the file name of the non-Butterworth filters
-ripple_tag = "" if filter_type == "butter" else f"_rip_{str(ripple_dB).removesuffix('.0').replace('.', '_')}dB"
-
+# Only the design frequency is encoded in the file names, which must match the
+# BLC_EM_NAME, WPD_EM_NAME, BPF_EM_NAME and CORE_EM_NAME variables in the
+# Makefile. 
 write_em_gds(
     blc_em,
-    f"sparx_blc_{f / 1e9:.0f}GHz_{Z0:.0f}Ohm_{signal_tag}_{ground_tag}_e_r_{e_r_tag}.gds",
+    f"sparx_blc_{f / 1e9:.0f}GHz.gds",
     cell_name="sparx_blc_em_sim",
 )
 
 write_em_gds(
     wpd_em,
-    f"sparx_wpd_{f / 1e9:.0f}GHz_{Z0:.0f}Ohm_{signal_tag}_{ground_tag}_e_r_{e_r_tag}_config_{wpd_shape}.gds",
+    f"sparx_wpd_{f / 1e9:.0f}GHz.gds",
     cell_name="sparx_wpd_em_sim",
 )
 
 write_em_gds(
     bpf_em,
-    f"sparx_bpf_f_{f / 1e9:.0f}GHz_bw_{bandwidth / 1e9:.0f}GHz_"
-    f"sig_{signal_tag}_gnd_{ground_tag}_z0_{Z0:.0f}Ohm_er_{e_r_tag}_"
-    f"{filter_type}_ord_{order}{ripple_tag}.gds",
+    f"sparx_bpf_{f / 1e9:.0f}GHz.gds",
     cell_name="sparx_bpf_em_sim",
 )
 

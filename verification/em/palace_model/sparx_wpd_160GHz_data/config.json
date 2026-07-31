@@ -2,10 +2,10 @@
     "Problem": {
         "Type": "Driven",
         "Verbose": 3,
-        "Output": "output/sparx_bpf_f_160GHz_bw_1GHz_sig_TM2_gnd_M5_z0_50Ohm_er_4_1_butter_ord_3"
+        "Output": "output/sparx_wpd_160GHz"
     },
     "Model": {
-        "Mesh": "sparx_bpf_f_160GHz_bw_1GHz_sig_TM2_gnd_M5_z0_50Ohm_er_4_1_butter_ord_3.msh",
+        "Mesh": "sparx_wpd_160GHz.msh",
         "L0": 1e-06,
         "Refinement": {
             "UniformLevels": 0,
@@ -43,35 +43,35 @@
         "Materials": [
             {
                 "Attributes": [
-                    13
+                    5
                 ],
                 "Permittivity": 1.0,
                 "Conductivity": 0.0
             },
             {
                 "Attributes": [
-                    14
+                    6
                 ],
                 "Permittivity": 6.6,
                 "Conductivity": 0.0
             },
             {
                 "Attributes": [
-                    15
+                    7
                 ],
                 "Permittivity": 4.1,
                 "Conductivity": 0.0
             },
             {
                 "Attributes": [
-                    16
+                    8
                 ],
                 "Permittivity": 4.1,
                 "Conductivity": 0.0
             },
             {
                 "Attributes": [
-                    17
+                    9
                 ],
                 "Permittivity": 1.0
             }
@@ -110,62 +110,6 @@
                 ],
                 "Conductivity": 30300000.0,
                 "Thickness": 3.0
-            },
-            {
-                "Attributes": [
-                    5
-                ],
-                "Conductivity": 30300000.0,
-                "Thickness": 3.0
-            },
-            {
-                "Attributes": [
-                    6
-                ],
-                "Conductivity": 30300000.0,
-                "Thickness": 3.0
-            },
-            {
-                "Attributes": [
-                    7
-                ],
-                "Conductivity": 30300000.0,
-                "Thickness": 3.0
-            },
-            {
-                "Attributes": [
-                    8
-                ],
-                "Conductivity": 30300000.0,
-                "Thickness": 3.0
-            },
-            {
-                "Attributes": [
-                    9
-                ],
-                "Conductivity": 30300000.0,
-                "Thickness": 3.0
-            },
-            {
-                "Attributes": [
-                    10
-                ],
-                "Conductivity": 30300000.0,
-                "Thickness": 3.0
-            },
-            {
-                "Attributes": [
-                    11
-                ],
-                "Conductivity": 30300000.0,
-                "Thickness": 3.0
-            },
-            {
-                "Attributes": [
-                    12
-                ],
-                "Conductivity": 30300000.0,
-                "Thickness": 3.0
             }
         ],
         "LumpedPort": [
@@ -175,7 +119,7 @@
                 "Direction": "Z",
                 "Excitation": 1,
                 "Attributes": [
-                    18
+                    10
                 ]
             },
             {
@@ -184,13 +128,22 @@
                 "Direction": "Z",
                 "Excitation": 2,
                 "Attributes": [
-                    19
+                    11
+                ]
+            },
+            {
+                "Index": 3,
+                "R": 50.0,
+                "Direction": "Z",
+                "Excitation": 3,
+                "Attributes": [
+                    12
                 ]
             }
         ],
         "Absorbing": {
             "Attributes": [
-                20
+                13
             ],
             "Order": 2
         }

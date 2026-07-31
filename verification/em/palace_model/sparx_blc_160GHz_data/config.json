@@ -2,10 +2,10 @@
     "Problem": {
         "Type": "Driven",
         "Verbose": 3,
-        "Output": "output/sparx_blc_160GHz_50Ohm_TM2_M5_e_r_4_1"
+        "Output": "output/sparx_blc_160GHz"
     },
     "Model": {
-        "Mesh": "sparx_blc_160GHz_50Ohm_TM2_M5_e_r_4_1.msh",
+        "Mesh": "sparx_blc_160GHz.msh",
         "L0": 1e-06,
         "Refinement": {
             "UniformLevels": 0,
