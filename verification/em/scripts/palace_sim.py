@@ -9,6 +9,22 @@ import gdspy
 import argparse
 
 
+def _parse_args():
+    """Parse the command line.
+
+    The EM parameters are normally derived from the GDS file name, which is
+    written by scripts/six_port_gen.py. Structures whose file name does not
+    encode them (e.g. the six-port core) pass them explicitly instead.
+    """
+    parser = argparse.ArgumentParser(description="Build and run a Palace model from a GDSII file")
+    parser.add_argument("gds_filename", help="GDSII file with the geometry and the port markers")
+    parser.add_argument("--f_center", type=float, default=None, help="Center frequency in Hz (default: from the file name)")
+    parser.add_argument("--signal_cross_section", type=str, default=None, help="Signal layer name, e.g. TM2 (default: from the file name)")
+    parser.add_argument("--ground_cross_section", type=str, default=None, help="Ground layer name, e.g. M5 (default: from the file name)")
+    parser.add_argument("--Z0", type=float, default=None, help="Reference impedance of the ports in Ohms (default: from the file name)")
+    return parser.parse_args()
+
+
 def _get_number_of_ports(gds_filename):
     """Get the number of ports from a GDSII file by counting layers with layer number > 200."""
     lib = gdspy.GdsLibrary()
@@ -91,7 +107,9 @@ def _get_layers(cell, layers=None):
 
 # ===================== input files and path settings =======================
 
-gds_filename = sys.argv[1]   # geometries
+args = _parse_args()
+
+gds_filename = args.gds_filename   # geometries
 # stackup (lives in ../stackups/, resolved absolutely so it does not depend on the cwd)
 XML_filename = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), "..", "stackups", "SG13G2_nosub.xml"
@@ -113,7 +131,7 @@ model_basename = str.split(gds_filename.split('/')[-1], ".")[0]
 sim_path = utilities.create_sim_path(script_path, model_basename, dirname="../palace_model/")
 print('Simulation data directory: ', sim_path)
 
-f_center = _get_ghz_from_filename(gds_filename) * 1e9
+f_center = args.f_center if args.f_center is not None else _get_ghz_from_filename(gds_filename) * 1e9
 
 
 # change path to models script path
@@ -158,14 +176,19 @@ layer_dict = {
     "M2": "Metal2",
     "M1": "Metal1",
 }
-signal_layer, ground_layer = _get_layer_names_from_filename(gds_filename)
+if args.signal_cross_section and args.ground_cross_section:
+    signal_layer, ground_layer = args.signal_cross_section, args.ground_cross_section
+else:
+    signal_layer, ground_layer = _get_layer_names_from_filename(gds_filename)
+
+port_Z0 = args.Z0 if args.Z0 is not None else _get_impedance_from_filename(gds_filename)
 
 for portnumber in range(1, num_ports + 1):
     simulation_ports.add_port(
         simulation_setup.simulation_port(
             portnumber=portnumber,
             voltage=1,
-            port_Z0=_get_impedance_from_filename(gds_filename),
+            port_Z0=port_Z0,
             source_layernum=200 + portnumber,
             from_layername=layer_dict.get(signal_layer),
             to_layername=layer_dict.get(ground_layer),

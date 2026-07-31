@@ -81,6 +81,18 @@ START_FREQ ?= 60
 STOP_FREQ ?= 300
 STEP_FREQ ?= 20
 
+# Base names of the EM structures that build-layout writes to verification/em/layout.
+# scripts/six_port_gen.py encodes the EM parameters above in these file names and
+# verification/em/scripts/palace_sim.py derives the frequency, the signal and ground
+# layers and the reference impedance back from them, so the names below must stay in
+# sync with the write_em_gds() calls in scripts/six_port_gen.py.
+E_R_TAG      := $(subst .,_,$(E_R))
+RIPPLE_TAG   := $(if $(filter butter,$(FILTER_TYPE)),,_rip_$(subst .,_,$(RIPPLE_DB:.0=))dB)
+BLC_EM_NAME  := sparx_blc_$(FREQ)GHz_$(Z0)Ohm_$(SIGNAL_CROSS_SECTION)_$(GROUND_CROSS_SECTION)_e_r_$(E_R_TAG)
+WPD_EM_NAME  := sparx_wpd_$(FREQ)GHz_$(Z0)Ohm_$(SIGNAL_CROSS_SECTION)_$(GROUND_CROSS_SECTION)_e_r_$(E_R_TAG)_config_$(CONFIG)
+BPF_EM_NAME  := sparx_bpf_f_$(FREQ)GHz_bw_$(BANDWIDTH)GHz_sig_$(SIGNAL_CROSS_SECTION)_gnd_$(GROUND_CROSS_SECTION)_z0_$(Z0)Ohm_er_$(E_R_TAG)_$(FILTER_TYPE)_ord_$(FILTER_ORDER)$(RIPPLE_TAG)
+CORE_EM_NAME := sparx$(FREQ)_core
+
 # S-parameter to lumped element netlist conversion with snp2le (always the de-embedded EM result)
 # Override with: make snp2le SNP=<file.sNp> ORDER=<N> LE_FORMAT=<spice|spectre> LE_OUT=<output_path>
 SNP ?= verification/em/s-parameter/sparx_bpf_f_160GHz_bw_1GHz_sig_TM2_gnd_M5_z0_50Ohm_er_4_1_butter_ord_3_deembedded.s2p
@@ -90,7 +102,7 @@ LE_OUT ?= netlist/spice/sparx_bpf_le.spice
 
 # EM run name for the copy-sparam target (base name of the GDS/Touchstone files)
 # Override with: make copy-sparam SPARAM=<em_run_name>
-SPARAM ?= sparx_blc_$(FREQ)GHz_$(Z0)Ohm_$(SIGNAL_CROSS_SECTION)_$(GROUND_CROSS_SECTION)_e_r_$(subst .,_,$(E_R))
+SPARAM ?= $(BLC_EM_NAME)
 
 # Folder structure
 XSCHEM_SCH_DIR  	:= schematic/xschem
@@ -108,6 +120,7 @@ NET_SPECTRE_DIR 	:= netlist/spectre
 LVS_RPT_DIR 		:= verification/lvs
 DRC_RPT_DIR 		:= verification/drc
 EM_RPT_DIR 			:= verification/em
+EM_LAY_DIR 			:= verification/em/layout
 EM_SPARAM_DIR 		:= verification/em/s-parameter
 PALACE_SCRIPTS_DIR 	:= $(PDK_ROOT)/$(PDK)/libs.tech/palace/scripts
 
@@ -131,7 +144,8 @@ help: ## Show this help message
 	@echo 'TB selects the Xschem testbench for sim-xschem (e.g. sparx_bpf_le_tb_acsp_ngspice).'
 	@echo 'SCRIPT selects the plotting script for sim-view-xschem (e.g. plot_n_port_tb_acsp_ngspice).'
 	@echo 'snp2le: SNP=<file.sNp> ORDER=<N> LE_FORMAT=<spice|spectre> LE_OUT=<path>.'
-	@echo 'EM sim: NP=<procs> Z0=<Ohms> E_R=<e_r> SIGNAL_CROSS_SECTION=<metal> GROUND_CROSS_SECTION=<metal>.'
+	@echo 'EM sim: solves the structures written by build-layout to $(EM_LAY_DIR), so run build-layout first.'
+	@echo 'EM sim: NP=<procs> Z0=<Ohms> E_R=<e_r> SIGNAL_CROSS_SECTION=<metal> GROUND_CROSS_SECTION=<metal> select the GDS to simulate.'
 	@echo 'sim-bpf-em: BANDWIDTH=<GHz> FILTER_TYPE=<butter|cheby|ellip> FILTER_ORDER=<N> RIPPLE_DB=<dB>. sim-wpd-em: CONFIG=<C|U>.'
 	@echo 'view-em-sim: FILE_NAME=<name_with_extension>. copy-sparam: SPARAM=<em_run_name>. release: VERSION=<version>.'
 	@echo 'regression is the fast tool/flow smoke test (committed EM result). regression-nightly also runs the WPD AWS Palace EM solve.'
@@ -311,87 +325,45 @@ magic-verify: ## Verify the CELL cell with Magic (usage: make magic-verify [CELL
 
 
 # EM Simulation Targets
-sim-blc-em: ## Run the BLC EM simulation with AWS Palace (usage: make sim-blc-em [FREQ=<GHz>] [SIGNAL_CROSS_SECTION=<metal>] [GROUND_CROSS_SECTION=<metal>] [Z0=<Ohms>] [E_R=<e_r>] [NP=<num_processors>])
-	BLC_GDS_FILENAME=sparx_blc_$(FREQ)GHz_$(Z0)Ohm_$(SIGNAL_CROSS_SECTION)_$(GROUND_CROSS_SECTION)_e_r_$(subst .,_,$(E_R)); \
+# All EM structures (BLC, WPD, BPF and six-port core, each with the Palace port
+# markers on layers 201..207) are written to verification/em/layout by build-layout,
+# so the simulation targets below only mesh and solve the existing GDS. This keeps
+# the EM runs consistent with the structures instantiated in the top-level layout.
+# $(1) = base name of the GDS in verification/em/layout (without the .gds suffix)
+# $(2) = additional arguments for palace_sim.py
+define run-em-sim
+	@test -f $(EM_LAY_DIR)/$(1).gds || { \
+		echo "ERROR: $(EM_LAY_DIR)/$(1).gds not found. Run 'make build-layout FREQ=$(FREQ)' first."; \
+		exit 1; \
+	}
 	. .venv/bin/activate && \
-		python3 $(EM_RPT_DIR)/scripts/sparx_blc_em_sim.py \
-			--frequency $(FREQ)e9 \
-			--signal_cross_section $(SIGNAL_CROSS_SECTION) \
-			--ground_cross_section $(GROUND_CROSS_SECTION) \
-			--Z0 $(Z0) \
-			--e_r $(E_R) && \
-		python3 $(EM_RPT_DIR)/scripts/palace_sim.py ../layout/$$BLC_GDS_FILENAME.gds && \
-		cd $(EM_RPT_DIR)/palace_model/$${BLC_GDS_FILENAME}_data && \
+		python3 $(EM_RPT_DIR)/scripts/palace_sim.py $(abspath $(EM_LAY_DIR)/$(1).gds) $(2) && \
+		cd $(EM_RPT_DIR)/palace_model/$(1)_data && \
 		palace -np $(NP) config.json && \
 		python3 $(PALACE_SCRIPTS_DIR)/combine_extend_snp.py
+endef
+
+sim-blc-em: ## Run the BLC EM simulation with AWS Palace (usage: make sim-blc-em [FREQ=<GHz>] [SIGNAL_CROSS_SECTION=<metal>] [GROUND_CROSS_SECTION=<metal>] [Z0=<Ohms>] [E_R=<e_r>] [NP=<num_processors>])
+	$(call run-em-sim,$(BLC_EM_NAME))
 .PHONY: sim-blc-em
 
 sim-wpd-em: ## Run the WPD EM simulation with AWS Palace (usage: make sim-wpd-em [FREQ=<GHz>] [SIGNAL_CROSS_SECTION=<metal>] [GROUND_CROSS_SECTION=<metal>] [Z0=<Ohms>] [E_R=<e_r>] [CONFIG=<C|U>] [NP=<num_processors>])
-	WPD_GDS_FILENAME=sparx_wpd_$(FREQ)GHz_$(Z0)Ohm_$(SIGNAL_CROSS_SECTION)_$(GROUND_CROSS_SECTION)_e_r_$(subst .,_,$(E_R))_config_$(CONFIG); \
-	. .venv/bin/activate && \
-		python3 $(EM_RPT_DIR)/scripts/sparx_wpd_em_sim.py \
-			--frequency $(FREQ)e9 \
-			--signal_cross_section $(SIGNAL_CROSS_SECTION) \
-			--ground_cross_section $(GROUND_CROSS_SECTION) \
-			--Z0 $(Z0) \
-			--e_r $(E_R) \
-			--config $(CONFIG) && \
-		python3 $(EM_RPT_DIR)/scripts/palace_sim.py ../layout/$$WPD_GDS_FILENAME.gds && \
-		cd $(EM_RPT_DIR)/palace_model/$${WPD_GDS_FILENAME}_data && \
-		palace -np $(NP) config.json && \
-		python3 $(PALACE_SCRIPTS_DIR)/combine_extend_snp.py
+	$(call run-em-sim,$(WPD_EM_NAME))
 .PHONY: sim-wpd-em
 
 sim-bpf-em: ## Run the BPF EM simulation with AWS Palace (usage: make sim-bpf-em [FREQ=<GHz>] [BANDWIDTH=<GHz>] [SIGNAL_CROSS_SECTION=<metal>] [GROUND_CROSS_SECTION=<metal>] [Z0=<Ohms>] [E_R=<e_r>] [FILTER_TYPE=<butter|cheby|ellip>] [FILTER_ORDER=<N>] [RIPPLE_DB=<dB>] [NP=<num_processors>])
-	BPF_FILTER_TYPE_LOWER=$$(echo "$(FILTER_TYPE)" | tr '[:upper:]' '[:lower:]'); \
-	if [ "$$BPF_FILTER_TYPE_LOWER" = "butter" ]; then \
-		RIPPLE_TAG=""; \
-	else \
-		RIPPLE_DB_TAG=$$(printf '%s' "$(RIPPLE_DB)" | sed 's/\.0$$//'); \
-		RIPPLE_TAG="_rip_$$(printf '%s' "$$RIPPLE_DB_TAG" | tr '.' '_')dB"; \
-	fi; \
-	BPF_GDS_FILENAME=sparx_bpf_f_$(FREQ)GHz_bw_$(BANDWIDTH)GHz_sig_$(SIGNAL_CROSS_SECTION)_gnd_$(GROUND_CROSS_SECTION)_z0_$(Z0)Ohm_er_$(subst .,_,$(E_R))_$(FILTER_TYPE)_ord_$(FILTER_ORDER)$$RIPPLE_TAG; \
-	. .venv/bin/activate && \
-		python3 $(EM_RPT_DIR)/scripts/sparx_bpf_em_sim.py \
-			--frequency $(FREQ)e9 \
-			--bandwidth $(BANDWIDTH)e9 \
-			--signal_cross_section $(SIGNAL_CROSS_SECTION) \
-			--ground_cross_section $(GROUND_CROSS_SECTION) \
-			--Z0 $(Z0) \
-			--e_r $(E_R) \
-			--filter_type $(FILTER_TYPE) \
-			--filter_order $(FILTER_ORDER) \
-			--ripple_dB $(RIPPLE_DB) && \
-		python3 $(EM_RPT_DIR)/scripts/palace_sim.py ../layout/$$BPF_GDS_FILENAME.gds && \
-		cd $(EM_RPT_DIR)/palace_model/$${BPF_GDS_FILENAME}_data && \
-		palace -np $(NP) config.json && \
-		python3 $(PALACE_SCRIPTS_DIR)/combine_extend_snp.py
+	$(call run-em-sim,$(BPF_EM_NAME))
 .PHONY: sim-bpf-em
 
 sim-sparx-core-em: ## Run the six-port core EM simulation with AWS Palace (usage: make sim-sparx-core-em [FREQ=<GHz>] [SIGNAL_CROSS_SECTION=<metal>] [GROUND_CROSS_SECTION=<metal>] [Z0=<Ohms>] [E_R=<e_r>] [NP=<num_processors>])
 # 	The core GDS filename does not encode the EM parameters, so they are passed to palace_sim.py explicitly.
-	CORE_GDS_FILENAME=sparx$(FREQ)_core; \
-	. .venv/bin/activate && \
-		python3 $(EM_RPT_DIR)/scripts/sparx_core_em_sim.py \
-			--frequency $(FREQ)e9 \
-			--signal_cross_section $(SIGNAL_CROSS_SECTION) \
-			--ground_cross_section $(GROUND_CROSS_SECTION) \
-			--Z0 $(Z0) \
-			--e_r $(E_R) && \
-		python3 $(EM_RPT_DIR)/scripts/palace_sim.py ../layout/$$CORE_GDS_FILENAME.gds \
-			--f_center $(FREQ)e9 \
-			--signal_cross_section $(SIGNAL_CROSS_SECTION) \
-			--ground_cross_section $(GROUND_CROSS_SECTION) \
-			--Z0 $(Z0) && \
-		cd $(EM_RPT_DIR)/palace_model/$${CORE_GDS_FILENAME}_data && \
-		palace -np $(NP) config.json && \
-		python3 $(PALACE_SCRIPTS_DIR)/combine_extend_snp.py
+	$(call run-em-sim,$(CORE_EM_NAME),--f_center $(FREQ)e9 --signal_cross_section $(SIGNAL_CROSS_SECTION) --ground_cross_section $(GROUND_CROSS_SECTION) --Z0 $(Z0))
 .PHONY: sim-sparx-core-em
 # ================================================================================================
 
 
 # View EM Simulation Results Target
-FILE_NAME ?= sparx_blc_$(FREQ)GHz_$(Z0)Ohm_$(SIGNAL_CROSS_SECTION)_$(GROUND_CROSS_SECTION)_e_r_$(subst .,_,$(E_R)).s4p
+FILE_NAME ?= $(BLC_EM_NAME).s4p
 view-em-sim: ## View EM simulation results with s-parameter plots (usage: make view-em-sim FILE_NAME=<name_with_extension>)
 	cd $(EM_RPT_DIR)/palace_model && python3 ../scripts/plot_snp.py $$(find . -type f -name "$(FILE_NAME)")
 .PHONY: view-em-sim

@@ -23,6 +23,21 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 DEFAULT_FREQUENCY = 160e9  # design frequency in Hz
 
+# EM sub-structures (BLC, WPD, BPF) are exported here for the Palace flow
+EM_LAYOUT_DIR = PROJECT_ROOT / "verification" / "em" / "layout"
+
+# short cross-section tags used in the EM filenames, must match
+# SIGNAL_CROSS_SECTION/GROUND_CROSS_SECTION in the Makefile
+CROSS_SECTION_TAGS = {
+    "topmetal2_routing": "TM2",
+    "topmetal1_routing": "TM1",
+    "metal5_routing": "M5",
+    "metal4_routing": "M4",
+    "metal3_routing": "M3",
+    "metal2_routing": "M2",
+    "metal1_routing": "M1",
+}
+
 def resolve_output_path(path_value: str) -> Path:
     """Resolve output path relative to project root unless absolute."""
     path = Path(path_value).expanduser()
@@ -34,6 +49,29 @@ def resolve_output_path(path_value: str) -> Path:
 def snap_to_grid(value: float) -> float:
     """Snap a length in um down to the nearest PDK grid point."""
     return round(value - value % ihp.tech.nm, 3)
+
+
+def write_em_gds(component: gf.Component, filename: str, cell_name: str) -> Path:
+    """Write an EM sub-structure to verification/em/layout for the Palace flow.
+
+    The filename encodes the design parameters and must match the
+    corresponding <CELL>_EM_NAME in the Makefile, since palace_sim.py
+    derives frequency, layers and impedance from it.
+
+    Args:
+        component: Component carrying the Palace port markers (layers 201..).
+        filename: File name including the .gds suffix.
+        cell_name: Top cell name, kept short to stay within the GDS name
+            limit (the parametrized file names are longer than that).
+
+    Returns:
+        Path of the written GDS file.
+    """
+    gds_path = EM_LAYOUT_DIR / filename
+    component.name = cell_name
+    component.write_gds(gds_path, with_metadata=False)
+    print(str(gds_path))
+    return gds_path
 
 
 def add_pad_pin(c: gf.Component, port_name: str, pad_name: str, pad_length: float ) -> None:
@@ -109,6 +147,8 @@ powdet_cell_name = powdet_gds_filename.stem
 FREQUENCY = args.frequency
 do_fill = not args.no_fill
 do_fill_m5 = not args.no_fill_m5
+
+
 
 # ============================================================
 # Design constants
@@ -2073,8 +2113,8 @@ wavelength_8 = snap_to_grid(wavelength / 8)  # eighth wavelength
 
 
 # filter parameters
-# Note: these parameters are duplicated in verification/em/scripts/sparx_core_em_sim.py,
-# any change here must also be applied there
+# Note: this file is the single reference for the BPF, both as it is built into
+# the chip and as it is exported for EM simulation.
 order = 3  # order of the band pass filter
 bandwidth = 1e9  # 1GHz bandwidth for input band pass filter
 filter_type = "butter"  # type of the band pass filter, can be "butter", "cheby",
@@ -2082,6 +2122,7 @@ connection_length_bpf = 10  # length of the connection piece between the band pa
 ripple_dB = 3  # ripple in dB for the cheby filter, ignored if the filter type is Butter
 
 # wilkinson power divider parameters
+wpd_shape = "U"  # routing shape of the wilkinson power divider, can be "C", "U"
 connection_length_wpd = 0  # length of the connection piece of the wilkinson power divider ports
 connection_length_bpf_wpd = (
     wavelength_4 * 3.5 / 5
@@ -2111,6 +2152,30 @@ blc_2_ref = c.add_ref(blc)
 
 blc_3_ref = c.add_ref(blc)
 
+
+## BLC EM sim prepatation
+# copy and prepare the BLC structure for EM simulation
+blc_em = blc.copy()
+
+port1 = blc_em.add_ref(gf.components.rectangle(size=(0.1, blc_em.ports["e1"].width), layer=(201,0)))
+port1.center = (blc_em.ports["e1"].center)
+port1.move((0.05,0))
+
+port2 = blc_em.add_ref(gf.components.rectangle(size=(0.1, blc_em.ports["e2"].width), layer=(202,0)))
+port2.center = (blc_em.ports["e2"].center)
+port2.move((-0.05,0))
+
+port3 = blc_em.add_ref(gf.components.rectangle(size=(0.1, blc_em.ports["e3"].width), layer=(203,0)))
+port3.center = (blc_em.ports["e3"].center)
+port3.move((-0.05,0))
+
+port4 = blc_em.add_ref(gf.components.rectangle(size=(0.1, blc_em.ports["e4"].width), layer=(204,0)))
+port4.center = (blc_em.ports["e4"].center)
+port4.move((0.05,0))
+# end BLC em
+
+
+
 corner = ihp.cells.tline_corner(
     signal_cross_section=signal_cross_section,
     ground_cross_section=ground_cross_section,
@@ -2137,12 +2202,28 @@ wpd = ihp.cells.wilkinson_power_divider(
     ground_cross_section=ground_cross_section,
     Z0=Z0,
     e_r=e_r,
-    shape="U",
+    shape=wpd_shape,
 )
 
 wpd.ports["e1"].orientation = 0
 wpd_ref = c.add_ref(wpd)
 
+## WPD EM sim prepatation
+# copy and prepare the WPD structure for EM simulation
+wpd_em = wpd.copy()
+
+port1 = wpd_em.add_ref(gf.components.rectangle(size=(0.1, wpd_em.ports["e1"].width), layer=(201,0)))
+port1.center = (wpd_em.ports["e1"].center)
+port1.move((0.05,0))
+
+port2 = wpd_em.add_ref(gf.components.rectangle(size=(wpd_em.ports["e2"].width, 0.1), layer=(202,0)))
+port2.center = (wpd_em.ports["e2"].center)
+port2.move((0, -0.05))
+
+port3 = wpd_em.add_ref(gf.components.rectangle(size=(wpd_em.ports["e3"].width, 0.1), layer=(203,0)))
+port3.center = (wpd_em.ports["e3"].center)
+port3.move((0, 0.05))
+# end WPD em
 
 connection_length_wpd_blc_one_leg = (
     blc_1_ref.ports["e1"].center[1]
@@ -2181,8 +2262,7 @@ connection_bpf_wpd = c.add_ref(
 connection_bpf_wpd.connect("e1", wpd_ref.ports["e1"])
 
 
-bandpass_filter = c.add_ref(
-    ihp.cells.hairpin_coupled_line_bandpass_filter(
+bpf = ihp.cells.hairpin_coupled_line_bandpass_filter(
         frequency=f,
         bandwidth=bandwidth,
         order=order,
@@ -2194,13 +2274,59 @@ bandpass_filter = c.add_ref(
         Z0=Z0,
         e_r=e_r,
     )
-)
+bandpass_filter = c.add_ref(bpf)
+
+
+## BPF EM sim prepatation
+# copy and prepare the BPF structure for EM simulation
+bpf_em = bpf.copy()
+port1 = bpf_em.add_ref(gf.components.rectangle(size=(0.1, bpf_em.ports["e1"].width), layer=(201,0)))
+port1.center = (bpf_em.ports["e1"].center)
+port1.move((0.05,0))
+
+port2 = bpf_em.add_ref(gf.components.rectangle(size=(0.1, bpf_em.ports["e2"].width), layer=(202,0)))
+port2.center = (bpf_em.ports["e2"].center)
+port2.move((-0.05,0))
+# end BPF em
 
 bandpass_filter.connect("e1", connection_bpf_wpd.ports["e2"])
 
-# Note: the blank six-port core for EM simulation (sparx<FREQ>_core.gds) is
-# generated by verification/em/scripts/sparx_core_em_sim.py, which assembles
-# the same network with Palace port markers.
+
+## six-port core EM sim prepatation
+# copy and prepare the six-port core structure for EM simulation
+
+six_port_blank = c.copy()
+
+port1 = six_port_blank.add_ref(gf.components.rectangle(size=(0.1, bandpass_filter.ports["e2"].width), layer=(201,0)))
+port1.center = (bandpass_filter.ports["e2"].center)
+port1.move((0.05,0))
+
+port2 = six_port_blank.add_ref(gf.components.rectangle(size=(0.1, blc_3_ref.ports["e2"].width), layer=(202,0)))
+port2.center = (blc_3_ref.ports["e2"].center)
+port2.move((-0.05,0))
+
+port3 = six_port_blank.add_ref(gf.components.rectangle(size=(blc_1_ref.ports["e2"].width, 0.1), layer=(203,0)))
+port3.center = (blc_1_ref.ports["e2"].center)
+port3.move((0, -0.05))
+
+port4 = six_port_blank.add_ref(gf.components.rectangle(size=(blc_1_ref.ports["e3"].width, 0.1), layer=(204,0)))
+port4.center = (blc_1_ref.ports["e3"].center)
+port4.move((0, -0.05))
+
+port5 = six_port_blank.add_ref(gf.components.rectangle(size=(blc_2_ref.ports["e2"].width, 0.1), layer=(205,0)))
+port5.center = (blc_2_ref.ports["e2"].center)
+port5.move((0, 0.05))
+
+port6 = six_port_blank.add_ref(gf.components.rectangle(size=(blc_2_ref.ports["e3"].width, 0.1), layer=(206,0)))
+port6.center = (blc_2_ref.ports["e3"].center)
+port6.move((0, 0.05))
+
+port7 = six_port_blank.add_ref(gf.components.rectangle(size=(0.1, blc_3_ref.ports["e3"].width), layer=(207,0)))
+port7.center = (blc_3_ref.ports["e3"].center)
+port7.move((-0.05,0))
+
+# end Six-Port em
+
 
 connection_blc_r_termination = ihp.cells.straight(
     length=round(CONNECTION_LEN_TERM * freq_scale, 3),  # scales with frequency
@@ -3023,3 +3149,48 @@ pd.ymin = 0
 # pd.show()
 pd.write_gds(powdet_gds_filename, with_metadata=False)
 
+
+# ============================================================
+# EM sub-structure export
+# ============================================================
+# Write the BLC, WPD, BPF and six-port core copies prepared above (Palace port
+# markers on layers 201..207) to verification/em/layout, so the EM flow
+# simulates the same structures that are instantiated in the top-level layout.
+# The file names must match the BLC_EM_NAME, WPD_EM_NAME, BPF_EM_NAME and
+# CORE_EM_NAME variables in the Makefile, which the sim-blc-em, sim-wpd-em,
+# sim-bpf-em and sim-sparx-core-em targets look up here, since
+# verification/em/scripts/palace_sim.py derives the frequency, the signal and
+# ground layers and the reference impedance from the file name.
+signal_tag = CROSS_SECTION_TAGS[signal_cross_section]
+ground_tag = CROSS_SECTION_TAGS[ground_cross_section]
+e_r_tag = str(e_r).replace(".", "_")
+# the ripple only appears in the file name of the non-Butterworth filters
+ripple_tag = "" if filter_type == "butter" else f"_rip_{str(ripple_dB).removesuffix('.0').replace('.', '_')}dB"
+
+write_em_gds(
+    blc_em,
+    f"sparx_blc_{f / 1e9:.0f}GHz_{Z0:.0f}Ohm_{signal_tag}_{ground_tag}_e_r_{e_r_tag}.gds",
+    cell_name="sparx_blc_em_sim",
+)
+
+write_em_gds(
+    wpd_em,
+    f"sparx_wpd_{f / 1e9:.0f}GHz_{Z0:.0f}Ohm_{signal_tag}_{ground_tag}_e_r_{e_r_tag}_config_{wpd_shape}.gds",
+    cell_name="sparx_wpd_em_sim",
+)
+
+write_em_gds(
+    bpf_em,
+    f"sparx_bpf_f_{f / 1e9:.0f}GHz_bw_{bandwidth / 1e9:.0f}GHz_"
+    f"sig_{signal_tag}_gnd_{ground_tag}_z0_{Z0:.0f}Ohm_er_{e_r_tag}_"
+    f"{filter_type}_ord_{order}{ripple_tag}.gds",
+    cell_name="sparx_bpf_em_sim",
+)
+
+six_port_blank.xmin = 0
+six_port_blank.ymin = 0
+write_em_gds(
+    six_port_blank,
+    f"sparx{f / 1e9:.0f}_core.gds",
+    cell_name="sparx_core_em_sim",
+)
