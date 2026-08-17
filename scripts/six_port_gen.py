@@ -2343,7 +2343,6 @@ via_m1_tm2_ref = c.add_ref(via_m1_tm2)
 via_m1_tm2_ref.connect("top", connection_blc_r_termination_ref.ports["e2"], allow_width_mismatch=True)
 
 r_termination = ihp.cells.rsil(
-    resistance=Z0,
     width=RSIL_WIDTH,
     length=RSIL_LENGTH,
 )
