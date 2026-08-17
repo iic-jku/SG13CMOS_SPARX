@@ -2280,42 +2280,6 @@ port2.move((-0.05,0))
 bandpass_filter.connect("e1", connection_bpf_wpd.ports["e2"])
 
 
-## six-port core EM sim prepatation
-# copy and prepare the six-port core structure for EM simulation
-
-six_port_blank = c.copy()
-
-port1 = six_port_blank.add_ref(gf.components.rectangle(size=(0.1, bandpass_filter.ports["e2"].width), layer=(201,0)))
-port1.center = (bandpass_filter.ports["e2"].center)
-port1.move((0.05,0))
-
-port2 = six_port_blank.add_ref(gf.components.rectangle(size=(0.1, blc_3_ref.ports["e2"].width), layer=(202,0)))
-port2.center = (blc_3_ref.ports["e2"].center)
-port2.move((-0.05,0))
-
-port3 = six_port_blank.add_ref(gf.components.rectangle(size=(blc_1_ref.ports["e2"].width, 0.1), layer=(203,0)))
-port3.center = (blc_1_ref.ports["e2"].center)
-port3.move((0, -0.05))
-
-port4 = six_port_blank.add_ref(gf.components.rectangle(size=(blc_1_ref.ports["e3"].width, 0.1), layer=(204,0)))
-port4.center = (blc_1_ref.ports["e3"].center)
-port4.move((0, -0.05))
-
-port5 = six_port_blank.add_ref(gf.components.rectangle(size=(blc_2_ref.ports["e2"].width, 0.1), layer=(205,0)))
-port5.center = (blc_2_ref.ports["e2"].center)
-port5.move((0, 0.05))
-
-port6 = six_port_blank.add_ref(gf.components.rectangle(size=(blc_2_ref.ports["e3"].width, 0.1), layer=(206,0)))
-port6.center = (blc_2_ref.ports["e3"].center)
-port6.move((0, 0.05))
-
-port7 = six_port_blank.add_ref(gf.components.rectangle(size=(0.1, blc_3_ref.ports["e3"].width), layer=(207,0)))
-port7.center = (blc_3_ref.ports["e3"].center)
-port7.move((-0.05,0))
-
-# end Six-Port em
-
-
 connection_blc_r_termination = ihp.cells.straight(
     length=round(CONNECTION_LEN_TERM * freq_scale, 3),  # scales with frequency
     cross_section=signal_cross_section,
@@ -2341,6 +2305,64 @@ via_m1_tm2.ports["top"].orientation = 180
 via_m1_tm2.ports["bottom"].orientation = 180
 via_m1_tm2_ref = c.add_ref(via_m1_tm2)
 via_m1_tm2_ref.connect("top", connection_blc_r_termination_ref.ports["e2"], allow_width_mismatch=True)
+
+
+## six-port core EM sim prepatation
+# copy and prepare the six-port core structure for EM simulation
+
+six_port_core = c.copy()
+
+port1 = six_port_core.add_ref(gf.components.rectangle(size=(0.1, bandpass_filter.ports["e2"].width), layer=(201,0)))
+port1.center = (bandpass_filter.ports["e2"].center)
+port1.move((0.05,0))
+
+port2 = six_port_core.add_ref(gf.components.rectangle(size=(0.1, blc_3_ref.ports["e2"].width), layer=(202,0)))
+port2.center = (blc_3_ref.ports["e2"].center)
+port2.move((-0.05,0))
+
+port3 = six_port_core.add_ref(gf.components.rectangle(size=(blc_1_ref.ports["e2"].width, 0.1), layer=(203,0)))
+port3.center = (blc_1_ref.ports["e2"].center)
+port3.move((0, -0.05))
+
+port4 = six_port_core.add_ref(gf.components.rectangle(size=(blc_1_ref.ports["e3"].width, 0.1), layer=(204,0)))
+port4.center = (blc_1_ref.ports["e3"].center)
+port4.move((0, -0.05))
+
+port5 = six_port_core.add_ref(gf.components.rectangle(size=(blc_2_ref.ports["e2"].width, 0.1), layer=(205,0)))
+port5.center = (blc_2_ref.ports["e2"].center)
+port5.move((0, 0.05))
+
+port6 = six_port_core.add_ref(gf.components.rectangle(size=(blc_2_ref.ports["e3"].width, 0.1), layer=(206,0)))
+port6.center = (blc_2_ref.ports["e3"].center)
+port6.move((0, 0.05))
+
+
+
+
+
+gnd_plate_extension = ihp.cells.straight(
+    length=26.5,  # manual measurement to fit the design
+    cross_section=ground_cross_section,
+    width=87.57,  # manual measurement to fit the design
+)
+gnd_plate_extension_ref = six_port_core.add_ref(gnd_plate_extension)
+
+gnd_plate_extension_ref.connect("e1", blc_3_ref.ports["e3"], allow_width_mismatch=True, allow_layer_mismatch=True)
+
+via_extension = ihp.cells.straight(
+    length=4,  # manual measurement to fit the design
+    cross_section="metal1_routing",
+    width=via_m1_tm2_ref.ports["bottom"].width,  
+)
+via_extension_ref = six_port_core.add_ref(via_extension)
+via_extension_ref.connect("e1", via_m1_tm2_ref.ports["bottom"], allow_width_mismatch=True, allow_layer_mismatch=True)
+
+port7 = six_port_core.add_ref(gf.components.rectangle(size=(0.1, via_extension_ref.ports["e2"].width), layer=(207,0)))
+port7.center = (via_extension_ref.ports["e2"].center)
+port7.move((0.05,0))
+
+# end Six-Port em
+
 
 r_termination = ihp.cells.rsil(
     width=RSIL_WIDTH,
@@ -3164,10 +3186,12 @@ write_em_gds(
     cell_name="sparx_bpf_em_sim",
 )
 
-six_port_blank.xmin = 0
-six_port_blank.ymin = 0
+six_port_core.xmin = 0
+six_port_core.ymin = 0
 write_em_gds(
-    six_port_blank,
+    six_port_core,
     f"sparx{f / 1e9:.0f}_core.gds",
     cell_name="sparx_core_em_sim",
 )
+
+six_port_core.show()
