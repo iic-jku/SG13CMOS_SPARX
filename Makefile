@@ -318,13 +318,14 @@ magic-verify: ## Verify the CELL cell with Magic (usage: make magic-verify [CELL
 # The GDS file names encode only the design frequency, so the port settings of the
 # EM solve are passed to palace_sim.py explicitly.
 # $(1) = base name of the GDS in verification/em/layout (without the .gds suffix)
+# $(2) = simulation script in verification/em/scripts (default: palace_sim.py)
 define run-em-sim
 	@test -f $(EM_LAY_DIR)/$(1).gds || { \
 		echo "ERROR: $(EM_LAY_DIR)/$(1).gds not found. Run 'make build-layout FREQ=$(FREQ)' first."; \
 		exit 1; \
 	}
 	. .venv/bin/activate && \
-		python3 $(EM_RPT_DIR)/scripts/palace_sim.py $(abspath $(EM_LAY_DIR)/$(1).gds) \
+		python3 $(EM_RPT_DIR)/scripts/$(if $(2),$(2),palace_sim.py) $(abspath $(EM_LAY_DIR)/$(1).gds) \
 			--f_center $(FREQ)e9 \
 			--signal_cross_section $(SIGNAL_CROSS_SECTION) \
 			--ground_cross_section $(GROUND_CROSS_SECTION) \
@@ -347,7 +348,7 @@ sim-bpf-em: ## Run the BPF EM simulation with AWS Palace (usage: make sim-bpf-em
 .PHONY: sim-bpf-em
 
 sim-sparx-core-em: ## Run the six-port core EM simulation with AWS Palace (usage: make sim-sparx-core-em [FREQ=<GHz>] [SIGNAL_CROSS_SECTION=<metal>] [GROUND_CROSS_SECTION=<metal>] [Z0=<Ohms>] [NP=<num_processors>])
-	$(call run-em-sim,$(CORE_EM_NAME))
+	$(call run-em-sim,$(CORE_EM_NAME),six_port_core_palace_sim.py)
 .PHONY: sim-sparx-core-em
 # ================================================================================================
 

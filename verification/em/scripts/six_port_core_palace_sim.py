@@ -183,7 +183,7 @@ else:
 
 port_Z0 = args.Z0 if args.Z0 is not None else _get_impedance_from_filename(gds_filename)
 
-for portnumber in range(1, num_ports): # dont include the last port for the terminating resistor
+for portnumber in range(1, num_ports): # the last port is the in-plane termination port, added separately below
     simulation_ports.add_port(
         simulation_setup.simulation_port(
             portnumber=portnumber,
@@ -195,16 +195,18 @@ for portnumber in range(1, num_ports): # dont include the last port for the term
             direction='z'
         )
     )
-    simulation_ports.add_port(
-        simulation_setup.simulation_port(
-            portnumber=7,
-            voltage=1,
-            port_Z0=port_Z0,
-            source_layernum=207,
-            target_layername="Metal1",
-            direction='x'
-        )
+
+# in-plane port on Metal1 across the gap where the termination resistor sits in the real layout
+simulation_ports.add_port(
+    simulation_setup.simulation_port(
+        portnumber=num_ports,
+        voltage=1,
+        port_Z0=port_Z0,
+        source_layernum=200 + num_ports,
+        target_layername="Metal1",
+        direction='x'
     )
+)
 
 # ======================== simulation ================================
 

@@ -195,7 +195,7 @@ NOFILL_SIDE_OFFSET = 12.5  # side nofill centering offset ((110 - 85) / 2)
 
 # Layout spacing (um)
 RFIN_GAP = 40  # gap between BLC port and PD rfin
-RFIN_PD = 16 # part of the connection that is part of the PD
+RFIN_PD = 18.4 # part of the connection that is part of the PD
 PROBE_PD_GAP = 5  # gap between PD edge and probe edge
 SEALRING_MARGIN = 50  # margin around circuit for sealring
 
@@ -2343,6 +2343,47 @@ connection_r_termination_vss_ref.connect(
     "e1", via_m1_m5_ref.ports["top"], allow_width_mismatch=True, allow_layer_mismatch=True
 )
 
+# rfin connections between BLC ports and PDs (created before the EM copy so
+# they are part of the six-port core and ports 3-6 can sit at their far ends)
+rfin_gap = RFIN_GAP  # straight T-line gap between BLC port and PD rfin port
+
+rfin_connection_pd1 = c.add_ref(
+    ihp.cells.straight(
+        length=rfin_gap - RFIN_PD,
+        cross_section=signal_cross_section,
+        width=blc_1_ref.ports["e2"].width,
+    )
+)
+rfin_connection_pd1.connect("e1", blc_1_ref.ports["e2"])
+
+rfin_connection_pd2 = c.add_ref(
+    ihp.cells.straight(
+        length=rfin_gap - RFIN_PD,
+        cross_section=signal_cross_section,
+        width=blc_1_ref.ports["e3"].width,
+    )
+)
+rfin_connection_pd2.connect("e1", blc_1_ref.ports["e3"], allow_width_mismatch=True)
+
+rfin_connection_pd3 = c.add_ref(
+    ihp.cells.straight(
+        length=rfin_gap - RFIN_PD,
+        cross_section=signal_cross_section,
+        width=blc_2_ref.ports["e3"].width,
+    )
+)
+rfin_connection_pd3.connect("e1", blc_2_ref.ports["e3"], allow_width_mismatch=True)
+
+rfin_connection_pd4 = c.add_ref(
+    ihp.cells.straight(
+        length=rfin_gap - RFIN_PD,
+        cross_section=signal_cross_section,
+        width=blc_2_ref.ports["e2"].width,
+    )
+)
+rfin_connection_pd4.connect("e1", blc_2_ref.ports["e2"], allow_width_mismatch=True)
+
+
 ## six-port core EM sim prepatation
 # copy and prepare the six-port core structure for EM simulation
 
@@ -2356,20 +2397,20 @@ port2 = six_port_core.add_ref(gf.components.rectangle(size=(0.1, blc_3_ref.ports
 port2.center = (blc_3_ref.ports["e2"].center)
 port2.move((-0.05,0))
 
-port3 = six_port_core.add_ref(gf.components.rectangle(size=(blc_1_ref.ports["e2"].width, 0.1), layer=(203,0)))
-port3.center = (blc_1_ref.ports["e2"].center)
+port3 = six_port_core.add_ref(gf.components.rectangle(size=(rfin_connection_pd1.ports["e2"].width, 0.1), layer=(203,0)))
+port3.center = (rfin_connection_pd1.ports["e2"].center)
 port3.move((0, -0.05))
 
-port4 = six_port_core.add_ref(gf.components.rectangle(size=(blc_1_ref.ports["e3"].width, 0.1), layer=(204,0)))
-port4.center = (blc_1_ref.ports["e3"].center)
+port4 = six_port_core.add_ref(gf.components.rectangle(size=(rfin_connection_pd2.ports["e2"].width, 0.1), layer=(204,0)))
+port4.center = (rfin_connection_pd2.ports["e2"].center)
 port4.move((0, -0.05))
 
-port5 = six_port_core.add_ref(gf.components.rectangle(size=(blc_2_ref.ports["e2"].width, 0.1), layer=(205,0)))
-port5.center = (blc_2_ref.ports["e2"].center)
+port5 = six_port_core.add_ref(gf.components.rectangle(size=(rfin_connection_pd4.ports["e2"].width, 0.1), layer=(205,0)))
+port5.center = (rfin_connection_pd4.ports["e2"].center)
 port5.move((0, 0.05))
 
-port6 = six_port_core.add_ref(gf.components.rectangle(size=(blc_2_ref.ports["e3"].width, 0.1), layer=(206,0)))
-port6.center = (blc_2_ref.ports["e3"].center)
+port6 = six_port_core.add_ref(gf.components.rectangle(size=(rfin_connection_pd3.ports["e2"].width, 0.1), layer=(206,0)))
+port6.center = (rfin_connection_pd3.ports["e2"].center)
 port6.move((0, 0.05))
 
 
@@ -2471,7 +2512,6 @@ c.add_ports(probe_right.ports, prefix="probe_right_")
 # Compute PD positions so rfin aligns straight with BLC ports.
 # Place each PD so its rfin port is directly above/below the BLC port,
 # with only a short straight gap (rfin_gap) in between.
-rfin_gap = RFIN_GAP  # straight T-line gap between BLC port and PD rfin port
 
 # create power detector (needed here to read rfin port offset)
 pd = powdet_sbd()
@@ -2564,14 +2604,6 @@ pd.write_gds(powdet_gds_filename)
 
 # PD1 reference, position and route
 pd1_ref = c.add_ref(pd).mirror_x()
-rfin_connection_pd1 = c.add_ref(
-    ihp.cells.straight(
-        length=rfin_gap- RFIN_PD,
-        cross_section=signal_cross_section,
-        width=blc_1_ref.ports["e2"].width,
-    )
-)
-rfin_connection_pd1.connect("e1", blc_1_ref.ports["e2"])
 pd1_ref.connect("rfin", rfin_connection_pd1.ports["e2"], allow_width_mismatch=True)
 
 # vdd connection of pd1 to probe top
@@ -2658,14 +2690,6 @@ route_pd1_vref = gf.routing.route_bundle_electrical(
 
 # PD2 reference, position and route
 pd2_ref = c.add_ref(pd)
-rfin_connection_pd2 = c.add_ref(
-    ihp.cells.straight(
-        length=rfin_gap - RFIN_PD,
-        cross_section=signal_cross_section,
-        width=blc_1_ref.ports["e3"].width,
-    )
-)
-rfin_connection_pd2.connect("e1", blc_1_ref.ports["e3"], allow_width_mismatch=True)
 pd2_ref.connect("rfin", rfin_connection_pd2.ports["e2"], allow_width_mismatch=True)
 
 # vdd connection of pd2 to probe top
@@ -2729,14 +2753,6 @@ route_pd2_vref = gf.routing.route_bundle_electrical(
 
 # PD3 reference, position and route
 pd3_ref = c.add_ref(pd).mirror_y().mirror_x()
-rfin_connection_pd3 = c.add_ref(
-    ihp.cells.straight(
-        length=rfin_gap - RFIN_PD,
-        cross_section=signal_cross_section,
-        width=blc_2_ref.ports["e3"].width,
-    )
-)
-rfin_connection_pd3.connect("e1", blc_2_ref.ports["e3"], allow_width_mismatch=True)
 pd3_ref.connect("rfin", rfin_connection_pd3.ports["e2"], allow_width_mismatch=True)
 
 # vdd connection of pd3 to probe bottom
@@ -2802,14 +2818,6 @@ route_pd3_vref = gf.routing.route_bundle_electrical(
 
 # PD4 reference, position and route
 pd4_ref = c.add_ref(pd).mirror_y()
-rfin_connection_pd4 = c.add_ref(
-    ihp.cells.straight(
-        length=rfin_gap - RFIN_PD,
-        cross_section=signal_cross_section,
-        width=blc_2_ref.ports["e2"].width,
-    )
-)
-rfin_connection_pd4.connect("e1", blc_2_ref.ports["e2"], allow_width_mismatch=True)
 pd4_ref.connect("rfin", rfin_connection_pd4.ports["e2"], allow_width_mismatch=True)
 
 # vdd connection of pd4 to probe bottom
