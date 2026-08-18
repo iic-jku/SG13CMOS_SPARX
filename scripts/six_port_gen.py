@@ -2307,6 +2307,39 @@ via_m1_tm2_ref = c.add_ref(via_m1_tm2)
 via_m1_tm2_ref.connect("top", connection_blc_r_termination_ref.ports["e2"], allow_width_mismatch=True)
 
 
+
+
+
+r_termination = ihp.cells.rsil(
+    width=RSIL_WIDTH,
+    length=RSIL_LENGTH,
+)
+
+length_r_termination = abs(r_termination.ports["e2"].center[1] - r_termination.ports["e1"].center[1])
+
+via_m1_m5 = ihp.cells.via_stack(
+    top_layer="Metal5",
+    bottom_layer="Metal1",
+    vn_columns=2,
+    vn_rows=2,
+)
+via_m1_m5.ports["top"].orientation = 180
+via_m1_m5.ports["bottom"].orientation = 0
+via_m1_m5_ref = c.add_ref(via_m1_m5)
+via_m1_m5_ref.center = via_m1_tm2_ref.center
+
+via_m1_m5_ref.move((-length_r_termination, 0))  # move to the left of the RSIL termination
+
+connection_r_termination_vss = ihp.cells.straight(
+    length=10,  # manual measurement to fit the design
+    cross_section=ground_cross_section,
+    width=2,  # manual measurement to fit the design
+)
+connection_r_termination_vss_ref = c.add_ref(connection_r_termination_vss)
+connection_r_termination_vss_ref.connect(
+    "e1", via_m1_m5_ref.ports["top"], allow_width_mismatch=True, allow_layer_mismatch=True
+)
+
 ## six-port core EM sim prepatation
 # copy and prepare the six-port core structure for EM simulation
 
@@ -2337,60 +2370,19 @@ port6.center = (blc_2_ref.ports["e3"].center)
 port6.move((0, 0.05))
 
 
-
-
-
-gnd_plate_extension = ihp.cells.straight(
-    length=26.5,  # manual measurement to fit the design
-    cross_section=ground_cross_section,
-    width=87.57,  # manual measurement to fit the design
-)
-gnd_plate_extension_ref = six_port_core.add_ref(gnd_plate_extension)
-
-gnd_plate_extension_ref.connect("e1", blc_3_ref.ports["e3"], allow_width_mismatch=True, allow_layer_mismatch=True)
-
-via_extension = ihp.cells.straight(
-    length=4,  # manual measurement to fit the design
-    cross_section="metal1_routing",
-    width=via_m1_tm2_ref.ports["bottom"].width,  
-)
-via_extension_ref = six_port_core.add_ref(via_extension)
-via_extension_ref.connect("e1", via_m1_tm2_ref.ports["bottom"], allow_width_mismatch=True, allow_layer_mismatch=True)
-
-port7 = six_port_core.add_ref(gf.components.rectangle(size=(0.1, via_extension_ref.ports["e2"].width), layer=(207,0)))
-port7.center = (via_extension_ref.ports["e2"].center)
-port7.move((0.05,0))
+port7 = six_port_core.add_ref(gf.components.rectangle(size=(via_m1_tm2_ref.ports["bottom"].center[0] - via_m1_m5_ref.ports["bottom"].center[0] + via_m1_m5_ref.xsize, via_m1_m5_ref.ymax - via_m1_m5_ref.ymin ), layer=(207,0)))
+port7.xmin = via_m1_m5_ref.xmin
+port7.ymin = via_m1_m5_ref.ymin
+# port7.move((0.05,0))
 
 # end Six-Port em
 
-
-r_termination = ihp.cells.rsil(
-    width=RSIL_WIDTH,
-    length=RSIL_LENGTH,
-)
 r_termination_ref = c.add_ref(r_termination)
 r_termination_ref.connect("e1", via_m1_tm2_ref.ports["bottom"], allow_width_mismatch=True, allow_layer_mismatch=True)
 
-via_m1_m5 = ihp.cells.via_stack(
-    top_layer="Metal5",
-    bottom_layer="Metal1",
-    vn_columns=2,
-    vn_rows=2,
-)
-via_m1_m5.ports["top"].orientation = 180
-via_m1_m5.ports["bottom"].orientation = 0
-via_m1_m5_ref = c.add_ref(via_m1_m5)
 via_m1_m5_ref.connect("bottom", r_termination_ref.ports["e2"], allow_width_mismatch=True, allow_layer_mismatch=True)
 
-connection_r_termination_vss = ihp.cells.straight(
-    length=10,  # manual measurement to fit the design
-    cross_section=ground_cross_section,
-    width=2,  # manual measurement to fit the design
-)
-connection_r_termination_vss_ref = c.add_ref(connection_r_termination_vss)
-connection_r_termination_vss_ref.connect(
-    "e1", via_m1_m5_ref.ports["top"], allow_width_mismatch=True, allow_layer_mismatch=True
-)
+
 
 # R-termination Metal5 nofill
 c.add_ref(
