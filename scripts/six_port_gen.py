@@ -195,6 +195,7 @@ NOFILL_SIDE_OFFSET = 12.5  # side nofill centering offset ((110 - 85) / 2)
 
 # Layout spacing (um)
 RFIN_GAP = 40  # gap between BLC port and PD rfin
+RFIN_PD = 16 # part of the connection that is part of the PD
 PROBE_PD_GAP = 5  # gap between PD edge and probe edge
 SEALRING_MARGIN = 50  # margin around circuit for sealring
 
@@ -1999,6 +2000,8 @@ def powdet_sbd() -> gf.Component:
     )
     straight_m3_ref = c.add_ref(straight_m3)
     straight_m3_ref.connect("e1", output_stage_ref.ports["vref"], allow_width_mismatch=True, allow_layer_mismatch=True)
+    rfin_connection = c.add_ref(ihp.cells.straight(length=RFIN_PD, cross_section="topmetal2_routing", width=7.2))
+    rfin_connection.connect("e1", via_tm1_tm2_ref.ports["top"], allow_width_mismatch=True)
     # add ports to the power detector
     vout_port = c.add_port(name="vout", port=output_stage_ref.ports["vout"])
     c.ports["vout"].orientation = 90
@@ -2007,7 +2010,7 @@ def powdet_sbd() -> gf.Component:
     c.ports["vref"].center = (c.ports["vref"].center[0], c.ports["vref"].center[1] - 0.1)  # preventing notch
     c.ports["vref"].orientation = 90
     
-    rfin_port = c.add_port(name="rfin", port=via_tm1_tm2_ref.ports["top"])
+    rfin_port = c.add_port(name="rfin", port=rfin_connection.ports["e2"])
     c.ports["rfin"].orientation = 270
     
     vss_port = c.add_port(name="vss", port=c3_ref.ports["LC_B_1_1"])
@@ -2563,7 +2566,7 @@ pd.write_gds(powdet_gds_filename)
 pd1_ref = c.add_ref(pd).mirror_x()
 rfin_connection_pd1 = c.add_ref(
     ihp.cells.straight(
-        length=rfin_gap,
+        length=rfin_gap- RFIN_PD,
         cross_section=signal_cross_section,
         width=blc_1_ref.ports["e2"].width,
     )
@@ -2657,7 +2660,7 @@ route_pd1_vref = gf.routing.route_bundle_electrical(
 pd2_ref = c.add_ref(pd)
 rfin_connection_pd2 = c.add_ref(
     ihp.cells.straight(
-        length=rfin_gap,
+        length=rfin_gap - RFIN_PD,
         cross_section=signal_cross_section,
         width=blc_1_ref.ports["e3"].width,
     )
@@ -2728,7 +2731,7 @@ route_pd2_vref = gf.routing.route_bundle_electrical(
 pd3_ref = c.add_ref(pd).mirror_y().mirror_x()
 rfin_connection_pd3 = c.add_ref(
     ihp.cells.straight(
-        length=rfin_gap,
+        length=rfin_gap - RFIN_PD,
         cross_section=signal_cross_section,
         width=blc_2_ref.ports["e3"].width,
     )
@@ -2801,7 +2804,7 @@ route_pd3_vref = gf.routing.route_bundle_electrical(
 pd4_ref = c.add_ref(pd).mirror_y()
 rfin_connection_pd4 = c.add_ref(
     ihp.cells.straight(
-        length=rfin_gap,
+        length=rfin_gap - RFIN_PD,
         cross_section=signal_cross_section,
         width=blc_2_ref.ports["e2"].width,
     )
