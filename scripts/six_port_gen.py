@@ -2414,8 +2414,8 @@ port6.center = (rfin_connection_pd3.ports["e2"].center)
 port6.move((0, 0.05))
 
 
-port7 = six_port_core.add_ref(gf.components.rectangle(size=(via_m1_tm2_ref.ports["bottom"].center[0] - via_m1_m5_ref.ports["bottom"].center[0] + via_m1_m5_ref.xsize, via_m1_m5_ref.ymax - via_m1_m5_ref.ymin ), layer=(207,0)))
-port7.xmin = via_m1_m5_ref.xmin
+port7 = six_port_core.add_ref(gf.components.rectangle(size=(via_m1_tm2_ref.ports["bottom"].center[0] - via_m1_m5_ref.ports["bottom"].center[0] - via_m1_m5_ref.xsize, via_m1_m5_ref.ymax - via_m1_m5_ref.ymin ), layer=(207,0)))
+port7.xmin = via_m1_m5_ref.xmax
 port7.ymin = via_m1_m5_ref.ymin
 # port7.move((0.05,0))
 
