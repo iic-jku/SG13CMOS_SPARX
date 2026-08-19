@@ -1,0 +1,658 @@
+{
+  "Boundaries": {
+    "Absorbing": {
+      "Attributes": [
+        51
+      ],
+      "Order": 2
+    },
+    "Conductivity": [
+      {
+        "Attributes": [
+          7
+        ],
+        "Conductivity": 21640000.0,
+        "External": false,
+        "Permeability": 1.0,
+        "Thickness": 0.41999999999999993
+      },
+      {
+        "Attributes": [
+          8
+        ],
+        "Conductivity": 21640000.0,
+        "External": false,
+        "Permeability": 1.0,
+        "Thickness": 0.41999999999999993
+      },
+      {
+        "Attributes": [
+          9
+        ],
+        "Conductivity": 21640000.0,
+        "External": false,
+        "Permeability": 1.0,
+        "Thickness": 0.41999999999999993
+      },
+      {
+        "Attributes": [
+          10
+        ],
+        "Conductivity": 21640000.0,
+        "External": false,
+        "Permeability": 1.0,
+        "Thickness": 0.41999999999999993
+      },
+      {
+        "Attributes": [
+          11
+        ],
+        "Conductivity": 23190000.0,
+        "External": false,
+        "Permeability": 1.0,
+        "Thickness": 0.4900000000000002
+      },
+      {
+        "Attributes": [
+          12
+        ],
+        "Conductivity": 23190000.0,
+        "External": false,
+        "Permeability": 1.0,
+        "Thickness": 0.4900000000000002
+      },
+      {
+        "Attributes": [
+          13
+        ],
+        "Conductivity": 23190000.0,
+        "External": false,
+        "Permeability": 1.0,
+        "Thickness": 0.4900000000000002
+      },
+      {
+        "Attributes": [
+          14
+        ],
+        "Conductivity": 23190000.0,
+        "External": false,
+        "Permeability": 1.0,
+        "Thickness": 0.4900000000000002
+      },
+      {
+        "Attributes": [
+          15
+        ],
+        "Conductivity": 23190000.0,
+        "External": false,
+        "Permeability": 1.0,
+        "Thickness": 0.4900000000000002
+      },
+      {
+        "Attributes": [
+          16
+        ],
+        "Conductivity": 23190000.0,
+        "External": false,
+        "Permeability": 1.0,
+        "Thickness": 0.4900000000000002
+      },
+      {
+        "Attributes": [
+          17
+        ],
+        "Conductivity": 23190000.0,
+        "External": false,
+        "Permeability": 1.0,
+        "Thickness": 0.4900000000000002
+      },
+      {
+        "Attributes": [
+          18
+        ],
+        "Conductivity": 23190000.0,
+        "External": false,
+        "Permeability": 1.0,
+        "Thickness": 0.4900000000000002
+      },
+      {
+        "Attributes": [
+          19
+        ],
+        "Conductivity": 23190000.0,
+        "External": false,
+        "Permeability": 1.0,
+        "Thickness": 0.4900000000000002
+      },
+      {
+        "Attributes": [
+          20
+        ],
+        "Conductivity": 23190000.0,
+        "External": false,
+        "Permeability": 1.0,
+        "Thickness": 0.4900000000000002
+      },
+      {
+        "Attributes": [
+          21
+        ],
+        "Conductivity": 23190000.0,
+        "External": false,
+        "Permeability": 1.0,
+        "Thickness": 0.4900000000000002
+      },
+      {
+        "Attributes": [
+          22
+        ],
+        "Conductivity": 23190000.0,
+        "External": false,
+        "Permeability": 1.0,
+        "Thickness": 0.4900000000000002
+      },
+      {
+        "Attributes": [
+          23
+        ],
+        "Conductivity": 23190000.0,
+        "External": false,
+        "Permeability": 1.0,
+        "Thickness": 0.4900000000000002
+      },
+      {
+        "Attributes": [
+          24
+        ],
+        "Conductivity": 23190000.0,
+        "External": false,
+        "Permeability": 1.0,
+        "Thickness": 0.4900000000000002
+      },
+      {
+        "Attributes": [
+          25
+        ],
+        "Conductivity": 23190000.0,
+        "External": false,
+        "Permeability": 1.0,
+        "Thickness": 0.4900000000000002
+      },
+      {
+        "Attributes": [
+          26
+        ],
+        "Conductivity": 23190000.0,
+        "External": false,
+        "Permeability": 1.0,
+        "Thickness": 0.4900000000000002
+      },
+      {
+        "Attributes": [
+          27
+        ],
+        "Conductivity": 27800000.0,
+        "External": false,
+        "Permeability": 1.0,
+        "Thickness": 2.000000000000001
+      },
+      {
+        "Attributes": [
+          28
+        ],
+        "Conductivity": 27800000.0,
+        "External": false,
+        "Permeability": 1.0,
+        "Thickness": 2.000000000000001
+      },
+      {
+        "Attributes": [
+          29
+        ],
+        "Conductivity": 30300000.0,
+        "External": false,
+        "Permeability": 1.0,
+        "Thickness": 3.0
+      },
+      {
+        "Attributes": [
+          30
+        ],
+        "Conductivity": 30300000.0,
+        "External": false,
+        "Permeability": 1.0,
+        "Thickness": 3.0
+      },
+      {
+        "Attributes": [
+          31
+        ],
+        "Conductivity": 30300000.0,
+        "External": false,
+        "Permeability": 1.0,
+        "Thickness": 3.0
+      },
+      {
+        "Attributes": [
+          32
+        ],
+        "Conductivity": 30300000.0,
+        "External": false,
+        "Permeability": 1.0,
+        "Thickness": 3.0
+      },
+      {
+        "Attributes": [
+          33
+        ],
+        "Conductivity": 30300000.0,
+        "External": false,
+        "Permeability": 1.0,
+        "Thickness": 3.0
+      },
+      {
+        "Attributes": [
+          34
+        ],
+        "Conductivity": 30300000.0,
+        "External": false,
+        "Permeability": 1.0,
+        "Thickness": 3.0
+      },
+      {
+        "Attributes": [
+          35
+        ],
+        "Conductivity": 30300000.0,
+        "External": false,
+        "Permeability": 1.0,
+        "Thickness": 3.0
+      },
+      {
+        "Attributes": [
+          36
+        ],
+        "Conductivity": 30300000.0,
+        "External": false,
+        "Permeability": 1.0,
+        "Thickness": 3.0
+      },
+      {
+        "Attributes": [
+          37
+        ],
+        "Conductivity": 30300000.0,
+        "External": false,
+        "Permeability": 1.0,
+        "Thickness": 3.0
+      },
+      {
+        "Attributes": [
+          38
+        ],
+        "Conductivity": 30300000.0,
+        "External": false,
+        "Permeability": 1.0,
+        "Thickness": 3.0
+      }
+    ],
+    "LumpedPort": [
+      {
+        "Active": true,
+        "Attributes": [
+          44
+        ],
+        "C": 0.0,
+        "Cs": 0.0,
+        "Direction": "Z",
+        "Excitation": 1,
+        "IncludeInSynthesis": true,
+        "Index": 1,
+        "L": 0.0,
+        "Ls": 0.0,
+        "R": 50.0,
+        "Rs": 0.0
+      },
+      {
+        "Active": true,
+        "Attributes": [
+          45
+        ],
+        "C": 0.0,
+        "Cs": 0.0,
+        "Direction": "Z",
+        "Excitation": 2,
+        "IncludeInSynthesis": true,
+        "Index": 2,
+        "L": 0.0,
+        "Ls": 0.0,
+        "R": 50.0,
+        "Rs": 0.0
+      },
+      {
+        "Active": true,
+        "Attributes": [
+          46
+        ],
+        "C": 0.0,
+        "Cs": 0.0,
+        "Direction": "Z",
+        "Excitation": 3,
+        "IncludeInSynthesis": true,
+        "Index": 3,
+        "L": 0.0,
+        "Ls": 0.0,
+        "R": 50.0,
+        "Rs": 0.0
+      },
+      {
+        "Active": true,
+        "Attributes": [
+          47
+        ],
+        "C": 0.0,
+        "Cs": 0.0,
+        "Direction": "Z",
+        "Excitation": 4,
+        "IncludeInSynthesis": true,
+        "Index": 4,
+        "L": 0.0,
+        "Ls": 0.0,
+        "R": 50.0,
+        "Rs": 0.0
+      },
+      {
+        "Active": true,
+        "Attributes": [
+          48
+        ],
+        "C": 0.0,
+        "Cs": 0.0,
+        "Direction": "Z",
+        "Excitation": 5,
+        "IncludeInSynthesis": true,
+        "Index": 5,
+        "L": 0.0,
+        "Ls": 0.0,
+        "R": 50.0,
+        "Rs": 0.0
+      },
+      {
+        "Active": true,
+        "Attributes": [
+          49
+        ],
+        "C": 0.0,
+        "Cs": 0.0,
+        "Direction": "Z",
+        "Excitation": 6,
+        "IncludeInSynthesis": true,
+        "Index": 6,
+        "L": 0.0,
+        "Ls": 0.0,
+        "R": 50.0,
+        "Rs": 0.0
+      },
+      {
+        "Active": true,
+        "Attributes": [
+          50
+        ],
+        "C": 0.0,
+        "Cs": 0.0,
+        "Direction": "X",
+        "Excitation": 7,
+        "IncludeInSynthesis": true,
+        "Index": 7,
+        "L": 0.0,
+        "Ls": 0.0,
+        "R": 50.0,
+        "Rs": 0.0
+      }
+    ]
+  },
+  "Domains": {
+    "Materials": [
+      {
+        "Attributes": [
+          1
+        ],
+        "Conductivity": [
+          166000.0,
+          166000.0,
+          1660000.0
+        ],
+        "LondonDepth": 0.0,
+        "LossTan": 0.0,
+        "Permeability": 1.0,
+        "Permittivity": 1.0
+      },
+      {
+        "Attributes": [
+          2
+        ],
+        "Conductivity": [
+          166000.0,
+          166000.0,
+          1660000.0
+        ],
+        "LondonDepth": 0.0,
+        "LossTan": 0.0,
+        "Permeability": 1.0,
+        "Permittivity": 1.0
+      },
+      {
+        "Attributes": [
+          3
+        ],
+        "Conductivity": [
+          166000.0,
+          166000.0,
+          1660000.0
+        ],
+        "LondonDepth": 0.0,
+        "LossTan": 0.0,
+        "Permeability": 1.0,
+        "Permittivity": 1.0
+      },
+      {
+        "Attributes": [
+          4
+        ],
+        "Conductivity": [
+          166000.0,
+          166000.0,
+          1660000.0
+        ],
+        "LondonDepth": 0.0,
+        "LossTan": 0.0,
+        "Permeability": 1.0,
+        "Permittivity": 1.0
+      },
+      {
+        "Attributes": [
+          5
+        ],
+        "Conductivity": [
+          219100.0,
+          219100.0,
+          2191000.0
+        ],
+        "LondonDepth": 0.0,
+        "LossTan": 0.0,
+        "Permeability": 1.0,
+        "Permittivity": 1.0
+      },
+      {
+        "Attributes": [
+          6
+        ],
+        "Conductivity": [
+          314300.0,
+          314300.0,
+          3143000.0
+        ],
+        "LondonDepth": 0.0,
+        "LossTan": 0.0,
+        "Permeability": 1.0,
+        "Permittivity": 1.0
+      },
+      {
+        "Attributes": [
+          39
+        ],
+        "Conductivity": 0.0,
+        "LondonDepth": 0.0,
+        "LossTan": 0.0,
+        "Permeability": 1.0,
+        "Permittivity": 1.0
+      },
+      {
+        "Attributes": [
+          40
+        ],
+        "Conductivity": 0.0,
+        "LondonDepth": 0.0,
+        "LossTan": 0.0,
+        "Permeability": 1.0,
+        "Permittivity": 6.6
+      },
+      {
+        "Attributes": [
+          41
+        ],
+        "Conductivity": 0.0,
+        "LondonDepth": 0.0,
+        "LossTan": 0.0,
+        "Permeability": 1.0,
+        "Permittivity": 4.1
+      },
+      {
+        "Attributes": [
+          42
+        ],
+        "Conductivity": 0.0,
+        "LondonDepth": 0.0,
+        "LossTan": 0.0,
+        "Permeability": 1.0,
+        "Permittivity": 4.1
+      },
+      {
+        "Attributes": [
+          43
+        ],
+        "Conductivity": 0.0,
+        "LondonDepth": 0.0,
+        "LossTan": 0.0,
+        "Permeability": 1.0,
+        "Permittivity": 1.0
+      }
+    ],
+    "Postprocessing": {
+      "Energy": [],
+      "Probe": []
+    }
+  },
+  "Model": {
+    "AddInterfaceBoundaryElements": true,
+    "CleanUnusedElements": true,
+    "CrackDisplacementFactor": 1e-12,
+    "CrackInternalBoundaryElements": true,
+    "ExportPrerefinedMesh": false,
+    "L0": 1e-06,
+    "MakeHexahedral": false,
+    "MakeSimplex": false,
+    "Mesh": "sparx160_core.msh",
+    "RefineCrackElements": true,
+    "Refinement": {
+      "MaxIts": 0,
+      "MaxNCLevels": 1,
+      "MaxSize": 2000000.0,
+      "MaximumImbalance": 1.1,
+      "Nonconformal": true,
+      "SaveAdaptIterations": true,
+      "SaveAdaptMesh": false,
+      "SerialUniformLevels": 0,
+      "Tol": 0.01,
+      "UniformLevels": 0,
+      "UpdateFraction": 0.7
+    },
+    "RemoveCurvature": false,
+    "ReorderElements": false,
+    "ReorientTetMesh": false
+  },
+  "Problem": {
+    "Output": "output/sparx160_core",
+    "OutputFormats": {
+      "GridFunction": false,
+      "Paraview": true
+    },
+    "Type": "Driven",
+    "Verbose": 3
+  },
+  "Solver": {
+    "Device": "CPU",
+    "Driven": {
+      "AdaptiveCircuitSynthesis": false,
+      "AdaptiveCircuitSynthesisDomainOrthogonalization": "Energy",
+      "AdaptiveConvergenceMemory": 2,
+      "AdaptiveGSOrthogonalization": "CGS2",
+      "AdaptiveMaxSamples": 20,
+      "AdaptiveTol": 0.02,
+      "Restart": 1,
+      "Samples": [
+        {
+          "FreqStep": 1.6,
+          "MaxFreq": 240.0,
+          "MinFreq": 80.0,
+          "SaveStep": 0,
+          "Type": "Linear"
+        }
+      ]
+    },
+    "Linear": {
+      "AMGAggressiveCoarsening": false,
+      "AMSMaxIts": 2,
+      "AMSSingularOperator": false,
+      "AMSVectorInterpolation": false,
+      "ColumnOrdering": "Default",
+      "ComplexCoarseSolve": false,
+      "DivFreeMaxIts": 1000,
+      "DivFreeTol": 1e-12,
+      "DropSmallEntries": false,
+      "EstimatorMG": false,
+      "EstimatorMaxIts": 10000,
+      "EstimatorTol": 1e-06,
+      "GSOrthogonalization": "MGS",
+      "InitialGuess": false,
+      "KSPType": "GMRES",
+      "MGAuxiliarySmoother": true,
+      "MGCoarsenType": "Logarithmic",
+      "MGCycleIts": 1,
+      "MGMaxLevels": 100,
+      "MGSmoothChebyshev4th": true,
+      "MGSmoothEigScaleMax": 1.0,
+      "MGSmoothEigScaleMin": 0.0,
+      "MGSmoothIts": 1,
+      "MGSmoothOrder": 4,
+      "MGUseMesh": true,
+      "MaxIts": 400,
+      "MaxSize": 400,
+      "PCMatReal": false,
+      "PCMatShifted": false,
+      "PCSide": "Default",
+      "ReorderingReuse": true,
+      "STRUMPACKButterflyLevels": 1,
+      "STRUMPACKCompressionTol": 0.001,
+      "STRUMPACKCompressionType": "None",
+      "STRUMPACKLossyPrecision": 16,
+      "SuperLU3DCommunicator": false,
+      "Tol": 1e-06,
+      "Type": "SuperLU"
+    },
+    "Order": 2,
+    "PartialAssemblyOrder": 1,
+    "QuadratureOrderExtra": 0,
+    "QuadratureOrderJacobian": false
+  }
+}

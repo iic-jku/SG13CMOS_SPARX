@@ -43,31 +43,103 @@
         "Materials": [
             {
                 "Attributes": [
-                    18
+                    1
                 ],
                 "Permittivity": 1.0,
-                "LossTan": 0.0
+                "Conductivity": [
+                    166000.0,
+                    166000.0,
+                    1660000.0
+                ]
             },
             {
                 "Attributes": [
-                    19
+                    2
+                ],
+                "Permittivity": 1.0,
+                "Conductivity": [
+                    166000.0,
+                    166000.0,
+                    1660000.0
+                ]
+            },
+            {
+                "Attributes": [
+                    3
+                ],
+                "Permittivity": 1.0,
+                "Conductivity": [
+                    166000.0,
+                    166000.0,
+                    1660000.0
+                ]
+            },
+            {
+                "Attributes": [
+                    4
+                ],
+                "Permittivity": 1.0,
+                "Conductivity": [
+                    166000.0,
+                    166000.0,
+                    1660000.0
+                ]
+            },
+            {
+                "Attributes": [
+                    5
+                ],
+                "Permittivity": 1.0,
+                "Conductivity": [
+                    219100.0,
+                    219100.0,
+                    2191000.0
+                ]
+            },
+            {
+                "Attributes": [
+                    6
+                ],
+                "Permittivity": 1.0,
+                "Conductivity": [
+                    314300.0,
+                    314300.0,
+                    3143000.0
+                ]
+            },
+            {
+                "Attributes": [
+                    39
+                ],
+                "Permittivity": 1.0,
+                "Conductivity": 0.0
+            },
+            {
+                "Attributes": [
+                    40
                 ],
                 "Permittivity": 6.6,
-                "LossTan": 0.0
+                "Conductivity": 0.0
             },
             {
                 "Attributes": [
-                    20
+                    41
                 ],
                 "Permittivity": 4.1,
-                "LossTan": 0.0
+                "Conductivity": 0.0
             },
             {
                 "Attributes": [
-                    21
+                    42
                 ],
-                "Permittivity": 1.0,
-                "LossTan": 0.0
+                "Permittivity": 4.1,
+                "Conductivity": 0.0
+            },
+            {
+                "Attributes": [
+                    43
+                ],
+                "Permittivity": 1.0
             }
         ],
         "Postprocessing": {
@@ -77,6 +149,111 @@
     },
     "Boundaries": {
         "Conductivity": [
+            {
+                "Attributes": [
+                    7
+                ],
+                "Conductivity": 21640000.0,
+                "Thickness": 0.41999999999999993
+            },
+            {
+                "Attributes": [
+                    8
+                ],
+                "Conductivity": 21640000.0,
+                "Thickness": 0.41999999999999993
+            },
+            {
+                "Attributes": [
+                    9
+                ],
+                "Conductivity": 21640000.0,
+                "Thickness": 0.41999999999999993
+            },
+            {
+                "Attributes": [
+                    10
+                ],
+                "Conductivity": 21640000.0,
+                "Thickness": 0.41999999999999993
+            },
+            {
+                "Attributes": [
+                    11
+                ],
+                "Conductivity": 23190000.0,
+                "Thickness": 0.4900000000000002
+            },
+            {
+                "Attributes": [
+                    12
+                ],
+                "Conductivity": 23190000.0,
+                "Thickness": 0.4900000000000002
+            },
+            {
+                "Attributes": [
+                    13
+                ],
+                "Conductivity": 23190000.0,
+                "Thickness": 0.4900000000000002
+            },
+            {
+                "Attributes": [
+                    14
+                ],
+                "Conductivity": 23190000.0,
+                "Thickness": 0.4900000000000002
+            },
+            {
+                "Attributes": [
+                    15
+                ],
+                "Conductivity": 23190000.0,
+                "Thickness": 0.4900000000000002
+            },
+            {
+                "Attributes": [
+                    16
+                ],
+                "Conductivity": 23190000.0,
+                "Thickness": 0.4900000000000002
+            },
+            {
+                "Attributes": [
+                    17
+                ],
+                "Conductivity": 23190000.0,
+                "Thickness": 0.4900000000000002
+            },
+            {
+                "Attributes": [
+                    18
+                ],
+                "Conductivity": 23190000.0,
+                "Thickness": 0.4900000000000002
+            },
+            {
+                "Attributes": [
+                    19
+                ],
+                "Conductivity": 23190000.0,
+                "Thickness": 0.4900000000000002
+            },
+            {
+                "Attributes": [
+                    20
+                ],
+                "Conductivity": 23190000.0,
+                "Thickness": 0.4900000000000002
+            },
+            {
+                "Attributes": [
+                    21
+                ],
+                "Conductivity": 23190000.0,
+                "Thickness": 0.4900000000000002
+            },
             {
                 "Attributes": [
                     22
@@ -93,10 +270,62 @@
             },
             {
                 "Attributes": [
-                    24,
-                    26,
-                    28,
-                    30,
+                    24
+                ],
+                "Conductivity": 23190000.0,
+                "Thickness": 0.4900000000000002
+            },
+            {
+                "Attributes": [
+                    25
+                ],
+                "Conductivity": 23190000.0,
+                "Thickness": 0.4900000000000002
+            },
+            {
+                "Attributes": [
+                    26
+                ],
+                "Conductivity": 23190000.0,
+                "Thickness": 0.4900000000000002
+            },
+            {
+                "Attributes": [
+                    27
+                ],
+                "Conductivity": 27800000.0,
+                "Thickness": 2.000000000000001
+            },
+            {
+                "Attributes": [
+                    28
+                ],
+                "Conductivity": 27800000.0,
+                "Thickness": 2.000000000000001
+            },
+            {
+                "Attributes": [
+                    29
+                ],
+                "Conductivity": 30300000.0,
+                "Thickness": 3.0
+            },
+            {
+                "Attributes": [
+                    30
+                ],
+                "Conductivity": 30300000.0,
+                "Thickness": 3.0
+            },
+            {
+                "Attributes": [
+                    31
+                ],
+                "Conductivity": 30300000.0,
+                "Thickness": 3.0
+            },
+            {
+                "Attributes": [
                     32
                 ],
                 "Conductivity": 30300000.0,
@@ -104,11 +333,42 @@
             },
             {
                 "Attributes": [
-                    25,
-                    27,
-                    29,
-                    31,
                     33
+                ],
+                "Conductivity": 30300000.0,
+                "Thickness": 3.0
+            },
+            {
+                "Attributes": [
+                    34
+                ],
+                "Conductivity": 30300000.0,
+                "Thickness": 3.0
+            },
+            {
+                "Attributes": [
+                    35
+                ],
+                "Conductivity": 30300000.0,
+                "Thickness": 3.0
+            },
+            {
+                "Attributes": [
+                    36
+                ],
+                "Conductivity": 30300000.0,
+                "Thickness": 3.0
+            },
+            {
+                "Attributes": [
+                    37
+                ],
+                "Conductivity": 30300000.0,
+                "Thickness": 3.0
+            },
+            {
+                "Attributes": [
+                    38
                 ],
                 "Conductivity": 30300000.0,
                 "Thickness": 3.0
@@ -117,71 +377,71 @@
         "LumpedPort": [
             {
                 "Index": 1,
-                "R": 50,
+                "R": 50.0,
                 "Direction": "Z",
                 "Excitation": 1,
                 "Attributes": [
-                    34
+                    44
                 ]
             },
             {
                 "Index": 2,
-                "R": 50,
+                "R": 50.0,
                 "Direction": "Z",
                 "Excitation": 2,
                 "Attributes": [
-                    35
+                    45
                 ]
             },
             {
                 "Index": 3,
-                "R": 50,
+                "R": 50.0,
                 "Direction": "Z",
                 "Excitation": 3,
                 "Attributes": [
-                    36
+                    46
                 ]
             },
             {
                 "Index": 4,
-                "R": 50,
+                "R": 50.0,
                 "Direction": "Z",
                 "Excitation": 4,
                 "Attributes": [
-                    37
+                    47
                 ]
             },
             {
                 "Index": 5,
-                "R": 50,
+                "R": 50.0,
                 "Direction": "Z",
                 "Excitation": 5,
                 "Attributes": [
-                    38
+                    48
                 ]
             },
             {
                 "Index": 6,
-                "R": 50,
+                "R": 50.0,
                 "Direction": "Z",
                 "Excitation": 6,
                 "Attributes": [
-                    39
+                    49
                 ]
             },
             {
                 "Index": 7,
-                "R": 50,
-                "Direction": "Z",
+                "R": 50.0,
+                "Direction": "X",
                 "Excitation": 7,
                 "Attributes": [
-                    40
+                    50
                 ]
             }
         ],
         "Absorbing": {
             "Attributes": [
-                41
+                51
             ],
             "Order": 2
         }
