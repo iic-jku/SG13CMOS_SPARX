@@ -2027,7 +2027,7 @@ def powdet_sbd() -> gf.Component:
     gf.labels.add_port_labels(c, ports= [vdd_port], layer = ihp.tech.LAYER.TopMetal1text)
     gf.add_pins.add_pin_rectangle(c, port=vout_port, layer=ihp.tech.LAYER.Metal4pin)
     gf.add_pins.add_pin_rectangle(c, port=vref_port, layer=ihp.tech.LAYER.Metal3pin)
-    gf.add_pins.add_pin_rectangle(c, port=rfin_port, layer=ihp.tech.LAYER.TopMetal2pin)
+    gf.add_pins.add_pin_rectangle_inside(c, port=rfin_port, layer=ihp.tech.LAYER.TopMetal2pin)
     gf.add_pins.add_pin_rectangle(c, port=vss_port, layer=ihp.tech.LAYER.Metal5pin)
     gf.add_pins.add_pin_rectangle(c, port=vdd_port, layer=ihp.tech.LAYER.TopMetal1pin)
 
