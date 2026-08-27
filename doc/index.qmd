@@ -29,7 +29,7 @@ This documentation is a Work in Progress.
 :::
 
 ::: {.callout-important}
-This repository requires the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS) container with tag `2026.07` or later.
+This repository requires the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS) container with tag `2026.08` or later.
 :::
 
 ## Overview
