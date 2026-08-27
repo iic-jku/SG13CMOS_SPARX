@@ -66,7 +66,6 @@ value="
 .temp 27
 .option method=gear
 .save all
-* .include sparx_powdet_sbd_tb.save
 .param lo_freq=149G
 .param lo_lev=100m
 .param rf_freq=151G
@@ -112,7 +111,7 @@ print if_tone >> result.txt
 }
 C {devices/launcher.sym} 1780 -1360 0 0 {name=h2
 descr="simulate" 
-tclcommand="xschem save; xschem netlist; xschem simulate"
+tclcommand="xschem save; xschem netlist; file mkdir $netlist_dir; write_data [save_params] $netlist_dir/[file rootname [file tail [xschem get current_name]]].save; xschem simulate"
 }
 C {devices/launcher.sym} 1780 -1300 0 0 {name=h3
 descr="annotate OP" 
@@ -148,3 +147,8 @@ C {sparx_powdet_sbd.sym} 1400 -900 0 0 {name=x1
 C {sparx_powdet_sbd_pex.sym} 1400 -1160 0 0 {name=x2
 spice_ignore=true}
 C {title-3.sym} 0 0 0 0 {name=l4 author="(c) 2026 H. Pretl, ICD@JKU" rev=1.0 lock=true}
+C {devices/code_shown.sym} 1710 -1460 0 0 {name=SAVE only_toplevel=true
+format="tcleval( @value )"
+value="
+.include [file rootname [file tail [xschem get schname]]].save
+"}

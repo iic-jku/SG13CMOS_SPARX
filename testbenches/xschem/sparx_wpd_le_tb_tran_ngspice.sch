@@ -50,7 +50,7 @@ lock=false
 value="
 .include ../../../netlist/spice/sparx_wpd_le.spice
 .include ../sim_range.spice
-.param temp=27
+.temp 27
 .options savecurrents klu method=gear reltol=1e-3 abstol=1e-15 gmin=1e-15
 .control
 
@@ -96,7 +96,7 @@ C {devices/gnd.sym} 1100 -940 0 0 {name=l39 lab=GND}
 C {devices/gnd.sym} 1460 -940 0 0 {name=l3 lab=GND}
 C {devices/launcher.sym} 1820 -1440 0 0 {name=h2
 descr="Simulate" 
-tclcommand="xschem save; xschem netlist; xschem simulate"
+tclcommand="xschem save; xschem netlist; file mkdir $netlist_dir; write_data [save_params] $netlist_dir/[file rootname [file tail [xschem get current_name]]].save; xschem simulate"
 }
 C {devices/launcher.sym} 1820 -1320 0 0 {name=h1
 descr="Load waves" 

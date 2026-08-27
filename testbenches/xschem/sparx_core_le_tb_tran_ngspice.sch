@@ -86,7 +86,7 @@ lock=false
 value="
 .include ../../../netlist/spice/sparx_core_le.spice
 .include ../sim_range.spice
-.param temp=27
+.temp 27
 .options savecurrents klu method=gear reltol=1e-3 abstol=1e-15 gmin=1e-15
 .control
 
@@ -128,7 +128,7 @@ wrdata ../plot_simulations/data/@schname\\\\.txt v1 v2 v3 v4 v5 v6 v7
 C {title-3.sym} 0 0 0 0 {name=l2 author="Simon Dorrer" rev=1.0 lock=true}
 C {devices/launcher.sym} 1820 -1440 0 0 {name=h2
 descr="Simulate" 
-tclcommand="xschem save; xschem netlist; xschem simulate"
+tclcommand="xschem save; xschem netlist; file mkdir $netlist_dir; write_data [save_params] $netlist_dir/[file rootname [file tail [xschem get current_name]]].save; xschem simulate"
 }
 C {devices/launcher.sym} 1820 -1320 0 0 {name=h1
 descr="Load waves" 

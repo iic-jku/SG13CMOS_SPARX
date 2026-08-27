@@ -127,7 +127,7 @@ value="
 .include ../../../netlist/spice/sparx_wpd_le.spice
 .include ../../../netlist/spice/sparx_blc_le.spice
 .include ../sim_range.spice
-.param temp=27
+.temp 27
 .options savecurrents klu method=gear reltol=1e-3 abstol=1e-15 gmin=1e-15
 .control
 
@@ -171,7 +171,7 @@ wrdata ../plot_simulations/data/@schname\\\\.txt
 C {title-3.sym} 0 0 0 0 {name=l2 author="Simon Dorrer" rev=1.0 lock=true}
 C {devices/launcher.sym} 1820 -1440 0 0 {name=h2
 descr="Simulate" 
-tclcommand="xschem save; xschem netlist; xschem simulate"
+tclcommand="xschem save; xschem netlist; file mkdir $netlist_dir; write_data [save_params] $netlist_dir/[file rootname [file tail [xschem get current_name]]].save; xschem simulate"
 }
 C {devices/launcher.sym} 1820 -1320 0 0 {name=h1
 descr="Load waves" 
@@ -248,3 +248,8 @@ C {lab_pin.sym} 1920 -1080 2 1 {name=p10 sig_type=std_logic lab=vout1}
 C {lab_pin.sym} 2040 -1080 2 1 {name=p11 sig_type=std_logic lab=vout2}
 C {lab_pin.sym} 2160 -1080 0 0 {name=p12 sig_type=std_logic lab=vout3}
 C {lab_pin.sym} 2280 -1080 0 0 {name=p13 sig_type=std_logic lab=vout4}
+C {devices/code_shown.sym} 1750 -1540 0 0 {name=SAVE only_toplevel=true
+format="tcleval( @value )"
+value="
+.include [file rootname [file tail [xschem get schname]]].save
+"}
