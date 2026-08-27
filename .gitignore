@@ -26,6 +26,7 @@ venv/
 /testbenches/archive
 /doc/.quarto/
 /doc/_site/
+/doc/index.pdf
 /doc/videos/sparx_gen_60ghz_to_300ghz_orig.mp4
 sparx_powdet_sbd.nodes
 sparx_powdet_sbd.sim
