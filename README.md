@@ -12,7 +12,7 @@
 Institute for Integrated Circuits and Quantum Computing, Johannes Kepler University (JKU), Linz, Austria
 
 > [!IMPORTANT]
-> This repository requires the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS) container with tag `2026.07` or later.
+> This repository requires the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS) container with tag `2026.08` or later.
 
 > [!TIP]
 > This repository is based on the [ihp-sg13g2-ams-chip-template](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template) template repository and has been extended with electromagnetic (EM) simulations using the tool AWS Palace. For a better understanding of the folder structure, how to use the Makefiles, and how to implement your own designs, it is recommended to go through this [tutorial](https://iic-jku.github.io/ihp-sg13g2-ams-chip-template/index.html).
@@ -185,6 +185,7 @@ An overview of the open-source design flow for SPARX is shown below. The flow co
 │  ├─ 📁 blender/
 │  └─ 📁 img/
 │     ├─ sparx160_top_black.png
+│     ├─ sparx160_top_black_TM2.png
 │     └─ sparx160_top_white.png
 ├─ 📁 schematic/
 │  └─ 📁 xschem/
@@ -205,8 +206,9 @@ An overview of the open-source design flow for SPARX is shown below. The flow co
 │     └─ xschemrc
 ├─ 📁 scripts/
 │  ├─ 📁 assets/
+│  ├─ check_pex_ports.py
 │  ├─ img2lay.py
-│  ├─ lay2img.py
+│  ├─ prune_pex_symbol.py
 │  ├─ six_port_gen.py
 │  └─ sparx_powdet_sbd_circuit.ipynb
 ├─ 📁 sscs-ose-code-a-chip/
@@ -224,6 +226,9 @@ An overview of the open-source design flow for SPARX is shown below. The flow co
 │     │  ├─ plot_n_port_tb_tran_ngspice.py
 │     │  ├─ plot_sparx_powdet_sbd_tb_hb_V-W_vacask.py
 │     │  ├─ plot_sparx_powdet_sbd_tb_hb_dBV-dBV_vacask.py
+│     │  ├─ plot_sparx_powdet_sbd_tb_nf_vacask.py
+│     │  ├─ plot_sparx_powdet_sbd_tb_pss_vacask.py
+│     │  ├─ plot_sparx_powdet_sbd_tb_tn_vacask.py
 │     │  └─ sparam_plot.py
 │     ├─ sparx_blc_le_tb_acsp_ngspice.sch
 │     ├─ ...
@@ -263,6 +268,64 @@ An overview of the open-source design flow for SPARX is shown below. The flow co
 </details>
 
 
+## Xschem Configuration
+
+Xschem reads exactly one `xschemrc` at start-up, and that file decides which symbol libraries are visible and where netlists and simulation output are written. This repository ships one per folder that holds schematics:
+
+| `xschemrc` | Belongs to |
+| --- | --- |
+| [`schematic/xschem/xschemrc`](schematic/xschem/xschemrc) | the six-port and power detector schematics and symbols |
+| [`testbenches/xschem/xschemrc`](testbenches/xschem/xschemrc) | the ngspice and VACASK testbenches |
+
+
+### What Every File Does
+
+Both run the same four steps, in this order:
+
+1. **Pick the PDK.** `PDK_ROOT` is probed in the usual install locations if the environment does not set it, and `PDK` falls back to `ihp-sg13g2`. The container already exports `PDK_ROOT`, and [`.designinit`](.designinit) exports `PDK`, so this step is only a safety net for an Xschem started outside that environment.
+2. **Source the PDK `xschemrc`.** `$PDK_ROOT/$PDK/libs.tech/xschem/xschemrc` brings in the IHP device symbols, the ngspice and VACASK model paths and the IHP menu. It is guarded by `[info exists PDK]` so it is read once even when the two project files are chained.
+3. **Add the project library paths.** `append_xschem_library_path_unique` appends a folder to `XSCHEM_LIBRARY_PATH` only if it is not already there, so the same folder never appears twice no matter how the files are chained. [`schematic/xschem/xschemrc`](schematic/xschem/xschemrc) puts itself and `testbenches/xschem/` on the path. [`testbenches/xschem/xschemrc`](testbenches/xschem/xschemrc) adds none of its own and gets both from the file it sources.
+4. **Pin the netlist directory.** `pin_netlist_dir` decides where `xschem netlist` and the simulators write.
+
+Both helper procedures are defined behind an `[info commands ...]` guard, so sourcing one file from the other is harmless and the order does not matter.
+
+
+### How the Files Are Chained
+
+The testbench file pulls in the schematic file:
+
+```text
+testbenches/xschem/xschemrc
+└─ source schematic/xschem/xschemrc
+```
+
+Either file therefore sees both folders, which is what lets a testbench instantiate `sparx_powdet_sbd.sym` or one of the `sparx_*_le.sym` lumped element symbols, and what lets you open a testbench from a session started in `schematic/xschem/`.
+
+
+### Where Netlists and Simulation Output Go
+
+`pin_netlist_dir` maps the folder of the schematic being netlisted to a `simulations/` folder:
+
+| Schematic lives in | `netlist_dir` |
+| --- | --- |
+| `testbenches/xschem` | `testbenches/xschem/simulations` |
+| `schematic/xschem` | `testbenches/xschem/simulations` |
+| anywhere else (a PDK example) | left at the value the `xschemrc` pinned |
+
+It runs twice: once while the `xschemrc` is read, using that file's own folder, and again through Xschem's `load_file_postprocess` hook for every schematic that is opened afterwards. The second call keeps the netlist next to its own schematic tree no matter where the session was started, so the relative includes of the testbenches, such as `.include ../../../netlist/spice/sparx_bpf_le.spice` or `.include ../../../netlist/pex/sparx_powdet_sbd_magic_pex.spice`, always resolve from `testbenches/xschem/simulations/`.
+
+A `set netlist_dir` passed on the Xschem command line still wins, because `--command` runs after the file is loaded. The LVS netlist targets rely on this to write into `netlist/schematic/`, and `sim-xschem` to write into `testbenches/xschem/simulations/`.
+
+Both `simulations/` folders are generated and git-ignored.
+
+
+### Which File Is Used
+
+- The Makefile targets always name one explicitly with `--rcfile`, so a target behaves the same from any working directory.
+- Starting Xschem from within one of the two folders picks up that folder's file, which is the normal interactive case.
+- `make open` starts Xschem in the file's own directory, so the same rule applies to every button of the file browser, see [Open the Design Files](#open-the-design-files).
+
+
 ## Makefile Targets
 
 ### Show Available Targets
@@ -273,6 +336,42 @@ The default Make target is `help`, so running `make` prints usage and all availa
 make
 make help
 ```
+
+### Open the Design Files
+
+Opens a file browser for this folder with `sak-open.py` from the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS), one button per design file, grouped by directory:
+
+```sh
+make open
+```
+
+Clicking a button launches the matching tool in the file's own directory, so Xschem finds its `simulations/` folder and KLayout the layouts where they belong:
+
+| File type | Tool |
+| --- | --- |
+| `.sch`, `.sym` | Xschem |
+| `.gds`, `.gds.gz`, `.oas`, `.oas.gz` | KLayout in edit mode |
+| `.mag` | Magic |
+| `.vcd`, `.fst`, `.gtkw` | GTKWave |
+| `.raw` | gaw (ngspice rawfile) |
+| `.png`, `.pdf` | the desktop's handler (`xdg-open`) |
+| `.sv`, `.svh`, `.v`, `.vh`, `.vhd`, `.vhdl`, `.spice`, `.cir`, `.sp`, `.cdl`, `.sdc`, `.lef`, `.lib`, `.tcl`, `.mk`, `.yaml`, `.json`, `.py`, `.qmd`, `.tex`, `.md` and `Makefile` | gvim |
+
+Only these types get a button. Files with any other extension (`.sh`, `.svg`, `.save`, `.inc`, `.sNp`, `.txt`, `.csv` and so on) are not listed.
+
+Schematics and symbols that belong to one design unit share a single tabbed Xschem instance instead of one process per click. The unit is the nearest ancestor holding a `Makefile`, so the whole design is one unit and the documentation under [`doc/`](doc/) another. Every tab then writes its netlists to the folder the `xschemrc` pins, see [Xschem Configuration](#xschem-configuration).
+
+The tree is rescanned every 15 s, so files a running flow produces appear on their own and are highlighted for a minute. Generated directories are skipped by default: `runs/`, `sim_build/`, `obj_dir/`, `simulations/`, `__pycache__/`, `_freeze/` and `.git/`. The Xschem `simulations/` folder is one of them, so the `.raw` files show up only with `--all`. Pass extra options with `OPEN_ARGS`:
+
+```sh
+make open OPEN_ARGS=--all                      # include the simulation outputs
+make open OPEN_ARGS="--prune palace_model"     # skip one more directory name
+```
+
+At most 400 buttons are drawn at once, because each one is an X window, and what is left out is stated at the end of the list. That cap is easy to hit with `--all`, which also pulls in the Palace meshes under `verification/em/palace_model/` and every simulation output, so narrow it with `--prune` rather than scrolling. The same target exists in [`doc/`](doc/) for the documentation sources and figures.
+
+> [!NOTE]
+> This target needs a display. Run it inside the container's VNC/noVNC desktop or over X11 forwarding. In a shell-only container it stops with `cannot open a window`. The `.png` and `.pdf` buttons hand the file to the desktop's registered handler, so those two need the full VNC/noVNC session and do not work over a bare X forward.
 
 ### Build PDK
 
@@ -321,11 +420,19 @@ make build-top
 
 ### Render Top Layout
 
-Renders the top-level GDS by calling `lay2img.py` and saves the images (`<TOP>_black.png` and `<TOP>_white.png`) in the `render/img/` folder:
+Renders the top-level GDS `layout/sparx<FREQ>_top.gds` with `sak-render.py` from the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS):
 
 ```sh
 make render-gds
+make render-gds FREQ=77
 ```
+
+Three images are written to the `render/img/` folder:
+
+- `sparx<FREQ>_top_white.png` and `sparx<FREQ>_top_black.png`: all physical mask layers, on a white and on a black background.
+- `sparx<FREQ>_top_black_TM2.png`: only `TopMetal2`, `TopVia2`, the `TopMetal2` filler and `Passiv` on a black background, which shows the six-port RF structures and the pads without the Metal5 ground plane underneath.
+
+All three images are 2048 px wide and rendered with 4x oversampling. `sak-render.py` reads the layer colours from the PDK's own KLayout layer properties and crops to the drawn geometry, so the images have no border margin.
 
 ### Design Rule Check (DRC)
 
@@ -344,7 +451,7 @@ The `DRC_LEVEL` parameter selects the KLayout DRC level (`sak-drc.sh -l`). It is
 | Zero-area / geometry | – | ✓ | ✓ |
 | Pin / label | – | ✓ | ✓ |
 | Recommended / extra rules | – | – | ✓ |
-| Density (chip-level fill) | – | – | ✓ |
+| Density (full-chip fill) | – | – | ✓ |
 | Antenna | – | – | ✓ |
 
 **KLayout DRC (regular)** runs a full (`regular`) KLayout DRC on the top-level cell:
@@ -413,6 +520,32 @@ make magic-lvs
 make magic-lvs CELL=sparx_powdet_sbd
 ```
 
+### Build Xschem PEX Symbol
+
+Builds the Xschem symbol the PEX flow needs, `schematic/xschem/<CELL>_pex.sym`, from the regular cell symbol `schematic/xschem/<CELL>.sym`:
+
+```sh
+make symbol-pex CELL=sparx_powdet_sbd
+```
+
+The generated symbol is a copy of `<CELL>.sym` with two changes: `type=subcircuit` becomes `type=primitive`, and the pin boxes the extracted netlist has no port for are dropped. Everything else (the remaining pin boxes and their order, every text label, `format`, `spectre_format`, `template`, graphics) is inherited, which is exactly what the PEX flow needs:
+
+- **`type=primitive`** stops Xschem from descending into a schematic of the same name. There is no `<CELL>_pex.sch`, so the instance line is emitted as it stands and the subcircuit comes from the `.include`d PEX netlist instead.
+- **`format="@name @pinlist @symname"`** makes the instance reference `@symname`, which resolves to `<CELL>_pex`, exactly the `.subckt` name the PEX flow writes.
+- **The pin order** is what `sak-pin-reorder.py` reorders the extracted netlist to, so it has to be that of the cell symbol.
+
+`PEX_MERGED_PINS` names the supply pins that the extraction does not report as ports of their own. It is empty by default: the power detector keeps `vdd` and `vss` as separate ports in both the Magic and the KPEX extraction, so nothing is dropped and `sparx_powdet_sbd_pex.sym` carries the same five pins as `sparx_powdet_sbd.sym`. Set it for a cell whose supplies come out of the flat extraction as one node, for example two ground pins that both tap the substrate: `make magic-pex CELL=<cellname> PEX_MERGED_PINS="<pin> ..."`.
+
+[`scripts/prune_pex_symbol.py`](scripts/prune_pex_symbol.py) drops those pins and, for the same reason, every repeat of a pin name after the first: a `.subckt` port list holds one entry per net, so pads that share a supply share a port. Only the pin boxes go and every text label stays, so the generated symbol still reads as the full cell while carrying exactly the pins the netlist has a port for.
+
+`symbol-pex` runs automatically at the start of `klayout-pex` and `magic-pex`, so the symbol is rebuilt from the current `<CELL>.sym` before every extraction and cannot go stale when a pin is added, removed or renamed. Calling it by hand is only needed to refresh the symbol without re-running an extraction. Anything added to the generated file by hand is lost at the next extraction, so make the change in `<CELL>.sym` instead.
+
+If `<CELL>.sym` does not exist, the target prints a note and does nothing, which leaves the PEX targets running without a pin reorder just as before. That is the case for the default `CELL`, the generated six-port top cell `sparx160_top`, which has no hand-drawn symbol. It fails only when `<CELL>.sym` declares neither `type=subcircuit` nor `type=primitive`.
+
+> [!NOTE]
+> Every symbol in this project also carries `spectre_format="@name ( @pinlist ) @symname"`. Xschem writes that line itself whenever a symbol is built from a schematic's pin list (key `a`, `make_sym.awk`), and it is read **only** by the Spectre netlister, which is also the one that drives VACASK (`xschem.tcl` configures `vacask "$N"` as the default simulator for `netlist_type spectre`). The SPICE netlister used for ngspice ignores it, so it has no effect on the ngspice testbenches.
+> Do not strip it: without it, instances of the symbol are **silently dropped** from a Spectre/VACASK netlist and the `subckt` line of the symbol itself comes out with an empty port list, with no warning at all. Every `_vacask` testbench in this repository depends on it.
+
 ### Parasitic Extraction (PEX)
 
 Runs parasitic extraction on the GDS layout in `layout/`. The extracted SPICE netlist is written to `netlist/pex/`.
@@ -423,11 +556,23 @@ The `EXT_MODE` parameter selects the extraction mode:
 - `3` = full-RC (default)
 
 > [!NOTE]
-> For `klayout-pex`, `EXT_MODE=1` (C-decoupled) is not yet supported by kpex and automatically falls back to `EXT_MODE=2` (CC) with a warning.
+> For `klayout-pex`, `EXT_MODE=1` (C-decoupled) is not yet supported by kpex and automatically falls back to `EXT_MODE=2` (C-coupled) with a warning.
 
 The `.subckt` name in the extracted SPICE file is `<CELL>_pex`: `magic-pex` sets it directly via the `sak-pex.sh` option `-n <CELL>_pex`, while for `klayout-pex` it is automatically renamed from `<CELL>` (kpex).
 
-If a matching Xschem symbol (`schematic/xschem/<CELL>_pex.sym`) exists, the `.subckt` pin order in the extracted SPICE file is automatically reordered with `sak-pin-reorder.py` (installed in the IIC-OSIC-TOOLS container) to match the symbol's pin positions. This ensures the PEX netlist can be used directly with the corresponding Xschem symbol for simulation.
+Both targets start by running `symbol-pex` (see above), so `schematic/xschem/<CELL>_pex.sym` always reflects the current cell symbol. If it exists, the `.subckt` pin order in the extracted SPICE file is then reordered with `sak-pin-reorder.py` (installed in the IIC-OSIC-TOOLS container) to match that symbol's pin positions. This ensures the PEX netlist can be used directly with the corresponding Xschem symbol for simulation regardless of the selected `EXT_MODE`.
+
+Both targets finish by running [`scripts/check_pex_ports.py`](scripts/check_pex_ports.py) on the netlist they just wrote. It verifies that every pin of the `.subckt` really reaches the circuit, and fails the target otherwise. Two cases are caught:
+
+- A port that is declared in the `.subckt` line but referenced by no element at all. Whatever is wired to that pin from outside is then left floating.
+- A port whose net was split into `<port>.t<n>` and `<port>.n<n>` fragments by `extresist` (`EXT_MODE=3`), where none of the fragments is connected back to the port. The pin is then dangling even though the fragments themselves are wired up.
+
+Both produce a netlist that ngspice reads without a single warning while the cell behaves completely differently in simulation, so the check is worth the two seconds it costs. It can also be run by hand on any SPICE netlist:
+
+```sh
+python3 scripts/check_pex_ports.py netlist/pex/sparx_powdet_sbd_magic_pex.spice
+python3 scripts/check_pex_ports.py -v netlist/pex/*.spice     # -v also prints the size of each subcircuit
+```
 
 **KLayout PEX** uses `kpex` with the Magic extraction engine (the 2.5D engine is work in progress):
 
@@ -587,15 +732,16 @@ make build-layout FREQ=77 && make sparx-core FREQ=77
 
 ### Xschem Testbench Simulation
 
-Runs a single Xschem testbench in batch mode (no display): it saves the schematic, exports the netlist to `testbenches/xschem/simulations/`, and runs the simulator. The testbench is selected with the `TB` variable (given without the `.sch` extension). The netlist format and simulator are derived automatically from the testbench name: names ending in `_ngspice` are netlisted as SPICE and simulated with ngspice, while names ending in `_vacask` are netlisted as Spectre and simulated with VACASK.
+Runs a single Xschem testbench in batch mode (no display): it saves the schematic, exports the netlist to `testbenches/xschem/simulations/`, and runs the simulator. The testbench is selected with the `TB` variable, given without the `.sch` extension (default: `sparx_bpf_le_tb_acsp_ngspice`). The netlist format and simulator are derived automatically from the testbench name: names ending in `_ngspice` are netlisted as SPICE and simulated with ngspice, while names ending in `_vacask` are netlisted as Spectre and simulated with VACASK.
 
 The target netlists with `xschem netlist` and then invokes the simulator directly in batch mode (`ngspice -b` for the `.spice` benches, `vacask -qp -sp` for the `.spectre` benches) instead of `xschem simulate`. For ngspice, `xschem simulate` would launch an interactive ngspice in a terminal detached from make (`$terminal -e 'ngspice -i ...'`): the target would return while ngspice waits at its prompt, the result would never be checked, and the process (with its X server) would leak. Running the simulator directly makes `make` block until the run finishes and see its exit status.
 
 VACASK is run with `-qp` (quiet progress, appropriate for a batch run) and `-sp` (skip postprocessing): the postprocess scripts that the VACASK testbenches declare are run by the Makefile right after the simulation instead. This bypasses VACASK's own subprocess launcher, which aborts with a `boost::asio` "Bad file descriptor" error on hosts whose kernel or container runtime blocks the syscalls it uses to spawn and await a child process. The `postprocess(PYTHON, ...)` lines stay in the testbenches, so running them from the Xschem GUI still postprocesses as usual.
 
-For the VACASK testbenches, `sim-xschem` also writes the operating-point save file `simulations/<TB>.save` (`write_data [save_params]`) while netlisting. The VACASK testbenches contain the same call in their Xschem launcher, but that runs only when the testbench is started from the Xschem GUI, and `simulations/` is not tracked by git. Without this step, a testbench that includes its save file (`include "<TB>.save"`, e.g. the power-detector harmonic-balance testbench) aborts with `File not found` on a fresh clone.
+`sim-xschem` also writes the FET operating-point save file `simulations/<TB>.save` (`write_data [save_params]`) while netlisting, for every testbench. That file lists the operating-point parameters of every transistor (`ids`, `gm`, `gds`, `vth` and so on), which the `annotate_fet_params` symbols and the `Annotate OP` launcher read back from the raw file. The testbenches that contain transistors pull it in by its bare file name, so it resolves inside `testbenches/xschem/simulations/`, where the simulator runs: the ngspice benches of the power detector and of the two top-level transient simulations through a `SAVE` code block (`.include <TB>.save`), the VACASK benches of the power detector through `include "<TB>.save"` in their control block. The `Simulate` launcher of every testbench writes the same file before it starts the simulator, so the file always matches the devices currently in the schematic, no `.save` file is tracked by git, and a fresh clone needs no manual export. Xschem's **IHP > Create FET .save file** menu entry writes the same file by hand.
 
 ```sh
+make sim-xschem                                  # run the default testbench (sparx_bpf_le_tb_acsp_ngspice)
 make sim-xschem TB=sparx_bpf_le_tb_acsp_ngspice
 make sim-xschem TB=sparx_bpf_le_tb_acsp_vacask
 make sim-xschem TB=sparx_powdet_sbd_tb_ngspice
@@ -606,9 +752,10 @@ Because `sim-xschem` runs headless, ngspice runs in batch mode (`ngspice -b`), w
 
 ### View Xschem Testbench Results
 
-To view a testbench's results on screen, use `sim-view-xschem` after running the simulation with `sim-xschem`. It runs a plotting script from `testbenches/xschem/plot_simulations/` (`SIM_PLOT_DIR`), selected with the `SCRIPT` variable (given without the `.py` extension), and reproduces the plots of the testbenches' `.control` blocks with matplotlib from the exported data in `xschem/plot_simulations/data/`, following the `plot_simulations` structure of the [ihp-sg13g2-ams-chip-template](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template):
+To view a testbench's results on screen, use `sim-view-xschem` after running the simulation with `sim-xschem`. It runs a plotting script from `testbenches/xschem/plot_simulations/` (`SIM_PLOT_DIR`), selected with the `SCRIPT` variable, given without the `.py` extension (default: `plot_n_port_tb_acsp_ngspice`), and reproduces the plots of the testbenches' `.control` blocks with matplotlib from the exported data in `xschem/plot_simulations/data/`, following the `plot_simulations` structure of the [ihp-sg13g2-ams-chip-template](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template):
 
 ```sh
+make sim-view-xschem                             # run the default plotting script (plot_n_port_tb_acsp_ngspice)
 make sim-view-xschem SCRIPT=plot_n_port_tb_acsp_ngspice
 make sim-view-xschem SCRIPT=plot_n_port_tb_tran_ngspice
 ```
@@ -642,6 +789,8 @@ The following testbenches are simulated:
 - `sparx_core_tb_acsp_ngspice` / `sparx_core_tb_acsp_vacask`: six-port core built from the BPF, WPD, and BLC LE models, AC S-parameter
 - `sparx_powdet_sbd_tb_ngspice`: SBD-based power detector (ngspice)
 - `sparx_powdet_sbd_tb_hb_vacask`: SBD-based power detector, harmonic balance (VACASK)
+- `sparx_powdet_sbd_tb_pss_vacask`: SBD-based power detector, single-tone periodic steady state (VACASK), fits the responsivity that the noise figure bench turns into an NEP
+- `sparx_powdet_sbd_tb_nf_vacask`: SBD-based power detector, noise figure and NEP (VACASK), runs after the PSS bench
 
 
 ### Build, Simulate, and Verify All
@@ -673,6 +822,7 @@ The following folders are exported:
 - `netlist/layout` -> `release/v.<VERSION>/netlist/layout`
 - `render/img/<TOP>_black.png` -> `release/v.<VERSION>/img/<TOP>_black.png`
 - `render/img/<TOP>_white.png` -> `release/v.<VERSION>/img/<TOP>_white.png`
+- `render/img/<TOP>_black_TM2.png` -> `release/v.<VERSION>/img/<TOP>_black_TM2.png`
 
 Run with default version (`2.0.0`):
 
@@ -709,7 +859,7 @@ To keep the runtime low while still covering most of the toolchain, the regressi
 
 - Only the small `sparx_powdet_sbd` power-detector cell is verified, not the full six-port top cell. KLayout DRC, KLayout LVS, and KLayout PEX are run. Magic DRC, Magic + Netgen LVS, and Magic PEX are run.
 - The full-wave EM solve is not re-run by the default `regression`. The AWS Palace EM simulation of the Wilkinson power divider (WPD) is the slowest step, so `regression` reuses the committed WPD Palace results and only exercises the downstream flow: S-parameter copy and lumped-element conversion (SPICE and Spectre). Use `regression-nightly` (or `make sim-wpd-em`) to regenerate the EM results.
-- Only one ngspice and one VACASK testbench are simulated (the bandpass-filter AC S-parameter benches).
+- Only one ngspice and one VACASK testbench are simulated (the Wilkinson power divider AC S-parameter benches).
 - The layout is generated at a single frequency (160 GHz). No frequency sweep is run.
 - Top-level LVS is not run (work in progress).
 
@@ -719,7 +869,7 @@ The following tools and flows are checked:
 | --- | --- |
 | GDSFactory PDK add-on build (git clone + pip install) | `build-pdk` (via `build-top`) |
 | GDSFactory (programmatic six-port layout generation) | `build-layout` (via `build-top`) |
-| KLayout (GDS-to-image rendering) | `render-gds` (via `build-top`) |
+| `sak-render.py` (GDS-to-image rendering) | `render-gds` (via `build-top`) |
 | Xschem netlisting, KLayout DRC, KLayout LVS, KLayout PEX | `klayout-verify CELL=sparx_powdet_sbd` |
 | Xschem netlisting, Magic DRC, Magic + Netgen LVS, Magic PEX | `magic-verify CELL=sparx_powdet_sbd` |
 | GDSFactory + gds2palace meshing + AWS Palace EM solve | `sim-wpd-em` (`regression-nightly` only) |
@@ -727,6 +877,36 @@ The following tools and flows are checked:
 | snp2le (de-embedded S-parameter to lumped element, SPICE + Spectre) | `snp2le SNP=..._deembedded.s3p ...` |
 | Xschem netlisting + ngspice | `sim-xschem TB=sparx_wpd_le_tb_acsp_ngspice` |
 | Xschem netlisting + VACASK | `sim-xschem TB=sparx_wpd_le_tb_acsp_vacask` |
+
+
+### Clean
+
+`make clean` deletes everything the targets of this Makefile generate. The sources stay untouched: the layout generator and helper scripts, the schematics, symbols and testbenches, the EM model scripts and the stackup documentation under `verification/em/`, the plotting scripts, the documentation sources and the notebook. Deleted are:
+
+- `build/` (the GDSFactory scratch folder of `build-layout`)
+- `layout/` (the six-port layouts of every frequency and the power detector)
+- `verification/em/layout/`, `verification/em/palace_model/` and `verification/em/s-parameter/` (the EM structures, the Palace meshes and results, and the copied Touchstone files)
+- `netlist/` (the schematic, layout and PEX netlists of the power detector, and the SPICE and Spectre lumped element netlists)
+- `render/img/` (the chip renders)
+- `verification/drc/` and `verification/lvs/`
+- `schematic/xschem/simulations/`, `testbenches/xschem/simulations/` and the `plot_simulations/` outputs (`data/`, `figures/`, `__pycache__/`)
+- the `__pycache__` folders under `scripts/` and `verification/em/scripts/`, and the kpex leftovers `*.nodes` and `*.sim` in the repository root
+
+The GDSFactory PDK add-on (`IHP/` and `.venv/`, both git-ignored) is a tool installation rather than a build product, so `clean` keeps it and `build-pdk` replaces it anyway. The rendered documentation has its own target, `make -C doc clean`.
+
+```sh
+make clean
+```
+
+[`release/`](release/) is never deleted, so published versions survive a clean. Every target recreates the folders it writes to, so a full rebuild from a clean tree is:
+
+```sh
+make clean
+make all
+```
+
+> [!WARNING]
+> Most of these outputs are committed in this repository, so `make clean` leaves a large deletion set in `git status`. Run `git restore .` to get the tracked ones back if you did not mean to remove them. This includes the Palace results under `verification/em/palace_model/`: `make all` regenerates the BPF, WPD and BLC solves, but the seven-port core solve only comes back with `make sparx-core`, and the default `make regression` reuses the committed WPD result, so after a clean it fails at `copy-sparam` until that result is restored or regenerated with `make sim-wpd-em`.
 
 
 ## Cite This Work
