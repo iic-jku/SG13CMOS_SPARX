@@ -634,6 +634,8 @@ The following parameters are shared by all EM simulation targets:
 
 `FREQ` is the only one that `build-layout` also takes as an argument. The other three are the port settings that the targets pass to `palace_sim.py`; they are not derived from the layout, so they must match `signal_cross_section`, `ground_cross_section`, and `Z0` in `scripts/six_port_gen.py`. Everything else about the structures (substrate permittivity, filter type, order, bandwidth, ripple, divider shape) is hardcoded in `scripts/six_port_gen.py`: change it there, rerun `build-layout`, and rerun the EM target.
 
+The process stackup that turns the GDS into a 3D model (materials, dielectric stack, GDS layer to z-range map) comes from the PDK, at `$PDK_ROOT/$PDK/libs.tech/palace/workflow/`, so it always matches the `gds2palace` that reads it. It is not vendored here. Both simulation targets default to `SG13G2_nosub.xml`, because the solid Metal5 plane under the TopMetal2 traces shields the silicon, so leaving the substrate out of the model costs almost nothing in accuracy and saves a lot of mesh. Pass `--stackup <name-or-path>` to use a different one. `verification/em/stackups/` holds the [documentation](verification/em/stackups/README.md): what each stackup is, where to find it, the XML format including the schemaVersion 3.0 and 3.1 additions, and how to check the reader version before using a 3.x file.
+
 **Branch-Line Coupler (BLC):**
 
 ```sh

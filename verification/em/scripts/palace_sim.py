@@ -22,7 +22,40 @@ def _parse_args():
     parser.add_argument("--signal_cross_section", type=str, default=None, help="Signal layer name, e.g. TM2 (default: from the file name)")
     parser.add_argument("--ground_cross_section", type=str, default=None, help="Ground layer name, e.g. M5 (default: from the file name)")
     parser.add_argument("--Z0", type=float, default=None, help="Reference impedance of the ports in Ohms (default: from the file name)")
+    parser.add_argument("--stackup", type=str, default="SG13G2_nosub.xml",
+                        help="Stackup XML, either a bare name resolved against the PDK's "
+                             "libs.tech/palace/workflow, or a path (default: SG13G2_nosub.xml)")
     return parser.parse_args()
+
+
+def _resolve_stackup(stackup):
+    """Resolve the stackup XML, preferring an explicit path over the PDK's copy.
+
+    The stackup files are not vendored in this repository. They ship with the PDK,
+    in the gds2palace submodule the container installs, so the model always uses the
+    same stackup as the gds2palace that reads it. See verification/em/stackups/README.md.
+    """
+    if os.path.sep in stackup or (os.path.altsep and os.path.altsep in stackup):
+        path = os.path.abspath(stackup)
+        if not os.path.isfile(path):
+            raise SystemExit(f"ERROR: stackup not found: {path}")
+        return path
+
+    pdk_root = os.environ.get("PDK_ROOT")
+    if not pdk_root:
+        raise SystemExit(
+            "ERROR: PDK_ROOT is not set, so the stackup cannot be resolved. Run inside "
+            "IIC-OSIC-TOOLS, or pass a path with --stackup."
+        )
+    pdk = os.environ.get("PDK", "ihp-sg13g2")
+    path = os.path.join(pdk_root, pdk, "libs.tech", "palace", "workflow", stackup)
+    if not os.path.isfile(path):
+        raise SystemExit(
+            f"ERROR: stackup not found: {path}" + os.linesep
+            + "       The PDK ships them in libs.tech/palace/workflow. "
+              "Check PDK_ROOT/PDK, or pass a path with --stackup."
+        )
+    return path
 
 
 def _get_number_of_ports(gds_filename):
@@ -110,12 +143,19 @@ def _get_layers(cell, layers=None):
 args = _parse_args()
 
 gds_filename = args.gds_filename   # geometries
-# stackup (lives in ../stackups/, resolved absolutely so it does not depend on the cwd)
-XML_filename = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), "..", "stackups", "SG13G2_nosub.xml"
-)
+# Stackup, taken from the PDK rather than vendored here, so it always matches the
+# gds2palace that reads it. SG13G2_nosub is the default because the solid Metal5 plane
+# under the TopMetal2 traces shields the silicon, so leaving the substrate out of the
+# model costs almost nothing in accuracy and saves a lot of mesh. The resolved path is
+# printed below, because it is the one model input this repository does not pin.
+# See verification/em/stackups/README.md for the other stackups and for the
+# schemaVersion 3.x caveat.
+XML_filename = _resolve_stackup(args.stackup)
+print("Stackup: ", XML_filename)
 
-# preprocess GDSII for safe handling of cutouts/holes?
+# preprocess GDSII for safe handling of cutouts/holes. No longer required since gds2palace
+# redesigned cutout handling in August 2026, kept here so the flow also works with older
+# gds2palace versions, where the argument still exists.
 preprocess_gds = False
 
 # merge via polygons with distance less than .. microns, set to 0 to disable via merging.

@@ -1,158 +1,282 @@
-# Overview of the XML files
+# Process stackups for the Palace EM flow
 
-Origin repository: <https://github.com/VolkerMuehlhaus/gds2palace_ihp_sg13g2>
+A stackup XML is what turns a GDS into a 3D model: the materials, the dielectric stack from
+top to bottom, and the map from GDS layer number to a z-range. A model script names exactly
+one of them.
 
-## Short answer
+**The files are not in this repository.** They ship with the PDK, so the stackup always
+matches the `gds2palace` that reads it. This folder holds the documentation and the figures
+only.
 
-All eight `.xml` files in the origin repository's `workflow/` folder (seven of them are copied into this folder, `pcb_ro4003.xml` is not) are the **same kind of file: technology stackup definitions**.
-They are not different formats or different roles. They are variants of one schema
-(`<Stackup schemaVersion="2.0">`), each describing a different substrate/BEOL configuration.
-A model script picks exactly one of them:
+## Where they are
 
-```python
-XML_filename = "SG13G2_200um.xml"   # stackup
+```
+$PDK_ROOT/$PDK/libs.tech/palace/workflow/*.xml                    the production stackups
+$PDK_ROOT/$PDK/libs.tech/palace/more_examples/                    resistors, thermal, format examples
+$PDK_ROOT/$PDK/libs.tech/palace/doc/XML_stackup_format/           the format reference
 ```
 
-They fall into **three families**:
+`libs.tech/palace` is a git submodule of the PDK pointing at
+[gds2palace_ihp_sg13g2](https://github.com/VolkerMuehlhaus/gds2palace_ihp_sg13g2), so the
+version you get is whatever the PDK pins and the container installs. `ihp-sg13cmos5l` has no
+`libs.tech/palace` at all, which is why the SG13CMOS5L stackups below come from the SG13G2
+side.
+
+To list what your container actually has:
+
+```sh
+ls $PDK_ROOT/$PDK/libs.tech/palace/workflow/*.xml
+```
+
+## Which one SPARX uses
+
+`SG13G2_nosub.xml`, the default of `--stackup` in `../scripts/palace_sim.py` and
+`../scripts/six_port_core_palace_sim.py`. The solid Metal5 plane under the TopMetal2 traces
+shields the silicon, so leaving the substrate out of the model costs almost nothing in
+accuracy and saves a lot of mesh. `nosub` declares no `SUBGND`, `BACKSIDEGND` or `LBE` layer,
+so those GDS layers are ignored even if they are drawn.
+
+Both scripts print the resolved path at startup:
+
+```
+Stackup:  /foss/pdks/ihp-sg13g2/libs.tech/palace/workflow/SG13G2_nosub.xml
+```
+
+That line is worth keeping in the log. The stackup is the one model input this repository
+does not pin, so it is what tells you which file a committed S-parameter set was solved
+against. To use a different one, pass a bare name resolved against the PDK, or any path:
+
+```sh
+python3 verification/em/scripts/palace_sim.py <gds> --stackup SG13G2_200um.xml
+python3 verification/em/scripts/palace_sim.py <gds> --stackup /path/to/my_stackup.xml
+```
+
+## The production stackups
+
+Two families, plus a PCB file that is not an IC at all.
 
 | Family | Files | What it is |
 |---|---|---|
-| **SG13G2** | `SG13G2_200um`, `SG13G2_100um`, `SG13G2_nosub` | IHP 130 nm SiGe:C BiCMOS (`ihp-sg13g2`). Full BEOL: Metal1–5, TopMetal1/2, MIM. |
-| **SG13CMOS5L** | `SG13CMOS5L_200um`, `SG13CMOS5L_300um`, `SG13CMOS5L_200um_backsideGND`, `SG13CMOS5L_nosub` | A **different IHP PDK** (`ihp-sg13cmos5l`): 130 nm plain CMOS with an M1–M4–TM1 metal stack. Also shipped in IIC-OSIC-TOOLS. |
-| **PCB** | `pcb_ro4003` | Not an IC at all, but a 2-layer Rogers RO4003 board. |
+| **SG13G2** | `SG13G2_200um`, `SG13G2_100um`, `SG13G2_nosub` | IHP 130 nm SiGe:C BiCMOS (`ihp-sg13g2`). Full BEOL: Metal1 to Metal5, TopMetal1/2, MIM. |
+| **SG13CMOS5L** | `SG13CMOS5L_200um`, `SG13CMOS5L_300um`, `SG13CMOS5L_200um_backsideGND`, `SG13CMOS5L_nosub` | A different IHP PDK (`ihp-sg13cmos5l`): 130 nm plain CMOS with an M1 to M4 plus TopMetal1 stack. |
+| **PCB** | `pcb_ro4003` | A 2-layer Rogers RO4003 board, εr 3.38, tanδ 0.0022. |
 
-Within a family, the files differ **only in what is below the BEOL** (and how much air is above).
+Within a family the files differ only in what is below the BEOL and how much air is above.
 
-## What the XML actually contains
+| File | Technology and BEOL | Substrate below the BEOL | Air above |
+|---|---|---|---|
+| `SG13G2_200um.xml` | Full SG13G2: Metal1 to Metal5, TopMetal1/2, MIM and Vmim (BEOL 16.13 µm) | EPI 3.75 µm plus Si 180 µm (200 µm total) | 200 µm |
+| `SG13G2_100um.xml` | same | EPI 3.75 µm plus Si 80 µm (100 µm, thinned wafer) | 200 µm |
+| `SG13G2_nosub.xml` | same | none, replaced by a 2 µm SiO2 "Spacing" (no EPI, no Si, no `SUBGND` / `BACKSIDEGND` / `LBE`) | 300 µm |
+| `SG13CMOS5L_200um.xml` | 5-metal option: Metal1 to Metal4 plus TopMetal1, no Metal5, no TopMetal2, no MIM, thinner oxide (BEOL 9.3 µm) | EPI 3.75 µm plus Si 186.95 µm | 300 µm |
+| `SG13CMOS5L_300um.xml` | same | Si 286.95 µm (300 µm) | 300 µm |
+| `SG13CMOS5L_200um_backsideGND.xml` | same | 200 µm Si plus a 1 µm `LOWLOSS` backside metal dielectric block (ground plane on the wafer back, no GDS layer needed) | 300 µm |
+| `SG13CMOS5L_nosub.xml` | same | none, 2 µm SiO2 spacing only | 300 µm |
 
-Parsed by `gds2palace/util_stackup_reader.py::read_substrate()`. Three sections:
+The 100 / 200 / 300 µm numbers are modelling truncations of the silicon, not the physical
+wafer thickness. With the default absorbing boundary at `zmin`, the value decides how much
+lossy silicon (sigma = 2 S/m) is inside the simulation domain. A thicker value captures more
+substrate loss and costs mesh and runtime.
 
-| Section | Purpose |
+### SG13G2 substrate variants at a glance
+
+![Substrate variants of the SG13G2 stackup XML files](fig/sg13g2_stackup_variants.svg)
+
+Cross-sections, not to scale. All three SG13G2 variants share the same BEOL. They differ only
+in what sits below it and how much air sits above.
+
+### SG13CMOS5L variants at a glance
+
+![The four SG13CMOS5L stackup XML variants](fig/sg13cmos5l_stackup_variants.svg)
+
+Cross-sections, not to scale. The BEOL itself is different from SG13G2. This is a separate
+PDK, which is why the two families cannot be shown in one figure.
+
+## Beyond the production set
+
+Under `more_examples/` in the same PDK folder:
+
+| File | What it is |
 |---|---|
-| `<Materials>` | Named materials with `Type` (Conductor / Dielectric / Semiconductor), `Permittivity`, `DielectricLossTangent`, `Conductivity`, display `Color`. E.g. `TopMetal2` σ = 30.3 MS/m, `SiO2` εr = 4.1, `Substrate` εr = 11.9 / σ = 2 S/m. |
-| `<Dielectrics>` | The vertical dielectric stack, **ordered top to bottom**, each with a `Thickness` in µm. This builds the simulation box. |
-| `<Layers>` | The GDS layer to physical layer mapping: `Layer=` is the GDSII layer number, `Type=` is `conductor` / `via` / `dielectric`, plus `Zmin` / `Zmax` and the `Material`. Preceded by `<Substrate Offset="..."/>`, which shifts all metal z-coordinates so that z = 0 in the layer table (wafer surface) lands at the correct absolute height inside the dielectric stack. |
+| `derived_layers_and_resistors/SG13G2_resistors_200um.xml` | The full SG13G2 200 µm stackup plus `RSIL` (7 Ω/sq), `RPPD` (260 Ω/sq) and `RHIGH` (1360 Ω/sq) as sheet resistors, recognized through derived layers. schemaVersion 3.1. |
+| `XML_stackup_format_examples/01..04_*.xml` | The same physical SG13G2 200 µm stackup written four times, each adding one format generation. The cleanest way to see what a 3.x attribute does. |
+| `thermal_simulation_using_Elmer/SG13_interposer_thermal_typicalvalues.xml` | An Elmer thermal model for an IHP interposer. Not an EM stackup. |
+| `doc/XML_stackup_format/variables_example.xml` | A small illustrative file for the expression syntax. Its derived layers do not match any real layout. |
 
-So in one sentence: **materials + z-geometry + GDS layer map.**
-Same idea as the openEMS IHP XML files. The origin repository notes they are similar but
-differ in details to enable Palace-specific "tricks".
+SPARX does not use the resistor stackup. The termination resistors are excluded from the EM
+model on purpose: `six_port_core_palace_sim.py` puts an in-plane Metal1 port across the gap
+where the resistor sits, and the resistor is added back in the circuit simulation. If you do
+want it, note it carries the full 200 µm substrate, EPI, `SUBGND`, `BACKSIDEGND` and `LBE`,
+so it is a much larger mesh than `nosub` and not a drop-in swap. Override its
+`total_thickness` variable from the script rather than editing the file.
 
-### Example excerpt
+## File format
 
 ```xml
 <Stackup schemaVersion="2.0">
+  <Variables>       <!-- optional, 3.1, must come first -->
   <Materials>
-    <Material Name="TopMetal2" Type="Conductor" Permittivity="1"
-              DielectricLossTangent="0" Conductivity="30300000.0" Color="ff8000"/>
-    <Material Name="Substrate" Type="Semiconductor" Permittivity="11.9"
-              DielectricLossTangent="0" Conductivity="2.0" Color="01e0ff"/>
-  </Materials>
   <ELayers LengthUnit="um">
     <Dielectrics>
-      <Dielectric Name="AIR"       Material="AIR"       Thickness="200.0000"/>
-      <Dielectric Name="Passive"   Material="Passive"   Thickness="0.4000"/>
-      <Dielectric Name="SiO2"      Material="SiO2"      Thickness="15.7303"/>
-      <Dielectric Name="EPI"       Material="EPI"       Thickness="3.7500"/>
-      <Dielectric Name="Substrate" Material="Substrate" Thickness="180.0000"/>
-    </Dielectrics>
     <Layers>
-      <Substrate Offset="183.75"/>
-      <Layer Name="TopMetal2" Type="conductor" Zmin="11.2303" Zmax="14.2303"
-             Material="TopMetal2" Layer="134"/>
-      <Layer Name="TopVia2"   Type="via"       Zmin="8.4303"  Zmax="11.2303"
-             Material="TopVia2"  Layer="133"/>
-      ...
-    </Layers>
+    <DerivedLayers> <!-- optional, 3.0 -->
   </ELayers>
+  <Tables>          <!-- optional, thermal only -->
 </Stackup>
 ```
 
+Parsed by `gds2palace/util_stackup_reader.py::read_substrate()`, which returns
+`materials_list, dielectrics_list, metals_list`.
+
+| Section | Purpose |
+|---|---|
+| `<Variables>` | Named numbers or strings, referenced from any other attribute as `=expression`. |
+| `<Materials>` | Named materials with `Type` (`Conductor`, `Dielectric`, `Semiconductor`, `Resistor`), `Permittivity`, `DielectricLossTangent`, `Conductivity`, `Rs`, display `Color`. |
+| `<Dielectrics>` | The vertical dielectric stack, ordered top to bottom, each with a `Thickness` in µm. This builds the simulation box. |
+| `<Layers>` | GDS layer to physical layer: `Layer=` is the GDSII layer number, `Type=` is `conductor`, `via`, `dielectric` or `sheet`, plus `Zmin`/`Zmax` and the `Material`. |
+| `<DerivedLayers>` | Layer numbers computed from other layers with `AND`/`OR`/`XOR`/`NOT`/`SIZE` instead of read from GDS. |
+| `<Tables>` | Temperature to thermal-conductivity lookup curves. Elmer thermal flow only. |
+
+`Permittivity` defaults to `1`, `DielectricLossTangent` to `0`, `Conductivity` to `0`, `Rs` to
+`0`. Upstream drops these attributes wherever they equal the default, so two files that look
+very different can describe the same thing. `Density`, `ThermalConductivity` and
+`ThermalConductivityTable` are read only by the Elmer thermal flow and have no effect on an
+S-parameter simulation.
+
 ### Special "magic" GDS layers
 
-Layers you can draw in your layout and that the stackup maps to non-PDK objects:
+Layers you can draw in your layout that the stackup maps to non-PDK objects:
 
 | Name | GDS layer | Meaning |
 |---|---|---|
-| `SUBGND` | 250 (SG13G2) / 210 (CMOS5L) | Ideal ground plate directly under the EPI, material `LOWLOSS` (σ = 1e10). |
-| `BACKSIDEGND` | 251 | Ideal ground plane on the wafer backside. |
+| `SUBGND` | 250 (SG13G2) / 210 (CMOS5L) | Ideal ground plate directly under the EPI, material `LOWLOSS` (sigma = 1e10). |
+| `BACKSIDEGND` | 251 | Ideal ground plane on the wafer backside. SG13G2 files only. |
 | `LBE` | 157 | Filled with `AIR` (local backside etch). Drawing it carves the silicon away. |
 
-## The eight files
+The `nosub` variants deliberately declare none of them.
 
-| File | Technology / BEOL | Substrate below the BEOL | Air above |
-|---|---|---|---|
-| `SG13G2_200um.xml` | Full SG13G2: Metal1–5, TopMetal1/2, MIM + Vmim (BEOL ≈ 16.1 µm) | EPI 3.75 µm + Si 180 µm (200 µm total) | 200 µm |
-| `SG13G2_100um.xml` | same | EPI 3.75 µm + Si 80 µm (≈ 100 µm, thinned wafer) | 200 µm |
-| `SG13G2_nosub.xml` | same | **none**, replaced by a 2 µm SiO₂ "Spacing" (no EPI, no Si, no `SUBGND` / `BACKSIDEGND` / `LBE`) | 300 µm |
-| `SG13CMOS5L_200um.xml` | 5-metal option: Metal1–4 + TopMetal1 only, **no Metal5, no TopMetal2, no MIM**, thinner oxide (8.9 µm) | EPI 3.75 µm + Si 186.95 µm | 300 µm |
-| `SG13CMOS5L_300um.xml` | same | Si 286.95 µm (≈ 300 µm) | 300 µm |
-| `SG13CMOS5L_200um_backsideGND.xml` | same | 200 µm Si **plus a 1 µm `LOWLOSS` backside metal dielectric block** (ground plane on the wafer back, no GDS layer needed) | 300 µm |
-| `SG13CMOS5L_nosub.xml` | same | **none**, 2 µm SiO₂ spacing only | 300 µm |
-| `pcb_ro4003.xml` | Not an IC at all: 2-layer Rogers RO4003 PCB (εr = 3.38, tanδ = 0.0022), 510 µm core, 17 µm copper top and bottom | n/a | n/a |
+## The three schema versions
 
-## SG13G2 substrate variants at a glance
+The format grew two generations in August 2026. `schemaVersion` on the `<Stackup>` root says
+which one a file uses.
 
-![Substrate variants of the SG13G2 stackup XML files](sg13g2_stackup_variants.svg)
+| schemaVersion | Adds | Needs |
+|---|---|---|
+| `2.0` | The original: `<Dielectrics>` stack implicitly by `Thickness` in file order, `<Layers>` carry absolute `Zmin`/`Zmax`, and one global `<Substrate Offset="...">` shifts the whole drawn stack. | Any reader. |
+| `3.0` | `Reference`/`ReferenceEdge` on `<Dielectric>` and `<Layer>`, `<DerivedLayers>`, thermal `<Tables>`. | `util_stackup_reader.py` 1.6.0 or newer. |
+| `3.1` | `<Variables>` and `=`-expressions in any attribute value, plus the `variable_overrides` argument to `read_substrate()`. | `util_stackup_reader.py` 1.7.0 or newer. |
 
-*Cross-sections (not to scale). All three SG13G2 variants share the same BEOL. They differ only in
-what sits below it and how much air sits above.*
+Every file in `workflow/` is still `2.0`. The 3.x ones live under `more_examples/`.
 
-## SG13CMOS5L variants at a glance
+### Reference-relative positioning, 3.0
 
-![The four SG13CMOS5L stackup XML variants](sg13cmos5l_stackup_variants.svg)
+In `2.0`, `<Substrate Offset>` is a single hand-computed number whose derivation exists nowhere
+in the file, and every `Zmin`/`Zmax` above a dielectric has to be recomputed by hand when that
+dielectric's `Thickness` changes. In `3.0` an element names what it sits against and its
+`Zmin`/`Zmax` become offsets from that edge, positive going up:
 
-*Cross-sections (not to scale). Note the BEOL itself is different from SG13G2. This is a separate
-PDK, which is why the two families cannot be shown in one figure.*
-
-## Default stackup
-
-The repository **never declares a default**. There is no `default` keyword, no fallback inside
-`read_substrate()`, and `workflow/README.md` does not rank the files. Every model script must name
-one explicitly:
-
-```python
-XML_filename = "SG13G2_200um.xml"   # stackup
+```xml
+<Layer Name="Metal1" Type="conductor" Material="Metal1" Layer="8"
+       Reference="Cont" ReferenceEdge="Top" Zmin="0.0000" Zmax="0.4200" />
 ```
 
-What does exist is a *de-facto* default, taken from the examples:
+A `<Dielectric>` may only reference another `<Dielectric>`. A `<Layer>` may reference either,
+and chains resolve in dependency order regardless of file order. Dielectric and Layer names
+share one namespace for the lookup, so a name must not exist as both, and a file must not mix
+`Reference` with a nonzero `<Substrate Offset="...">`.
 
-| PDK | De-facto default | Reasoning |
-|---|---|---|
-| **SG13G2** | `SG13G2_200um.xml` | Used by every substrate-aware example (`palace_L2n0`, `palace_ind_frame`, `palace_rfcmim`, `inductor_500pH_2port`). Full BEOL on 200 µm silicon. |
-| **SG13CMOS5L** | `SG13CMOS5L_200um.xml` | No example uses any CMOS5L stackup, so this is by analogy: it is the plain on-wafer case, and the other three are derived from it (300 µm = thicker Si, `backsideGND` = + ideal ground plate, `nosub` = Si removed). |
+### Variables and expressions, 3.1
 
-**Caveat:** the 100 / 200 / 300 µm numbers are *modelling truncations* of the silicon, not the
-physical wafer thickness. With the default `ABC` boundary at `zmin`, the value decides how much
-lossy silicon (σ = 2 S/m) is inside the simulation domain. A thicker value captures more substrate
-loss, but leads to a larger mesh and a slower simulation.
+```xml
+<Variables>
+  <Variable Name="air_thickness" Value="200.0000" />
+  <Variable Name="total_thickness" Value="200.0000" />
+  <Variable Name="bulk_thickness" Value="=total_thickness-20" />
+</Variables>
+...
+<Dielectric Name="Substrate" Material="Substrate" Thickness="=bulk_thickness" />
+```
 
-## Which examples use which
+Any attribute value starting with `=` is an expression over `+ - * / **`, unary signs,
+parentheses, numeric literals and bare variable names. A string variable may only be used as
+the whole value, not inside arithmetic. There are no function calls. An expression used in a
+GDSII layer number must resolve to an integer, otherwise it is an error rather than a silent
+truncation.
 
-| Model script | Stackup |
-|---|---|
-| `palace_line_viaport.py`, `palace_line_noGDS.py`, `palace_balun_mesh5.py`, `palace_butlermatrix.py`, `palace_butlermatrix_dump93.py` | `SG13G2_nosub.xml` |
-| `palace_L2n0.py`, `palace_ind_frame.py`, `palace_rfcmim.py`, `inductor_500pH_2port.py` | `SG13G2_200um.xml` |
-| `palace_core.py` | `SG13G2_100um.xml` |
-| `palace_pcb_lowpass.py` | `pcb_ro4003.xml` |
+A model script can override a variable without touching the file, which is the clean way to
+sweep substrate thickness:
 
-None of the `SG13CMOS5L_*.xml` files is referenced by any example. They are provided for the
-5-metal flavour if you need it.
+```python
+materials_list, dielectrics_list, metals_list = stackup_reader.read_substrate(
+    XML_filename, variable_overrides={'total_thickness': 300})
+```
+
+An override naming a variable that does not exist is an error, so a stale override fails fast
+instead of doing nothing.
+
+### Derived layers, 3.0
+
+A derived layer needs a normal `<Layer>` entry giving it a z-range and material, plus a
+`<DerivedLayer>` entry giving it geometry. `Operation` is `AND`, `OR`, `XOR`, `NOT` (two or
+more operands, folded left to right, order matters for `NOT`) or `SIZE` (one operand, needs a
+nonzero `Oversize`). `Oversize` can be added to any operation and is applied last. An
+`<Operand>` may name another derived layer, resolved automatically in dependency order. No
+change is needed in the model script: `read_gds()` picks the definitions up from
+`metals_list`.
+
+The redesign that brought derived layers also reworked cutout handling, so the
+`preprocess_gds` model option is no longer required. Both SPARX scripts already set it to
+`False`.
+
+### Sheet resistors
+
+`Type="Resistor"` materials carry `Rs` in Ohm per square and pair with a zero-thickness
+`Type="sheet"` layer. Setting `Zmax` equal to `Zmin` forces `Type` to `sheet` whatever the
+file says.
+
+## Before using a 3.x file, check the reader
+
+This is the one real trap. A reader older than 1.6.0 does not understand
+`Reference`/`ReferenceEdge` and **does not warn about it**. It ignores the attributes and
+reads `Zmin`/`Zmax` as absolute coordinates, so a 3.0 file meshes without any error message
+and puts every referenced layer at the wrong height. You get S-parameters, not a failure. A
+reader older than 1.7.0 on a 3.1 file fails loudly instead, because `Thickness="=air_thickness"`
+does not parse as a float.
+
+`gds2palace` comes from the container, and we do not pin it, so check before switching:
+
+```sh
+python3 -c "import gds2palace as g; r = g.stackup_reader; print(
+  'gds2palace', getattr(g, '__version__', '?'),
+  'reader', getattr(r, '__version__', '?'),
+  'schema', getattr(r, 'SUPPORTED_SCHEMA_VERSION', 'pre-3.x'))"
+```
+
+`SUPPORTED_SCHEMA_VERSION` only exists from reader 1.6.0, so `pre-3.x` in that last field
+means the reader predates the whole format and every `Reference` is about to be misread.
+gds2palace 0.4.0 ships reader 1.7.2 and handles everything.
 
 ## How to choose
 
-- **Transmission lines, baluns, Butler matrices**, and anything else with a solid Metal1 ground
-  plane underneath: use **`nosub`**. The ground shields the silicon, so removing it costs almost
-  nothing in accuracy and saves a lot of mesh. The user's guide explicitly notes the
-  with/without-substrate difference was verified negligible for their line models.
-- **Inductors, MIM caps**, and anything where substrate loss or coupling matters: use **`200um`**
-  (or `100um` for a thinned wafer).
-- Add `SUBGND` / `BACKSIDEGND` / `LBE` polygons to your GDS **only** if the chosen stackup declares
-  those layers (`nosub` deliberately drops them).
+- Transmission lines, baluns, couplers, and anything else with a solid ground plane
+  underneath: use `nosub`. The ground shields the silicon, so removing it costs almost nothing
+  in accuracy and saves a lot of mesh. This is what all four SPARX structures do.
+- Inductors, MIM caps, and anything where substrate loss or coupling matters: use `200um`, or
+  `100um` for a thinned wafer.
+- Add `SUBGND` / `BACKSIDEGND` / `LBE` polygons to your GDS only if the chosen stackup
+  declares those layers.
 
 ## One inconsistency worth knowing
 
-In the SG13G2 files `LBE` is declared `Type="dielectric"`, while in the older CMOS5L files it is
-`Type="via"` with material `AIR`. The reader supports both (`is_dielectric` / `is_via`), but the
-SG13G2 form is the cleaner one to copy if you write your own stackup.
+In the SG13G2 files `LBE` is declared `Type="dielectric"` and `SUBGND` / `BACKSIDEGND` are
+`Type="conductor"`. In the older CMOS5L files `LBE` and `SUBGND` are both `Type="via"`, with
+`LBE` carrying material `AIR`. The reader supports both, but the SG13G2 form is the cleaner
+one to copy if you write your own stackup.
 
----
+## Upstream documentation
+
+- Format reference: [`XML_stackup_format.md`](https://github.com/VolkerMuehlhaus/gds2palace_ihp_sg13g2/blob/main/doc/XML_stackup_format/XML_stackup_format.md)
+- How the format grew: [`evolution_of_stackup_file_format.md`](https://github.com/VolkerMuehlhaus/gds2palace_ihp_sg13g2/blob/main/doc/XML_stackup_format/evolution_of_stackup_file_format.md)
+- Derived layers: [`derived_layers.md`](https://github.com/VolkerMuehlhaus/gds2palace_ihp_sg13g2/blob/main/doc/XML_stackup_format/derived_layers.md)
+- Change log: [`doc/CHANGES.md`](https://github.com/VolkerMuehlhaus/gds2palace_ihp_sg13g2/blob/main/doc/CHANGES.md)
+- GUI stackup editor: [setupEM](https://github.com/VolkerMuehlhaus/setupEM), `Tools > Edit Stackup XML...`, or `stackupEditor <file>.xml` standalone
