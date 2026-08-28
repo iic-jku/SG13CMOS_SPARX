@@ -58,6 +58,25 @@ def _resolve_stackup(stackup):
     return path
 
 
+def _pdk_commit():
+    """Read the PDK git hash the container was built from.
+
+    IIC-OSIC-TOOLS writes it to $PDK_ROOT/$PDK/COMMIT at install time. Since the
+    stackup is not vendored in this repository, this hash is what identifies the
+    exact stackup a result was solved against: it pins the PDK commit, which pins
+    the libs.tech/palace submodule, which is the stackup file itself.
+    """
+    pdk_root = os.environ.get("PDK_ROOT")
+    if not pdk_root:
+        return "unknown (PDK_ROOT not set)"
+    path = os.path.join(pdk_root, os.environ.get("PDK", "ihp-sg13g2"), "COMMIT")
+    try:
+        with open(path) as commit_file:
+            return commit_file.read().strip() or "unknown (empty COMMIT file)"
+    except OSError:
+        return f"unknown (no {path})"
+
+
 def _get_number_of_ports(gds_filename):
     """Get the number of ports from a GDSII file by counting layers with layer number > 200."""
     lib = gdspy.GdsLibrary()
@@ -151,7 +170,8 @@ gds_filename = args.gds_filename   # geometries
 # See verification/em/stackups/README.md for the other stackups and for the
 # schemaVersion 3.x caveat.
 XML_filename = _resolve_stackup(args.stackup)
-print("Stackup: ", XML_filename)
+print("Stackup:    ", XML_filename)
+print("PDK commit: ", _pdk_commit())
 
 # preprocess GDSII for safe handling of cutouts/holes. No longer required since gds2palace
 # redesigned cutout handling in August 2026, kept here so the flow also works with older

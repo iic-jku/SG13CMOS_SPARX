@@ -18,7 +18,10 @@ $PDK_ROOT/$PDK/libs.tech/palace/doc/XML_stackup_format/           the format ref
 
 `libs.tech/palace` is a git submodule of the PDK pointing at
 [gds2palace_ihp_sg13g2](https://github.com/VolkerMuehlhaus/gds2palace_ihp_sg13g2), so the
-version you get is whatever the PDK pins and the container installs. `ihp-sg13cmos5l` has no
+version you get is whatever the PDK pins and the container installs. IIC-OSIC-TOOLS clones
+the `iic-jku` fork's `dev` branch with `--recursive`, so the whole palace tree is present in
+the image, `workflow/`, `more_examples/` and `doc/` alike. Since 2026-08-21 that fork pins
+gds2palace 0.4.0 (reader 1.7.2), which reads every schema version below. `ihp-sg13cmos5l` has no
 `libs.tech/palace` at all, which is why the SG13CMOS5L stackups below come from the SG13G2
 side.
 
@@ -36,15 +39,23 @@ shields the silicon, so leaving the substrate out of the model costs almost noth
 accuracy and saves a lot of mesh. `nosub` declares no `SUBGND`, `BACKSIDEGND` or `LBE` layer,
 so those GDS layers are ignored even if they are drawn.
 
-Both scripts print the resolved path at startup:
+Both scripts print the stackup and the PDK version at startup:
 
 ```
-Stackup:  /foss/pdks/ihp-sg13g2/libs.tech/palace/workflow/SG13G2_nosub.xml
+Stackup:     /foss/pdks/ihp-sg13g2/libs.tech/palace/workflow/SG13G2_nosub.xml
+PDK commit:  d592520846234ec601cd80300d7377d41340b5a5
 ```
 
-That line is worth keeping in the log. The stackup is the one model input this repository
-does not pin, so it is what tells you which file a committed S-parameter set was solved
-against. To use a different one, pass a bare name resolved against the PDK, or any path:
+Keep those two lines in the log. The stackup is the one model input this repository does not
+pin, and together they identify it exactly: the PDK commit pins the `libs.tech/palace`
+submodule, which is the stackup file itself. The hash comes from `$PDK_ROOT/$PDK/COMMIT`,
+which IIC-OSIC-TOOLS writes when it installs the PDK, so you can also read it directly:
+
+```sh
+cat $PDK_ROOT/$PDK/COMMIT
+```
+
+To use a different stackup, pass a bare name resolved against the PDK, or any path:
 
 ```sh
 python3 verification/em/scripts/palace_sim.py <gds> --stackup SG13G2_200um.xml
