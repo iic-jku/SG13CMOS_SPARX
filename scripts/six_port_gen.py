@@ -2284,7 +2284,7 @@ bandpass_filter.connect("e1", connection_bpf_wpd.ports["e2"])
 
 
 connection_blc_r_termination = ihp.cells.straight(
-    length=round(CONNECTION_LEN_TERM * freq_scale, 3),  # scales with frequency
+    length=round(CONNECTION_LEN_TERM, 3), 
     cross_section=signal_cross_section,
     width=ihp.cells.waveguides._calculate_width_from_Z0(
         Z0=Z0, e_r=e_r, signal_cross_section=signal_cross_section, ground_cross_section=ground_cross_section
@@ -2439,7 +2439,7 @@ c.add_ref(
 
 connection_bpd_pad = c.add_ref(
     ihp.cells.straight(
-        length=round(CONNECTION_LEN_BPF_PAD * freq_scale, 2),  # scales with frequency
+        length=round(CONNECTION_LEN_BPF_PAD, 2),  # scales with frequency
         cross_section=signal_cross_section,
         width=ihp.cells.waveguides._calculate_width_from_Z0(
             Z0=Z0, e_r=e_r, signal_cross_section=signal_cross_section, ground_cross_section=ground_cross_section
@@ -2474,7 +2474,7 @@ c.add_ports(probe_left.ports, prefix="probe_left_")
 connection_blc_pad = c.add_ref(
     ihp.cells.straight(
         length=round(
-            CONNECTION_LEN_BLC_PAD * freq_scale + CONNECTION_LEN_BLC_EXTRA, 3
+            CONNECTION_LEN_BLC_PAD + CONNECTION_LEN_BLC_EXTRA, 3
         ),  # scales with frequency + extra pad clearance
         cross_section=signal_cross_section,
         width=ihp.cells.waveguides._calculate_width_from_Z0(
@@ -2890,7 +2890,7 @@ sealring_height = round(c.ysize + 2 * sealring_margin)
 
 print(f"Sealring: {sealring_width} x {sealring_height} um (freq_scale={freq_scale:.2f})")
 
-sealring_center =  c.center # save before adding more refs
+sealring_center =  (round(c.center[0], 2), round(c.center[1], 2))  # save before adding more refs, round it to avoid off grid errors
 c.add_ref(ihp.cells.sealring(width=sealring_width, height=sealring_height)).center = sealring_center
 
 
@@ -3197,4 +3197,4 @@ write_em_gds(
     cell_name="sparx_core_em_sim",
 )
 
-six_port_core.show()
+# six_port_core.show()
