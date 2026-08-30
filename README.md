@@ -157,8 +157,8 @@ An overview of the open-source design flow for SPARX is shown below. The flow co
 │  │  ├─ sparx_powdet_sbd_klayout.cir
 │  │  └─ sparx_powdet_sbd_magic.ext.spc
 │  ├─ 📁 pex/
-│  │  ├─ sparx_powdet_sbd_klayout_pex.spice
-│  │  └─ sparx_powdet_sbd_magic_pex.spice
+│  │  ├─ sparx_powdet_sbd_klayout_pex_3.spice
+│  │  └─ sparx_powdet_sbd_magic_pex_3.spice
 │  ├─ 📁 schematic/
 │  │  ├─ sparx_powdet_sbd_klayout.cdl
 │  │  └─ sparx_powdet_sbd_magic.spice
@@ -312,7 +312,7 @@ Either file therefore sees both folders, which is what lets a testbench instanti
 | `schematic/xschem` | `testbenches/xschem/simulations` |
 | anywhere else (a PDK example) | left at the value the `xschemrc` pinned |
 
-It runs twice: once while the `xschemrc` is read, using that file's own folder, and again through Xschem's `load_file_postprocess` hook for every schematic that is opened afterwards. The second call keeps the netlist next to its own schematic tree no matter where the session was started, so the relative includes of the testbenches, such as `.include ../../../netlist/spice/sparx_bpf_le.spice` or `.include ../../../netlist/pex/sparx_powdet_sbd_magic_pex.spice`, always resolve from `testbenches/xschem/simulations/`.
+It runs twice: once while the `xschemrc` is read, using that file's own folder, and again through Xschem's `load_file_postprocess` hook for every schematic that is opened afterwards. The second call keeps the netlist next to its own schematic tree no matter where the session was started, so the relative includes of the testbenches, such as `.include ../../../netlist/spice/sparx_bpf_le.spice` or `.include ../../../netlist/pex/sparx_powdet_sbd_magic_pex_3.spice`, always resolve from `testbenches/xschem/simulations/`.
 
 A `set netlist_dir` passed on the Xschem command line still wins, because `--command` runs after the file is loaded. The LVS netlist targets rely on this to write into `netlist/schematic/`, and `sim-xschem` to write into `testbenches/xschem/simulations/`.
 
@@ -548,7 +548,12 @@ If `<CELL>.sym` does not exist, the target prints a note and does nothing, which
 
 ### Parasitic Extraction (PEX)
 
-Runs parasitic extraction on the GDS layout in `layout/`. The extracted SPICE netlist is written to `netlist/pex/`.
+Runs parasitic extraction on the GDS layout in `layout/`. The extracted SPICE netlist is written to `netlist/pex/`, with the extraction mode as suffix, so the three modes sit next to each other without overwriting one another:
+
+- `klayout-pex` writes `netlist/pex/<CELL>_klayout_pex_<EXT_MODE>.spice`
+- `magic-pex` writes `netlist/pex/<CELL>_magic_pex_<EXT_MODE>.spice`
+
+The committed netlists of the power detector are the full-RC ones, `sparx_powdet_sbd_magic_pex_3.spice` and `sparx_powdet_sbd_klayout_pex_3.spice`. The Magic one is what the `.include` in the ngspice testbench `sparx_powdet_sbd_tb_ngspice.sch` and the `m1_pex` variant of the VACASK power-detector testbenches (`scripts/powdet_variant.py`) read.
 
 The `EXT_MODE` parameter selects the extraction mode:
 - `1` = C-decoupled
@@ -570,7 +575,7 @@ Both targets finish by running [`scripts/check_pex_ports.py`](scripts/check_pex_
 Both produce a netlist that ngspice reads without a single warning while the cell behaves completely differently in simulation, so the check is worth the two seconds it costs. It can also be run by hand on any SPICE netlist:
 
 ```sh
-python3 scripts/check_pex_ports.py netlist/pex/sparx_powdet_sbd_magic_pex.spice
+python3 scripts/check_pex_ports.py netlist/pex/sparx_powdet_sbd_magic_pex_3.spice
 python3 scripts/check_pex_ports.py -v netlist/pex/*.spice     # -v also prints the size of each subcircuit
 ```
 
