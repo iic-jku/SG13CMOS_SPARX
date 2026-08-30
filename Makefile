@@ -28,17 +28,17 @@ CELL ?= $(TOP)
 # Override with: make <target> EXT_MODE=<1|2|3>
 EXT_MODE ?= 3
 
-# full-RC extresist threshold in mOhm (sak-pex.sh -t, only used in EXT_MODE=3; default: 10000 = 10 Ohm)
+# full-RC extresist threshold in mOhm (sak-pex.sh -t, only used in EXT_MODE=3; default: 1000 = 1 Ohm)
 # Override with: make <target> THRESHOLD=<mOhm>
-THRESHOLD ?= 10000
+THRESHOLD ?= 1000
 
-# full-RC extresist minres in mOhm (sak-pex.sh -r, only used in EXT_MODE=3; default: 1000 = 1 Ohm)
+# full-RC extresist minres in mOhm (sak-pex.sh -r, only used in EXT_MODE=3; default: 100 = 0.1 Ohm)
 # Override with: make <target> MINRES=<mOhm>
-MINRES ?= 1000
+MINRES ?= 100
 
-# full-RC extresist mindelay in ps (sak-pex.sh -y, only used in EXT_MODE=3; default: 1; 0 = gate by resistance)
+# full-RC extresist mindelay in ps (sak-pex.sh -y, only used in EXT_MODE=3; default: 0, gate by resistance)
 # Override with: make <target> MINDELAY=<ps>
-MINDELAY ?= 1
+MINDELAY ?= 0
 
 # KLayout DRC level: precheck, macro, or regular (sak-drc.sh -l, only used by klayout-drc; default: macro)
 # Override with: make <target> DRC_LEVEL=<precheck|macro|regular>
@@ -130,7 +130,8 @@ help: ## Show this help message
 	@echo ''
 	@echo 'CELL defaults to $(TOP). Override to verify subcells.'
 	@echo 'EXT_MODE defaults to 3 (full-RC). 1=C-decoupled, 2=C-coupled.'
-	@echo 'THRESHOLD/MINRES/MINDELAY are full-RC (EXT_MODE=3) extresist settings for magic-pex (defaults 10000 mOhm / 1000 mOhm / 1 ps).'
+	@echo 'The extracted netlists carry the mode as suffix: netlist/pex/<CELL>_magic_pex_<EXT_MODE>.spice and <CELL>_klayout_pex_<EXT_MODE>.spice.'
+	@echo 'THRESHOLD/MINRES/MINDELAY are full-RC (EXT_MODE=3) extresist settings for magic-pex (defaults 1000 mOhm / 100 mOhm / 0 ps, gating by resistance, Magic's own are 10000 / 1000 / 1).'
 	@echo 'DRC_LEVEL defaults to macro. Sets the KLayout DRC level for klayout-drc (precheck|macro|regular).'
 	@echo 'PEX_MERGED_PINS is empty by default. Lists the supply pins that the flat extraction merges, they are dropped from the generated PEX symbol.'
 	@echo 'FREQ defaults to 160 (GHz). Override for build-layout.'

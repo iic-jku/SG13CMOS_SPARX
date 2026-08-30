@@ -597,9 +597,11 @@ make magic-pex CELL=sparx_powdet_sbd EXT_MODE=3
 
 For full-RC extraction (`EXT_MODE=3`), `magic-pex` additionally exposes the `sak-pex.sh` `extresist` tuning parameters. They are ignored in `EXT_MODE=1`/`2`:
 
-- `THRESHOLD` - extresist threshold in mOhm (`-t`, default `10000` = 10 Ohm)
-- `MINRES` - extresist minimum resistance in mOhm (`-r`, default `1000` = 1 Ohm)
-- `MINDELAY` - extresist minimum delay in ps (`-y`, default `1`; `0` = gate by resistance)
+- `THRESHOLD` - extresist threshold in mOhm (`-t`, default `1000` = 1 Ohm): the minimum end-to-end resistance of a net for it to be extracted at all
+- `MINRES` - extresist minimum resistance in mOhm (`-r`, default `100` = 0.1 Ohm): resistors below this are merged
+- `MINDELAY` - extresist minimum delay in ps (`-y`, default `0` = gate by resistance): the minimum RC delay of a net for its resistors to be written
+
+Magic's own defaults, which the template keeps, are `10000` / `1000` / `1`. This repository gates by resistance instead. A delay gate of 1 ps is 57 degrees at 160 GHz, and on the power detector it drops the deterministic baseband routes that matter for the transimpedance amplifier, 22 Ohm of routing in series with the feedback resistor and 6.4 Ohm per drain finger, while the RF nets stay below 0.1 Ohm end to end and never carry a resistor at any setting. `MINRES=100` keeps `extresist` from arbitrarily attaching the `vout` port to its resistor network, which `1000` does once `MINDELAY` is `0`. The extracted capacitors, which set the post-layout behaviour of the detector, do not depend on any of the three values. The `vss` network of this cell comes out different in every run: the substrate guard rings of the Schottky diodes are not tied to ground by metal, `extresist` reports `Orphaned node "vss"` for it, and the VACASK testbenches idealize that net in [`scripts/powdet_variant.py`](scripts/powdet_variant.py).
 
 ```sh
 make magic-pex CELL=sparx_powdet_sbd EXT_MODE=3 THRESHOLD=5000 MINRES=500 MINDELAY=2
