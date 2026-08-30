@@ -2383,7 +2383,18 @@ rfin_connection_pd4 = c.add_ref(
 )
 rfin_connection_pd4.connect("e1", blc_2_ref.ports["e2"], allow_width_mismatch=True)
 
-
+connection_blc_pad_1 = c.add_ref(
+    ihp.cells.straight(
+        length=ihp.cells.waveguides._calculate_width_from_Z0(
+            Z0=Z0, e_r=e_r, signal_cross_section=signal_cross_section, ground_cross_section=ground_cross_section
+        )*3,  
+        cross_section=signal_cross_section,
+        width=ihp.cells.waveguides._calculate_width_from_Z0(
+            Z0=Z0, e_r=e_r, signal_cross_section=signal_cross_section, ground_cross_section=ground_cross_section
+        ),
+    )
+)
+connection_blc_pad_1.connect("e1", blc_3_ref.ports["e2"])
 ## six-port core EM sim prepatation
 # copy and prepare the six-port core structure for EM simulation
 
@@ -2393,8 +2404,8 @@ port1 = six_port_core.add_ref(gf.components.rectangle(size=(0.1, bandpass_filter
 port1.center = (bandpass_filter.ports["e2"].center)
 port1.move((0.05,0))
 
-port2 = six_port_core.add_ref(gf.components.rectangle(size=(0.1, blc_3_ref.ports["e2"].width), layer=(202,0)))
-port2.center = (blc_3_ref.ports["e2"].center)
+port2 = six_port_core.add_ref(gf.components.rectangle(size=(0.1, connection_blc_pad_1.ports["e2"].width), layer=(202,0)))
+port2.center = (connection_blc_pad_1.ports["e2"].center)
 port2.move((-0.05,0))
 
 port3 = six_port_core.add_ref(gf.components.rectangle(size=(rfin_connection_pd1.ports["e2"].width, 0.1), layer=(203,0)))
@@ -2437,7 +2448,7 @@ c.add_ref(
 ).center = connection_r_termination_vss_ref.center
 
 
-connection_bpd_pad = c.add_ref(
+connection_bpf_pad = c.add_ref(
     ihp.cells.straight(
         length=round(CONNECTION_LEN_BPF_PAD, 2),  # scales with frequency
         cross_section=signal_cross_section,
@@ -2446,7 +2457,53 @@ connection_bpd_pad = c.add_ref(
         ),
     )
 )
-connection_bpd_pad.connect("e1", bandpass_filter.ports["e2"], allow_width_mismatch=True)
+connection_bpf_pad.connect("e1", bandpass_filter.ports["e2"], allow_width_mismatch=True)
+
+connection_blc_pad_2 = c.add_ref(
+    ihp.cells.straight(
+        round(
+            CONNECTION_LEN_BLC_PAD + CONNECTION_LEN_BLC_EXTRA - ihp.cells.waveguides._calculate_width_from_Z0(
+                Z0=Z0, e_r=e_r, signal_cross_section=signal_cross_section, ground_cross_section=ground_cross_section
+            ), 2
+        ),
+        cross_section=signal_cross_section,
+        width=ihp.cells.waveguides._calculate_width_from_Z0(
+            Z0=Z0, e_r=e_r, signal_cross_section=signal_cross_section, ground_cross_section=ground_cross_section
+        ),
+    )
+)
+connection_blc_pad_2.connect("e1", connection_blc_pad_1.ports["e2"])
+
+# probe pads right
+probe_right = c.add_ref(
+    ihp.cells.bondpad_array(
+        config="GSG",
+        pitch=PROBE_PITCH,
+        width_ground=PROBE_GROUND_WIDTH_RIGHT,
+        width_signal=PROBE_SIGNAL_SIZE,
+        length_signal=PROBE_SIGNAL_SIZE,
+        signal_cross_section="topmetal1_routing",
+        ground_cross_section="metal1_routing",
+        ground_connection="psub",
+    )
+).rotate(-90)
+probe_right.connect("e1", connection_blc_pad_2.ports["e2"], allow_width_mismatch=True)
+
+c.add_ref(
+    gf.components.rectangle(size=(NOFILL_GSG_SIZE, NOFILL_GSG_SIZE), layer=ihp.tech.LAYER.Metal5nofill)
+).center = probe_right.center
+c.add_ports(probe_right.ports, prefix="probe_right_")
+
+connection_bpf_pad = c.add_ref(
+    ihp.cells.straight(
+        length=round(CONNECTION_LEN_BPF_PAD, 2),  # scales with frequency
+        cross_section=signal_cross_section,
+        width=ihp.cells.waveguides._calculate_width_from_Z0(
+            Z0=Z0, e_r=e_r, signal_cross_section=signal_cross_section, ground_cross_section=ground_cross_section
+        ),
+    )
+)
+connection_bpf_pad.connect("e1", bandpass_filter.ports["e2"], allow_width_mismatch=True)
 
 
 # probe pads left
@@ -2464,45 +2521,14 @@ probe_left = c.add_ref(
 ).rotate(-90)
 probe_left.center = bandpass_filter.ports["e2"].center
 probe_left.xmax = bandpass_filter.ports["e2"].center[0] - 15
-probe_left.connect("e1", connection_bpd_pad.ports["e2"], allow_width_mismatch=True)
+probe_left.connect("e1", connection_bpf_pad.ports["e2"], allow_width_mismatch=True)
 
 c.add_ref(
     gf.components.rectangle(size=(NOFILL_GSG_SIZE, NOFILL_GSG_SIZE), layer=ihp.tech.LAYER.Metal5nofill)
 ).center = probe_left.center
 c.add_ports(probe_left.ports, prefix="probe_left_")
 
-connection_blc_pad = c.add_ref(
-    ihp.cells.straight(
-        length=round(
-            CONNECTION_LEN_BLC_PAD + CONNECTION_LEN_BLC_EXTRA, 3
-        ),  # scales with frequency + extra pad clearance
-        cross_section=signal_cross_section,
-        width=ihp.cells.waveguides._calculate_width_from_Z0(
-            Z0=Z0, e_r=e_r, signal_cross_section=signal_cross_section, ground_cross_section=ground_cross_section
-        ),
-    )
-)
-connection_blc_pad.connect("e1", blc_3_ref.ports["e2"])
 
-# probe pads right
-probe_right = c.add_ref(
-    ihp.cells.bondpad_array(
-        config="GSG",
-        pitch=PROBE_PITCH,
-        width_ground=PROBE_GROUND_WIDTH_RIGHT,
-        width_signal=PROBE_SIGNAL_SIZE,
-        length_signal=PROBE_SIGNAL_SIZE,
-        signal_cross_section="topmetal1_routing",
-        ground_cross_section="metal1_routing",
-        ground_connection="psub",
-    )
-).rotate(-90)
-probe_right.connect("e1", connection_blc_pad.ports["e2"], allow_width_mismatch=True)
-
-c.add_ref(
-    gf.components.rectangle(size=(NOFILL_GSG_SIZE, NOFILL_GSG_SIZE), layer=ihp.tech.LAYER.Metal5nofill)
-).center = probe_right.center
-c.add_ports(probe_right.ports, prefix="probe_right_")
 
 
 # ============================================================
