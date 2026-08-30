@@ -6,7 +6,7 @@
 * 
 .SUBCKT sparx_wpd_le p1 p2 p3
 V1 p1 s1 0
-R1 s1 0 50
+R1 s1 0 50 noisy=0
 Gd1_1 0 s1 p1 0 -0.007667604072
 Fd1_1 0 s1 V1 -0.3833802036
 Gr1_re_1_1 0 s1 x1_re_a1 0 130827.903
@@ -37,33 +37,33 @@ Gr4_im_1_3 0 s1 x4_im_a3 0 -238409.5415
 Cx1_re_a1 x1_re_a1 0 1.428106935e-11
 Gx1_re_a1 0 x1_re_a1 p1 0 1.406876159e-08
 Fx1_re_a1 0 x1_re_a1 V1 7.034380793e-07
-Rp1_re_re_a1 0 x1_re_a1 1
+Rp1_re_re_a1 0 x1_re_a1 1 noisy=0
 Gp1_re_im_a1 0 x1_re_a1 x1_im_a1 0 26.00269748
 Cx1_im_a1 x1_im_a1 0 1.428106935e-11
 Gp1_im_re_a1 0 x1_im_a1 x1_re_a1 0 -26.00269748
-Rp1_im_im_a1 0 x1_im_a1 1
+Rp1_im_im_a1 0 x1_im_a1 1 noisy=0
 Cx2_a1 x2_a1 0 1.373999553e-12
 Gx2_a1 0 x2_a1 p1 0 0.006807230025
 Fx2_a1 0 x2_a1 V1 0.3403615013
-Rp2_a1 0 x2_a1 1
+Rp2_a1 0 x2_a1 1 noisy=0
 Cx3_re_a1 x3_re_a1 0 8.876811616e-13
 Gx3_re_a1 0 x3_re_a1 p1 0 4.376855181e-08
 Fx3_re_a1 0 x3_re_a1 V1 2.188427591e-06
-Rp3_re_re_a1 0 x3_re_a1 1
+Rp3_re_re_a1 0 x3_re_a1 1 noisy=0
 Gp3_re_im_a1 0 x3_re_a1 x3_im_a1 0 1.353391809
 Cx3_im_a1 x3_im_a1 0 8.876811616e-13
 Gp3_im_re_a1 0 x3_im_a1 x3_re_a1 0 -1.353391809
-Rp3_im_im_a1 0 x3_im_a1 1
+Rp3_im_im_a1 0 x3_im_a1 1 noisy=0
 Cx4_re_a1 x4_re_a1 0 8.894836628e-13
 Gx4_re_a1 0 x4_re_a1 p1 0 4.752972272e-08
 Fx4_re_a1 0 x4_re_a1 V1 2.376486136e-06
-Rp4_re_re_a1 0 x4_re_a1 1
+Rp4_re_re_a1 0 x4_re_a1 1 noisy=0
 Gp4_re_im_a1 0 x4_re_a1 x4_im_a1 0 0.8552729471
 Cx4_im_a1 x4_im_a1 0 8.894836628e-13
 Gp4_im_re_a1 0 x4_im_a1 x4_re_a1 0 -0.8552729471
-Rp4_im_im_a1 0 x4_im_a1 1
+Rp4_im_im_a1 0 x4_im_a1 1 noisy=0
 V2 p2 s2 0
-R2 s2 0 50
+R2 s2 0 50 noisy=0
 Gd2_1 0 s2 p1 0 0.004979483314
 Fd2_1 0 s2 V1 0.2489741657
 Gr1_re_2_1 0 s2 x1_re_a1 0 -125612.429
@@ -94,33 +94,33 @@ Gr4_im_2_3 0 s2 x4_im_a3 0 -459487.665
 Cx1_re_a2 x1_re_a2 0 1.428106935e-11
 Gx1_re_a2 0 x1_re_a2 p2 0 2.534579826e-08
 Fx1_re_a2 0 x1_re_a2 V2 1.267289913e-06
-Rp1_re_re_a2 0 x1_re_a2 1
+Rp1_re_re_a2 0 x1_re_a2 1 noisy=0
 Gp1_re_im_a2 0 x1_re_a2 x1_im_a2 0 26.00269748
 Cx1_im_a2 x1_im_a2 0 1.428106935e-11
 Gp1_im_re_a2 0 x1_im_a2 x1_re_a2 0 -26.00269748
-Rp1_im_im_a2 0 x1_im_a2 1
+Rp1_im_im_a2 0 x1_im_a2 1 noisy=0
 Cx2_a2 x2_a2 0 1.373999553e-12
 Gx2_a2 0 x2_a2 p2 0 0.02225901739
 Fx2_a2 0 x2_a2 V2 1.11295087
-Rp2_a2 0 x2_a2 1
+Rp2_a2 0 x2_a2 1 noisy=0
 Cx3_re_a2 x3_re_a2 0 8.876811616e-13
 Gx3_re_a2 0 x3_re_a2 p2 0 6.490446649e-08
 Fx3_re_a2 0 x3_re_a2 V2 3.245223325e-06
-Rp3_re_re_a2 0 x3_re_a2 1
+Rp3_re_re_a2 0 x3_re_a2 1 noisy=0
 Gp3_re_im_a2 0 x3_re_a2 x3_im_a2 0 1.353391809
 Cx3_im_a2 x3_im_a2 0 8.876811616e-13
 Gp3_im_re_a2 0 x3_im_a2 x3_re_a2 0 -1.353391809
-Rp3_im_im_a2 0 x3_im_a2 1
+Rp3_im_im_a2 0 x3_im_a2 1 noisy=0
 Cx4_re_a2 x4_re_a2 0 8.894836628e-13
 Gx4_re_a2 0 x4_re_a2 p2 0 7.513159973e-08
 Fx4_re_a2 0 x4_re_a2 V2 3.756579986e-06
-Rp4_re_re_a2 0 x4_re_a2 1
+Rp4_re_re_a2 0 x4_re_a2 1 noisy=0
 Gp4_re_im_a2 0 x4_re_a2 x4_im_a2 0 0.8552729471
 Cx4_im_a2 x4_im_a2 0 8.894836628e-13
 Gp4_im_re_a2 0 x4_im_a2 x4_re_a2 0 -0.8552729471
-Rp4_im_im_a2 0 x4_im_a2 1
+Rp4_im_im_a2 0 x4_im_a2 1 noisy=0
 V3 p3 s3 0
-R3 s3 0 50
+R3 s3 0 50 noisy=0
 Gd3_1 0 s3 p1 0 0.00499185723
 Fd3_1 0 s3 V1 0.2495928615
 Gr1_re_3_1 0 s3 x1_re_a1 0 -124260.2389
@@ -151,29 +151,29 @@ Gr4_im_3_3 0 s3 x4_im_a3 0 143042.5122
 Cx1_re_a3 x1_re_a3 0 1.428106935e-11
 Gx1_re_a3 0 x1_re_a3 p3 0 2.534579826e-08
 Fx1_re_a3 0 x1_re_a3 V3 1.267289913e-06
-Rp1_re_re_a3 0 x1_re_a3 1
+Rp1_re_re_a3 0 x1_re_a3 1 noisy=0
 Gp1_re_im_a3 0 x1_re_a3 x1_im_a3 0 26.00269748
 Cx1_im_a3 x1_im_a3 0 1.428106935e-11
 Gp1_im_re_a3 0 x1_im_a3 x1_re_a3 0 -26.00269748
-Rp1_im_im_a3 0 x1_im_a3 1
+Rp1_im_im_a3 0 x1_im_a3 1 noisy=0
 Cx2_a3 x2_a3 0 1.373999553e-12
 Gx2_a3 0 x2_a3 p3 0 0.02225901739
 Fx2_a3 0 x2_a3 V3 1.11295087
-Rp2_a3 0 x2_a3 1
+Rp2_a3 0 x2_a3 1 noisy=0
 Cx3_re_a3 x3_re_a3 0 8.876811616e-13
 Gx3_re_a3 0 x3_re_a3 p3 0 6.490446649e-08
 Fx3_re_a3 0 x3_re_a3 V3 3.245223325e-06
-Rp3_re_re_a3 0 x3_re_a3 1
+Rp3_re_re_a3 0 x3_re_a3 1 noisy=0
 Gp3_re_im_a3 0 x3_re_a3 x3_im_a3 0 1.353391809
 Cx3_im_a3 x3_im_a3 0 8.876811616e-13
 Gp3_im_re_a3 0 x3_im_a3 x3_re_a3 0 -1.353391809
-Rp3_im_im_a3 0 x3_im_a3 1
+Rp3_im_im_a3 0 x3_im_a3 1 noisy=0
 Cx4_re_a3 x4_re_a3 0 8.894836628e-13
 Gx4_re_a3 0 x4_re_a3 p3 0 7.513159973e-08
 Fx4_re_a3 0 x4_re_a3 V3 3.756579986e-06
-Rp4_re_re_a3 0 x4_re_a3 1
+Rp4_re_re_a3 0 x4_re_a3 1 noisy=0
 Gp4_re_im_a3 0 x4_re_a3 x4_im_a3 0 0.8552729471
 Cx4_im_a3 x4_im_a3 0 8.894836628e-13
 Gp4_im_re_a3 0 x4_im_a3 x4_re_a3 0 -0.8552729471
-Rp4_im_im_a3 0 x4_im_a3 1
+Rp4_im_im_a3 0 x4_im_a3 1 noisy=0
 .ENDS sparx_wpd_le
