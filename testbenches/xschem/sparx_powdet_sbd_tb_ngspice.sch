@@ -61,8 +61,8 @@ value="
 "}
 C {devices/code_shown.sym} 100 -1330 0 0 {name=NGSPICE only_toplevel=true 
 value="
-* .include ../../../netlist/pex/sparx_powdet_sbd_magic_pex.spice
-* .include ../../../netlist/pex/sparx_powdet_sbd_klayout_pex.spice
+* .include ../../../netlist/pex/sparx_powdet_sbd_magic_pex_3.spice
+* .include ../../../netlist/pex/sparx_powdet_sbd_klayout_pex_3.spice
 .temp 27
 .option method=gear
 .save all
