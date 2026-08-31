@@ -236,13 +236,17 @@ def fill_cell(layer=ihp.tech.LAYER.Metal5slit, size=(3, 3)) -> gf.Component:
 
 @gf.cell
 def fill_gat_active(size=(3, 3), active_extension=(0.18, 0.18)) -> gf.Component:
-    """Gate-poly + active filler cell with centred Activ region."""
+    """Gate-poly + active filler cell with centred Activ region.
+
+    `size` sets GatPoly:filler directly (bounded by GFil.a's 5.00um max width);
+    Activ:filler is inset by `active_extension` so GatPoly:filler encloses it (GFil.j).
+    """
     c = gf.Component()
     gat_ref = c.add_ref(gf.c.rectangle(layer=ihp.tech.LAYER.GatPolyfiller, size=size))
     activ_ref = c.add_ref(
         gf.c.rectangle(
             layer=ihp.tech.LAYER.Activfiller,
-            size=(size[0] + 2 * active_extension[0], size[1] + 2 * active_extension[1]),
+            size=(size[0] - 2 * active_extension[0], size[1] - 2 * active_extension[1]),
         )
     )
     activ_ref.center = gat_ref.center
@@ -2912,7 +2916,7 @@ route_pd4_vref = gf.routing.route_bundle_electrical(
 
 sealring_margin = SEALRING_MARGIN  # margin around circuit for sealring
 sealring_width = round(c.xsize + 2 * sealring_margin)
-sealring_height = round(c.ysize + 2 * sealring_margin)
+sealring_height = round(c.ysize + 2 * sealring_margin/2)
 
 print(f"Sealring: {sealring_width} x {sealring_height} um (freq_scale={freq_scale:.2f})")
 
@@ -2998,10 +3002,10 @@ if not supervisors_gds_path.exists():
 
 if do_fill:
     # active/gat poly fill
-    gatpoly_activ_fill_space = 1
+    gatpoly_activ_fill_space = 0.85
     c.fill(
-        fill_cell=fill_gat_active(size=(3, 3)),
-        fill_layers=[(ihp.tech.LAYER.EdgeSealboundary, -50)],
+        fill_cell=fill_gat_active(size=(5, 5)),
+        fill_layers=[(ihp.tech.LAYER.EdgeSealboundary, -30)],
         exclude_layers=[
             (ihp.tech.LAYER.Activdrawing, 1.1),
             (ihp.tech.LAYER.pSDdrawing, 1.1),
@@ -3020,10 +3024,10 @@ if do_fill:
         y_space=gatpoly_activ_fill_space,
     )
     # metal1 fill
-    metal_fill_space = 1
+    metal_fill_space = 1.1
     c.fill(
-        fill_cell=fill_cell(layer=ihp.tech.LAYER.Metal1filler),
-        fill_layers=[(ihp.tech.LAYER.EdgeSealboundary, -50)],
+        fill_cell=fill_cell(layer=ihp.tech.LAYER.Metal1filler, size=(5, 5)),
+        fill_layers=[(ihp.tech.LAYER.EdgeSealboundary, -40)],
         exclude_layers=[
             (ihp.tech.LAYER.Metal1drawing, 10),
             (ihp.tech.LAYER.Passivdrawing, 10),
@@ -3034,8 +3038,8 @@ if do_fill:
     )
     # metal2 fill
     c.fill(
-        fill_cell=fill_cell(layer=ihp.tech.LAYER.Metal2filler),
-        fill_layers=[(ihp.tech.LAYER.EdgeSealboundary, -50)],
+        fill_cell=fill_cell(layer=ihp.tech.LAYER.Metal2filler, size=(5, 5)),
+        fill_layers=[(ihp.tech.LAYER.EdgeSealboundary, -40)],
         exclude_layers=[
             (ihp.tech.LAYER.Metal2drawing, 10),
             (ihp.tech.LAYER.Passivdrawing, 10),
@@ -3045,9 +3049,10 @@ if do_fill:
         y_space=metal_fill_space,
     )
     # metal3 fill
+    metal_fill_space = 1
     c.fill(
-        fill_cell=fill_cell(layer=ihp.tech.LAYER.Metal3filler),
-        fill_layers=[(ihp.tech.LAYER.EdgeSealboundary, -50)],
+        fill_cell=fill_cell(layer=ihp.tech.LAYER.Metal3filler, size=(5, 5)),
+        fill_layers=[(ihp.tech.LAYER.EdgeSealboundary, -40)],
         exclude_layers=[
             (ihp.tech.LAYER.Metal3drawing, 10),
             (ihp.tech.LAYER.Passivdrawing, 10),
@@ -3058,8 +3063,8 @@ if do_fill:
     )
     # metal4 fill
     c.fill(
-        fill_cell=fill_cell(layer=ihp.tech.LAYER.Metal4filler),
-        fill_layers=[(ihp.tech.LAYER.EdgeSealboundary, -50)],
+        fill_cell=fill_cell(layer=ihp.tech.LAYER.Metal4filler, size=(5, 5)),
+        fill_layers=[(ihp.tech.LAYER.EdgeSealboundary, -40)],
         exclude_layers=[
             (ihp.tech.LAYER.Metal4drawing, 10),
             (ihp.tech.LAYER.Passivdrawing, 10),
@@ -3073,7 +3078,7 @@ if do_fill_m5:
     # metal5 fill (groundplate)
     c.fill(
         fill_cell=fill_ground(),
-        fill_layers=[(ihp.tech.LAYER.EdgeSealboundary, -50)],
+        fill_layers=[(ihp.tech.LAYER.EdgeSealboundary, -40)],
         exclude_layers=[(ihp.tech.LAYER.Passivdrawing, 0), (ihp.tech.LAYER.Metal5nofill, 0)],
         x_space=0,
         y_space=0,
@@ -3093,8 +3098,15 @@ if do_fill_m5:
 if do_fill:
     # topmetal1 fill
     c.fill(
-        fill_cell=fill_cell(layer=ihp.tech.LAYER.TopMetal1filler, size=(9, 9)),
-        fill_layers=[(ihp.tech.LAYER.EdgeSealboundary, -50)],
+        fill_cell=fill_cell(layer=ihp.tech.LAYER.TopMetal1drawing, size=(30, 30)),
+        fill_layers=[(ihp.tech.LAYER.EdgeSealboundary, -10)],
+        exclude_layers=[(ihp.tech.LAYER.TopMetal1drawing, 10), (ihp.tech.LAYER.TopMetal2drawing, 20)],
+        x_space=1.65,
+        y_space=1.65,
+    )
+    c.fill(
+        fill_cell=fill_cell(layer=ihp.tech.LAYER.TopMetal1filler, size=(10, 10)),
+        fill_layers=[(ihp.tech.LAYER.EdgeSealboundary, -10)],
         exclude_layers=[(ihp.tech.LAYER.TopMetal1drawing, 10), (ihp.tech.LAYER.TopMetal2drawing, 20)],
         x_space=3,
         y_space=3,
