@@ -21,7 +21,7 @@ ihp.PDK.activate()
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
-DEFAULT_FREQUENCY = 60e9  # design frequency in Hz
+DEFAULT_FREQUENCY = 160e9  # design frequency in Hz
 
 # EM sub-structures (BLC, WPD, BPF) are exported here for the Palace flow
 EM_LAYOUT_DIR = PROJECT_ROOT / "verification" / "em" / "layout"
