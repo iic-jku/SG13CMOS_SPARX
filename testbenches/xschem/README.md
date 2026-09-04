@@ -1,6 +1,6 @@
 # Xschem Testbenches
 
-This folder holds every circuit-level testbench of SPARX, for both simulators the flow uses, together with the post-processing scripts that turn the raw simulator output into the numbers and figures used in the documentation and in the papers.
+This folder holds every circuit-level testbench of SPARX, for both simulators the flow uses, together with the post-processing scripts that turn the raw simulator output into the numbers and figures used in the documentation.
 
 There are 21 testbenches in four groups:
 
@@ -51,7 +51,7 @@ These are the analyses this folder uses. Which analyses a given build has is wor
 
 ### Why two ways to compute the same steady state
 
-`hb` and `pss` both produce the periodic steady state, and they are complementary rather than redundant. Harmonic balance solves for the Fourier coefficients directly, which suits mildly nonlinear, high-Q and multi-tone problems. Shooting solves for the initial condition that reproduces itself after one period, which suits stiff, sharply switching circuits. Running both on the same detector and getting the same transfer curve is the strongest single piece of evidence in the detector section, because the two algorithms share no code path. They agree within 0.6 percent here.
+`hb` and `pss` both produce the periodic steady state, and they are complementary rather than redundant. Harmonic balance solves for the Fourier coefficients directly, which suits mildly nonlinear, high-Q and multi-tone problems. Shooting solves for the initial condition that reproduces itself after one period, which suits stiff, sharply switching circuits. Running both on the same detector and getting the same transfer curve is the strongest evidence available that the curve is real, because the two algorithms share no code path. They agree within 0.6 percent here.
 
 ### What `hbac` is, and how it relates to PAC
 
@@ -64,7 +64,7 @@ Once a periodic steady state exists, linearizing around it gives a linear period
 
 So `hbac` is literally harmonic-balance AC, and it is the same class of analysis as `pac`, only built on the HB solution instead of the shooting solution. VACASK's own registry string calls it "HBAC (quasi)periodic small-signal", where "quasi" acknowledges that an HB state can carry two incommensurate tones, which a strictly periodic shooting solution cannot represent.
 
-**This build has `hbac` but no `pac`, and neither `pnoise` nor `hbnoise`.** The consequence is stated plainly in the detector section below and in the paper: there is no noise analysis around a pumped large-signal state, so the detector's output noise density is taken at the quiescent operating point. That misses the bias shift the LO causes and any noise folding from the LO harmonics. For this circuit the error is second order, because the dominant noise source is a baseband current at the transimpedance amplifier input, which neither shifts much nor folds, but it is an approximation and not a measurement.
+**This build has `hbac` but no `pac`, and neither `pnoise` nor `hbnoise`.** The consequence is stated plainly under [the noise figure testbench](#33-noise-figure-nep-and-minimum-detectable-power) below: there is no noise analysis around a pumped large-signal state, so the detector's output noise density is taken at the quiescent operating point. That misses the bias shift the LO causes and any noise folding from the LO harmonics. For this circuit the error is second order, because the dominant noise source is a baseband current at the transimpedance amplifier input, which neither shifts much nor folds, but it is an approximation and not a measurement.
 
 ## ngspice, and why both simulators
 
