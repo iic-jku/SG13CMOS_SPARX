@@ -192,10 +192,10 @@ In the LO-offset mode the detector is a mixer, so a noise figure is well defined
 
 | quantity | m = 1, fabricated | m = 1, post-layout | m = 16 |
 |---|---|---|---|
-| NF (double sideband) | 38.2 dB | 38.5 dB | 25.6 dB |
-| NEP at 1 MHz | 6.2 nW per root Hz | 6.3 | 1.1 |
-| NEP at 1 GHz | 175 pW per root Hz | 179 | 18 |
-| minimum detectable power, 1 MHz to 5 GHz | -18.0 dBm | -17.9 dBm | -25.4 dBm |
+| NF (double sideband) | 38.2 dB | 39.0 dB | 25.6 dB |
+| NEP at 1 MHz | 6.2 nW per root Hz | 6.8 | 1.1 |
+| NEP at 1 GHz | 175 pW per root Hz | 191 | 18 |
+| minimum detectable power, 1 MHz to 5 GHz | -18.0 dBm | -17.6 dBm | -25.4 dBm |
 | video bandwidth | 1.26 GHz | 1.12 GHz | 1.77 GHz |
 
 Two results worth carrying forward. About 94 percent of the output noise power between 1 MHz and 5 GHz is flicker noise of the parasitic vertical PNP that the PDK model of the Schottky diode contains, so nothing that was sized in this design sets the noise floor. And because that noise is 1/f across the whole video band, detecting at DC as a conventional six-port does is expensive: moving the outputs to a 1 GHz IF improves the NEP 35-fold.
@@ -259,11 +259,11 @@ Six analyses in one bench, all at 159 GHz LO and 161 GHz RF applied through 50 O
 
 **Findings.**
 
-- The LO path through filter, divider and coupler loses 16.9 dB to 18.6 dB, so +12 dBm at the pad places each detector at -6.6 dBm to -4.9 dBm, which is the operating point the detector was characterized at.
-- The RF path through two couplers loses 5.9 dB to 9.7 dB.
-- The differential I and Q outputs show an amplitude imbalance of 2.1 dB and a phase difference of 85.3 degrees, which the six-port calibration absorbs.
-- That imbalance is predicted by the EM data alone to within 0.4 dB and 0.7 degrees, by forming the product of the conjugated LO-path and the RF-path S-parameters per output. The circuit simulation and the EM solve agree without any fitting.
-- The transient reproduces the `hbac` amplitudes within 0.2 dB, and the two-tone HB within 0.4 dB.
+- The LO path through filter, divider and coupler loses 17.3 dB to 18.6 dB, so +12 dBm at the pad places each detector at -6.6 dBm to -5.3 dBm, which is the operating point the detector was characterized at.
+- The RF path through two couplers loses 5.4 dB to 9.3 dB.
+- The differential I and Q outputs show an amplitude imbalance of 2.0 dB and a phase difference of 85.6 degrees, which the six-port calibration absorbs.
+- That imbalance is predicted by the EM data alone to within 0.5 dB and 1.0 degrees, by forming the product of the conjugated LO-path and the RF-path S-parameters per output. The circuit simulation and the EM solve agree without any fitting.
+- The transient reproduces the `hbac` amplitudes within 0.2 dB, and the two-tone HB within 0.5 dB.
 
 **Limits.**
 
@@ -303,7 +303,9 @@ Each variant runs in `simulations/<variant>/` and every output file carries the 
 
 **The PEX symbols in the testbenches are dormant and are never simulated.** Each detector bench does instantiate `sparx_powdet_sbd_pex.sym` next to the schematic symbol, but it carries `spice_ignore=true` and `spectre_ignore=true`, and in the ngspice bench the two PEX include lines are commented out. The verification is that the string `sparx_powdet_sbd_pex` appears zero times in every emitted netlist. The post-layout results come from the netlist rewrite above, not from a symbol swap. The same holds at the top level, where `sparx_top_le.sch` instantiates the schematic symbol four times and the PEX symbol not at all.
 
-What the extraction contributes is worth stating exactly, since "post-layout" can mean many things. With the resistance-gated `extresist` settings the Makefile uses, the extracted netlist is the schematic plus its parasitic capacitors, plus the deterministic route resistances of the supply, output and reference nets, of which the 22 Ohm in series with the feedback resistor is the only one that changes a reported number. The ground net is idealized onto the pin, because the extraction returns the transistor sources to ground through a substrate-like path that the layout does not have, and leaving it in place changes every large-signal number by 6 to 16 dB.
+What the extraction contributes is worth stating exactly, since "post-layout" can mean many things. With the resistance-gated `extresist` settings the Makefile uses, the extracted netlist is the schematic plus its parasitic capacitors, plus the deterministic route resistances of the supply, output and reference nets, of which the 22 Ohm in series with the feedback resistor is the largest. Net effect on the fabricated design: the responsivity falls 5.9 percent, from 41.2 V/W to 38.8 V/W, the input impedance detunes from 51 - j10 Ohm to 40 - j25 Ohm, and the video bandwidth falls 11 percent. The ground net is idealized onto the pin, because the extraction returns the transistor sources to ground through a substrate-like path that the layout does not have, and leaving it in place changes every large-signal number by 6 to 16 dB.
+
+The netlist in `netlist/pex/` carries a correction that must not be lost. The `EXT_MODE=3` full-RC run with this Magic version and PDK deck hits [magic#557](https://github.com/RTimothyEdwards/magic/issues/557): the coupling capacitance is emitted twice, and the substrate capacitance that `extresist` parks on internal nodes of the ground net is discarded when the variant script idealises `vss`. The committed netlist has the capacitance per net pair rebuilt from an `extract all` plus `ext2spice hierarchy off` reference of the same layout, which its header documents. Re-running `make magic-pex` alone overwrites that and reintroduces the error, which is worth knowing because the failure is quiet: before the correction the post-layout responsivity read 41.4 V/W, that is 0.5 percent *above* the schematic, and the plausible-sounding story that the routing resistance gives back what the capacitors take was an artefact of the double count.
 
 ## Traps worth knowing
 
