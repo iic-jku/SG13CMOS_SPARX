@@ -107,7 +107,9 @@ write @schname\\\\.raw
 set appendwrite
 
 * Transient Analysis
-tran 100p 4n
+* tmax capped at 20 fs: without it Gear damps the 159/161 GHz carriers on the
+* pole network (the top-level bench once read 12x low from exactly this).
+tran 100p 4n 0 20f
 remzerovec
 write @schname\\\\.raw
 set appendwrite
