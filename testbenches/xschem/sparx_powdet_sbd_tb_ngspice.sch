@@ -67,16 +67,16 @@ value="
 .temp 27
 .save all
 .param lo_freq=159G
-.param lo_lev=100m
+.param lo_lev=300m
 .param rf_freq=161G
-.param rf_lev=1m
+.param rf_lev=3m
 .options savecurrents klu method=gear reltol=1e-3 abstol=1e-12 gmin=1e-12 rshunt=1e14
 .control
 set num_threads=8
 *set specwindow=blackman
 
-let lo_freq = 149G
-let rf_freq = 151G
+let lo_freq = 159G
+let rf_freq = 161G
 let if_freq = rf_freq - lo_freq
 
 op
