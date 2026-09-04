@@ -5,7 +5,7 @@ V {}
 S {}
 F {}
 E {}
-T {VACASK Testbench for SBD-Based Power Detector} 600 -1720 0 0 1 1 {}
+T {VACASK HB Testbench for SBD-Based Power Detector} 600 -1720 0 0 1 1 {}
 T {SPDX-FileCopyrightText: 2025-2026 The SPARX Team
 SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1
 } 1920 -220 0 0 0.4 0.4 {}
@@ -40,7 +40,7 @@ N 1480 -640 1560 -640 {lab=ref}
 C {devices/vsource.sym} 800 -410 0 0 {name=vdd value="dc=1.5"}
 C {devices/vsource.sym} 1020 -490 0 0 {name=vin3 value="type=\\"sine\\" sinedc=0 ampl=1m freq="freq_rf""}
 C {devices/vsource.sym} 1020 -410 0 0 {name=vin2 value="type=\\"sine\\" sinedc=0 ampl=300m freq="freq_lo""}
-C {simulator_commands_shown.sym} 1880 -1310 0 0 {
+C {simulator_commands_shown.sym} 1880 -1350 0 0 {
 name=Libs_VACASK
 simulator=vacask
 only_toplevel=false
@@ -52,7 +52,7 @@ include \\"cornerCAP.lib\\" section=cap_typ
 include \\"cornerDIO.lib\\" section=dio_tt
 "
       }
-C {simulator_commands_shown.sym} 100 -1350 0 0 {
+C {simulator_commands_shown.sym} 100 -1390 0 0 {
 name=Script_VACASK
 simulator=vacask
 only_toplevel=false
@@ -90,7 +90,7 @@ C {capa.sym} 1660 -390 0 0 {name=C2
 m=1
 value=5p}
 C {title-3.sym} 0 0 0 0 {name=l4 author="(c) 2026 H. Pretl, ICD@JKU" rev=1.0 lock=true}
-C {devices/launcher.sym} 1620 -1260 0 0 {name=h5
+C {devices/launcher.sym} 1620 -1300 0 0 {name=h5
 descr="annotate OP" 
 tclcommand="set show_hidden_texts 1; xschem annotate_op"
 }
@@ -109,7 +109,7 @@ C {noconn.sym} 1840 -560 0 0 {name=l7}
 C {sparx_powdet_sbd_pex.sym} 1400 -920 0 0 {name=xdemod2
 spice_ignore=true
 spectre_ignore=true}
-C {launcher.sym} 1620 -1320 0 0 {name=h2
+C {launcher.sym} 1620 -1360 0 0 {name=h2
 descr="Simulate VACASK"
 tclcommand="
 # Setup the default simulation commands if not already set up

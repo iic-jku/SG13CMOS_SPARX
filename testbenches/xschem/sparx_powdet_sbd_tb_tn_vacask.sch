@@ -5,45 +5,45 @@ V {}
 S {}
 F {}
 E {}
-T {VACASK Transient-Noise Testbench for the SBD-Based Power Detector} 600 -1720 0 0 1 1 {}
+T {VACASK Transient-Noise Testbench for the SBD-Based Power Detector} 370 -1710 0 0 1 1 {}
 T {SPDX-FileCopyrightText: 2025-2026 The SPARX Team
 SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1
 } 1920 -220 0 0 0.4 0.4 {}
-N 800 -300 800 -280 {
+N 1320 -380 1320 -360 {
 lab=GND}
-N 1020 -380 1020 -300 {lab=GND}
-N 1020 -460 1020 -440 {lab=#net1}
-N 1020 -660 1020 -600 {lab=rfin}
-N 1020 -540 1020 -520 {lab=src}
-N 1400 -300 1560 -300 {lab=GND}
-N 1400 -800 1400 -720 {lab=vdd}
-N 800 -300 1020 -300 {lab=GND}
-N 1660 -520 1800 -520 {lab=out_cm}
-N 1840 -470 1840 -300 {lab=GND}
-N 1840 -590 1840 -530 {lab=out}
-N 1560 -640 1560 -480 {lab=ref}
-N 1560 -480 1800 -480 {lab=ref}
-N 800 -380 800 -300 {lab=GND}
-N 800 -800 800 -440 {lab=vdd}
-N 1660 -300 1840 -300 {lab=GND}
-N 1660 -360 1660 -300 {lab=GND}
-N 1560 -300 1660 -300 {lab=GND}
-N 1560 -360 1560 -300 {lab=GND}
-N 1560 -480 1560 -420 {lab=ref}
-N 1660 -520 1660 -420 {lab=out_cm}
-N 1660 -680 1660 -520 {lab=out_cm}
-N 1020 -660 1320 -660 {lab=rfin}
-N 1400 -600 1400 -300 {lab=GND}
-N 1020 -300 1400 -300 {lab=GND}
-N 800 -800 1400 -800 {lab=vdd}
-N 1480 -680 1660 -680 {lab=out_cm}
-N 1480 -640 1560 -640 {lab=ref}
-C {devices/vsource.sym} 800 -410 0 0 {name=vdd value="dc=1.5"}
-C {devices/res.sym} 1020 -570 0 0 {name=Rs value=50}
-C {devices/lab_pin.sym} 1020 -540 0 0 {name=p21 sig_type=std_logic lab=src}
-C {devices/vsource.sym} 1020 -490 0 0 {name=vin3 value="type=\\"sine\\" sinedc=0 ampl=ampl_rf freq="freq_rf""}
-C {devices/vsource.sym} 1020 -410 0 0 {name=vin2 value="type=\\"sine\\" sinedc=0 ampl=ampl_lo freq="freq_lo""}
-C {simulator_commands_shown.sym} 1880 -1310 0 0 {
+N 1540 -460 1540 -380 {lab=GND}
+N 1540 -540 1540 -520 {lab=#net1}
+N 1540 -740 1540 -680 {lab=rfin}
+N 1540 -620 1540 -600 {lab=src}
+N 1920 -380 2080 -380 {lab=GND}
+N 1920 -880 1920 -800 {lab=vdd}
+N 1320 -380 1540 -380 {lab=GND}
+N 2180 -600 2320 -600 {lab=out_cm}
+N 2360 -550 2360 -380 {lab=GND}
+N 2360 -670 2360 -610 {lab=out}
+N 2080 -720 2080 -560 {lab=ref}
+N 2080 -560 2320 -560 {lab=ref}
+N 1320 -460 1320 -380 {lab=GND}
+N 1320 -880 1320 -520 {lab=vdd}
+N 2180 -380 2360 -380 {lab=GND}
+N 2180 -440 2180 -380 {lab=GND}
+N 2080 -380 2180 -380 {lab=GND}
+N 2080 -440 2080 -380 {lab=GND}
+N 2080 -560 2080 -500 {lab=ref}
+N 2180 -600 2180 -500 {lab=out_cm}
+N 2180 -760 2180 -600 {lab=out_cm}
+N 1540 -740 1840 -740 {lab=rfin}
+N 1920 -680 1920 -380 {lab=GND}
+N 1540 -380 1920 -380 {lab=GND}
+N 1320 -880 1920 -880 {lab=vdd}
+N 2000 -760 2180 -760 {lab=out_cm}
+N 2000 -720 2080 -720 {lab=ref}
+C {devices/vsource.sym} 1320 -490 0 0 {name=vdd value="dc=1.5"}
+C {devices/res.sym} 1540 -650 0 0 {name=Rs value=50}
+C {devices/lab_pin.sym} 1540 -620 0 0 {name=p21 sig_type=std_logic lab=src}
+C {devices/vsource.sym} 1540 -570 0 0 {name=vin3 value="type=\\"sine\\" sinedc=0 ampl=ampl_rf freq="freq_rf""}
+C {devices/vsource.sym} 1540 -490 0 0 {name=vin2 value="type=\\"sine\\" sinedc=0 ampl=ampl_lo freq="freq_lo""}
+C {simulator_commands_shown.sym} 1900 -1350 0 0 {
 name=Libs_VACASK
 simulator=vacask
 only_toplevel=false
@@ -55,7 +55,7 @@ include \\"cornerCAP.lib\\" section=cap_typ
 include \\"cornerDIO.lib\\" section=dio_tt
 "
       }
-C {simulator_commands_shown.sym} 100 -1350 0 0 {
+C {simulator_commands_shown.sym} 80 -1350 0 0 {
 name=Script_VACASK
 simulator=vacask
 only_toplevel=false
@@ -124,34 +124,34 @@ control
   postprocess(PYTHON, \\"../plot_simulations/plot_sparx_powdet_sbd_tb_tn_vacask.py\\")
 endc
 "}
-C {sparx_powdet_sbd.sym} 1400 -660 0 0 {name=xdemod1}
-C {capa.sym} 1560 -390 0 0 {name=C1
+C {sparx_powdet_sbd.sym} 1920 -740 0 0 {name=xdemod1}
+C {capa.sym} 2080 -470 0 0 {name=C1
 m=1
 value=5p}
-C {capa.sym} 1660 -390 0 0 {name=C2
+C {capa.sym} 2180 -470 0 0 {name=C2
 m=1
 value=5p}
 C {title-3.sym} 0 0 0 0 {name=l4 author="Simon Dorrer" rev=1.0 lock=true}
-C {devices/launcher.sym} 1620 -1260 0 0 {name=h5
+C {devices/launcher.sym} 1640 -1300 0 0 {name=h5
 descr="annotate OP" 
 tclcommand="set show_hidden_texts 1; xschem annotate_op"
 }
-C {devices/gnd.sym} 800 -280 0 0 {name=l1 lab=GND}
-C {devices/lab_pin.sym} 1020 -660 0 0 {name=p11 sig_type=std_logic lab=rfin}
-C {devices/lab_pin.sym} 1660 -680 0 1 {name=p12 sig_type=std_logic lab=out_cm}
-C {spice_probe.sym} 1020 -660 0 0 {name=p14 attrs=""}
-C {spice_probe.sym} 1660 -680 0 0 {name=p15 attrs=""}
-C {devices/lab_pin.sym} 1560 -640 0 1 {name=p16 sig_type=std_logic lab=ref}
-C {spice_probe.sym} 1560 -640 0 0 {name=p17 attrs=""}
-C {devices/lab_pin.sym} 800 -800 0 0 {name=p18 sig_type=std_logic lab=vdd}
-C {vcvs.sym} 1840 -500 0 0 {name=E2 value=1}
-C {spice_probe.sym} 1840 -590 0 0 {name=p19 attrs=""}
-C {devices/lab_pin.sym} 1840 -590 0 1 {name=p20 sig_type=std_logic lab=out}
-C {noconn.sym} 1840 -560 0 0 {name=l7}
-C {sparx_powdet_sbd_pex.sym} 1400 -920 0 0 {name=xdemod2
+C {devices/gnd.sym} 1320 -360 0 0 {name=l1 lab=GND}
+C {devices/lab_pin.sym} 1540 -740 0 0 {name=p11 sig_type=std_logic lab=rfin}
+C {devices/lab_pin.sym} 2180 -760 0 1 {name=p12 sig_type=std_logic lab=out_cm}
+C {spice_probe.sym} 1540 -740 0 0 {name=p14 attrs=""}
+C {spice_probe.sym} 2180 -760 0 0 {name=p15 attrs=""}
+C {devices/lab_pin.sym} 2080 -720 0 1 {name=p16 sig_type=std_logic lab=ref}
+C {spice_probe.sym} 2080 -720 0 0 {name=p17 attrs=""}
+C {devices/lab_pin.sym} 1320 -880 0 0 {name=p18 sig_type=std_logic lab=vdd}
+C {vcvs.sym} 2360 -580 0 0 {name=E2 value=1}
+C {spice_probe.sym} 2360 -670 0 0 {name=p19 attrs=""}
+C {devices/lab_pin.sym} 2360 -670 0 1 {name=p20 sig_type=std_logic lab=out}
+C {noconn.sym} 2360 -640 0 0 {name=l7}
+C {sparx_powdet_sbd_pex.sym} 1920 -1000 0 0 {name=xdemod2
 spice_ignore=true
 spectre_ignore=true}
-C {launcher.sym} 1620 -1320 0 0 {name=h2
+C {launcher.sym} 1640 -1360 0 0 {name=h2
 descr="Simulate VACASK"
 tclcommand="
 # Setup the default simulation commands if not already set up
