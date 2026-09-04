@@ -17,7 +17,6 @@ lab=GND}
 N 1080 -480 1240 -480 {lab=rfdummy}
 N 1020 -620 1020 -540 {lab=gnd_local}
 N 1020 -700 1020 -680 {lab=#net1}
-N 1020 -900 1020 -760 {lab=rfin}
 N 1400 -540 1560 -540 {lab=gnd_local}
 N 1400 -1040 1400 -960 {lab=vdd}
 N 800 -540 1020 -540 {lab=gnd_local}
@@ -46,6 +45,8 @@ N 1080 -480 1080 -460 {lab=rfdummy}
 N 800 -1040 1400 -1040 {lab=vdd}
 N 1480 -920 1660 -920 {lab=out_cm}
 N 1480 -880 1560 -880 {lab=ref}
+N 1020 -900 1020 -840 {lab=rfin}
+N 1020 -780 1020 -760 {lab=#net2}
 C {devices/vsource.sym} 800 -430 0 0 {name=Vss value=0}
 C {devices/gnd.sym} 800 -380 0 0 {name=l2 lab=GND}
 C {devices/lab_pin.sym} 800 -480 0 1 {name=p1 sig_type=std_logic lab=gnd_local}
@@ -61,15 +62,15 @@ value="
 "}
 C {devices/code_shown.sym} 100 -1330 0 0 {name=NGSPICE only_toplevel=true 
 value="
-* .include ../../../netlist/pex/sparx_powdet_sbd_magic_pex_3.spice
+.include ../../../netlist/pex/sparx_powdet_sbd_magic_pex_3.spice
 * .include ../../../netlist/pex/sparx_powdet_sbd_klayout_pex_3.spice
 .temp 27
-.option method=gear
 .save all
-.param lo_freq=149G
+.param lo_freq=159G
 .param lo_lev=100m
-.param rf_freq=151G
+.param rf_freq=161G
 .param rf_lev=1m
+.options savecurrents klu method=gear reltol=1e-3 abstol=1e-12 gmin=1e-12 rshunt=1e14
 .control
 set num_threads=8
 *set specwindow=blackman
@@ -142,9 +143,7 @@ C {vcvs.sym} 1840 -740 0 0 {name=E1 value=1}
 C {spice_probe.sym} 1840 -830 0 0 {name=p10 attrs=""}
 C {devices/lab_pin.sym} 1840 -830 0 1 {name=p11 sig_type=std_logic lab=out}
 C {noconn.sym} 1840 -800 0 0 {name=l3}
-C {sparx_powdet_sbd.sym} 1400 -900 0 0 {name=x1
-}
-C {sparx_powdet_sbd_pex.sym} 1400 -1160 0 0 {name=x2
+C {sparx_powdet_sbd_pex.sym} 1400 -1220 0 0 {name=x2
 spice_ignore=true}
 C {title-3.sym} 0 0 0 0 {name=l4 author="(c) 2026 H. Pretl, ICD@JKU" rev=1.0 lock=true}
 C {devices/code_shown.sym} 1710 -1460 0 0 {name=SAVE only_toplevel=true
@@ -152,3 +151,6 @@ format="tcleval( @value )"
 value="
 .include [file rootname [file tail [xschem get schname]]].save
 "}
+C {devices/res.sym} 1020 -810 0 0 {name=Rs value=50}
+C {sparx_powdet_sbd.sym} 1400 -900 0 0 {name=x1
+}
