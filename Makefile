@@ -53,6 +53,14 @@ PEX_MERGED_PINS ?=
 # Override with: make <target> EV_PRECISION=<digits>
 EV_PRECISION ?= 5
 
+# Power-detector design variant for the VACASK testbenches that instantiate the detector, the receiver bench
+# sparx_top_le_tb_rx_vacask included, rewritten from the emitted netlist by scripts/powdet_variant.py: m1 (as
+# fabricated, the default), m16 (Schottky diodes with 16 parallel cells), m1_pex (the fabricated design with its
+# Magic full-RC parasitics, netlist/pex/<CELL>_magic_pex_3.spice). A variant runs in simulations/<VARIANT>/ and its
+# plots and data files carry the variant as a suffix.
+# Override with: make sim-xschem TB=sparx_powdet_sbd_tb_pss_vacask VARIANT=<m16|m1_pex>
+VARIANT ?=
+
 # Design frequency in GHz (default: 160)
 # Override with: make build-layout FREQ=<frequency_in_GHz>
 FREQ ?= 160
@@ -141,6 +149,7 @@ help: ## Show this help message
 	@echo 'EV_PRECISION defaults to 5 significant digits for Xschem ev function.'
 	@echo 'TB selects the Xschem testbench for sim-xschem (default: sparx_bpf_le_tb_acsp_ngspice).'
 	@echo 'SCRIPT selects the plotting script for sim-view-xschem (default: plot_n_port_tb_acsp_ngspice).'
+	@echo 'VARIANT selects a power-detector design variant for sim-xschem (m16, m1_pex), empty runs the design as fabricated.'
 	@echo 'snp2le: SNP=<file.sNp> ORDER=<N> LE_FORMAT=<spice|spectre> LE_OUT=<path>.'
 	@echo 'EM sim: solves the structures written by build-layout to $(EM_LAY_DIR), so run build-layout first.'
 	@echo 'EM sim: NP=<procs> Z0=<Ohms> SIGNAL_CROSS_SECTION=<metal> GROUND_CROSS_SECTION=<metal> are the port settings of the solve.'
@@ -444,15 +453,26 @@ sim-xschem: ## Run a testbench simulation with Xschem in batch mode (usage: make
 		write_data [save_params] $(abspath $(XSCHEM_TB_DIR)/simulations)/$(TB).save; \
 		xschem netlist \
 	' $(TB).sch
-	cd $(XSCHEM_TB_DIR)/simulations && $(if $(findstring _vacask,$(TB)),vacask -qp -sp $(TB).spectre </dev/null,ngspice -b $(TB).spice)
+# 	With VARIANT set, the emitted netlist is rewritten into the design variant and run in its own directory.
+	$(if $(VARIANT),python3 $(SCRIPTS_DIR)/powdet_variant.py --variant $(VARIANT) $(XSCHEM_TB_DIR)/simulations/$(TB).spectre $(XSCHEM_TB_DIR)/simulations/$(VARIANT)/$(TB).spectre && cp $(XSCHEM_TB_DIR)/simulations/$(TB).save $(XSCHEM_TB_DIR)/simulations/$(VARIANT)/)
+	cd $(XSCHEM_TB_DIR)/simulations/$(VARIANT) && $(if $(findstring _vacask,$(TB)),vacask -qp -sp $(TB).spectre </dev/null,ngspice -b $(TB).spice)
 # 	VACASK runs with -sp, so its postprocess scripts are run here instead.
+#	POWDET_VARIANT tells the power-detector scripts which directory to read and which suffix to write.
 	$(if $(findstring _acsp_vacask,$(TB)),python3 $(SIM_PLOT_DIR)/plot_n_port_tb_acsp_vacask.py)
 	$(if $(findstring _hb_vacask,$(TB)),python3 $(SIM_PLOT_DIR)/plot_sparx_powdet_sbd_tb_hb_dBV-dBV_vacask.py)
 	$(if $(findstring _hb_vacask,$(TB)),python3 $(SIM_PLOT_DIR)/plot_sparx_powdet_sbd_tb_hb_V-W_vacask.py)
-	$(if $(findstring _pss_vacask,$(TB)),python3 $(SIM_PLOT_DIR)/plot_sparx_powdet_sbd_tb_pss_vacask.py)
-	$(if $(findstring _nf_vacask,$(TB)),python3 $(SIM_PLOT_DIR)/plot_sparx_powdet_sbd_tb_nf_vacask.py)
-	$(if $(findstring _tn_vacask,$(TB)),python3 $(SIM_PLOT_DIR)/plot_sparx_powdet_sbd_tb_tn_vacask.py)
+	$(if $(findstring _pss_vacask,$(TB)),POWDET_VARIANT=$(VARIANT) python3 $(SIM_PLOT_DIR)/plot_sparx_powdet_sbd_tb_pss_vacask.py)
+	$(if $(findstring _nf_vacask,$(TB)),POWDET_VARIANT=$(VARIANT) python3 $(SIM_PLOT_DIR)/plot_sparx_powdet_sbd_tb_nf_vacask.py)
+	$(if $(findstring _tn_vacask,$(TB)),POWDET_VARIANT=$(VARIANT) python3 $(SIM_PLOT_DIR)/plot_sparx_powdet_sbd_tb_tn_vacask.py)
+	$(if $(findstring _rx_vacask,$(TB)),POWDET_VARIANT=$(VARIANT) python3 $(SIM_PLOT_DIR)/plot_sparx_top_le_tb_rx_vacask.py)
 .PHONY: sim-xschem
+
+sim-powdet-variants: ## Run the power-detector PSS and NF testbenches for the m16 and m1_pex design variants (usage: make sim-powdet-variants)
+	$(MAKE) sim-xschem TB=sparx_powdet_sbd_tb_pss_vacask VARIANT=m16
+	$(MAKE) sim-xschem TB=sparx_powdet_sbd_tb_nf_vacask VARIANT=m16
+	$(MAKE) sim-xschem TB=sparx_powdet_sbd_tb_pss_vacask VARIANT=m1_pex
+	$(MAKE) sim-xschem TB=sparx_powdet_sbd_tb_nf_vacask VARIANT=m1_pex
+.PHONY: sim-powdet-variants
 
 sim-view-xschem: ## Plot Xschem simulation results (usage: make sim-view-xschem [SCRIPT=<scriptname>])
 	SHOW_PLOTS=1 python3 $(SIM_PLOT_DIR)/$(SCRIPT).py
@@ -472,8 +492,15 @@ sim-all: ## Run all Xschem testbench simulations (usage: make sim-all)
 	$(MAKE) sim-xschem TB=sparx_powdet_sbd_tb_ngspice
 	$(MAKE) sim-xschem TB=sparx_powdet_sbd_tb_hb_vacask
 # 	PSS before NF: the PSS testbench fits the responsivity that the NF testbench turns into an NEP.
+#	The design variants (16 diode cells, and the fabricated design with its layout parasitics) follow the fabricated design.
 	$(MAKE) sim-xschem TB=sparx_powdet_sbd_tb_pss_vacask
 	$(MAKE) sim-xschem TB=sparx_powdet_sbd_tb_nf_vacask
+	$(MAKE) sim-powdet-variants
+# 	Receiver level: the full-core fit driving the four detectors, as fabricated and post-layout, in VACASK (HB, HBAC, two-tone HB and transient in one bench), and the two ngspice transients of the composed and the full-core model.
+	$(MAKE) sim-xschem TB=sparx_top_le_tb_rx_vacask
+	$(MAKE) sim-xschem TB=sparx_top_le_tb_rx_vacask VARIANT=m1_pex
+	$(MAKE) sim-xschem TB=sparx_top_le_tb_tran_ngspice
+	$(MAKE) sim-xschem TB=sparx_top_tb_tran_ngspice
 .PHONY: sim-all
 # ================================================================================================
 
@@ -482,8 +509,8 @@ sim-all: ## Run all Xschem testbench simulations (usage: make sim-all)
 sparx-core: ## Run the six-port core EM flow: EM simulation, S-parameter copy, LE fit with ORDER=24, and core testbench simulation (usage: make sparx-core [FREQ=<GHz>])
 	$(MAKE) sim-sparx-core-em
 	$(MAKE) copy-sparam SPARAM=sparx$(FREQ)_core
-	$(MAKE) snp2le SNP=$(EM_SPARAM_DIR)/sparx$(FREQ)_core_deembedded.s7p ORDER=24 LE_FORMAT=spice LE_OUT=netlist/spice/sparx_core_le.spice
-	$(MAKE) snp2le SNP=$(EM_SPARAM_DIR)/sparx$(FREQ)_core_deembedded.s7p ORDER=24 LE_FORMAT=spectre LE_OUT=netlist/spectre/sparx_core_le.inc
+	$(MAKE) snp2le SNP=$(EM_SPARAM_DIR)/sparx$(FREQ)_core.s7p ORDER=24 LE_FORMAT=spice LE_OUT=netlist/spice/sparx_core_le.spice
+	$(MAKE) snp2le SNP=$(EM_SPARAM_DIR)/sparx$(FREQ)_core.s7p ORDER=24 LE_FORMAT=spectre LE_OUT=netlist/spectre/sparx_core_le.inc
 	$(MAKE) sim-xschem TB=sparx_core_tb_acsp_ngspice
 	$(MAKE) sim-xschem TB=sparx_core_tb_acsp_vacask
 .PHONY: sparx-core
