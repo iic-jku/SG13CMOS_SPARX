@@ -1,5 +1,13 @@
 * PEX produced on Sun Aug 30 02:50:36 PM CEST 2026 using /foss/tools/sak/sak-pex.sh with m=3 and s=1 (extresist threshold=1000 mOhm, minres=100 mOhm, mindelay=0 ps)
 * NGSPICE file created from sparx_powdet_sbd_pex.ext - technology: ihp-sg13g2
+* CORRECTED 2026-09-04 as a workaround for magic#557, which this extraction hits:
+* the coupling capacitance of the m=3 full-RC run is emitted twice, and the substrate
+* capacitance that extresist parks on internal nodes of the ground net is lost when
+* scripts/powdet_variant.py idealises vss. The capacitance per net pair was rebuilt
+* from an <extract all> plus <ext2spice hierarchy off> reference of the same layout.
+* Devices and resistors are unchanged from the sak-pex.sh run named above, only the
+* C lines differ. Post-layout responsivity moves 41.4 -> 38.8 V/W, the video
+* bandwidth does not move. Regenerating with sak-pex.sh alone reintroduces the error.
 
 .subckt sparx_powdet_sbd_pex vout vref vdd rfin vss
 X0 vout.t6 dw_8122_4047# vdd.t16 vdd.t0 sg13_lv_pmos ad=0.95p pd=5.38u as=0.95p ps=5.38u w=5u l=0.13u
@@ -383,78 +391,80 @@ C34 a_8474_2725# a_9398_3295# 0.02051f
 C35 a_9398_3295# a_9398_2795# 0.02622f
 C36 a_9398_3295# dw_9390_4047# 0.39405f
 C37 a_8474_2725# vref 0.19179f
-C38 vref vss 5.02923f
-C39 vout vss 28.86927f
-C40 a_8232_4131# vss 0.1611f
-C41 dw_9390_4047# vss 0.90928f
-C42 vss.t42 vss 57.02948f
-C43 vss.t44 vss 85.40701f
-C44 vdd.n0 vss 0.01157f
-C45 vdd.n1 vss 0.01157f
-C46 vdd.n2 vss 0.04753f
-C47 vdd.n3 vss 0.19403f
-C48 vdd.n4 vss 0.03609f
-C49 vdd.n5 vss 0.08528f
-C50 vdd.n6 vss 0.03588f
-C51 vdd.t1 vss 2.59563f
-C52 vdd.t10 vss 0.01355f
-C53 vdd.t8 vss 0.01355f
-C54 vdd.t6 vss 0.01355f
-C55 vdd.t4 vss 0.01355f
-C56 vdd.t3 vss 0.01861f
-C57 vdd.t25 vss 0.01788f
-C58 vdd.n7 vss 0.02287f
-C59 vdd.n8 vss 0.01157f
-C60 vdd.n9 vss 0.01157f
-C61 vdd.n10 vss 0.01157f
-C62 vdd.t0 vss 0.82161f
-C63 vdd.t2 vss 0.05953f
-C64 vdd.t14 vss 3.18063f
-C65 vdd.t16 vss 5.86965f
-C66 vdd.t18 vss 0.01355f
-C67 vdd.t20 vss 0.01355f
-C68 vdd.t22 vss 0.01862f
-C69 vdd.t28 vss 0.01789f
-C70 vdd.n11 vss 0.02287f
-C71 vdd.n12 vss 0.01157f
-C72 vdd.n13 vss 0.01157f
-C73 vdd.n14 vss 0.01157f
-C74 vdd.t23 vss 0.14061f
-C75 vout.n0 vss 0.58697f
-C76 vout.n1 vss 0.35382f
-C77 vout.n2 vss 0.84176f
-C78 vout.t16 vss 0.43984f
-C79 vout.t2 vss 0.43468f
-C80 vout.n3 vss 1.20363f
-C81 vout.t1 vss 0.47857f
-C82 vout.n4 vss 0.67633f
-C83 vout.t6 vss 9.41402f
-C84 vout.n5 vss 0.67635f
-C85 vout.t7 vss 0.43468f
-C86 vout.n6 vss 1.26312f
-C87 vout.t4 vss 0.43467f
-C88 vout.t19 vss 0.43468f
-C89 vout.t0 vss 0.43468f
-C90 vout.t8 vss 0.43467f
-C91 vout.t3 vss 0.43467f
-C92 vout.n7 vss 4.72619f
-C93 vout.t20 vss 0.15257f
-C94 vout.t17 vss 0.2206f
-C95 vout.t13 vss 0.2206f
-C96 vout.t15 vss 0.22124f
-C97 vout.t14 vss 0.2206f
-C98 vout.t10 vss 0.2206f
-C99 vout.t11 vss 0.2206f
-C100 vout.t12 vss 0.22346f
-C101 vout.n8 vss 0.6382f
-C102 vout.t9 vss 0.2206f
-C103 vout.t18 vss 0.2206f
-C104 vout.t5 vss 0.2206f
-C105 vout.n9 vss 4.02988f
-C106 vref.t0 vss 3.10325f
-C107 vref.t1 vss 0.21934f
-C108 vref.n0 vss 1.17682f
-C109 vref.t2 vss 0.14147f
-C110 vref.n1 vss 1.46361f
+C38 vref vss 1.67631f
+C39 vout vss 11.6703f
+C40 a_8232_4131# vss 3.15782f
+C41 dw_9390_4047# vss 5.24452f
+C44 vdd.n0 vss 0.0500145f
+C45 vdd.n1 vss 0.0500145f
+C46 vdd.n2 vss 0.205462f
+C47 vdd.n3 vss 0.838748f
+C48 vdd.n4 vss 0.156009f
+C49 vdd.n5 vss 0.368646f
+C50 vdd.n6 vss 0.155101f
+C51 vdd.t1 vss 11.2203f
+C52 vdd.t10 vss 0.0585736f
+C53 vdd.t8 vss 0.0585736f
+C54 vdd.t6 vss 0.0585736f
+C55 vdd.t4 vss 0.0585736f
+C56 vdd.t3 vss 0.0804469f
+C57 vdd.t25 vss 0.0772912f
+C58 vdd.n7 vss 0.0988619f
+C59 vdd.n8 vss 0.0500145f
+C60 vdd.n9 vss 0.0500145f
+C61 vdd.n10 vss 0.0500145f
+C62 vdd.t0 vss 3.55164f
+C63 vdd.t2 vss 0.257335f
+C64 vdd.t14 vss 13.7492f
+C65 vdd.t16 vss 25.3732f
+C66 vdd.t18 vss 0.0585736f
+C67 vdd.t20 vss 0.0585736f
+C68 vdd.t22 vss 0.0804901f
+C69 vdd.t28 vss 0.0773345f
+C70 vdd.n11 vss 0.0988619f
+C71 vdd.n12 vss 0.0500145f
+C72 vdd.n13 vss 0.0500145f
+C73 vdd.n14 vss 0.0500145f
+C74 vdd.t23 vss 0.607826f
+C75 vout.n0 vss 0.237281f
+C76 vout.n1 vss 0.143031f
+C77 vout.n2 vss 0.340279f
+C78 vout.t16 vss 0.177804f
+C79 vout.t2 vss 0.175718f
+C80 vout.n3 vss 0.486563f
+C81 vout.t1 vss 0.19346f
+C82 vout.n4 vss 0.273404f
+C83 vout.t6 vss 3.80559f
+C84 vout.n5 vss 0.273412f
+C85 vout.t7 vss 0.175718f
+C86 vout.n6 vss 0.510612f
+C87 vout.t4 vss 0.175714f
+C88 vout.t19 vss 0.175718f
+C89 vout.t0 vss 0.175718f
+C90 vout.t8 vss 0.175714f
+C91 vout.t3 vss 0.175714f
+C92 vout.n7 vss 1.91055f
+C93 vout.t20 vss 0.0616759f
+C94 vout.t17 vss 0.0891768f
+C95 vout.t13 vss 0.0891768f
+C96 vout.t15 vss 0.0894355f
+C97 vout.t14 vss 0.0891768f
+C98 vout.t10 vss 0.0891768f
+C99 vout.t11 vss 0.0891768f
+C100 vout.t12 vss 0.0903329f
+C101 vout.n8 vss 0.25799f
+C102 vout.t9 vss 0.0891768f
+C103 vout.t18 vss 0.0891768f
+C104 vout.t5 vss 0.0891768f
+C105 vout.n9 vss 1.62907f
+C106 vref.t0 vss 1.03435f
+C107 vref.t1 vss 0.0731088f
+C108 vref.n0 vss 0.392249f
+C109 vref.t2 vss 0.0471537f
+C110 vref.n1 vss 0.48784f
+Cfix0 a_8474_2725# vss 56.9921f
+Cfix1 a_9398_3295# vss 0.89308f
+Cfix2 dw_8122_4047# vss 11.656f
+Cfix3 rfin vss 3.22536f
 .ends
 
