@@ -1,51 +1,42 @@
 # SPDX-FileCopyrightText: 2025-2026 The SPARX Team
 # SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1
-# Description: Validate the SBD detector's small-signal noise in the linear limit of a transient-noise noisescale ladder.
+# Description: Check hbnoise (or the quiescent noise analysis) of the SBD detector against the linear limit of a transient-noise noisescale ladder, and the noise figure from all three.
 
 # TRANSIENT NOISE OF THE SBD POWER DETECTOR.
 #
-# At full noise amplitude the transient-noise output of this detector comes
-# out 3 to 8 times above the small-signal noise analysis. This script runs the
-# same transient at several values of noisescale, which multiplies every
-# device noise source amplitude, and splits the output PSD as
+# The testbench runs the same LO-pumped transient at several values of
+# noisescale, which multiplies every device noise source amplitude, and this
+# script splits the output PSD as
 #
 #   S_out(f, x) = a(f) * x + b(f) * x^2,     x = noisescale^2
 #
-# a(f) is the linear term. It must reproduce the small-signal noise analysis
-# from the NF testbench, and it does, to within 12 % at 0.3, 1 and 3 GHz.
-# That is the validation that the transient-noise setup (SDE mode, the rsw
-# workaround, the LTE floor) is sound.
+# a(f) is the linear term, the noise a small-signal analysis describes. With
+# the LO on it must reproduce hbnoise from the NF testbench, with ampl_lo=0
+# in the netlist it must reproduce the quiescent noise analysis instead. That
+# agreement is the validation of both the transient-noise setup and the
+# periodic noise analysis, since the two share no code path.
 #
-# b(f) is the excess, and it is NOT the detector rectifying its own noise,
-# although that was the first reading of it. Two things rule that out:
+# b(f) is whatever is not linear. Rectified Gaussian noise would be there, it
+# is exactly second order in the noise amplitude and its size follows from the
+# junction curvature, 2.4e-11 V/rtHz at the output for this detector. What the
+# transient shows instead is orders of magnitude larger, grows faster than
+# second order between rungs, grows with noisefmax without converging, and is
+# absent on single devices with the same settings. The working conclusion is a
+# numerical artefact of SDE transient noise on this stiff, strongly nonlinear
+# circuit. The ladder therefore stays at small noisescale, where the top rung
+# is only mildly contaminated, and the script prints the apparent order of the
+# excess so a change in that behaviour is visible. Do not quote the total at
+# any rung as a noise level.
 #
-#   size    Rectified Gaussian noise has a known magnitude. With the junction
-#           curvature k = I0 / (2 n^2 V_T^2) = 0.020 A/V^2 (I0 = 30 uA) and
-#           the white sources putting 0.36 mV RMS across the junction in the
-#           20 GHz noise bandwidth, the rectified term is 2 k^2 S_v^2 B,
-#           which is 2.6e-14 A/rtHz at the TIA input and 2.4e-11 V/rtHz at
-#           the output. The observed excess at 1 GHz is 1.9e-8 V/rtHz, 770
-#           times larger, 58 dB in power.
-#   order   Rectified Gaussian noise is exactly second order in the noise
-#           amplitude, so the excess would scale as x^2 and the middle rung
-#           of the ladder would fall on the a x + b x^2 line through the outer
-#           two. It falls 2 to 3 dB below it, so the excess grows faster than
-#           second order between the upper rungs. The script prints the
-#           apparent order.
-#
-# Single devices (a resistor, a PSP103 MOSFET, a schottky_nbl1 diode) show no
-# excess with the same settings, and the excess grows with noisefmax without
-# converging (6.3, 8.4, 7.7, 9.5, 11.4 times the linear ASD at 1 GHz for
-# 10, 20, 50, 100 and 200 GHz). The working conclusion is a numerical
-# artefact of transient noise on this stiff, strongly nonlinear circuit,
-# mechanism not identified. Until it is, treat the full-amplitude transient
-# noise of this detector as unusable and this bench as a linear-limit check
-# of the small-signal analysis. It is deliberately not part of sim-all.
+# The noise figure is then computed from the linear term with the same
+# conversion the NF testbench uses, so the three noise estimates, transient,
+# hbnoise and quiescent, can be compared on one number.
 
 from rawfile import rawread
 import numpy as np
 import os
 import re
+import json
 import matplotlib
 # Default to the non-interactive Agg backend: write the PNG, open no window.
 # This is required under a VACASK postprocess, where a Qt window crashes VACASK's
@@ -56,22 +47,27 @@ if not SHOW_PLOTS:
     matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
+K_B = 1.380649e-23
+T0 = 290.0
+TB = 'sparx_powdet_sbd_tb_tn_vacask'
+NETLIST = TB + '.spectre'
+# POWDET_VARIANT selects a design variant run by the Makefile (m16, m1_pex).
+VARIANT = os.environ.get('POWDET_VARIANT', '').strip()
+SUFFIX = f'_{VARIANT}' if VARIANT else ''
 # The testbench runs one analysis per noisescale rather than sweeping it: a
 # transient-noise run that aborts writes no rawfile, so one failing rung of a
 # sweep costs every other rung too. The values are read back out of the
 # netlist so they stay defined in one place.
-NETLIST = 'sparx_powdet_sbd_tb_tn_vacask.spectre'
-# POWDET_VARIANT selects a design variant run by the Makefile (m16, m1_pex).
-VARIANT = os.environ.get('POWDET_VARIANT', '').strip()
-SUFFIX = f'_{VARIANT}' if VARIANT else ''
 ANALYSIS_RE = r'analysis\s+(\w+)\s+tran\b[^\n]*?noisescale=([\d.eE+\-]+)'
-# Small-signal reference written by the noise-figure testbench. Optional: if it
-# is missing the script still runs, it just cannot cross-check the linear term.
-REF_NAME = 'powdet_nf_noise.raw'
-DISCARD_FRAC = 0.05      # drop this fraction of the record (op to tran settling)
-N_SEGMENTS = 12          # Welch segments, sets the frequency resolution
-# Frequencies the summary table reports.
-REPORT_F = (3e8, 1e9, 3e9)
+# References written by the noise-figure testbench, in the same directory.
+REF_PUMPED = 'powdet_nf_hbnoise_usb.raw'
+REF_QUIESCENT = 'powdet_nf_noise.raw'
+SOURCE_RES = 'Rs'
+DISCARD_FRAC = 0.1       # drop this fraction of the record (op to tran settling)
+DF_TARGET = 100e6        # Welch frequency resolution, sets the segment length
+# Frequencies the summary table reports, all well inside the resolution and
+# below noisefmax.
+REPORT_F = (5e8, 1e9, 2e9, 3e9)
 
 
 def find_design_root():
@@ -94,7 +90,23 @@ def find_design_root():
 
 DESIGN_ROOT = find_design_root()
 SIM_DIR = os.path.join(DESIGN_ROOT, 'testbenches', 'xschem', 'simulations', VARIANT)
-FIG_DIR = os.path.join(DESIGN_ROOT, 'testbenches', 'xschem', 'plot_simulations', 'figures')
+PLOT_DIR = os.path.join(DESIGN_ROOT, 'testbenches', 'xschem', 'plot_simulations')
+FIG_DIR = os.path.join(PLOT_DIR, 'figures')
+DATA_DIR = os.path.join(PLOT_DIR, 'data')
+NF_FILE = os.path.join(DATA_DIR, f'sparx_powdet_sbd_nf{SUFFIX}.json')
+
+
+def parse_var(netlist, name):
+    m = re.search(rf'var\s+{name}\s*=\s*([\d.eE+\-]+[GMKkTmu]?)', netlist)
+    val = m.group(1)
+    for suf, exp in (('G', 'e9'), ('M', 'e6'), ('K', 'e3'), ('k', 'e3'),
+                     ('T', 'e12'), ('m', 'e-3'), ('u', 'e-6')):
+        val = val.replace(suf, exp)
+    return float(val)
+
+
+def db(x):
+    return 10.0 * np.log10(x)
 
 
 def welch(t, v):
@@ -108,7 +120,7 @@ def welch(t, v):
     t_u = np.linspace(t[0], t[-1], t.size)
     v_u = np.interp(t_u, t, v)
     fs = (t.size - 1) / (t_u[-1] - t_u[0])
-    nper = 1 << int(np.log2(max(256, t.size // N_SEGMENTS)))
+    nper = 1 << int(round(np.log2(fs / DF_TARGET)))
     win = np.hanning(nper)
     wnorm = np.sum(win ** 2)
     acc = np.zeros(nper // 2 + 1)
@@ -119,12 +131,14 @@ def welch(t, v):
         n += 1
     psd = acc / n / (fs * wnorm)
     psd[1:-1] *= 2.0
-    return np.fft.rfftfreq(nper, 1.0 / fs), psd, fs, t.size
+    return np.fft.rfftfreq(nper, 1.0 / fs), psd, fs, t.size, n
 
 
 with open(os.path.join(SIM_DIR, NETLIST)) as fh:
     netlist = fh.read()
 analyses = re.findall(ANALYSIS_RE, netlist)
+ampl_lo = parse_var(netlist, 'ampl_lo')
+pumped = ampl_lo > 0
 # Above noisefmax no noise is injected, so the spectrum there is the
 # integrator's own residual and carries nothing. Plot up to it, no further.
 _m = re.search(r'noisefmax=([\d.eE+\-]+)([GMKkT]?)', netlist)
@@ -140,8 +154,8 @@ for name, ns in analyses:
         missing.append((name, ns))
         continue
     tn = rawread(path).get()
-    f, psd, fs, npts = welch(np.real(tn['time']), np.real(tn['out']))
-    runs.append({'ns': float(ns), 'f': f, 'psd': psd, 'fs': fs, 'npts': npts})
+    f, psd, fs, npts, nseg = welch(np.real(tn['time']), np.real(tn['out']))
+    runs.append({'ns': float(ns), 'f': f, 'psd': psd, 'fs': fs, 'npts': npts, 'nseg': nseg})
 runs.sort(key=lambda r: r['ns'])
 for name, ns in missing:
     print(f'Note: {name}.raw is missing, so noisescale = {ns} is not in the fit. '
@@ -149,7 +163,7 @@ for name, ns in missing:
           'exits 0, so check the transcript for "Timestep too small".')
 if len(runs) < 2:
     raise RuntimeError(f'Need at least 2 noisescale points to separate the linear and '
-                       f'rectified terms, {len(runs)} produced a rawfile.')
+                       f'excess terms, {len(runs)} produced a rawfile.')
 
 # Each run sees a different noise realisation, so the adaptive integrator
 # accepts a slightly different number of timepoints and the Welch grids differ
@@ -164,33 +178,37 @@ for r in runs[1:]:
 # --- solve S(f, x) = a*x + b*x^2 with x = noisescale^2 -------------------
 # Two unknowns, so use the two extreme scales and solve exactly. A least
 # squares fit over all of them is wrong here: it is dominated by the largest
-# scale, where the rectified term is the whole signal, and it then pushes the
-# linear term to whatever makes that point fit. The lowest scale is where the
-# rectified term is negligible, so it is the one that pins a(f), and the
-# highest is the one that pins b(f). Intermediate scales become a check.
+# scale, where the excess is largest, and it then pushes the linear term to
+# whatever makes that point fit. The lowest scale pins a(f), the highest pins
+# b(f), and the scales in between become the check.
 x = np.array([r['ns'] ** 2 for r in runs])
 S = np.vstack([r['psd'] for r in runs])              # [scale, frequency]
 xlo, xhi = x[0], x[-1]
 det = xlo * xhi ** 2 - xhi * xlo ** 2
 a_lin = (S[0] * xhi ** 2 - S[-1] * xlo ** 2) / det
-b_rect = (S[-1] * xlo - S[0] * xhi) / det
+b_exc = (S[-1] * xlo - S[0] * xhi) / det
 a_lin = np.clip(a_lin, 0, None)
-b_rect = np.clip(b_rect, 0, None)
+b_exc = np.clip(b_exc, 0, None)
+
+# --- references from the NF testbench ---------------------------------------
+def load_ref(name):
+    path = os.path.join(SIM_DIR, name)
+    if not os.path.isfile(path):
+        return None, None, None
+    r = rawread(path).get()
+    fr = np.real(r['frequency'])
+    src = f'n({SOURCE_RES})'
+    s_src = np.real(r[src]) if src in r.names else np.zeros(fr.size)
+    return fr, np.real(r['onoise']), s_src
 
 
-def model(xv):
-    return a_lin * xv + b_rect * xv ** 2
-
-# --- small-signal reference, if the NF testbench has been run ------------
-ref_path = os.path.join(SIM_DIR, REF_NAME)
-ref_f = ref_s = None
-if os.path.isfile(ref_path):
-    ref = rawread(ref_path).get()
-    ref_f = np.real(ref['frequency'])
-    ref_s = np.real(ref['onoise'])
-else:
-    print(f'Note: {REF_NAME} is missing, so the linear term cannot be checked against '
-          'the small-signal analysis. Run the NF testbench first '
+ref_f_p, ref_s_p, ref_src_p = load_ref(REF_PUMPED)
+ref_f_q, ref_s_q, _ = load_ref(REF_QUIESCENT)
+ref_f, ref_s = (ref_f_p, ref_s_p) if pumped else (ref_f_q, ref_s_q)
+ref_label = 'hbnoise, LO on' if pumped else 'noise, LO off'
+if ref_s is None:
+    print(f'Note: {REF_PUMPED if pumped else REF_QUIESCENT} is missing, so the linear term '
+          'cannot be checked. Run the NF testbench first '
           '(make sim-xschem TB=sparx_powdet_sbd_tb_nf_vacask).')
 
 
@@ -199,37 +217,46 @@ def band_mean(arr, f0, rel=0.2):
     return float(np.mean(arr[m])) if m.any() else float('nan')
 
 
+def ref_at(fr, sr, f0):
+    return float(np.interp(f0, fr, sr)) if sr is not None else float('nan')
+
+
+print(f'LO                    : {"on, " + f"{ampl_lo*1e3:.0f} mV" if pumped else "off"}, '
+      f'reference is {ref_label}')
 print(f'Records               : {runs[0]["npts"]} points, fs = {runs[0]["fs"]:.3e} Hz, '
-      f'df = {f[1]:.3e} Hz')
+      f'{runs[0]["nseg"]} Welch segments, df = {f[1]:.3e} Hz')
 print(f'noisescale points     : ' + ', '.join(f'{r["ns"]:g}' for r in runs))
 print()
-hdr = f'{"f [Hz]":>10} {"linear ASD":>12} {"small-signal":>12} {"ratio":>7} ' \
-      f'{"total at ns=1":>14} {"excess":>8}'
-print(hdr)
-print(f'{"":>10} {"[V/rtHz]":>12} {"[V/rtHz]":>12} {"":>7} {"[V/rtHz]":>14} {"[x]":>8}')
+print(f'{"f [Hz]":>8} {"linear ASD":>11} {ref_label:>15} {"ratio":>6} {"noise, LO off":>13} {"ratio":>6} '
+      f'{"top rung/ns":>11} {"excess":>7}')
+print(f'{"":>8} {"[V/rtHz]":>11} {"[V/rtHz]":>15} {"":>6} {"[V/rtHz]":>13} {"":>6} {"[V/rtHz]":>11} {"[x]":>7}')
+rows = []
 for f0 in REPORT_F:
     lin = np.sqrt(band_mean(a_lin, f0))
-    tot = np.sqrt(band_mean(S[-1], f0))
-    if ref_s is not None:
-        j = int(np.argmin(np.abs(ref_f - f0)))
-        ref_asd = float(np.sqrt(ref_s[j]))
-        ratio = f'{lin / ref_asd:7.3f}'
-    else:
-        ref_asd, ratio = float('nan'), f'{"n/a":>7}'
-    print(f'{f0:10.2e} {lin:12.4e} {ref_asd:12.4e} {ratio} {tot:14.4e} {tot/lin:8.2f}')
+    r_asd = np.sqrt(ref_at(ref_f, ref_s, f0))
+    q_asd = np.sqrt(ref_at(ref_f_q, ref_s_q, f0))
+    tot = np.sqrt(band_mean(S[-1], f0)) / runs[-1]['ns']
+    rows.append({'f_Hz': f0, 'asd_linear_V': lin, 'asd_ref_V': r_asd, 'asd_quiescent_V': q_asd,
+                 'asd_top_rung_normalised_V': tot})
+    print(f'{f0:8.1e} {lin:11.3e} {r_asd:15.3e} {lin/r_asd:6.3f} {q_asd:13.3e} {lin/q_asd:6.3f} '
+          f'{tot:11.3e} {tot/lin:7.2f}')
+print()
+print('"ratio" is the linear term of the transient-noise split against the small-signal')
+print('reference and should be near 1. "excess" is what the top rung, normalised by its')
+print('noisescale, reports on top of it.')
+print('It is not physical rectified noise, see the header, and it depends on the noise')
+print('settings. Do not quote it.')
 
 print()
-print('The "ratio" column is the validation: the linear term of the transient-noise')
-print('split against the small-signal noise analysis, and it should be near 1.')
-print('The "excess" column is what a raw transient-noise run reports on top of it.')
-print('It is not physical rectified noise, see the header, and it depends on the')
-print('noise settings. Do not quote it.')
+print('Normalised ASD per rung, sqrt(S)/noisescale at 1 GHz. A purely linear circuit')
+print('gives one value on every rung:')
+for r in runs:
+    print(f'  noisescale {r["ns"]:<6g} {np.sqrt(band_mean(r["psd"], 1e9))/r["ns"]:.3e} V/rtHz')
 
 if len(runs) > 2:
     print()
-    print('Order of the excess between the middle and top rungs, from the excess')
-    print('S - a*x at each. Rectified Gaussian noise is exactly 2. Anything well')
-    print('above 2 is not rectification.')
+    print('Order of the excess between the middle and top rungs, from S - a*x at each.')
+    print('Rectified Gaussian noise is exactly 2. Anything well above 2 is not rectification.')
     for r in runs[1:-1]:
         x_mid, x_top = r['ns'] ** 2, x[-1]
         line = []
@@ -243,6 +270,50 @@ if len(runs) > 2:
                 line.append(f'{f0/1e9:.1f} GHz n/a (no excess at the middle rung)')
         print(f'  from noisescale {r["ns"]:g} to {runs[-1]["ns"]:g}:   ' + '   '.join(line))
 
+# --- noise figure from the three noise estimates -----------------------------
+nf_rows = []
+if pumped and os.path.isfile(NF_FILE) and ref_s_p is not None:
+    with open(NF_FILE) as fh:
+        nf = json.load(fh)
+    f_nf = np.asarray(nf['f_Hz'])
+    g_sum = np.asarray(nf['g_usb_V2_per_W']) + np.asarray(nf['g_lsb_V2_per_W'])
+    print()
+    print(f'Double-sideband noise figure at {nf["p_lo_avail_W"]*1e3:.3g} mW LO from the three noise')
+    print('estimates, with the hbac conversion of the NF testbench in the denominator. The')
+    print('transient value uses the linear term of the ladder less the source resistor share')
+    print('of the hbnoise result.')
+    print(f'{"f_IF [Hz]":>10} {"transient":>10} {"hbnoise":>9} {"quiescent":>10}')
+    for row in rows:
+        f0 = row['f_Hz']
+        g = float(np.interp(f0, f_nf, g_sum))
+        s_src = float(np.interp(f0, ref_f_p, ref_src_p))
+        s_tn = max(row['asd_linear_V'] ** 2 - s_src, 0.0)
+        nf_tn = float(db(1.0 + s_tn / (g * K_B * T0)))
+        nf_hbn = float(np.interp(f0, f_nf, nf['nf_dsb_dB']))
+        nf_q = float(np.interp(f0, f_nf, nf['nf_dsb_quiescent_dB']))
+        row.update({'nf_dsb_transient_dB': nf_tn, 'nf_dsb_hbnoise_dB': nf_hbn,
+                    'nf_dsb_quiescent_dB': nf_q})
+        print(f'{f0:10.1e} {nf_tn:10.2f} {nf_hbn:9.2f} {nf_q:10.2f}')
+    # The same, bin by bin over the Welch grid, for the comparison figure. The
+    # lowest bins are left out, they are one resolution step from DC.
+    m_c = (f >= 2 * f[1]) & (f <= min(FMAX, f_nf[-1]))
+    f_c = f[m_c]
+    s_c = np.clip(a_lin[m_c] - np.interp(f_c, ref_f_p, ref_src_p), 0, None)
+    nf_curve = {
+        'f_Hz': f_c,
+        'transient': db(1.0 + s_c / (np.interp(f_c, f_nf, g_sum) * K_B * T0)),
+        'hbnoise': np.interp(f_c, f_nf, nf['nf_dsb_dB']),
+        'quiescent': np.interp(f_c, f_nf, nf['nf_dsb_quiescent_dB']),
+        'f_nf': f_nf,
+        'nf_hbnoise_full': np.asarray(nf['nf_dsb_dB']),
+        'nf_quiescent_full': np.asarray(nf['nf_dsb_quiescent_dB']),
+        'p_lo_W': float(nf['p_lo_avail_W']),
+    }
+elif pumped:
+    print(f'\nNote: {NF_FILE} is missing, no noise figure from the transient. Run the NF '
+          'testbench first.')
+
+
 def band_ylim(ax, arrays):
     """Fit the y range to what is actually inside the plotted x range."""
     band = (f >= f[1]) & (f <= FMAX)
@@ -251,17 +322,20 @@ def band_ylim(ax, arrays):
     if vals.size:
         ax.set_ylim(vals.min() / 3, vals.max() * 3)
 
+
 # --- plot ----------------------------------------------------------------
 fig, (ax_raw, ax_split) = plt.subplots(2, 1, figsize=(8, 9), constrained_layout=True)
-fig.suptitle('SBD Power Detector - Transient Noise, Linear and Rectified Terms')
+fig.suptitle(f'SBD Power Detector {VARIANT} - Transient Noise, LO {"on" if pumped else "off"}, '
+             'Linear Term Against the Small-Signal Analyses')
 
 sl = slice(1, None)
 for r in runs:
-    # r['psd'] is on the common grid f after the interpolation above.
     ax_raw.loglog(f[sl], np.sqrt(r['psd'][sl]) / r['ns'], lw=1, alpha=0.8,
                   label=f'noisescale = {r["ns"]:g}')
-if ref_s is not None:
-    ax_raw.loglog(ref_f, np.sqrt(ref_s), 'k--', lw=2, label='small-signal noise')
+if ref_s_p is not None:
+    ax_raw.loglog(ref_f_p, np.sqrt(ref_s_p), 'k', lw=2, label='hbnoise, LO on')
+if ref_s_q is not None:
+    ax_raw.loglog(ref_f_q, np.sqrt(ref_s_q), 'k--', lw=1.5, label='noise, LO off')
 ax_raw.set_xlim(f[1], FMAX)
 band_ylim(ax_raw, [r['psd'] / r['ns'] ** 2 for r in runs])
 ax_raw.set_xlabel('Frequency (Hz)')
@@ -274,21 +348,81 @@ ax_raw.grid(True, which='both')
 ax_split.loglog(f[sl], np.sqrt(a_lin[sl]), label='linear term $\\sqrt{a}$')
 # b is clipped at zero, so hide the bins where the split found none rather
 # than drawing a solid block of downward spikes.
-b_plot = np.where(b_rect > 0, b_rect, np.nan)
-ax_split.loglog(f[sl], np.sqrt(b_plot[sl]), label='rectified term $\\sqrt{b}$ at noisescale = 1')
-ax_split.loglog(f[sl], np.sqrt(S[-1][sl]), 'k', lw=1, alpha=0.5, label='total at noisescale = 1')
-if ref_s is not None:
-    ax_split.loglog(ref_f, np.sqrt(ref_s), 'k--', lw=2, label='small-signal noise')
+b_plot = np.where(b_exc > 0, b_exc, np.nan)
+ax_split.loglog(f[sl], np.sqrt(b_plot[sl] * xhi ** 2), label=f'excess $\\sqrt{{b x^2}}$ at noisescale = {runs[-1]["ns"]:g}')
+ax_split.loglog(f[sl], np.sqrt(S[-1][sl]), color='tab:gray', lw=1, alpha=0.7,
+                label=f'total at noisescale = {runs[-1]["ns"]:g}')
+if ref_s_p is not None:
+    ax_split.loglog(ref_f_p, np.sqrt(ref_s_p), 'k', lw=2, label='hbnoise, LO on')
+if ref_s_q is not None:
+    ax_split.loglog(ref_f_q, np.sqrt(ref_s_q), 'k--', lw=1.5, label='noise, LO off')
 ax_split.set_xlim(f[1], FMAX)
-band_ylim(ax_split, [a_lin, b_rect, S[-1]])
+band_ylim(ax_split, [a_lin, b_exc * xhi ** 2, S[-1]])
 ax_split.set_xlabel('Frequency (Hz)')
 ax_split.set_ylabel('Output noise ASD (V/$\\sqrt{\\mathrm{Hz}}$)')
 ax_split.legend(fontsize=8)
 ax_split.grid(True, which='both')
 
 os.makedirs(FIG_DIR, exist_ok=True)
-plt.savefig(os.path.join(FIG_DIR, f'sparx_powdet_sbd_tn{SUFFIX}.png'), dpi=150)
-print(f'\nWrote {os.path.join(FIG_DIR, f"sparx_powdet_sbd_tn{SUFFIX}.png")}')
+fig_file = os.path.join(FIG_DIR, f'sparx_powdet_sbd_tn{SUFFIX}.png')
+plt.savefig(fig_file, dpi=150)
+print(f'\nWrote {fig_file}')
+
+# --- the noise figure from the three noise estimates, in one figure --------
+if nf_rows is not None and 'nf_curve' in globals():
+    fig2, axes2 = plt.subplots(1, 2, figsize=(13, 5), constrained_layout=True)
+    p_lo_dbm = 10 * np.log10(nf_curve['p_lo_W'] / 1e-3)
+    fig2.suptitle(f'SBD Power Detector {VARIANT} - Noise Figure from Three Noise Estimates '
+                  f'(LO {p_lo_dbm:.1f} dBm)')
+    for ax, lo_x, title in ((axes2[0], 1e3, 'full IF range'),
+                            (axes2[1], 1e8, 'where the transient ladder resolves it')):
+        ax.semilogx(nf_curve['f_nf'], nf_curve['nf_hbnoise_full'], 'k', lw=2,
+                    label='hbnoise, LO on')
+        ax.semilogx(nf_curve['f_nf'], nf_curve['nf_quiescent_full'], 'k--', lw=1.5,
+                    label='small-signal noise at the operating point, LO off')
+        ax.semilogx(nf_curve['f_Hz'], nf_curve['transient'], color='tab:blue', lw=1, alpha=0.7,
+                    label='transient noise, linear term of the ladder, LO on')
+        ax.semilogx([r['f_Hz'] for r in rows], [r['nf_dsb_transient_dB'] for r in rows], 'o',
+                    color='tab:blue', label='transient, band mean at the reported IFs')
+        ax.set_xlim(lo_x, FMAX / 4)
+        if lo_x > 1e3:
+            m = nf_curve['f_nf'] >= lo_x
+            ax.set_ylim(nf_curve['nf_quiescent_full'][m].min() - 2,
+                        nf_curve['nf_hbnoise_full'][m].max() + 2)
+        ax.set_xlabel('IF frequency (Hz)')
+        ax.set_ylabel('NF$_{DSB}$ (dB)')
+        ax.set_title(title, fontsize=10)
+        ax.legend(fontsize=8)
+        ax.grid(True, which='both')
+    fig2_file = os.path.join(FIG_DIR, f'sparx_powdet_sbd_nf_compare{SUFFIX}.png')
+    fig2.savefig(fig2_file, dpi=150)
+    print(f'Wrote {fig2_file}')
+    csv2 = os.path.join(DATA_DIR, f'sparx_powdet_sbd_nf_compare{SUFFIX}.csv')
+    os.makedirs(DATA_DIR, exist_ok=True)
+    np.savetxt(csv2, np.column_stack((nf_curve['f_Hz'], nf_curve['transient'],
+                                      nf_curve['hbnoise'], nf_curve['quiescent'])),
+               delimiter=',', comments='', fmt='%.6e',
+               header='f_hz,nf_dsb_transient_db,nf_dsb_hbnoise_db,nf_dsb_quiescent_db')
+    print(f'Wrote {csv2}')
+
+os.makedirs(DATA_DIR, exist_ok=True)
+out_file = os.path.join(DATA_DIR, f'sparx_powdet_sbd_tn{SUFFIX}.json')
+with open(out_file, 'w') as fh:
+    json.dump({
+        'variant': VARIANT or 'm1',
+        'ampl_lo_V': ampl_lo,
+        'reference': ref_label,
+        'noisescale': [r['ns'] for r in runs],
+        'df_Hz': float(f[1]),
+        'rows': rows,
+        'source': TB,
+    }, fh, indent=2)
+csv_file = os.path.join(DATA_DIR, f'sparx_powdet_sbd_tn{SUFFIX}.csv')
+band = (f >= f[1]) & (f <= FMAX)
+np.savetxt(csv_file, np.column_stack((f[band], np.sqrt(a_lin[band]), np.sqrt(S[-1][band]))),
+           delimiter=',', comments='', fmt='%.6e',
+           header='f_hz,asd_linear_v,asd_top_rung_v')
+print(f'Wrote {out_file}\nWrote {csv_file}')
 
 if SHOW_PLOTS:
     plt.show()

@@ -513,6 +513,7 @@ sim-all: ## Run all Xschem testbench simulations (usage: make sim-all)
 #	The design variants (16 diode cells, and the fabricated design with its layout parasitics) follow the fabricated design.
 	$(MAKE) sim-xschem TB=sparx_powdet_sbd_tb_pss_vacask
 	$(MAKE) sim-xschem TB=sparx_powdet_sbd_tb_nf_vacask
+	$(MAKE) sim-xschem TB=sparx_powdet_sbd_tb_tn_vacask
 	$(MAKE) sim-powdet-variants
 # 	Receiver level: the full-core fit driving the four detectors, as fabricated and post-layout, in VACASK (HB, HBAC, two-tone HB and transient in one bench), and the two ngspice transients of the composed and the full-core model.
 	$(MAKE) sim-xschem TB=sparx_top_le_tb_rx_vacask

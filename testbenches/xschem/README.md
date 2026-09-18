@@ -25,10 +25,15 @@ make sim-all                                         # every testbench, in the o
 
 `sim-xschem` netlists the schematic, runs the simulator, and then calls the matching post-processing script, so a single command takes you from schematic to figure. The Makefile refuses to run with any PDK other than `ihp-sg13g2`, because the container default (`ihp-sg13cmos5l`) is a different metal stack and silently produces wrong extractions.
 
-Two ordering constraints matter:
+Three ordering constraints matter:
 
 - The detector PSS testbench must run before the NF testbench, because the NF script reads the fitted responsivity out of `plot_simulations/data/sparx_powdet_sbd_beta<variant>.json` to convert noise into NEP and MDS.
+- The detector transient-noise testbench must run after the NF testbench, because its script checks the ladder against the `hbnoise` rawfile of the NF run and turns it into a noise figure with the NF bench's conversion.
 - The passive fits must exist in `netlist/spice/` and `netlist/spectre/` before any testbench that instantiates them. They are produced by `make snp2le` from the de-embedded Touchstone files, see the repository README.
+
+**The two detector noise benches need a VACASK with the `hbnoise` analysis.** The 2026.08 container ships VACASK `a9d8860`, which has none, and `sim-xschem` refuses those two benches with a message rather than failing inside the simulator. The analysis was merged into VACASK `main` on 2026-09-17. The results in this folder were produced with `main` at commit `fc997ca` plus the five fixes of branch `update-hbnoise` (`e7b5e41`, submitted upstream, see below), built inside the running container the way IIC-OSIC-TOOLS builds its release binary (`_build/images/vacask/scripts/install.sh`: Boost 1.88 static with `BOOST_PROCESS_V2_DISABLE_PIDFD_OPEN`, `-march=x86-64-v2`, OpenVAF from `/foss/tools/openvaf/bin`). Three development packages the runtime container lacks have to be installed first: `libopenblas-dev`, `libsuitesparse-dev` and `libtomlplusplus-dev`. The build takes a few minutes and the result replaces `/foss/tools/vacask`, so it is lost when the container is recreated. Every other bench runs on the stock binary.
+
+That build also carries a newer SPICE BJT model than `a9d8860`, and the difference is visible in these results, see [the model note](#model-note-the-bjt-area-scaling-changed-between-vacask-builds) under the noise figure bench.
 
 Outputs land in three places. The raw simulator output goes to `simulations/` (git-ignored), the machine-readable results to `plot_simulations/data/` as CSV and JSON, and the overview figures to `plot_simulations/figures/` as PNG.
 
@@ -48,6 +53,7 @@ These are the analyses this folder uses. Which analyses a given build has is wor
 | `hb` | harmonic balance, the large-signal periodic solution in the frequency domain, single tone or multi-tone | detector transfer curve, receiver LO and RF levels |
 | `pss` | periodic steady state by shooting, the same solution in the time domain | independent check of the HB transfer curve |
 | `hbac` | small-signal transfer around the HB solution, sideband to sideband | detector conversion gain and video response, receiver IF response |
+| `hbnoise` | small-signal noise around the HB solution, every source modulated by the pumped operating point and folded from all spurs to the output | detector noise figure, with the LO on |
 
 ### Why two ways to compute the same steady state
 
@@ -64,7 +70,19 @@ Once a periodic steady state exists, linearizing around it gives a linear period
 
 So `hbac` is literally harmonic-balance AC, and it is the same class of analysis as `pac`, only built on the HB solution instead of the shooting solution. VACASK's own registry string calls it "HBAC (quasi)periodic small-signal", where "quasi" acknowledges that an HB state can carry two incommensurate tones, which a strictly periodic shooting solution cannot represent.
 
-**This build has `hbac` but no `pac`, and neither `pnoise` nor `hbnoise`.** The consequence is stated plainly under [the noise figure testbench](#33-noise-figure-nep-and-minimum-detectable-power) below: there is no noise analysis around a pumped large-signal state, so the detector's output noise density is taken at the quiescent operating point. That misses the bias shift the LO causes and any noise folding from the LO harmonics. For this circuit the error is second order, because the dominant noise source is a baseband current at the transimpedance amplifier input, which neither shifts much nor folds, but it is an approximation and not a measurement.
+**VACASK `main` since 2026-09-17 has `hbac` and `hbnoise`, and no shooting-based `pac` or `pnoise`.** Until 2026-09-17 no periodic noise analysis existed in any build, and the detector noise figure rested on the `noise` analysis at the quiescent operating point, with the caveat that the LO-induced bias shift and the folding from the LO harmonics were missing. `hbnoise` removes that caveat. The noise figure bench keeps the quiescent estimate next to the pumped result, and the difference is not second order: the LO raises the output noise of the fabricated detector by a factor 1.5 to 1.8 at the operating point, see [the noise figure testbench](#33-noise-figure-nep-and-minimum-detectable-power).
+
+Before the analysis was trusted on this circuit it was checked five ways, all in `testbenches/xschem/simulations/_hbnoise_chk/` (not tracked), on top of the two regression tests VACASK ships for it (`test/test_hbnoise1.sim` and `test_hbnoise2.sim`, which pass on this build):
+
+- On a resistor with a modulated white noise source in an LTI network, `hbnoise` reproduces the closed form, the time average of the modulated PSD through the filter, to 1e-6 at `nharm=15` and 1e-5 at `nharm=5`. A modulated flicker source reproduces the folded closed form to 1e-5 for every drive amplitude, harmonic count and sampling factor tried. One trap on the way: the resistor's flicker is modulated by its own current, which is the source current after the RC filter, so a closed form written with the source current is off by the filter's response at the pump frequency.
+- With the LO amplitude set to zero, `hbnoise` around the zero-drive HB solution reproduces the `noise` analysis of the detector, `onoise`, `gain` and every contributor to 1e-9. On `fc997ca` itself the `r3_cmc` resistor sub-contributions differed, because `hbnoise` folded every flicker source as exactly 1/f while those carry a frequency exponent below 1. They are five orders of magnitude below the total here, and the exponent is honoured since the `update-hbnoise` fix.
+- The source resistor's thermal noise is stationary, so its `hbnoise` contribution must equal 4kTRs times the sum of |H_k|^2 over all 19 spurs, with H_k the `hbac` transfer from spur k to the IF. It does, to five digits at every IF, and the implied temperature is the simulator default of 300.15 K.
+- The `gain` that `hbnoise` reports for a tone at its input spur equals the `hbac` conversion to 1e-5 dB over the IF sweep and 0.005 dB over the LO sweep.
+- A transient-noise ladder with the LO on, at noise amplitudes small enough to stay linear, reproduces the `hbnoise` output noise within 17 percent at every IF from 0.5 GHz to 3 GHz, where the quiescent `noise` analysis sits 25 to 58 percent low. The transient and the periodic analysis share no code path. This is the [transient-noise testbench](#34-transient-noise-the-independent-check-of-hbnoise).
+
+Two properties of the analysis to know before writing a bench: a `sweep` applies to the one analysis that follows it, so a swept `hbac` and a swept `hbnoise` need two sweeps, and an offset frequency that lands exactly on a harmonic of the pump puts one spur at zero frequency, where flicker noise is undefined. On `fc997ca` that point returned `nan`, since the `update-hbnoise` fix the spur is left out with a warning. Both are documented upstream now.
+
+The five fixes on branch `update-hbnoise`, one commit each, all verified on this detector: the `nan` at pump harmonics, the flicker exponent, the sweep documentation, a skip instead of a failure for the four `absdelay` tests when the Verilog-A compiler emits OSDI 0.4 (the container's OpenVAF-Reloaded does, and VACASK reads delay descriptors only from 0.5, so the delay is silently zero), and a note on the BJT base-collector area scaling that differs from released ngspice. With them the upstream suite reports 63 passed and 4 skipped in this container.
 
 ## ngspice, and why both simulators
 
@@ -181,47 +199,97 @@ The coupling efficiency is the headline result of the block. The 52 Ohm terminat
 |---|---|
 | **Testbench** | `sparx_powdet_sbd_tb_nf_vacask` |
 | **Post-processing** | `plot_sparx_powdet_sbd_tb_nf_vacask.py` |
-| **Analyses** | small-signal `noise` from 1 kHz to 5 GHz, `hbac` for the upper and the lower sideband over the same range, and `hbac` at a fixed 2 GHz IF while the LO amplitude is swept from 1 mV to 1.4 V |
+| **Analyses** | small-signal `noise` from 1 kHz to 5 GHz with the LO off, `hbac` for the upper and the lower sideband over the same range, `hbnoise` over the same range with the LO on, once with the gain referred to each sideband, and `hbac` plus `hbnoise` at a fixed 2 GHz IF while the LO amplitude is swept from 1 mV to 1.4 V |
 | **Outputs** | `data/sparx_powdet_sbd_nf<variant>.{json,csv}`, `data/sparx_powdet_sbd_nf_lo<variant>.csv`, `figures/sparx_powdet_sbd_nf<variant>.png` |
 
 ![Detector noise figure and NEP](plot_simulations/figures/sparx_powdet_sbd_nf.png)
 
-In the LO-offset mode the detector is a mixer, so a noise figure is well defined. The conversion gain of each sideband to the IF comes from `hbac`, and the double-sideband noise figure follows, both sidebands carrying signal in a six-port.
+In the LO-offset mode the detector is a mixer, so a noise figure is well defined. The conversion gain of each sideband to the IF comes from `hbac`, the output noise with the LO on from `hbnoise`, and the double-sideband noise figure follows, both sidebands carrying signal in a six-port. The script computes it a second time with the quiescent `noise` result in the numerator, which is what the bench reported before `hbnoise` existed, so the correction is visible in every output: `nf_dsb_db` is the `hbnoise` result and `nf_dsb_quiescent_db` the old estimate. NEP and MDS are detector figures without an LO and stay built on the quiescent noise.
 
 **Findings**, at a 2 GHz IF and -6.5 dBm of LO:
 
 | quantity | m = 1, fabricated | m = 1, post-layout | m = 16 |
 |---|---|---|---|
-| NF (double sideband) | 38.2 dB | 39.0 dB | 25.6 dB |
-| NEP at 1 MHz | 6.2 nW per root Hz | 6.8 | 1.1 |
-| NEP at 1 GHz | 175 pW per root Hz | 191 | 18 |
-| minimum detectable power, 1 MHz to 5 GHz | -18.0 dBm | -17.6 dBm | -25.4 dBm |
+| NF (double sideband), `hbnoise` | 42.2 dB | 42.7 dB | 26.7 dB |
+| NF (double sideband), quiescent-noise estimate | 40.0 dB | 40.7 dB | 23.9 dB |
+| NF without the PCell PNP flicker, `hbnoise` | 35.2 dB | 36.0 dB | 26.5 dB |
+| output noise with the LO on over LO off, at 2 GHz | 1.66 | 1.57 | 1.95 |
+| NEP at 1 MHz | 8.7 nW per root Hz | 9.5 | 0.72 |
+| NEP at 1 GHz | 226 pW per root Hz | 247 | 13.5 |
+| minimum detectable power, 1 MHz to 5 GHz | -16.6 dBm | -16.2 dBm | -27.3 dBm |
 | video bandwidth | 1.26 GHz | 1.12 GHz | 1.77 GHz |
+| best NF against LO drive at 2 GHz, `hbnoise` | 39.6 dB at +6.9 dBm | 42.6 dB at -6.3 dBm | 26.6 dB at -3.0 dBm |
 
-Two results worth carrying forward. About 94 percent of the output noise power between 1 MHz and 5 GHz is flicker noise of the parasitic vertical PNP that the PDK model of the Schottky diode contains, so nothing that was sized in this design sets the noise floor. And because that noise is 1/f across the whole video band, detecting at DC as a conventional six-port does is expensive: moving the outputs to a 1 GHz IF improves the NEP 35-fold.
+Three results worth carrying forward. About 97 percent of the pumped output noise power between 1 MHz and 5 GHz is flicker noise of the parasitic vertical PNP that the PDK model of the Schottky diode contains, so nothing that was sized in this design sets the noise floor. Because that noise is 1/f across the whole video band, detecting at DC as a conventional six-port does is expensive: moving the outputs to a 1 GHz IF improves the NEP 38-fold. And the LO does not leave the noise alone: at the operating point it raises the output noise of the fabricated detector by a factor 1.5 at low IF and 1.8 near 1 GHz, which is 1.7 to 2.6 dB of noise figure the quiescent estimate missed. For the 16-cell variant the sign flips below 100 MHz, where the LO lowers the PNP flicker to 0.28 of its quiescent value, and the pumped noise figure at 1 MHz is 5.5 dB better than the estimate.
+
+**The noise figure against LO drive no longer improves past compression.** With the quiescent estimate the curve kept falling to 30.8 dB at +6.9 dBm for the fabricated detector, because the conversion keeps rising once the LO switches the junction. `hbnoise` shows the pumped noise rising with it, 7.7 times the quiescent value at +6.9 dBm, and the curve stays between 39.6 and 43.7 dB from -6.5 dBm upwards. The post-layout detector has its minimum at the operating point, 42.6 dB at -6.3 dBm, and the 16-cell variant at -3.0 dBm. The LO drive is not a lever for the noise figure beyond the square-law region.
 
 **Limits.**
 
-- **No periodic noise analysis exists in this build**, so the output noise density is the one at the quiescent operating point. It carries neither the LO-induced bias shift nor noise folding from the LO harmonics, which is why the curves above the compression point are optimistic. See the analysis table above.
-- The `hbac` conversion is cross-checked against the closed form for a square-law detector and agrees within 0.15 dB for all three versions, so the conversion side of the noise figure is on firm ground even though the noise side is approximate.
-- The dominant noise source is a model extrapolation. The PNP flicker model is evaluated at about 5 pA of base current, far below any plausible characterization current, so the script also reports every figure with those contributors removed. Silicon decides which is right.
-- An `include` of the operating-point `.save` file breaks `hbac` binding and only `hbac`. It is not included in this bench for that reason.
+- The `hbac` conversion is cross-checked against the closed form for a square-law detector and agrees within 0.16 dB for all three versions, and the `gain` that `hbnoise` reports agrees with `hbac` to 0.005 dB, so the conversion side of the noise figure is on firm ground.
+- The dominant noise source is a model extrapolation. The PNP flicker model is evaluated at about 20 pA of base current, far below any plausible characterization current, so the script also reports every figure with those contributors removed. Silicon decides which is right.
+- The LO sweep runs `hbac` and `hbnoise` in two separate sweeps, because a VACASK sweep body holds one analysis. A swept HB solution continues from the previous amplitude, and at 1.4 V it sits 1.5 percent away in pumped noise from a cold solve at the same amplitude.
+- An `include` of the operating-point `.save` file breaks `hbac` and `hbnoise` binding and only those. It is not included in this bench for that reason.
 
-### 3.4 Transient noise, a cross-check only
+#### Model note: the BJT area scaling changed between VACASK builds
+
+Every quantity in the table that the PCell PNP dominates is larger than the same quantity computed with the 2026.08 container binary, by a factor 1.95 in noise power: NEP at 1 MHz was 6.2 nW per root Hz, the quiescent-noise NF at 2 GHz was 38.2 dB, the MDS from 1 MHz was -18.0 dBm. The quantities without the PNP are unchanged to 1e-5, and so are HB, `hbac`, the responsivity and the compression point.
+
+The cause is the SPICE Gummel-Poon model `sp_bjt`, updated in VACASK on 2026-09-07 (`devices/spice/bjt.va`, commit `2428fa3`, "ngspice pre-master-48"). When the model card gives no separate `ibc`, the base-collector saturation current is now `is` times the area factor once, `BJTBCtSatCur = BJTtSatCur / area` followed by the multiplication with `areab`, which defaults to `area`. The August version and ngspice up to and including its current master derive it from the already area-scaled `BJTtSatCur` and multiply by `areab` again, which is `area` squared. The PNP inside `schottky_nbl1` has `area` = 0.3 for one cell, so its reverse-active current was 0.3 times too small before, and it is 3.5 times larger now: flicker scales as `kf * Ib^0.53`, which is the factor 1.95. A `noise` analysis of the whole detector with ngspice-47 reproduces the old binary to four digits from 1 kHz to 1 GHz and sits 1.95 times below the new one, so the numbers of the March 2026 tapeout report and of the paper draft are the ngspice-47 reading, and the numbers here are the single-area-scaling reading. The single scaling is the physically consistent one, and it is what the card means if it was fitted with a simulator that scales once. Which reading the fabricated part follows is the same open question as the PNP flicker model itself.
+
+### 3.4 Transient noise, the independent check of hbnoise
 
 | | |
 |---|---|
 | **Testbench** | `sparx_powdet_sbd_tb_tn_vacask` |
 | **Post-processing** | `plot_sparx_powdet_sbd_tb_tn_vacask.py` |
-| **Analyses** | three transient runs, 100 ns at 1 ps steps, `noisefmax=20G`, differing only in `noisescale` |
+| **Analyses** | three transient runs with the LO on at -6.5 dBm, 100 ns at 0.15 ps maximum step, `noisefmax=20G`, differing only in `noisescale` (0.01, 0.0316, 0.1) |
+| **Outputs** | `data/sparx_powdet_sbd_tn<variant>.{json,csv}`, `data/sparx_powdet_sbd_nf_compare<variant>.csv`, `figures/sparx_powdet_sbd_tn<variant>.png`, `figures/sparx_powdet_sbd_nf_compare<variant>.png` |
 
 ![Transient noise](plot_simulations/figures/sparx_powdet_sbd_tn.png)
 
-**This testbench is deliberately not part of `sim-all`, and none of its numbers are reported anywhere.** It exists to validate the small-signal noise setup, which it does: splitting the PSD as a linear plus a quadratic term in `noisescale` squared and solving from the extreme scales, the linear term reproduces the small-signal analysis within 12 percent at 0.3, 1 and 3 GHz.
+Transient noise and `hbnoise` share no code path, so a transient with the LO on is the one check of the periodic noise analysis that does not rest on the same linearization. The script takes the output PSD of each run by Welch's method at 100 MHz resolution, splits it as a term linear in `noisescale` squared plus a remainder, solves the two from the extreme rungs, and compares the linear term against the `hbnoise` and the quiescent `noise` result of the NF bench. With the same `hbac` conversion in the denominator it then states the noise figure from all three noise estimates:
 
-**Limits.** At full noise amplitude the output is 3 to 8 times above the small-signal answer, and that excess is not physics. It fails two independent checks. Its magnitude is 58 dB larger than what rectification of the circuit's own noise could produce, and its scaling order is 2.7 to 2.8 where a rectified term must be exactly 2. Single devices show no excess with identical settings, and the excess grows with `noisefmax` without converging. The working conclusion is a numerical artefact of SDE transient noise on a stiff, strongly nonlinear circuit. Until that is understood, full-amplitude transient noise on this class of circuit is not a measurement.
+| IF | transient, linear term | `hbnoise` | quiescent `noise` |
+|---|---|---|---|
+| 0.5 GHz | 47.2 dB | 47.5 dB | 45.0 dB |
+| 1 GHz | 46.0 dB | 44.7 dB | 42.1 dB |
+| 2 GHz | 42.9 dB | 42.2 dB | 40.0 dB |
+| 3 GHz | 41.2 dB | 41.1 dB | 39.2 dB |
 
-Four settings are mandatory and each was found by bisecting an aborting run: `noisemode="sde"`, an `rsw` on every diode model card, `tran_noiselte` far above its default of 1, and no `noise` analysis anywhere in the same deck.
+The transient sits within 1.4 dB of `hbnoise` and 2 to 4 dB above the quiescent estimate, and the three rungs collapse onto one curve within 2 percent when normalised by `noisescale`, so the ladder is in its linear regime. The bench costs about 2.5 minutes and is part of `sim-all`.
+
+#### The three noise estimates in one figure
+
+![Noise figure of the fabricated detector from hbnoise, transient noise and the quiescent noise analysis](plot_simulations/figures/sparx_powdet_sbd_nf_compare.png)
+
+The figure is the fabricated detector at -6.5 dBm of LO. All three curves share the `hbac` conversion of the NF bench in the denominator, so what differs between them is only the output-noise estimate: `hbnoise` with the LO on, the quiescent `noise` analysis with the LO off, and the linear term of the transient ladder with the LO on, drawn bin by bin at the 100 MHz Welch resolution from 200 MHz up and as band means at the four reported IFs. Below 200 MHz only the two small-signal analyses exist, a 100 ns record cannot resolve less.
+
+**Quiescent against `hbnoise`: 1.7 dB at low IF, 2.6 dB at 1 GHz, 1.2 dB at 5 GHz.** This is the difference between linearising the noise sources at the DC bias and at the pumped operating point, and it is plausible in size, sign and shape:
+
+- At -6.5 dBm the signal diode rectifies about 10 uA on top of its 30 uA bias (the detected output moves from -7.0 mV to -16.4 mV across the 920 Ohm transimpedance), so every noise source that scales with current is evaluated at the wrong current in the quiescent analysis.
+- The parasitic PNP of the signal diode carries 89 percent of the pumped output noise at 1 GHz. Its flicker model is `kf Ib^0.53`, and its base current follows the cathode swing exponentially, so its time average rises more than the diode's: the contribution grows 1.8 to 2.0 times, which is a 3.2 times larger average base current. On an exponential junction the average of `exp(v/nV_T)` under a swing `a` is the Bessel function `I0(a/nV_T)`, and 3.2 corresponds to about 75 mV of swing across that junction, a plausible fraction of the 300 mV at the RF node behind the cell's 1.36 kOhm series resistance.
+- The shot noise of the Schottky junction doubles, the average current is up and the white source folds from the sidebands, but it is 1 percent of the total. The thermal sources of the transimpedance amplifier and of the series resistance move by less than 10 percent, as they should. The replica diode's PNP drops to 0.76 of its quiescent contribution: it is not pumped, and its transfer to the differential output changes with the operating point of the signal branch.
+- The ratio of the totals is not flat because the mix is not: at low IF the replica PNP still holds a fifth of the noise and pulls the ratio down to 1.5, at 1 GHz the signal PNP dominates and the ratio is 1.8, above the video pole the flat thermal sources, which the LO barely touches, take a larger share and the ratio falls to 1.3 at 5 GHz.
+
+Nothing in that list is new physics. The quiescent estimate is what every bench had to use before a periodic noise analysis existed, and it is optimistic by exactly the amount the pumped current adds, so the older 38 to 40 dB figures have to be read as lower bounds.
+
+**Transient against `hbnoise`: within 1.4 dB, and a little above it.** Three ladders that differ only in `noiseseed` put the transient 0.6 to 1.3 dB above `hbnoise` on average, with a scatter of about 0.8 dB per seed:
+
+| IF | seed 1 | seed 2 | seed 3 | `hbnoise` |
+|---|---|---|---|---|
+| 0.5 GHz | 47.4 dB | 49.0 dB | 48.1 dB | 47.5 dB |
+| 1 GHz | 46.2 dB | 45.8 dB | 45.4 dB | 44.7 dB |
+| 2 GHz | 43.0 dB | 42.5 dB | 44.0 dB | 42.2 dB |
+| 3 GHz | 41.3 dB | 42.0 dB | 41.8 dB | 41.1 dB |
+
+The seed values are single rungs at `noisescale` 0.1, the committed ladder uses seed 1. The offset is at the edge of what the seed scatter resolves, and the two obvious explanations are excluded: the harmonic count moves `hbnoise` by 0.2 dB between `nharm` 5 and 25, and the ladder's own nonlinearity is 2 percent between its rungs. What remains is the estimator side, a Hann-windowed Welch PSD of a record resampled from adaptive 0.15 ps steps against an analysis that samples every noise modulation function at the HB collocation points, and 1 dB is a fair statement of what the two methods can agree on. Both put the noise figure 2 to 4 dB above the quiescent estimate, at every IF, with the same frequency dependence, and that is the result that matters.
+
+**Limits.**
+
+- **The ladder has to stay at small noise amplitude.** At `noisescale` 1 the output of this circuit is 15 times above `hbnoise`, and the excess grows faster than second order in the noise amplitude between rungs, so the two-rung split returns a negative linear term. This is the excess the unpumped ladder showed before, 3 to 8 times at full amplitude, and it fails the same checks: 58 dB above what rectification of the circuit's own noise can produce, scaling order 2.7 where a rectified term is exactly 2, absent on single devices with identical settings, and growing with `noisefmax` without converging. The working conclusion is a numerical artefact of SDE transient noise on a stiff, strongly nonlinear circuit. Full-amplitude transient noise on this class of circuit is not a measurement, and the script prints the apparent order of the excess so a change in that behaviour is visible.
+- With `ampl_lo=0` in the netlist the ladder runs unpumped and the script checks it against the quiescent `noise` analysis instead, which is the configuration this bench had until 2026-09-17.
+- Four settings are mandatory and each was found by bisecting an aborting run: `noisemode="sde"`, an `rsw` on every diode model card, `tran_noiselte` far above its default of 1, and no `noise` analysis anywhere in the same deck.
 
 ### 3.5 ngspice cross-check
 
