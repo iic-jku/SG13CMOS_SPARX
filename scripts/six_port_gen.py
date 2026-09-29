@@ -3078,7 +3078,7 @@ if do_fill_m5:
     # metal5 fill (groundplate)
     c.fill(
         fill_cell=fill_ground(),
-        fill_layers=[(ihp.tech.LAYER.EdgeSealboundary, -40)],
+        fill_layers=[(ihp.tech.LAYER.EdgeSealboundary, -50)],
         exclude_layers=[(ihp.tech.LAYER.Passivdrawing, 0), (ihp.tech.LAYER.Metal5nofill, 0)],
         x_space=0,
         y_space=0,
