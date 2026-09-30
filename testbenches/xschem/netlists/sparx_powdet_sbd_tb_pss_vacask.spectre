@@ -1,0 +1,120 @@
+// sch_path: /foss/designs/designs/SG13G2_SPARX160/testbenches/xschem/sparx_powdet_sbd_tb_pss_vacask.sch
+//subckt sparx_powdet_sbd_tb_pss_vacask ( )
+vdd ( vdd GND ) vsource dc=1.5 
+Rs ( rfin src ) resistor r=50 $mfactor=1 
+vin3 ( src net1 ) vsource type="sine" sinedc=0 ampl=1m freq=freq_rf 
+vin2 ( net1 GND ) vsource type="sine" sinedc=0 ampl=0 freq=freq_lo 
+xdemod1 ( out_cm ref vdd rfin GND ) sparx_powdet_sbd 
+C1 ( ref GND ) capacitor c=5p $mfactor=1 
+C2 ( out_cm GND ) capacitor c=5p $mfactor=1 
+E2 ( out GND out_cm ref ) vcvs gain=1 
+//// begin user architecture code
+
+
+
+include "sg13g2_vacask_common.lib"
+include "cornerMOSlv.lib" section=mos_tt
+include "cornerRES.lib" section=res_typ
+include "cornerCAP.lib" section=cap_typ
+include "cornerDIO.lib" section=dio_tt
+
+
+
+
+
+control
+  // Single RF tone. vin2 (the LO source) stays in the topology so that all
+  // power-detector benches share one netlist, but it is idle here.
+  var freq_rf=161G
+  var freq_lo=159G
+
+  include "sparx_powdet_sbd_tb_pss_vacask.save"
+  save default
+
+  analysis sparx_powdet_sbd_tb_pss_vacask op
+
+  // The detected term is a sub-microvolt DC shift riding on a -7 mV output
+  // offset, so the default tolerances do not resolve it: with reltol=1e-3 the
+  // fitted responsivity is still wrong by 25 % at -40 dBm and diverges below
+  // that. These settings hold beta flat to within 1 % down to -70 dBm.
+  options reltol=1e-8 abstol=1e-16 vntol=1e-9
+
+  // (1) Single-tone harmonic balance over the source amplitude. Rs=50 Ohm,
+  //     so the available power is a^2 / (8 * Rs). The plot script reads the
+  //     DC bin of the spectrum at the output and the fundamental at the input.
+  sweep ampl_rf instance="vin3" parameter="ampl" from=100u to=1.4 mode="dec" points=8
+    analysis powdet_pss1 hb freq=[freq_rf] nharm=15
+
+  // (2) Shooting PSS at five amplitudes of the same grid, as the check of the
+  //     harmonic balance: the plot script compares the period average of the
+  //     output against the HB DC bin at the same amplitude. driven=1 fixes the
+  //     period at 1/freq_rf, without it the shooting solves for the period of
+  //     an oscillator and aborts. tstab only seeds the shooting, the Newton
+  //     loop converges to the periodic state from there. The HB tolerances
+  //     above are too tight for the transient integrator inside pss, which
+  //     aborts on them, so the shooting runs at the default tolerances.
+  //     Tighter settings change the detected term by less than 1e-4
+  //     where they integrate at all and abort at low drive (reltol=1e-4
+  //     on the 16-cell variant, 1e-5 on the fabricated one), the
+  //     shooting resolves the detected term to better than 1 % down to
+  //     10 uV without them. One analysis per point rather
+  //     than a sweep, so a point that fails does not take the others with it.
+  //     maxacfreq=0: without it pss sizes its time step for a periodic
+  //     small-signal follow-up that is never run and aborts on the step size.
+  var tper=1/freq_rf
+  options reltol=1e-3 abstol=1e-12 vntol=1e-6
+  alter instance("vin3") ampl=10m
+  analysis powdet_pss2a pss driven=1 tper=tper tstab=50*tper maxacfreq=0
+  alter instance("vin3") ampl=31.62m
+  analysis powdet_pss2b pss driven=1 tper=tper tstab=50*tper maxacfreq=0
+  alter instance("vin3") ampl=100m
+  analysis powdet_pss2c pss driven=1 tper=tper tstab=50*tper maxacfreq=0
+  alter instance("vin3") ampl=316.2m
+  analysis powdet_pss2d pss driven=1 tper=tper tstab=50*tper maxacfreq=0
+  alter instance("vin3") ampl=1.0
+  analysis powdet_pss2e pss driven=1 tper=tper tstab=50*tper maxacfreq=0
+
+  postprocess(PYTHON, "../plot_simulations/plot_sparx_powdet_sbd_tb_pss_vacask.py")
+endc
+
+
+//// end user architecture code
+//ends
+
+// expanding   symbol:  sparx_powdet_sbd.sym # of pins=5
+// sym_path: /foss/designs/designs/SG13G2_SPARX160/schematic/xschem/sparx_powdet_sbd.sym
+// sch_path: /foss/designs/designs/SG13G2_SPARX160/schematic/xschem/sparx_powdet_sbd.sch
+subckt sparx_powdet_sbd ( vout vref vdd rfin vss )
+//.ipin rfin
+//.opin vout
+//.iopin vss
+//.iopin vdd
+//.opin vref
+XR1 ( bias1 rfin_int vss ) rsil w=0.5e-6 l=2.5e-6 m=1 mm_ok=1 
+XD1 ( rfin_int bb_int vss ) schottky_nbl1 nx=1 ny=1 
+XC2 ( bias1 vss ) cap_cmim w=10e-6 l=10e-6 m=30 mm_ok=1 
+XM4 ( vout bb_int vdd vdd ) sg13_lv_pmos w=100u l=0.13u ng=20 m=1 mm_ok=1 
+XM3 ( vout bb_int vss vss ) sg13_lv_nmos w=50u l=0.13u ng=20 m=1 mm_ok=1 
+XR2 ( vout bb_int vss ) rppd w=0.5e-6 l=1.5e-6 m=1 b=0 mm_ok=1 
+XM2 ( vref bias2 vdd vdd ) sg13_lv_pmos w=10u l=0.13u ng=2 m=1 mm_ok=1 
+XM1 ( vref bias2 vss vss ) sg13_lv_nmos w=5u l=0.13u ng=2 m=1 mm_ok=1 
+XC3 ( vdd vss ) cap_cmim w=10e-6 l=10e-6 m=28 mm_ok=1 
+XD2 ( net1 bias2 vss ) schottky_nbl1 nx=1 ny=1 
+XR3 ( bias1 vdd vss ) rhigh w=0.5e-6 l=2e-6 m=1 b=0 mm_ok=1 
+XR4 ( vref bias2 vss ) rppd w=0.5e-6 l=1.5e-6 m=1 b=0 mm_ok=1 
+XR5 ( bias1 net1 vss ) rsil w=0.5e-6 l=2.5e-6 m=1 mm_ok=1 
+XMdummy1 ( vss vss vss vss ) sg13_lv_nmos w=5u l=0.13u ng=2 m=1 mm_ok=1 
+XMdummy2 ( vdd vdd vdd vdd ) sg13_lv_pmos w=10u l=0.13u ng=2 m=1 mm_ok=1 
+XC1 ( rfin rfin_int ) cap_cmim w=10e-6 l=10e-6 m=1 mm_ok=1 
+XC4 ( vdd vss ) cap_cmim w=6.8e-6 l=9e-6 m=2 mm_ok=1 
+ends 
+
+ground GND 
+//// begin user architecture code
+model vsource vsource
+load "resistor.osdi"
+model resistor resistor
+load "capacitor.osdi"
+model capacitor capacitor
+model vcvs vcvs
+//// end user architecture code

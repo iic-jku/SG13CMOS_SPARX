@@ -25,11 +25,13 @@ make sim-all                                         # every testbench, in the o
 
 `sim-xschem` netlists the schematic, runs the simulator, and then calls the matching post-processing script, so a single command takes you from schematic to figure. The Makefile refuses to run with any PDK other than `ihp-sg13g2`, because the container default (`ihp-sg13cmos5l`) is a different metal stack and silently produces wrong extractions.
 
+**Netlists without Xschem.** `netlists/` holds the VACASK netlists of the four benches the Code-a-Chip notebook runs, `sparx_powdet_sbd_tb_pss_vacask`, `sparx_powdet_sbd_tb_nf_vacask`, `sparx_powdet_sbd_tb_tn_vacask` and `sparx_top_le_tb_rx_vacask`, each with its `.save` file, for environments without Xschem such as Google Colab. They are exactly what the netlisting step of `sim-xschem` writes to `simulations/`, and their relative includes and post-processing paths assume they run there: copy them to `simulations/` and run `vacask -qp -sp <testbench>.spectre` in that folder, then the matching script from `plot_simulations/`. The post-layout receiver is not stored, it is produced the way `sim-xschem` does it, by `scripts/powdet_variant.py --variant m1_pex` into `simulations/m1_pex/`. After a change to one of these schematics, export the netlist again with `make sim-xschem TB=<testbench>` and copy it from `simulations/`.
+
 Three ordering constraints matter:
 
 - The detector PSS testbench must run before the NF testbench, because the NF script reads the fitted responsivity out of `plot_simulations/data/sparx_powdet_sbd_beta<variant>.json` to convert noise into NEP and MDS.
 - The detector transient-noise testbench must run after the NF testbench, because its script checks the ladder against the `hbnoise` rawfile of the NF run and turns it into a noise figure with the NF bench's conversion.
-- The passive fits must exist in `netlist/spice/` and `netlist/spectre/` before any testbench that instantiates them. They are produced by `make snp2le` from the de-embedded Touchstone files, see the repository README.
+- The passive fits must exist in `netlist/spice/` and `netlist/spectre/` before any testbench that instantiates them. They are produced by `make snp2le` from the de-embedded Touchstone files, see the repository README. The full-core fit is the exception: it is made from `sparx160_core.s7p`, the Touchstone without de-embedding, with `make snp2le SNP=verification/em/s-parameter/sparx160_core.s7p ORDER=24 LE_FORMAT=spectre LE_OUT=netlist/spectre/sparx_core_le.inc`.
 
 **The two detector noise benches need a VACASK with the `hbnoise` analysis.** The 2026.08 container ships VACASK `a9d8860`, which has none, and `sim-xschem` refuses those two benches with a message rather than failing inside the simulator. The analysis was merged into VACASK `main` on 2026-09-17. The results in this folder were produced with `main` at commit `fc997ca` plus the five fixes of branch `update-hbnoise` (`e7b5e41`, submitted upstream, see below), built inside the running container the way IIC-OSIC-TOOLS builds its release binary (`_build/images/vacask/scripts/install.sh`: Boost 1.88 static with `BOOST_PROCESS_V2_DISABLE_PIDFD_OPEN`, `-march=x86-64-v2`, OpenVAF from `/foss/tools/openvaf/bin`). Three development packages the runtime container lacks have to be installed first: `libopenblas-dev`, `libsuitesparse-dev` and `libtomlplusplus-dev`. The build takes a few minutes and the result replaces `/foss/tools/vacask`, so it is lost when the container is recreated. Every other bench runs on the stock binary.
 
@@ -392,6 +394,7 @@ These cost real time to find, and none of them announce themselves.
 ```
 testbenches/xschem/
   *.sch                                   the 21 testbenches
+  netlists/                               exported VACASK netlists of the four notebook benches, for use without Xschem
   sim_range.{inc,spice}                   the frequency band the passive benches sweep
   xschemrc                                library paths for this folder
   plot_simulations/

@@ -1,0 +1,169 @@
+// sch_path: /foss/designs/designs/SG13G2_SPARX160/testbenches/xschem/sparx_top_le_tb_rx_vacask.sch
+//subckt sparx_top_le_tb_rx_vacask ( )
+vlo ( lo_src GND ) vsource type="sine" sinedc=0 ampl=0 freq=freq_lo 
+Rlo ( vlo lo_src ) resistor r=50 $mfactor=1 
+vrf ( rf_src GND ) vsource type="sine" sinedc=0 ampl=0 freq=freq_rf spur={[1]} smag=[1] 
+Rrf ( vrf rf_src ) resistor r=50 $mfactor=1 
+VDD ( VDD GND ) vsource dc=1.5 
+C1 ( vout1 GND ) capacitor c=5p $mfactor=1 
+C2 ( vout2 GND ) capacitor c=5p $mfactor=1 
+C3 ( vout3 GND ) capacitor c=5p $mfactor=1 
+C4 ( vout4 GND ) capacitor c=5p $mfactor=1 
+C5 ( vref1 GND ) capacitor c=5p $mfactor=1 
+C6 ( vref2 GND ) capacitor c=5p $mfactor=1 
+C7 ( vref3 GND ) capacitor c=5p $mfactor=1 
+C8 ( vref4 GND ) capacitor c=5p $mfactor=1 
+E1 ( out1 GND vout1 vref1 ) vcvs gain=1 
+E2 ( out2 GND vout2 vref2 ) vcvs gain=1 
+E3 ( out3 GND vout3 vref3 ) vcvs gain=1 
+E4 ( out4 GND vout4 vref4 ) vcvs gain=1 
+x1 ( vout2 vout1 VDD GND vref1 vref2 vrf vlo vout4 vref4 vref3 vout3 ) sparx_top_le 
+//// begin user architecture code
+
+
+
+control
+  // Receiver-level characterisation: the full-core fit sparx_core_le (order 24
+  // vector fit of the Palace 7-port solve, see netlist/spectre) drives the four
+  // power detectors inside sparx_top_le. The LO enters core port 1 (BPF, WPD,
+  // BLC), the RF port 2 (two BLCs). Both sources sit behind 50 Ohm, so a source
+  // amplitude a is an available power a^2 / (8 * 50) at the pad:
+  //   +12 dBm=2.52 V, +3 dBm=894 mV, -20 dBm=63.2 mV.
+  // +12 dBm at the LO pad puts about -6.5 dBm on each detector, the operating
+  // point of the detector benches, behind the 17 to 19 dB of the LO path.
+  // vrf carries spur={[1]} smag=[1]: the unit small-signal tone at freq_lo + f
+  // that hbac uses as the RF. It has no effect on any other analysis.
+  var freq_lo=159G
+  var freq_rf=161G
+  var ampl_lo=2.52
+  var ampl_rf=63.2m
+
+  // Top-level nodes and the four detector inputs only: the receiver has about
+  // 1700 unknowns and the 10 ns transient 200000 points.
+  options strictsave=1
+  save v(out1) v(out2) v(out3) v(out4)
+  save v(vout1) v(vout2) v(vout3) v(vout4) v(vref1) v(vref2) v(vref3) v(vref4)
+  save v(vlo) v(vrf) v("x1:net1") v("x1:net2") v("x1:net3") v("x1:net4")
+
+  analysis op1 op
+
+  // (0) RF alone at -20 dBm: the RF reaching each detector from the HB
+  //     spectrum at freq_rf, which is the RF-path loss at circuit level.
+  alter instance("vrf") ampl=ampl_rf
+  analysis rx_hb_rf hb freq=[freq_rf] nharm=5
+  alter instance("vrf") ampl=0
+
+  // (1) LO at the detector operating point, RF as the hbac spur: the IF
+  //     response of the four detectors, and the LO reaching each of them from
+  //     the HB spectrum at freq_lo.
+  alter instance("vlo") ampl=ampl_lo
+  analysis rx_hb hb freq=[freq_lo] nharm=9
+  analysis rx_hbac_if hbac freq=[freq_lo] nharm=9 outspur=[0] from=1M to=5G mode="dec" points=10
+
+  // (2) IF output at 2 GHz against the LO power at the pad, -6 dBm to +15 dBm.
+  sweep a_lo instance="vlo" parameter="ampl" from=0.316 to=3.56 mode="dec" points=20
+    analysis rx_hbac_lo hbac freq=[freq_lo] nharm=9 outspur=[0] values=[2G]
+
+  // (3) Two-tone HB cross-check at the transient's levels. A cold two-tone
+  //     solve does not converge on the detector, so the LO is ramped.
+  alter instance("vrf") ampl=ampl_rf
+  sweep a_lo2 instance="vlo" parameter="ampl" from=0.63 to=2.52 mode="lin" points=4
+    analysis rx_hb2 hb freq=[freq_lo, freq_rf] nharm=[5,2] truncate="diamond"
+
+  // (4) Transient at the same levels, 10 ns so the detected dc has fully settled, the last nanosecond is plotted.
+  alter instance("vlo") ampl=ampl_lo
+  analysis rx_tran tran stop=10n step=10f maxstep=50f
+
+  postprocess(PYTHON, "../plot_simulations/plot_sparx_top_le_tb_rx_vacask.py")
+endc
+
+
+
+
+
+include "sg13g2_vacask_common.lib"
+include "cornerMOSlv.lib" section=mos_tt
+include "cornerRES.lib" section=res_typ
+include "cornerCAP.lib" section=cap_typ
+include "cornerDIO.lib" section=dio_tt
+// capacitor, resistor, vsource and vcvs models are auto-emitted by the symbols
+// of this bench, the fitted core needs the controlled sources on top of them.
+model vccs vccs
+model cccs cccs
+include "../../../netlist/spectre/sparx_core_le.inc"
+
+
+//// end user architecture code
+//ends
+
+// expanding   symbol:  sparx_top_le.sym # of pins=20
+// sym_path: /foss/designs/designs/SG13G2_SPARX160/schematic/xschem/sparx_top_le.sym
+// sch_path: /foss/designs/designs/SG13G2_SPARX160/schematic/xschem/sparx_top_le.sch
+subckt sparx_top_le ( vout2 vout1 vdd vss vref1 vref2 vrf vlo vout4 vref4 vref3 vout3 )
+//.ipin vrf
+//.opin vout1
+//.iopin vdd
+//.opin vref1
+//.opin vref2
+//.opin vout2
+//.ipin vlo
+//.iopin vss
+//.iopin vss
+//.opin vout3
+//.iopin vdd
+//.opin vref3
+//.opin vref4
+//.opin vout4
+//.iopin vss
+//.iopin vss
+//.iopin vss
+//.iopin vss
+//.iopin vss
+//.iopin vss
+x1 ( vout1 vref1 vdd net1 vss ) sparx_powdet_sbd 
+x2 ( vout2 vref2 vdd net2 vss ) sparx_powdet_sbd 
+x3 ( vout3 vref3 vdd net3 vss ) sparx_powdet_sbd 
+x9 ( vout4 vref4 vdd net4 vss ) sparx_powdet_sbd 
+XR1 ( net5 vss vss ) rsil w=0.5e-6 l=2.5e-6 m=1 mm_ok=1 
+x4 ( vlo vrf net1 net2 net4 net3 net5 ) sparx_core_le 
+ends 
+
+
+// expanding   symbol:  sparx_powdet_sbd.sym # of pins=5
+// sym_path: /foss/designs/designs/SG13G2_SPARX160/schematic/xschem/sparx_powdet_sbd.sym
+// sch_path: /foss/designs/designs/SG13G2_SPARX160/schematic/xschem/sparx_powdet_sbd.sch
+subckt sparx_powdet_sbd ( vout vref vdd rfin vss )
+//.ipin rfin
+//.opin vout
+//.iopin vss
+//.iopin vdd
+//.opin vref
+XR1 ( bias1 rfin_int vss ) rsil w=0.5e-6 l=2.5e-6 m=1 mm_ok=1 
+XD1 ( rfin_int bb_int vss ) schottky_nbl1 nx=1 ny=1 
+XC2 ( bias1 vss ) cap_cmim w=10e-6 l=10e-6 m=30 mm_ok=1 
+XM4 ( vout bb_int vdd vdd ) sg13_lv_pmos w=100u l=0.13u ng=20 m=1 mm_ok=1 
+XM3 ( vout bb_int vss vss ) sg13_lv_nmos w=50u l=0.13u ng=20 m=1 mm_ok=1 
+XR2 ( vout bb_int vss ) rppd w=0.5e-6 l=1.5e-6 m=1 b=0 mm_ok=1 
+XM2 ( vref bias2 vdd vdd ) sg13_lv_pmos w=10u l=0.13u ng=2 m=1 mm_ok=1 
+XM1 ( vref bias2 vss vss ) sg13_lv_nmos w=5u l=0.13u ng=2 m=1 mm_ok=1 
+XC3 ( vdd vss ) cap_cmim w=10e-6 l=10e-6 m=28 mm_ok=1 
+XD2 ( net1 bias2 vss ) schottky_nbl1 nx=1 ny=1 
+XR3 ( bias1 vdd vss ) rhigh w=0.5e-6 l=2e-6 m=1 b=0 mm_ok=1 
+XR4 ( vref bias2 vss ) rppd w=0.5e-6 l=1.5e-6 m=1 b=0 mm_ok=1 
+XR5 ( bias1 net1 vss ) rsil w=0.5e-6 l=2.5e-6 m=1 mm_ok=1 
+XMdummy1 ( vss vss vss vss ) sg13_lv_nmos w=5u l=0.13u ng=2 m=1 mm_ok=1 
+XMdummy2 ( vdd vdd vdd vdd ) sg13_lv_pmos w=10u l=0.13u ng=2 m=1 mm_ok=1 
+XC1 ( rfin rfin_int ) cap_cmim w=10e-6 l=10e-6 m=1 mm_ok=1 
+XC4 ( vdd vss ) cap_cmim w=6.8e-6 l=9e-6 m=2 mm_ok=1 
+ends 
+
+ground GND 
+global VDD 
+//// begin user architecture code
+model vsource vsource
+load "resistor.osdi"
+model resistor resistor
+load "capacitor.osdi"
+model capacitor capacitor
+model vcvs vcvs
+//// end user architecture code

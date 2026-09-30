@@ -1,0 +1,112 @@
+// sch_path: /foss/designs/designs/SG13G2_SPARX160/testbenches/xschem/sparx_powdet_sbd_tb_tn_vacask.sch
+//subckt sparx_powdet_sbd_tb_tn_vacask ( )
+vdd ( vdd GND ) vsource dc=1.5 
+Rs ( rfin src ) resistor r=50 $mfactor=1 
+vin3 ( src net1 ) vsource type="sine" sinedc=0 ampl=ampl_rf freq=freq_rf 
+vin2 ( net1 GND ) vsource type="sine" sinedc=0 ampl=ampl_lo freq=freq_lo 
+xdemod1 ( out_cm ref vdd rfin GND ) sparx_powdet_sbd 
+C1 ( ref GND ) capacitor c=5p $mfactor=1 
+C2 ( out_cm GND ) capacitor c=5p $mfactor=1 
+E2 ( out GND out_cm ref ) vcvs gain=1 
+//// begin user architecture code
+
+
+
+include "sg13g2_vacask_common.lib"
+include "cornerMOSlv.lib" section=mos_tt
+include "cornerRES.lib" section=res_typ
+include "cornerCAP.lib" section=cap_typ
+include "cornerDIO.lib" section=dio_tt
+
+
+
+
+
+control
+  // LO-pumped transient noise, three runs that differ only in noisescale.
+  // The plot script splits the output PSD into a term linear in noisescale^2,
+  // which must reproduce hbnoise from the NF bench, and whatever is left.
+  //
+  // Four settings are not optional, each found by bisecting an aborting run:
+  //  1. noisemode="sde". The default "zoh" aborts with "Timestep too small"
+  //     on any PSP103 device.
+  //  2. rsw on every sp_diode model card. Without it the sidewall flicker
+  //     exponent is never assigned, stays 0, and VACASK rejects it. jsw is 0,
+  //     so the sidewall branch carries no current and nothing else changes.
+  //  3. tran_noiselte far above its default of 1, or the noise drives the
+  //     timestep down until the run aborts. The result does not depend on the
+  //     value where both run.
+  //  4. No noise analysis in this deck. It aborts the transient in either
+  //     order. The references live in the NF bench.
+  //
+  // maxstep resolves the 159 GHz LO. With ampl_lo=0 the ladder runs unpumped
+  // and the plot script checks it against the quiescent noise analysis instead,
+  // which is the configuration this bench had before hbnoise existed.
+  var freq_lo=159G
+  var freq_rf=161G
+  var ampl_rf=0
+  var ampl_lo=300m
+  save v("out")
+  options strictsave=1
+  options tran_noiselte=1e6
+
+  analysis sparx_powdet_sbd_tb_tn_vacask op
+
+  alter model("dmain_mod") rsw=1e-3
+  alter model("drev_mod") rsw=1e-3
+  alter model("dsub_mod") rsw=1e-3
+
+  // One analysis per noisescale rather than a sweep: an aborting run writes no
+  // rawfile, and one failing rung of a sweep would cost the others too. The
+  // plot script reads the noisescale values back out of this netlist.
+  // The ladder stays at or below 0.1. At 1.0 the output is 15 times above
+  // hbnoise with an excess that grows faster than second order in noisescale,
+  // the same artefact the unpumped ladder showed, and the split then fails.
+  analysis powdet_tn1 tran stop=100n step=0.1p maxstep=0.15p noisefmax=20G noisefmin=10M oversample=3 noiseseed=1 noisemode="sde" noisescale=0.01
+  analysis powdet_tn2 tran stop=100n step=0.1p maxstep=0.15p noisefmax=20G noisefmin=10M oversample=3 noiseseed=1 noisemode="sde" noisescale=0.0316227766
+  analysis powdet_tn3 tran stop=100n step=0.1p maxstep=0.15p noisefmax=20G noisefmin=10M oversample=3 noiseseed=1 noisemode="sde" noisescale=0.1
+
+  postprocess(PYTHON, "../plot_simulations/plot_sparx_powdet_sbd_tb_tn_vacask.py")
+endc
+
+
+//// end user architecture code
+//ends
+
+// expanding   symbol:  sparx_powdet_sbd.sym # of pins=5
+// sym_path: /foss/designs/designs/SG13G2_SPARX160/schematic/xschem/sparx_powdet_sbd.sym
+// sch_path: /foss/designs/designs/SG13G2_SPARX160/schematic/xschem/sparx_powdet_sbd.sch
+subckt sparx_powdet_sbd ( vout vref vdd rfin vss )
+//.ipin rfin
+//.opin vout
+//.iopin vss
+//.iopin vdd
+//.opin vref
+XR1 ( bias1 rfin_int vss ) rsil w=0.5e-6 l=2.5e-6 m=1 mm_ok=1 
+XD1 ( rfin_int bb_int vss ) schottky_nbl1 nx=1 ny=1 
+XC2 ( bias1 vss ) cap_cmim w=10e-6 l=10e-6 m=30 mm_ok=1 
+XM4 ( vout bb_int vdd vdd ) sg13_lv_pmos w=100u l=0.13u ng=20 m=1 mm_ok=1 
+XM3 ( vout bb_int vss vss ) sg13_lv_nmos w=50u l=0.13u ng=20 m=1 mm_ok=1 
+XR2 ( vout bb_int vss ) rppd w=0.5e-6 l=1.5e-6 m=1 b=0 mm_ok=1 
+XM2 ( vref bias2 vdd vdd ) sg13_lv_pmos w=10u l=0.13u ng=2 m=1 mm_ok=1 
+XM1 ( vref bias2 vss vss ) sg13_lv_nmos w=5u l=0.13u ng=2 m=1 mm_ok=1 
+XC3 ( vdd vss ) cap_cmim w=10e-6 l=10e-6 m=28 mm_ok=1 
+XD2 ( net1 bias2 vss ) schottky_nbl1 nx=1 ny=1 
+XR3 ( bias1 vdd vss ) rhigh w=0.5e-6 l=2e-6 m=1 b=0 mm_ok=1 
+XR4 ( vref bias2 vss ) rppd w=0.5e-6 l=1.5e-6 m=1 b=0 mm_ok=1 
+XR5 ( bias1 net1 vss ) rsil w=0.5e-6 l=2.5e-6 m=1 mm_ok=1 
+XMdummy1 ( vss vss vss vss ) sg13_lv_nmos w=5u l=0.13u ng=2 m=1 mm_ok=1 
+XMdummy2 ( vdd vdd vdd vdd ) sg13_lv_pmos w=10u l=0.13u ng=2 m=1 mm_ok=1 
+XC1 ( rfin rfin_int ) cap_cmim w=10e-6 l=10e-6 m=1 mm_ok=1 
+XC4 ( vdd vss ) cap_cmim w=6.8e-6 l=9e-6 m=2 mm_ok=1 
+ends 
+
+ground GND 
+//// begin user architecture code
+model vsource vsource
+load "resistor.osdi"
+model resistor resistor
+load "capacitor.osdi"
+model capacitor capacitor
+model vcvs vcvs
+//// end user architecture code

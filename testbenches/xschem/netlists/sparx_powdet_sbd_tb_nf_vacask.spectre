@@ -1,0 +1,117 @@
+// sch_path: /foss/designs/designs/SG13G2_SPARX160/testbenches/xschem/sparx_powdet_sbd_tb_nf_vacask.sch
+//subckt sparx_powdet_sbd_tb_nf_vacask ( )
+vdd ( vdd GND ) vsource dc=1.5 
+Rs ( rfin src ) resistor r=50 $mfactor=1 
+vin3 ( src net1 ) vsource type="sine" sinedc=0 ampl=0 freq=freq_rf spur={[1]} smag=[1] 
+vin2 ( net1 GND ) vsource type="sine" sinedc=0 ampl=0 freq=freq_lo 
+xdemod1 ( out_cm ref vdd rfin GND ) sparx_powdet_sbd 
+C1 ( ref GND ) capacitor c=5p $mfactor=1 
+C2 ( out_cm GND ) capacitor c=5p $mfactor=1 
+E2 ( out GND out_cm ref ) vcvs gain=1 
+//// begin user architecture code
+
+
+
+include "sg13g2_vacask_common.lib"
+include "cornerMOSlv.lib" section=mos_tt
+include "cornerRES.lib" section=res_typ
+include "cornerCAP.lib" section=cap_typ
+include "cornerDIO.lib" section=dio_tt
+
+
+
+
+
+control
+  // LO at freq_lo, RF one IF away from it. Rs=50 Ohm, so a source amplitude
+  // a is an available power a^2 / (8 Rs): 300 mV is -6.5 dBm. vin3 carries
+  // spur={[1]} smag=[1], the unit upper-sideband tone the hbac analyses use.
+  var freq_lo=159G
+  var freq_rf=161G
+  var ampl_lo=300m
+
+  // No include of the .save file: its operating-point saves bind to op and
+  // noise but not to hbac or hbnoise, which then write no rawfile.
+  // save full keeps every noise contribution for the contributor ranking.
+  save full
+
+  analysis sparx_powdet_sbd_tb_nf_vacask op
+
+  // (1) Output noise at the quiescent operating point, LO off. This is the
+  //     detector's own floor, which NEP and MDS are built on. The noise figure
+  //     rested on it before hbnoise existed, and the plot script keeps that
+  //     estimate next to the pumped result.
+  analysis powdet_nf_noise noise out="out" in="vin3" from=1k to=5G mode="dec" points=20
+
+  // (2) Conversion of each sideband to the IF from hbac around the single-tone
+  //     HB solution of the LO. spur [1] is RF=LO + f, [-1] is RF=LO - f.
+  //     The LO amplitude is a literal because a sweep cannot follow a parameter
+  //     bound to an expression. Keep it equal to ampl_lo.
+  alter instance("vin2") ampl=300m
+  analysis powdet_nf_hbac_usb hbac freq=[freq_lo] nharm=9 outspur=[0] from=1k to=5G mode="dec" points=20
+  alter instance("vin3") spur={[-1]}
+  analysis powdet_nf_hbac_lsb hbac freq=[freq_lo] nharm=9 outspur=[0] from=1k to=5G mode="dec" points=20
+  alter instance("vin3") spur={[1]}
+
+  // (3) Output noise with the LO on, from hbnoise around the same HB solution:
+  //     every source is modulated by the pumped operating point and folded from
+  //     all 19 spurs to the IF. This is the numerator of the noise figure.
+  //     gain is |V_out(IF) / V_in|^2 for a unit tone at inspur, the transfer
+  //     hbac computes, and the plot script checks the two against each other.
+  //     The second run only moves inspur to the lower sideband, its onoise is
+  //     the same.
+  analysis powdet_nf_hbnoise_usb hbnoise freq=[freq_lo] nharm=9 in="vin3" inspur=[1] outspur=[0] out="out" from=1k to=5G mode="dec" points=20
+  analysis powdet_nf_hbnoise_lsb hbnoise freq=[freq_lo] nharm=9 in="vin3" inspur=[-1] outspur=[0] out="out" from=1k to=5G mode="dec" points=20
+
+  // (4) Conversion and pumped noise at one IF against the LO drive, for the
+  //     noise figure versus LO power. A sweep body holds one analysis, so the
+  //     same sweep is written twice.
+  sweep a_lo instance="vin2" parameter="ampl" from=1m to=1.4 mode="dec" points=6
+    analysis powdet_nf_hbac_lo hbac freq=[freq_lo] nharm=9 outspur=[0] values=[2G]
+  sweep a_lo_n instance="vin2" parameter="ampl" from=1m to=1.4 mode="dec" points=6
+    analysis powdet_nf_hbnoise_lo hbnoise freq=[freq_lo] nharm=9 in="vin3" inspur=[1] outspur=[0] out="out" values=[2G]
+
+  postprocess(PYTHON, "../plot_simulations/plot_sparx_powdet_sbd_tb_nf_vacask.py")
+endc
+
+
+//// end user architecture code
+//ends
+
+// expanding   symbol:  sparx_powdet_sbd.sym # of pins=5
+// sym_path: /foss/designs/designs/SG13G2_SPARX160/schematic/xschem/sparx_powdet_sbd.sym
+// sch_path: /foss/designs/designs/SG13G2_SPARX160/schematic/xschem/sparx_powdet_sbd.sch
+subckt sparx_powdet_sbd ( vout vref vdd rfin vss )
+//.ipin rfin
+//.opin vout
+//.iopin vss
+//.iopin vdd
+//.opin vref
+XR1 ( bias1 rfin_int vss ) rsil w=0.5e-6 l=2.5e-6 m=1 mm_ok=1 
+XD1 ( rfin_int bb_int vss ) schottky_nbl1 nx=1 ny=1 
+XC2 ( bias1 vss ) cap_cmim w=10e-6 l=10e-6 m=30 mm_ok=1 
+XM4 ( vout bb_int vdd vdd ) sg13_lv_pmos w=100u l=0.13u ng=20 m=1 mm_ok=1 
+XM3 ( vout bb_int vss vss ) sg13_lv_nmos w=50u l=0.13u ng=20 m=1 mm_ok=1 
+XR2 ( vout bb_int vss ) rppd w=0.5e-6 l=1.5e-6 m=1 b=0 mm_ok=1 
+XM2 ( vref bias2 vdd vdd ) sg13_lv_pmos w=10u l=0.13u ng=2 m=1 mm_ok=1 
+XM1 ( vref bias2 vss vss ) sg13_lv_nmos w=5u l=0.13u ng=2 m=1 mm_ok=1 
+XC3 ( vdd vss ) cap_cmim w=10e-6 l=10e-6 m=28 mm_ok=1 
+XD2 ( net1 bias2 vss ) schottky_nbl1 nx=1 ny=1 
+XR3 ( bias1 vdd vss ) rhigh w=0.5e-6 l=2e-6 m=1 b=0 mm_ok=1 
+XR4 ( vref bias2 vss ) rppd w=0.5e-6 l=1.5e-6 m=1 b=0 mm_ok=1 
+XR5 ( bias1 net1 vss ) rsil w=0.5e-6 l=2.5e-6 m=1 mm_ok=1 
+XMdummy1 ( vss vss vss vss ) sg13_lv_nmos w=5u l=0.13u ng=2 m=1 mm_ok=1 
+XMdummy2 ( vdd vdd vdd vdd ) sg13_lv_pmos w=10u l=0.13u ng=2 m=1 mm_ok=1 
+XC1 ( rfin rfin_int ) cap_cmim w=10e-6 l=10e-6 m=1 mm_ok=1 
+XC4 ( vdd vss ) cap_cmim w=6.8e-6 l=9e-6 m=2 mm_ok=1 
+ends 
+
+ground GND 
+//// begin user architecture code
+model vsource vsource
+load "resistor.osdi"
+model resistor resistor
+load "capacitor.osdi"
+model capacitor capacitor
+model vcvs vcvs
+//// end user architecture code
