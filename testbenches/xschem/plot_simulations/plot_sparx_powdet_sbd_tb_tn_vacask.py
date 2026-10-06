@@ -273,7 +273,7 @@ if len(runs) > 2:
                 line.append(f'{f0/1e9:.1f} GHz n/a (no excess at the middle rung)')
         print(f'  from noisescale {r["ns"]:g} to {runs[-1]["ns"]:g}:   ' + '   '.join(line))
 
-# --- noise figure from the three noise estimates -----------------------------
+# --- noise figure from the noise estimates, four with pnoise ----------------
 nf_rows = []
 if pumped and os.path.isfile(NF_FILE) and ref_s_p is not None:
     with open(NF_FILE) as fh:
@@ -382,7 +382,7 @@ fig_file = os.path.join(FIG_DIR, f'sparx_powdet_sbd_tn{SUFFIX}.png')
 plt.savefig(fig_file, dpi=150)
 print(f'\nWrote {fig_file}')
 
-# --- the noise figure from the three noise estimates, in one figure --------
+# --- the noise figure from all noise estimates, in one figure -------------
 if nf_rows is not None and 'nf_curve' in globals():
     fig2, axes2 = plt.subplots(1, 2, figsize=(13, 5), constrained_layout=True)
     p_lo_dbm = 10 * np.log10(nf_curve['p_lo_W'] / 1e-3)
