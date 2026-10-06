@@ -17,7 +17,8 @@
       "asd_top_rung_normalised_V": 1.8046636972426106e-08,
       "nf_dsb_transient_dB": 47.242490558930825,
       "nf_dsb_hbnoise_dB": 47.48758273173654,
-      "nf_dsb_quiescent_dB": 44.99162613932309
+      "nf_dsb_quiescent_dB": 44.99162613932309,
+      "nf_dsb_pnoise_dB": 47.58211437109131
     },
     {
       "f_Hz": 1000000000.0,
@@ -27,7 +28,8 @@
       "asd_top_rung_normalised_V": 1.1966987803554066e-08,
       "nf_dsb_transient_dB": 45.43025068641442,
       "nf_dsb_hbnoise_dB": 44.669420847242904,
-      "nf_dsb_quiescent_dB": 42.075180807129435
+      "nf_dsb_quiescent_dB": 42.075180807129435,
+      "nf_dsb_pnoise_dB": 44.758867884562555
     },
     {
       "f_Hz": 2000000000.0,
@@ -37,7 +39,8 @@
       "asd_top_rung_normalised_V": 3.747601286404404e-09,
       "nf_dsb_transient_dB": 43.03467174772143,
       "nf_dsb_hbnoise_dB": 42.19096502123244,
-      "nf_dsb_quiescent_dB": 39.989562203387045
+      "nf_dsb_quiescent_dB": 39.989562203387045,
+      "nf_dsb_pnoise_dB": 42.268732304549324
     },
     {
       "f_Hz": 3000000000.0,
@@ -47,7 +50,8 @@
       "asd_top_rung_normalised_V": 1.4619561681519566e-09,
       "nf_dsb_transient_dB": 41.279226483161544,
       "nf_dsb_hbnoise_dB": 41.05046725420257,
-      "nf_dsb_quiescent_dB": 39.23812742461996
+      "nf_dsb_quiescent_dB": 39.23812742461996,
+      "nf_dsb_pnoise_dB": 41.11688695898968
     }
   ],
   "source": "sparx_powdet_sbd_tb_tn_vacask"

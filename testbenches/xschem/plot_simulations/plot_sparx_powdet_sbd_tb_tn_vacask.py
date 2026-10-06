@@ -1,6 +1,6 @@
 # SPDX-FileCopyrightText: 2025-2026 The SPARX Team
 # SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1
-# Description: Check hbnoise (or the quiescent noise analysis) of the SBD detector against the linear limit of a transient-noise noisescale ladder, and the noise figure from all three.
+# Description: Check hbnoise (or the quiescent noise analysis) of the SBD detector against the linear limit of a transient-noise noisescale ladder, and the noise figure from all of them and pnoise.
 
 # TRANSIENT NOISE OF THE SBD POWER DETECTOR.
 #
@@ -29,8 +29,11 @@
 # any rung as a noise level.
 #
 # The noise figure is then computed from the linear term with the same
-# conversion the NF testbench uses, so the three noise estimates, transient,
-# hbnoise and quiescent, can be compared on one number.
+# conversion the NF testbench uses, so the noise estimates, transient,
+# hbnoise and quiescent, can be compared on one number. When the NF run also
+# had pnoise (its JSON carries a shooting_check), pnoise joins them as the
+# deterministic check on a second large-signal engine, with the same hbac
+# conversion in the denominator.
 
 from rawfile import rawread
 import numpy as np
@@ -277,12 +280,17 @@ if pumped and os.path.isfile(NF_FILE) and ref_s_p is not None:
         nf = json.load(fh)
     f_nf = np.asarray(nf['f_Hz'])
     g_sum = np.asarray(nf['g_usb_V2_per_W']) + np.asarray(nf['g_lsb_V2_per_W'])
+    # pnoise output noise without the source resistor, absent when the NF run had no pnoise.
+    shooting = nf.get('shooting_check')
+    nf_pn_full = (db(1.0 + np.asarray(shooting['s_out_pnoise_V2_per_Hz']) / (g_sum * K_B * T0))
+                  if shooting else None)
     print()
-    print(f'Double-sideband noise figure at {nf["p_lo_avail_W"]*1e3:.3g} mW LO from the three noise')
+    print(f'Double-sideband noise figure at {nf["p_lo_avail_W"]*1e3:.3g} mW LO from the noise')
     print('estimates, with the hbac conversion of the NF testbench in the denominator. The')
     print('transient value uses the linear term of the ladder less the source resistor share')
     print('of the hbnoise result.')
-    print(f'{"f_IF [Hz]":>10} {"transient":>10} {"hbnoise":>9} {"quiescent":>10}')
+    print(f'{"f_IF [Hz]":>10} {"transient":>10} {"hbnoise":>9} {"quiescent":>10}'
+          + (f' {"pnoise":>8}' if shooting else ''))
     for row in rows:
         f0 = row['f_Hz']
         g = float(np.interp(f0, f_nf, g_sum))
@@ -293,7 +301,11 @@ if pumped and os.path.isfile(NF_FILE) and ref_s_p is not None:
         nf_q = float(np.interp(f0, f_nf, nf['nf_dsb_quiescent_dB']))
         row.update({'nf_dsb_transient_dB': nf_tn, 'nf_dsb_hbnoise_dB': nf_hbn,
                     'nf_dsb_quiescent_dB': nf_q})
-        print(f'{f0:10.1e} {nf_tn:10.2f} {nf_hbn:9.2f} {nf_q:10.2f}')
+        line = f'{f0:10.1e} {nf_tn:10.2f} {nf_hbn:9.2f} {nf_q:10.2f}'
+        if shooting:
+            row['nf_dsb_pnoise_dB'] = float(np.interp(f0, f_nf, nf_pn_full))
+            line += f' {row["nf_dsb_pnoise_dB"]:8.2f}'
+        print(line)
     # The same, bin by bin over the Welch grid, for the comparison figure. The
     # lowest bins are left out, they are one resolution step from DC.
     m_c = (f >= 2 * f[1]) & (f <= min(FMAX, f_nf[-1]))
@@ -307,6 +319,8 @@ if pumped and os.path.isfile(NF_FILE) and ref_s_p is not None:
         'f_nf': f_nf,
         'nf_hbnoise_full': np.asarray(nf['nf_dsb_dB']),
         'nf_quiescent_full': np.asarray(nf['nf_dsb_quiescent_dB']),
+        'nf_pnoise_full': nf_pn_full,
+        'pnoise': np.interp(f_c, f_nf, nf_pn_full) if shooting else None,
         'p_lo_W': float(nf['p_lo_avail_W']),
     }
 elif pumped:
@@ -372,14 +386,19 @@ print(f'\nWrote {fig_file}')
 if nf_rows is not None and 'nf_curve' in globals():
     fig2, axes2 = plt.subplots(1, 2, figsize=(13, 5), constrained_layout=True)
     p_lo_dbm = 10 * np.log10(nf_curve['p_lo_W'] / 1e-3)
-    fig2.suptitle(f'SBD Power Detector {VARIANT} - Noise Figure from Three Noise Estimates '
-                  f'(LO {p_lo_dbm:.1f} dBm)')
+    has_pn = nf_curve['nf_pnoise_full'] is not None
+    fig2.suptitle(f'SBD Power Detector {VARIANT} - Noise Figure from {"Four" if has_pn else "Three"} '
+                  f'Noise Estimates (LO {p_lo_dbm:.1f} dBm)')
     for ax, lo_x, title in ((axes2[0], 1e3, 'full IF range'),
                             (axes2[1], 1e8, 'where the transient ladder resolves it')):
         ax.semilogx(nf_curve['f_nf'], nf_curve['nf_hbnoise_full'], 'k', lw=2,
                     label='hbnoise, LO on')
         ax.semilogx(nf_curve['f_nf'], nf_curve['nf_quiescent_full'], 'k--', lw=1.5,
                     label='small-signal noise at the operating point, LO off')
+        if has_pn:
+            # Open circles on every other point: pnoise sits within 0.1 dB of hbnoise and a line would vanish under it.
+            ax.semilogx(nf_curve['f_nf'][::2], nf_curve['nf_pnoise_full'][::2], 'o', color='k', mfc='none',
+                        ms=4, label='pnoise around a shooting PSS, LO on')
         ax.semilogx(nf_curve['f_Hz'], nf_curve['transient'], color='tab:blue', lw=1, alpha=0.7,
                     label='transient noise, linear term of the ladder, LO on')
         ax.semilogx([r['f_Hz'] for r in rows], [r['nf_dsb_transient_dB'] for r in rows], 'o',
@@ -399,10 +418,12 @@ if nf_rows is not None and 'nf_curve' in globals():
     print(f'Wrote {fig2_file}')
     csv2 = os.path.join(DATA_DIR, f'sparx_powdet_sbd_nf_compare{SUFFIX}.csv')
     os.makedirs(DATA_DIR, exist_ok=True)
-    np.savetxt(csv2, np.column_stack((nf_curve['f_Hz'], nf_curve['transient'],
-                                      nf_curve['hbnoise'], nf_curve['quiescent'])),
-               delimiter=',', comments='', fmt='%.6e',
-               header='f_hz,nf_dsb_transient_db,nf_dsb_hbnoise_db,nf_dsb_quiescent_db')
+    cols2 = [nf_curve['f_Hz'], nf_curve['transient'], nf_curve['hbnoise'], nf_curve['quiescent']]
+    header2 = 'f_hz,nf_dsb_transient_db,nf_dsb_hbnoise_db,nf_dsb_quiescent_db'
+    if has_pn:
+        cols2.append(nf_curve['pnoise'])
+        header2 += ',nf_dsb_pnoise_db'
+    np.savetxt(csv2, np.column_stack(cols2), delimiter=',', comments='', fmt='%.6e', header=header2)
     print(f'Wrote {csv2}')
 
 os.makedirs(DATA_DIR, exist_ok=True)

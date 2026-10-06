@@ -295,24 +295,24 @@ The cause is the SPICE Gummel-Poon model `sp_bjt`, updated in VACASK on 2026-09-
 
 ![Transient noise](plot_simulations/figures/sparx_powdet_sbd_tn.png)
 
-Transient noise and `hbnoise` share no code path, so a transient with the LO on is the one check of the periodic noise analyses that does not rest on a linearization at all. The deterministic check on a second large-signal engine is `pnoise` in the NF bench, see [the shooting cross-check](#the-shooting-cross-check-pac-and-pnoise). The script takes the output PSD of each run by Welch's method at 100 MHz resolution, splits it as a term linear in `noisescale` squared plus a remainder, solves the two from the extreme rungs, and compares the linear term against the `hbnoise` and the quiescent `noise` result of the NF bench. With the same `hbac` conversion in the denominator it then states the noise figure from all three noise estimates:
+Transient noise and `hbnoise` share no code path, so a transient with the LO on is the one check of the periodic noise analyses that does not rest on a linearization at all. The deterministic check on a second large-signal engine is `pnoise` in the NF bench, see [the shooting cross-check](#the-shooting-cross-check-pac-and-pnoise). The script takes the output PSD of each run by Welch's method at 100 MHz resolution, splits it as a term linear in `noisescale` squared plus a remainder, solves the two from the extreme rungs, and compares the linear term against the `hbnoise` and the quiescent `noise` result of the NF bench. With the same `hbac` conversion in the denominator it then states the noise figure from all three noise estimates, and from the `pnoise` result of the NF bench when that run had it:
 
-| IF | transient, linear term | `hbnoise` | quiescent `noise` |
-|---|---|---|---|
-| 0.5 GHz | 47.2 dB | 47.5 dB | 45.0 dB |
-| 1 GHz | 45.4 dB | 44.7 dB | 42.1 dB |
-| 2 GHz | 43.0 dB | 42.2 dB | 40.0 dB |
-| 3 GHz | 41.3 dB | 41.1 dB | 39.2 dB |
+| IF | transient, linear term | `hbnoise` | quiescent `noise` | `pnoise` |
+|---|---|---|---|---|
+| 0.5 GHz | 47.2 dB | 47.5 dB | 45.0 dB | 47.6 dB |
+| 1 GHz | 45.4 dB | 44.7 dB | 42.1 dB | 44.8 dB |
+| 2 GHz | 43.0 dB | 42.2 dB | 40.0 dB | 42.3 dB |
+| 3 GHz | 41.3 dB | 41.1 dB | 39.2 dB | 41.1 dB |
 
 The transient sits within 0.9 dB of `hbnoise` and 2.0 to 3.4 dB above the quiescent estimate, and the three rungs collapse onto one curve within 2 percent when normalised by `noisescale`, so the ladder is in its linear regime. The bench costs about 4 minutes and is part of `sim-all`.
 
 The transient column moved between VACASK builds while `hbnoise` did not: the build of 2026-09-18 gave 47.2, 46.0, 42.9 and 41.2 dB, and the 2026.09 image's `89e888d` and `1b48553` both give the values above, byte-identical between the two. The same seed draws a different noise realisation, and the shift of up to 0.6 dB stays inside the seed scatter below.
 
-#### The three noise estimates in one figure
+#### The four noise estimates in one figure
 
-![Noise figure of the fabricated detector from hbnoise, transient noise and the quiescent noise analysis](plot_simulations/figures/sparx_powdet_sbd_nf_compare.png)
+![Noise figure of the fabricated detector from hbnoise, pnoise, transient noise and the quiescent noise analysis](plot_simulations/figures/sparx_powdet_sbd_nf_compare.png)
 
-The figure is the fabricated detector at -6.5 dBm of LO. All three curves share the `hbac` conversion of the NF bench in the denominator, so what differs between them is only the output-noise estimate: `hbnoise` with the LO on, the quiescent `noise` analysis with the LO off, and the linear term of the transient ladder with the LO on, drawn bin by bin at the 100 MHz Welch resolution from 200 MHz up and as band means at the four reported IFs. Below 200 MHz only the two small-signal analyses exist, a 100 ns record cannot resolve less.
+The figure is the fabricated detector at -6.5 dBm of LO. All curves share the `hbac` conversion of the NF bench in the denominator, so what differs between them is only the output-noise estimate: `hbnoise` with the LO on, the quiescent `noise` analysis with the LO off, `pnoise` around the shooting PSS of the same LO as open circles, and the linear term of the transient ladder with the LO on, drawn bin by bin at the 100 MHz Welch resolution from 200 MHz up and as band means at the four reported IFs. Below 200 MHz only the small-signal analyses exist, a 100 ns record cannot resolve less. The `pnoise` circles sit within 0.1 dB of `hbnoise` over the whole IF range, which is what places the transient's scatter and offset on the transient side. The script takes `pnoise` from the NF bench's JSON and draws the figure with three curves when that run had none, as on a VACASK before `1b48553`.
 
 **Quiescent against `hbnoise`: 1.7 dB at low IF, 2.6 dB at 1 GHz, 1.2 dB at 5 GHz.** This is the difference between linearising the noise sources at the DC bias and at the pumped operating point, and it is plausible in size, sign and shape:
 
