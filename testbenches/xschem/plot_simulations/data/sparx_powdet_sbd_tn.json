@@ -11,41 +11,41 @@
   "rows": [
     {
       "f_Hz": 500000000.0,
-      "asd_linear_V": 1.7494073531850367e-08,
+      "asd_linear_V": 1.7624312386432137e-08,
       "asd_ref_V": 1.8128946342033968e-08,
       "asd_quiescent_V": 1.3600920118356734e-08,
-      "asd_top_rung_normalised_V": 1.8003032336591315e-08,
-      "nf_dsb_transient_dB": 47.17806579384029,
+      "asd_top_rung_normalised_V": 1.8046636972426106e-08,
+      "nf_dsb_transient_dB": 47.242490558930825,
       "nf_dsb_hbnoise_dB": 47.48758273173654,
       "nf_dsb_quiescent_dB": 44.99162613932309
     },
     {
       "f_Hz": 1000000000.0,
-      "asd_linear_V": 1.2580594797105933e-08,
+      "asd_linear_V": 1.1727148784393313e-08,
       "asd_ref_V": 1.074555038190215e-08,
       "asd_quiescent_V": 7.970755857274625e-09,
-      "asd_top_rung_normalised_V": 1.2813901723772357e-08,
-      "nf_dsb_transient_dB": 46.04042678897085,
+      "asd_top_rung_normalised_V": 1.1966987803554066e-08,
+      "nf_dsb_transient_dB": 45.43025068641442,
       "nf_dsb_hbnoise_dB": 44.669420847242904,
       "nf_dsb_quiescent_dB": 42.075180807129435
     },
     {
       "f_Hz": 2000000000.0,
-      "asd_linear_V": 3.6242093657033047e-09,
+      "asd_linear_V": 3.6724881012862566e-09,
       "asd_ref_V": 3.3343895438104924e-09,
       "asd_quiescent_V": 2.587326038180625e-09,
-      "asd_top_rung_normalised_V": 3.6666442043544563e-09,
-      "nf_dsb_transient_dB": 42.919728537622376,
+      "asd_top_rung_normalised_V": 3.747601286404404e-09,
+      "nf_dsb_transient_dB": 43.03467174772143,
       "nf_dsb_hbnoise_dB": 42.19096502123244,
       "nf_dsb_quiescent_dB": 39.989562203387045
     },
     {
       "f_Hz": 3000000000.0,
-      "asd_linear_V": 1.4157254827944853e-09,
+      "asd_linear_V": 1.4289892063236616e-09,
       "asd_ref_V": 1.397098554660034e-09,
       "asd_quiescent_V": 1.1320473900870934e-09,
-      "asd_top_rung_normalised_V": 1.4352065114814416e-09,
-      "nf_dsb_transient_dB": 41.19822705081838,
+      "asd_top_rung_normalised_V": 1.4619561681519566e-09,
+      "nf_dsb_transient_dB": 41.279226483161544,
       "nf_dsb_hbnoise_dB": 41.05046725420257,
       "nf_dsb_quiescent_dB": 39.23812742461996
     }
