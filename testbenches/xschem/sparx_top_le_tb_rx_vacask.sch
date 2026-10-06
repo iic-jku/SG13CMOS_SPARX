@@ -126,7 +126,9 @@ control
     analysis rx_hb2 hb freq=[freq_lo, freq_rf] nharm=[5,2] truncate=\\"diamond\\"
 
   // (4) Transient at the same levels, 10 ns so the detected dc has fully settled, the last nanosecond is plotted.
+  // op2: a fresh operating point for the transient. Started from the state the HB analyses above leave, the transient with the post-layout detectors aborts with Timestep too small on VACASK 89e888d and 1b48553.
   alter instance(\\"vlo\\") ampl=ampl_lo
+  analysis op2 op
   analysis rx_tran tran stop=10n step=10f maxstep=50f
 
   postprocess(PYTHON, \\"../plot_simulations/plot_sparx_top_le_tb_rx_vacask.py\\")

@@ -65,11 +65,14 @@ control
 
   // (4) Conversion and pumped noise at one IF against the LO drive, for the
   //     noise figure versus LO power. A sweep body holds one analysis, so the
-  //     same sweep is written twice.
+  //     same sweep is written twice. nharm=15 because nine harmonics are not
+  //     converged above P(1 dB): at +4 dBm they overstate the conversion of the
+  //     fabricated detector by 8.4 dB against pac and against 25 harmonics. At
+  //     the -6.5 dBm of (2) and (3), 9 and 25 harmonics agree within 0.15 dB.
   sweep a_lo instance="vin2" parameter="ampl" from=1m to=1.4 mode="dec" points=6
-    analysis powdet_nf_hbac_lo hbac freq=[freq_lo] nharm=9 outspur=[0] values=[2G]
+    analysis powdet_nf_hbac_lo hbac freq=[freq_lo] nharm=15 outspur=[0] values=[2G]
   sweep a_lo_n instance="vin2" parameter="ampl" from=1m to=1.4 mode="dec" points=6
-    analysis powdet_nf_hbnoise_lo hbnoise freq=[freq_lo] nharm=9 in="vin3" inspur=[1] outspur=[0] out="out" values=[2G]
+    analysis powdet_nf_hbnoise_lo hbnoise freq=[freq_lo] nharm=15 in="vin3" inspur=[1] outspur=[0] out="out" values=[2G]
 
   postprocess(PYTHON, "../plot_simulations/plot_sparx_powdet_sbd_tb_nf_vacask.py")
 endc

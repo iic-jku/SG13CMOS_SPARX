@@ -1,6 +1,6 @@
 # SPDX-FileCopyrightText: 2025-2026 The SPARX Team
 # SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1
-# Description: Noise figure, NEP and MDS of the SBD power detector from VACASK noise, hbnoise and hbac.
+# Description: Noise figure, NEP and MDS of the SBD power detector from VACASK noise, hbnoise and hbac, checked against pac and pnoise.
 
 # NOISE FIGURE OF THE SBD POWER DETECTOR.
 #
@@ -24,6 +24,15 @@
 #                          phasor at the IF f.
 #   powdet_nf_hbac_lo      the same conversion and the same pumped noise at one
 #   powdet_nf_hbnoise_lo   IF against the LO amplitude.
+#   powdet_nf_pac_usb      the shooting-PSS twins of the HB analyses: pac of
+#   powdet_nf_pac_lsb      hbac, pnoise of hbnoise, around the periodic steady
+#   powdet_nf_pnoise_usb   state of the LO found by shooting, which shares no
+#   powdet_nf_pnoise_lsb   code with harmonic balance. pnoise_lo is the twin of
+#   powdet_nf_pnoise_lo    hbnoise_lo, its gain the pac conversion.
+#
+# The shooting results are the cross-check of the HB ones and are read only
+# if their rawfiles come from the same run, so a deck without them (VACASK
+# before 1b48553 has neither analysis) is still post-processed.
 #
 # With an RF source of available power P_a landing in one sideband and giving
 # an IF output of peak amplitude V_IF, define the conversion
@@ -102,7 +111,12 @@ HBNOISE_LO = 'powdet_nf_hbnoise_lo.raw'
 HBAC_USB = 'powdet_nf_hbac_usb.raw'
 HBAC_LSB = 'powdet_nf_hbac_lsb.raw'
 HBAC_LO = 'powdet_nf_hbac_lo.raw'
-SOURCE_RES = 'Rs'         # instance name of the source resistor in the testbench
+PAC_USB = 'powdet_nf_pac_usb.raw'
+PAC_LSB = 'powdet_nf_pac_lsb.raw'
+PNOISE_USB = 'powdet_nf_pnoise_usb.raw'
+PNOISE_LSB = 'powdet_nf_pnoise_lsb.raw'
+PNOISE_LO = 'powdet_nf_pnoise_lo.raw'
+SOURCE_RES = 'Rs'        # instance name of the source resistor in the testbench
 # The parasitic PNP inside the Schottky PCell, one per diode instance, whatever
 # the instance is called in the schematic or the extracted view.
 PNP_PATTERN = re.compile(r'^n\(xdemod1:[^:,]+:q1\)$')
@@ -277,13 +291,17 @@ def sweep_points(raw_name, value):
     return np.asarray(grid)[order], [vals[i] for i in order]
 
 
+def lo_noise_point(h, gi):
+    """(S_int, S_pnp, gain) at one LO amplitude of an hbnoise or pnoise sweep."""
+    s_src = float(np.real(h[gi, src_vec])[0]) if src_vec in h.names else 0.0
+    return (float(np.real(h[gi, 'onoise'])[0]) - s_src,
+            float(sum(np.real(h[gi, n])[0] for n in h.names if PNP_PATTERN.match(n))),
+            float(np.real(h[gi, 'gain'])[0]))
+
+
 name_lo = next(n for n in rawread(os.path.join(SIM_DIR, HBAC_LO)).get().names if n.startswith('out;'))
 a_grid, v_if_lo = sweep_points(HBAC_LO, lambda h, gi: float(np.abs(h[gi, name_lo])[0]))
-a_grid_n, s_lo = sweep_points(
-    HBNOISE_LO, lambda h, gi: (float(np.real(h[gi, 'onoise'])[0])
-                               - (float(np.real(h[gi, src_vec])[0]) if src_vec in h.names else 0.0),
-                               float(sum(np.real(h[gi, n])[0] for n in h.names if PNP_PATTERN.match(n))),
-                               float(np.real(h[gi, 'gain'])[0])))
+a_grid_n, s_lo = sweep_points(HBNOISE_LO, lo_noise_point)
 if a_grid.size != a_grid_n.size or np.max(np.abs(a_grid_n / a_grid - 1.0)) > 1e-6:
     raise RuntimeError('the hbac and hbnoise LO sweeps must use the same amplitude grid')
 plo_grid = a_grid ** 2 / (8.0 * RS)
@@ -302,6 +320,44 @@ nf_vs_plo_q, _ = noise_figures(s_q[j_if], g_lo_grid, g_lo_grid * imb_if)
 nf_vs_plo_q_nopnp, _ = noise_figures(s_q_nopnp[j_if], g_lo_grid, g_lo_grid * imb_if)
 i_best = int(np.argmin(nf_vs_plo))
 i_best_q = int(np.argmin(nf_vs_plo_q))
+
+
+# --- shooting cross-check: pac against hbac, pnoise against hbnoise ---------
+def same_run(raw_name):
+    """True if the rawfile exists and is not older than the hbac result of this run."""
+    path = os.path.join(SIM_DIR, raw_name)
+    return (os.path.isfile(path)
+            and os.path.getmtime(path) >= os.path.getmtime(os.path.join(SIM_DIR, HBAC_USB)))
+
+
+HAVE_SHOOTING = all(same_run(n) for n in (PAC_USB, PAC_LSB, PNOISE_USB, PNOISE_LSB, PNOISE_LO))
+if HAVE_SHOOTING:
+    f_pu, g_u_pac_raw = hbac_conversion(PAC_USB)
+    f_pl, g_l_pac_raw = hbac_conversion(PAC_LSB)
+    g_u_pac = loginterp(f_n, f_pu, g_u_pac_raw)
+    g_l_pac = loginterp(f_n, f_pl, g_l_pac_raw)
+    pac_vs_hbac_db = np.concatenate((db(g_u_pac / g_u), db(g_l_pac / g_l)))
+    f_pn, s_pn, _, pn = noise_split(PNOISE_USB)
+    if f_pn.size != f_n.size or np.max(np.abs(f_pn / f_n - 1.0)) > 1e-6:
+        raise RuntimeError('noise and pnoise must sweep the same frequency grid')
+    pn_l = rawread(os.path.join(SIM_DIR, PNOISE_LSB)).get()
+    if np.max(np.abs(np.real(pn_l['onoise']) / np.real(pn['onoise']) - 1.0)) > 1e-6:
+        raise RuntimeError('the usb and lsb pnoise runs report different onoise, they must '
+                           'differ only in inharm')
+    pn_vs_hbn_db = db(s_pn / s_p)
+    # pnoise and pac linearise at the same stored PSS, so 4 Rs gain is the pac conversion.
+    pn_gain_check_db = max(float(np.max(np.abs(db(4.0 * RS * np.real(pn['gain']) / g_u_pac)))),
+                           float(np.max(np.abs(db(4.0 * RS * np.real(pn_l['gain']) / g_l_pac)))))
+    nf_dsb_pn, _ = noise_figures(s_pn, g_u_pac, g_l_pac)
+    a_grid_p, s_lo_p = sweep_points(PNOISE_LO, lo_noise_point)
+    if a_grid_p.size != a_grid.size or np.max(np.abs(a_grid_p / a_grid - 1.0)) > 1e-6:
+        raise RuntimeError('the pnoise and hbac LO sweeps must use the same amplitude grid')
+    s_lo_int_pn = np.asarray([v[0] for v in s_lo_p])
+    g_lo_pn = 4.0 * RS * np.asarray([v[2] for v in s_lo_p])
+    nf_vs_plo_pn, _ = noise_figures(s_lo_int_pn, g_lo_pn, g_lo_pn * (g_l_pac[j_if] / g_u_pac[j_if]))
+    lo_gain_pn_db = db(g_lo_pn / g_lo_grid)
+    lo_nf_pn_db = nf_vs_plo_pn - nf_vs_plo
+    i_best_pn = int(np.argmin(nf_vs_plo_pn))
 
 # --- responsivity, NEP, MDS --------------------------------------------------
 if not os.path.isfile(BETA_FILE):
@@ -387,6 +443,21 @@ for i in range(plo_grid.size):
     print(f'{dbm(plo_grid[i]):11.1f} {s_lo_int[i]:13.3e} {s_lo_int[i]/s_q[j_if]:14.2f} '
           f'{nf_vs_plo[i]:8.2f} {nf_vs_plo_q[i]:9.2f}')
 print()
+if HAVE_SHOOTING:
+    print('Shooting cross-check, pac against hbac and pnoise against hbnoise:')
+    print(f'  pac - hbac conversion  : {pac_vs_hbac_db.min():+.4f} .. {pac_vs_hbac_db.max():+.4f} dB, '
+          'both sidebands over the IF sweep')
+    print(f'  pnoise - hbnoise noise : {pn_vs_hbn_db.min():+.3f} .. {pn_vs_hbn_db.max():+.3f} dB over the IF sweep, '
+          f'{pn_vs_hbn_db[j_if]:+.3f} dB at {F_IF_LO/1e9:.0f} GHz')
+    print(f'  pnoise gain vs pac     : within {pn_gain_check_db:.1e} dB')
+    print(f'  NF_DSB at {F_IF_LO/1e9:.0f} GHz        : {nf_dsb_pn[j_if]:.2f} dB from pnoise, {nf_dsb[j_if]:.2f} dB from hbnoise')
+    print(f'  against LO drive       : pnoise - HB conversion {lo_gain_pn_db.min():+.3f} .. {lo_gain_pn_db.max():+.3f} dB, '
+          f'NF {lo_nf_pn_db.min():+.3f} .. {lo_nf_pn_db.max():+.3f} dB, best NF {nf_vs_plo_pn[i_best_pn]:.1f} dB '
+          f'at {dbm(plo_grid[i_best_pn]):.1f} dBm')
+else:
+    print('Shooting cross-check skipped: no pac and pnoise rawfiles from this run '
+          '(VACASK before 1b48553 has neither analysis).')
+print()
 print(f'Top output-noise contributors over {lo_b:.0e} .. {hi_b:.0e} Hz, pumped, and their '
       'pumped-over-quiescent ratio:')
 for _, name in contrib_p[:N_CONTRIB + 2]:
@@ -402,6 +473,8 @@ fig.suptitle(f'SBD Power Detector {VARIANT} - Noise Figure (LO {freq_lo/1e9:.0f}
 ax = axes[0, 0]
 ax.loglog(f_n, asd_p, 'k', lw=2, label='output noise, LO on (hbnoise)')
 ax.loglog(f_n, asd_q, 'k--', lw=1.5, label='output noise, LO off (noise)')
+if HAVE_SHOOTING:
+    ax.loglog(f_n[::2], np.sqrt(s_pn[::2]), 'o', color='k', mfc='none', ms=4, label='output noise, LO on (pnoise)')
 for _, name in contrib_p[:N_CONTRIB]:
     ax.loglog(f_n, np.sqrt(np.real(hn[name])), lw=1, alpha=0.8, label=name)
 ax.axvspan(lo_b, hi_b, color='tab:orange', alpha=0.10, label='video band')
@@ -413,8 +486,11 @@ ax.grid(True, which='both')
 ax = axes[0, 1]
 ax.semilogx(f_n, 20 * np.log10(v_if_ref), label=f'upper sideband, RF {dbm(P_RF_REF):.1f} dBm')
 ax.semilogx(f_n, 20 * np.log10(np.sqrt(2.0 * g_l * P_RF_REF)), '--', alpha=0.7, label='lower sideband')
+if HAVE_SHOOTING:
+    ax.semilogx(f_n[::2], 20 * np.log10(np.sqrt(2.0 * g_u_pac[::2] * P_RF_REF)), 'o', color='tab:blue',
+                mfc='none', ms=4, label='upper sideband, pac')
 ax.set_xlabel('IF frequency (Hz)')
-ax.set_ylabel('IF output amplitude (dBV), hbac')
+ax.set_ylabel('IF output amplitude (dBV), hbac' + (' and pac' if HAVE_SHOOTING else ''))
 ax.legend(fontsize=8)
 ax.grid(True, which='both')
 
@@ -422,6 +498,8 @@ ax = axes[1, 0]
 ax.semilogx(f_n, nf_dsb, 'k', lw=2, label='NF$_{DSB}$, hbnoise')
 ax.semilogx(f_n, nf_dsb_q, 'k--', lw=1.5, label='NF$_{DSB}$, quiescent-noise estimate')
 ax.semilogx(f_n, nf_dsb_nopnp, ':', color='tab:gray', label='hbnoise, without PCell PNP flicker')
+if HAVE_SHOOTING:
+    ax.semilogx(f_n[::2], nf_dsb_pn[::2], 'o', color='k', mfc='none', ms=4, label='NF$_{DSB}$, pnoise and pac')
 ax.set_xlabel('IF frequency (Hz)')
 ax.set_ylabel('NF$_{DSB}$ (dB)')
 ax.legend(fontsize=8)
@@ -431,6 +509,8 @@ ax = axes[1, 1]
 ax.semilogx(plo_grid, nf_vs_plo, 'k', lw=2, label=f'NF$_{{DSB}}$ at IF = {F_IF_LO/1e9:g} GHz, hbnoise')
 ax.semilogx(plo_grid, nf_vs_plo_q, 'k--', lw=1.5, label='quiescent-noise estimate')
 ax.semilogx(plo_grid, nf_vs_plo_nopnp, ':', color='tab:gray', label='hbnoise, without PCell PNP flicker')
+if HAVE_SHOOTING:
+    ax.semilogx(plo_grid, nf_vs_plo_pn, 'o', color='k', mfc='none', ms=4, label='pnoise')
 ax.axvline(p_lo, color='tab:red', ls=':', label=f'LO used here, {dbm(p_lo):.1f} dBm')
 p1db = pss.get('p_1db_W')
 if p1db:
@@ -488,6 +568,23 @@ with open(out_file, 'w') as f:
                       'nf_dsb_no_pnp_dB': nf_vs_plo_nopnp.tolist(),
                       'nf_dsb_quiescent_dB': nf_vs_plo_q.tolist(),
                       'nf_dsb_quiescent_no_pnp_dB': nf_vs_plo_q_nopnp.tolist()},
+        # None when the run had no pac and pnoise analyses.
+        'shooting_check': {
+            'pac_minus_hbac_dB': [float(pac_vs_hbac_db.min()), float(pac_vs_hbac_db.max())],
+            'pnoise_minus_hbnoise_dB': [float(pn_vs_hbn_db.min()), float(pn_vs_hbn_db.max())],
+            'pnoise_minus_hbnoise_at_f_if_lo_dB': float(pn_vs_hbn_db[j_if]),
+            'pnoise_gain_vs_pac_max_dB': pn_gain_check_db,
+            'lo_sweep_conversion_pnoise_minus_hbac_dB': [float(lo_gain_pn_db.min()), float(lo_gain_pn_db.max())],
+            'lo_sweep_nf_pnoise_minus_hb_dB': [float(lo_nf_pn_db.min()), float(lo_nf_pn_db.max())],
+            'nf_dsb_pnoise_best_dB': float(nf_vs_plo_pn[i_best_pn]),
+            'p_lo_pnoise_best_W': float(plo_grid[i_best_pn]),
+            'nf_dsb_pnoise_dB': nf_dsb_pn.tolist(),
+            's_out_pnoise_V2_per_Hz': s_pn.tolist(),
+            'g_usb_pac_V2_per_W': g_u_pac.tolist(),
+            'g_lsb_pac_V2_per_W': g_l_pac.tolist(),
+            'nf_vs_plo_nf_dsb_pnoise_dB': nf_vs_plo_pn.tolist(),
+            'nf_vs_plo_g_usb_pnoise_V2_per_W': g_lo_pn.tolist(),
+        } if HAVE_SHOOTING else None,
         'source': TB,
     }, f, indent=2)
 print(f'\nWrote {out_file}')
@@ -495,21 +592,23 @@ print(f'\nWrote {out_file}')
 # --- CSV for pgfplots -------------------------------------------------------
 # nf_dsb_db and nf_ssb_db carry the hbnoise result. The pre-hbnoise estimate is
 # kept as nf_dsb_quiescent_db so a figure built on it can still be reproduced.
+# The pac and pnoise columns are appended, so existing column names keep their place.
+cols = [f_n, asd_q, beta_f, nep, nep_nopnp, g_u, g_l, 20 * np.log10(v_if_ref), nf_dsb, nf_ssb,
+        nf_dsb_nopnp, asd_p, nf_dsb_q, nf_ssb_q, nf_dsb_q_nopnp]
+header = ('f_hz,asd_v,beta_f_vw,nep_w,nep_nopnp_w,g_usb,g_lsb,vif_dbv,nf_dsb_db,nf_ssb_db,'
+          'nf_dsb_nopnp_db,asd_pumped_v,nf_dsb_quiescent_db,nf_ssb_quiescent_db,'
+          'nf_dsb_quiescent_nopnp_db')
+cols_lo = [dbm(plo_grid), nf_vs_plo, nf_vs_plo_nopnp, g_lo_grid, s_lo_int, nf_vs_plo_q, nf_vs_plo_q_nopnp]
+header_lo = 'plo_dbm,nf_dsb_db,nf_dsb_nopnp_db,g_usb,s_out_pumped,nf_dsb_quiescent_db,nf_dsb_quiescent_nopnp_db'
+if HAVE_SHOOTING:
+    cols += [g_u_pac, g_l_pac, np.sqrt(s_pn), nf_dsb_pn]
+    header += ',g_usb_pac,g_lsb_pac,asd_pnoise_v,nf_dsb_pnoise_db'
+    cols_lo += [g_lo_pn, s_lo_int_pn, nf_vs_plo_pn]
+    header_lo += ',g_usb_pnoise,s_out_pnoise,nf_dsb_pnoise_db'
 csv_f = os.path.join(DATA_DIR, f'sparx_powdet_sbd_nf{SUFFIX}.csv')
-np.savetxt(csv_f,
-           np.column_stack((f_n, asd_q, beta_f, nep, nep_nopnp, g_u, g_l,
-                            20 * np.log10(v_if_ref), nf_dsb, nf_ssb, nf_dsb_nopnp,
-                            asd_p, nf_dsb_q, nf_ssb_q, nf_dsb_q_nopnp)),
-           delimiter=',', comments='', fmt='%.6e',
-           header='f_hz,asd_v,beta_f_vw,nep_w,nep_nopnp_w,g_usb,g_lsb,vif_dbv,nf_dsb_db,nf_ssb_db,'
-                  'nf_dsb_nopnp_db,asd_pumped_v,nf_dsb_quiescent_db,nf_ssb_quiescent_db,'
-                  'nf_dsb_quiescent_nopnp_db')
+np.savetxt(csv_f, np.column_stack(cols), delimiter=',', comments='', fmt='%.6e', header=header)
 csv_lo = os.path.join(DATA_DIR, f'sparx_powdet_sbd_nf_lo{SUFFIX}.csv')
-np.savetxt(csv_lo, np.column_stack((dbm(plo_grid), nf_vs_plo, nf_vs_plo_nopnp, g_lo_grid,
-                                    s_lo_int, nf_vs_plo_q, nf_vs_plo_q_nopnp)),
-           delimiter=',', comments='', fmt='%.6e',
-           header='plo_dbm,nf_dsb_db,nf_dsb_nopnp_db,g_usb,s_out_pumped,nf_dsb_quiescent_db,'
-                  'nf_dsb_quiescent_nopnp_db')
+np.savetxt(csv_lo, np.column_stack(cols_lo), delimiter=',', comments='', fmt='%.6e', header=header_lo)
 print(f'Wrote {csv_f}\nWrote {csv_lo}')
 
 if SHOW_PLOTS:
