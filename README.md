@@ -952,7 +952,7 @@ make all
   author = {Dorrer, Simon and Kellerer-Pirklbauer, David and Pretl, Harald},
   month = apr,
   year = {2026},
-  title = {{GitHub Repository for SPARX: An Open-Source, Automated, Programmatically Generated, Frequency-Scalable Six-Port Receiver in 130-nm CMOS}},
+  title = {{GitHub Repository of SPARX: An Open-Source, Automated, Programmatically Generated, Frequency-Scalable Six-Port Receiver in 130-nm CMOS}},
   url = {https://github.com/iic-jku/SG13CMOS_SPARX},
   doi = {10.5281/zenodo.19654232}
 }
