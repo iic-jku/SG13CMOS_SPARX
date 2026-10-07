@@ -1,4 +1,4 @@
-// sch_path: /foss/designs/designs/SG13G2_SPARX160/testbenches/xschem/sparx_powdet_sbd_tb_pss_vacask.sch
+// sch_path: /foss/designs/SG13CMOS_SPARX/testbenches/xschem/sparx_powdet_sbd_tb_pss_vacask.sch
 //subckt sparx_powdet_sbd_tb_pss_vacask ( )
 vdd ( vdd GND ) vsource dc=1.5 
 Rs ( rfin src ) resistor r=50 $mfactor=1 
@@ -45,33 +45,39 @@ control
   sweep ampl_rf instance="vin3" parameter="ampl" from=100u to=1.4 mode="dec" points=8
     analysis powdet_pss1 hb freq=[freq_rf] nharm=15
 
-  // (2) Shooting PSS at five amplitudes of the same grid, as the check of the
-  //     harmonic balance: the plot script compares the period average of the
-  //     output against the HB DC bin at the same amplitude. pss treats the
-  //     circuit as driven, period fixed at tper, unless oscillator=1. VACASK
-  //     before 1b48553 needed driven=1 for that and solved for the period of an
-  //     oscillator without it. tstab only seeds the shooting, the Newton
-  //     loop converges to the periodic state from there. The HB tolerances
-  //     above are too tight for the transient integrator inside pss, which
-  //     aborts on them, so the shooting runs at the default tolerances.
-  //     Tighter settings change the detected term by less than 1e-4
-  //     where they integrate at all and abort at low drive (reltol=1e-4
-  //     on the 16-cell variant, 1e-5 on the fabricated one), the
-  //     shooting resolves the detected term to better than 1 % down to
-  //     10 uV without them. One analysis per point rather
-  //     than a sweep, so a point that fails does not take the others with it.
+  // (2) Shooting PSS at nine amplitudes of the same grid, -76 to +4 dBm, as
+  //     the check of the harmonic balance: the plot script compares the period
+  //     average of the output against the HB DC bin at the same amplitude. pss
+  //     treats the circuit as driven, period fixed at tper, unless
+  //     oscillator=1. VACASK before 1b48553 needed driven=1 for that and solved
+  //     for the period of an oscillator without it. The shooting runs at the
+  //     default tolerances, because its stabilization transient aborts at
+  //     tighter ones: at reltol=1e-5 (1e-4 for 16 cells), and at 1 mV and
+  //     below already with abstol=1e-15. On the fabricated design it still
+  //     lands within 0.05 % of HB down to 10 nV of detected voltage, and tstab
+  //     from 20 to 200 periods changes that by less than 1e-3. One analysis per point
+  //     rather than a sweep, so a point that fails does not take the others
+  //     with it.
   var tper=1/freq_rf
   options reltol=1e-3 abstol=1e-12 vntol=1e-6
-  alter instance("vin3") ampl=10m
+  alter instance("vin3") ampl=100u
   analysis powdet_pss2a pss tper=tper tstab=50*tper
-  alter instance("vin3") ampl=31.62m
+  alter instance("vin3") ampl=316.2u
   analysis powdet_pss2b pss tper=tper tstab=50*tper
-  alter instance("vin3") ampl=100m
+  alter instance("vin3") ampl=1m
   analysis powdet_pss2c pss tper=tper tstab=50*tper
-  alter instance("vin3") ampl=316.2m
+  alter instance("vin3") ampl=3.162m
   analysis powdet_pss2d pss tper=tper tstab=50*tper
-  alter instance("vin3") ampl=1.0
+  alter instance("vin3") ampl=10m
   analysis powdet_pss2e pss tper=tper tstab=50*tper
+  alter instance("vin3") ampl=31.62m
+  analysis powdet_pss2f pss tper=tper tstab=50*tper
+  alter instance("vin3") ampl=100m
+  analysis powdet_pss2g pss tper=tper tstab=50*tper
+  alter instance("vin3") ampl=316.2m
+  analysis powdet_pss2h pss tper=tper tstab=50*tper
+  alter instance("vin3") ampl=1.0
+  analysis powdet_pss2i pss tper=tper tstab=50*tper
 
   postprocess(PYTHON, "../plot_simulations/plot_sparx_powdet_sbd_tb_pss_vacask.py")
 endc
@@ -81,8 +87,8 @@ endc
 //ends
 
 // expanding   symbol:  sparx_powdet_sbd.sym # of pins=5
-// sym_path: /foss/designs/designs/SG13G2_SPARX160/schematic/xschem/sparx_powdet_sbd.sym
-// sch_path: /foss/designs/designs/SG13G2_SPARX160/schematic/xschem/sparx_powdet_sbd.sch
+// sym_path: /foss/designs/SG13CMOS_SPARX/schematic/xschem/sparx_powdet_sbd.sym
+// sch_path: /foss/designs/SG13CMOS_SPARX/schematic/xschem/sparx_powdet_sbd.sch
 subckt sparx_powdet_sbd ( vout vref vdd rfin vss )
 //.ipin rfin
 //.opin vout
