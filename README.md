@@ -950,7 +950,7 @@ make all
 ```
 @misc{2026_SPARX,
   author = {Dorrer, Simon and Kellerer-Pirklbauer, David and Pretl, Harald},
-  month = apr,
+  month = oct,
   year = {2026},
   title = {{GitHub Repository of SPARX: An Open-Source, Automated, Programmatically Generated, Frequency-Scalable Six-Port Receiver in 130-nm CMOS}},
   url = {https://github.com/iic-jku/SG13CMOS_SPARX},
