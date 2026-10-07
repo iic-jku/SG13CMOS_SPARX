@@ -69,3 +69,8 @@ SPDX-License-Identifier = "Apache-2.0 WITH SHL-2.1"
 path = ["verification/drc/**", "verification/lvs/**", "verification/em/layout/**", "verification/em/palace_model/**", "verification/em/s-parameter/**", "verification/em/stackups/**"]
 SPDX-FileCopyrightText = "2025-2026 The SPARX Team"
 SPDX-License-Identifier = "Apache-2.0 WITH SHL-2.1"
+
+[[annotations]]
+path = "sscs-ose-code-a-chip/build/vacask/*.tar.gz"
+SPDX-FileCopyrightText = "2023-2026 EDA Lab FE Uni-Lj, Arpad Buermen"
+SPDX-License-Identifier = "AGPL-3.0-only"

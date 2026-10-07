@@ -47,9 +47,10 @@ control
 
   // (2) Shooting PSS at five amplitudes of the same grid, as the check of the
   //     harmonic balance: the plot script compares the period average of the
-  //     output against the HB DC bin at the same amplitude. driven=1 fixes the
-  //     period at 1/freq_rf, without it the shooting solves for the period of
-  //     an oscillator and aborts. tstab only seeds the shooting, the Newton
+  //     output against the HB DC bin at the same amplitude. pss treats the
+  //     circuit as driven, period fixed at tper, unless oscillator=1. VACASK
+  //     before 1b48553 needed driven=1 for that and solved for the period of an
+  //     oscillator without it. tstab only seeds the shooting, the Newton
   //     loop converges to the periodic state from there. The HB tolerances
   //     above are too tight for the transient integrator inside pss, which
   //     aborts on them, so the shooting runs at the default tolerances.
@@ -59,20 +60,18 @@ control
   //     shooting resolves the detected term to better than 1 % down to
   //     10 uV without them. One analysis per point rather
   //     than a sweep, so a point that fails does not take the others with it.
-  //     maxacfreq=0: without it pss sizes its time step for a periodic
-  //     small-signal follow-up that is never run and aborts on the step size.
   var tper=1/freq_rf
   options reltol=1e-3 abstol=1e-12 vntol=1e-6
   alter instance("vin3") ampl=10m
-  analysis powdet_pss2a pss driven=1 tper=tper tstab=50*tper maxacfreq=0
+  analysis powdet_pss2a pss tper=tper tstab=50*tper
   alter instance("vin3") ampl=31.62m
-  analysis powdet_pss2b pss driven=1 tper=tper tstab=50*tper maxacfreq=0
+  analysis powdet_pss2b pss tper=tper tstab=50*tper
   alter instance("vin3") ampl=100m
-  analysis powdet_pss2c pss driven=1 tper=tper tstab=50*tper maxacfreq=0
+  analysis powdet_pss2c pss tper=tper tstab=50*tper
   alter instance("vin3") ampl=316.2m
-  analysis powdet_pss2d pss driven=1 tper=tper tstab=50*tper maxacfreq=0
+  analysis powdet_pss2d pss tper=tper tstab=50*tper
   alter instance("vin3") ampl=1.0
-  analysis powdet_pss2e pss driven=1 tper=tper tstab=50*tper maxacfreq=0
+  analysis powdet_pss2e pss tper=tper tstab=50*tper
 
   postprocess(PYTHON, "../plot_simulations/plot_sparx_powdet_sbd_tb_pss_vacask.py")
 endc

@@ -74,6 +74,26 @@ control
   sweep a_lo_n instance="vin2" parameter="ampl" from=1m to=1.4 mode="dec" points=6
     analysis powdet_nf_hbnoise_lo hbnoise freq=[freq_lo] nharm=15 in="vin3" inspur=[1] outspur=[0] out="out" values=[2G]
 
+  // (5) The same conversion and pumped noise around the periodic steady state
+  //     of the LO found by shooting, which shares no code with HB: pac is the
+  //     twin of hbac, pnoise of hbnoise. The PSS is solved once and stored, the
+  //     other three analyses linearise at it (psssolve=0). truncharm=9 is
+  //     converged, 40 moves the result by less than 0.005 dB. pac takes the spur of the
+  //     RF source as a signed harmonic number, hbac as a tone-weight vector.
+  var tper_lo=1/freq_lo
+  alter instance("vin3") spur={1}
+  analysis powdet_nf_pac_usb pac tper=tper_lo tstab=50*tper_lo maxharm=9 truncharm=9 outharm=0 store="pss_lo" from=1k to=5G mode="dec" points=20
+  alter instance("vin3") spur={-1}
+  analysis powdet_nf_pac_lsb pac psssolve=0 ic="pss_lo" truncharm=9 outharm=0 from=1k to=5G mode="dec" points=20
+  alter instance("vin3") spur={[1]}
+  analysis powdet_nf_pnoise_usb pnoise psssolve=0 ic="pss_lo" truncharm=9 in="vin3" inharm=1 outharm=0 out="out" from=1k to=5G mode="dec" points=20
+  analysis powdet_nf_pnoise_lsb pnoise psssolve=0 ic="pss_lo" truncharm=9 in="vin3" inharm=-1 outharm=0 out="out" from=1k to=5G mode="dec" points=20
+
+  // (6) pnoise against the LO drive, the twin of (4). Its gain is the pac
+  //     conversion, so the one sweep gives the noise figure.
+  sweep a_lo_p instance="vin2" parameter="ampl" from=1m to=1.4 mode="dec" points=6
+    analysis powdet_nf_pnoise_lo pnoise tper=tper_lo tstab=50*tper_lo maxharm=9 truncharm=9 in="vin3" inharm=1 outharm=0 out="out" values=[2G]
+
   postprocess(PYTHON, "../plot_simulations/plot_sparx_powdet_sbd_tb_nf_vacask.py")
 endc
 
