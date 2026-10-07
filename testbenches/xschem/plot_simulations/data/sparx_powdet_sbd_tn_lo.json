@@ -1,0 +1,100 @@
+{
+  "variant": "m1",
+  "f_if_Hz": 2000000000.0,
+  "levels": [
+    {
+      "p_lo_W": 1.1489013851188483e-08,
+      "nf_dsb_transient_dB": 82.5921683867146,
+      "nf_dsb_hbnoise_dB": 81.96035170131799,
+      "nf_dsb_pnoise_dB": 81.96158842290214,
+      "nf_dsb_quiescent_dB": 82.04072356909802,
+      "tn_over_hbnoise": 1.1565959545094766,
+      "rung_spread": 0.07626037339872349
+    },
+    {
+      "p_lo_W": 5.2798975709120324e-08,
+      "nf_dsb_transient_dB": 75.97102247039759,
+      "nf_dsb_hbnoise_dB": 75.3374206515716,
+      "nf_dsb_pnoise_dB": 75.33849272852311,
+      "nf_dsb_quiescent_dB": 75.41706165554912,
+      "tn_over_hbnoise": 1.1570714655298955,
+      "rung_spread": 0.07601312437802776
+    },
+    {
+      "p_lo_W": 2.4264326530025936e-07,
+      "nf_dsb_transient_dB": 69.35318231639796,
+      "nf_dsb_hbnoise_dB": 68.71621846929506,
+      "nf_dsb_pnoise_dB": 68.7165337719096,
+      "nf_dsb_quiescent_dB": 68.79256053143042,
+      "tn_over_hbnoise": 1.1579675591937402,
+      "rung_spread": 0.0752922612794209
+    },
+    {
+      "p_lo_W": 1.115092734372912e-06,
+      "nf_dsb_transient_dB": 62.749847688645985,
+      "nf_dsb_hbnoise_dB": 62.10294899035743,
+      "nf_dsb_pnoise_dB": 62.09980797263499,
+      "nf_dsb_quiescent_dB": 62.164279898547264,
+      "tn_over_hbnoise": 1.160619617131525,
+      "rung_spread": 0.07430099484287433
+    },
+    {
+      "p_lo_W": 5.124526348228008e-06,
+      "nf_dsb_transient_dB": 56.168074596139874,
+      "nf_dsb_hbnoise_dB": 55.50720304694977,
+      "nf_dsb_pnoise_dB": 55.50860538459592,
+      "nf_dsb_quiescent_dB": 55.50033081012113,
+      "tn_over_hbnoise": 1.1643601340100016,
+      "rung_spread": 0.07368103495444589
+    },
+    {
+      "p_lo_W": 2.3550301678228798e-05,
+      "nf_dsb_transient_dB": 49.785324000351295,
+      "nf_dsb_hbnoise_dB": 49.06322373745988,
+      "nf_dsb_pnoise_dB": 49.06486433395217,
+      "nf_dsb_quiescent_dB": 48.75626142998567,
+      "tn_over_hbnoise": 1.1808938251772927,
+      "rung_spread": 0.04431058897379425
+    },
+    {
+      "p_lo_W": 0.0002320120766639032,
+      "nf_dsb_transient_dB": 43.11919881382315,
+      "nf_dsb_hbnoise_dB": 42.33862242686708,
+      "nf_dsb_pnoise_dB": 42.26518148384783,
+      "nf_dsb_quiescent_dB": 39.99201558893328,
+      "tn_over_hbnoise": 1.1969108631714807,
+      "rung_spread": 0.038862359486251385
+    },
+    {
+      "p_lo_W": 0.0010662359849738367,
+      "nf_dsb_transient_dB": 45.10543696316651,
+      "nf_dsb_hbnoise_dB": 44.20825818056585,
+      "nf_dsb_pnoise_dB": 44.15782144710866,
+      "nf_dsb_quiescent_dB": 38.096159602725024,
+      "tn_over_hbnoise": 1.229478544244232,
+      "rung_spread": 0.25449416098223177
+    },
+    {
+      "p_lo_W": 0.004900000000000001,
+      "nf_dsb_transient_dB": 47.07970802214571,
+      "nf_dsb_hbnoise_dB": 45.94081392098326,
+      "nf_dsb_pnoise_dB": 46.03139642775364,
+      "nf_dsb_quiescent_dB": 37.503057064258186,
+      "tn_over_hbnoise": 1.299846176740262,
+      "rung_spread": 0.026050025972200075
+    }
+  ],
+  "tn_minus_hbnoise_dB": [
+    0.6318166853966147,
+    1.1388941011624496
+  ],
+  "pnoise_minus_hbnoise_dB": [
+    -0.07344094301924997,
+    0.09884866855027497
+  ],
+  "quiescent_minus_hbnoise_dB": [
+    -8.437756856725073,
+    0.08048331597039748
+  ],
+  "source": "sparx_powdet_sbd_tb_tn_lo_vacask"
+}

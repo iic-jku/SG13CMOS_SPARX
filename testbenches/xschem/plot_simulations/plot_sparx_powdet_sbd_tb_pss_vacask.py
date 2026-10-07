@@ -131,9 +131,9 @@ p_avail = ampl ** 2 / (8.0 * RS)          # [W]
 # The zero-drive output V_off is a fitted parameter of the square-law line
 # V_dc = V_off + beta * P, not a measured point. The two obvious references
 # both bias the low end: the lowest HB point carries its own detected term
-# (1e-9 V at -76 dBm, a 6 % error at -64 dBm), and the OP analysis differs
-# from the HB DC bin by a systematic 0.5 uV that HB-against-HB differencing
-# cancels and OP-against-HB does not (the script prints it). Fitting V_off on
+# (1e-9 V at -76 dBm, a 6 % error at -64 dBm), and the OP analysis runs at
+# the default tolerances, which leave it 0.5 uV off (the script prints it,
+# at the HB tolerances it lands within 0.1 nV of V_off). Fitting V_off on
 # the square-law region uses only HB data and subtracts nothing twice.
 # Pass 1 finds the square-law region with the lowest point as a provisional
 # reference, pass 2 fits V_off and beta together on that region.

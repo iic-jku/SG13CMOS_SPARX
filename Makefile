@@ -482,6 +482,7 @@ sim-xschem: ## Run a testbench simulation with Xschem in batch mode (usage: make
 	$(if $(findstring _pss_vacask,$(TB)),POWDET_VARIANT=$(VARIANT) python3 $(SIM_PLOT_DIR)/plot_sparx_powdet_sbd_tb_pss_vacask.py)
 	$(if $(findstring _nf_vacask,$(TB)),POWDET_VARIANT=$(VARIANT) python3 $(SIM_PLOT_DIR)/plot_sparx_powdet_sbd_tb_nf_vacask.py)
 	$(if $(findstring _tn_vacask,$(TB)),POWDET_VARIANT=$(VARIANT) python3 $(SIM_PLOT_DIR)/plot_sparx_powdet_sbd_tb_tn_vacask.py)
+	$(if $(findstring _tn_lo_vacask,$(TB)),POWDET_VARIANT=$(VARIANT) python3 $(SIM_PLOT_DIR)/plot_sparx_powdet_sbd_tb_tn_lo_vacask.py)
 	$(if $(findstring _rx_vacask,$(TB)),POWDET_VARIANT=$(VARIANT) python3 $(SIM_PLOT_DIR)/plot_sparx_top_le_tb_rx_vacask.py)
 .PHONY: sim-xschem
 
@@ -514,6 +515,7 @@ sim-all: ## Run all Xschem testbench simulations (usage: make sim-all)
 	$(MAKE) sim-xschem TB=sparx_powdet_sbd_tb_pss_vacask
 	$(MAKE) sim-xschem TB=sparx_powdet_sbd_tb_nf_vacask
 	$(MAKE) sim-xschem TB=sparx_powdet_sbd_tb_tn_vacask
+	$(MAKE) sim-xschem TB=sparx_powdet_sbd_tb_tn_lo_vacask
 	$(MAKE) sim-powdet-variants
 # 	Receiver level: the full-core fit driving the four detectors, as fabricated and post-layout, in VACASK (HB, HBAC, two-tone HB and transient in one bench), and the two ngspice transients of the composed and the full-core model.
 	$(MAKE) sim-xschem TB=sparx_top_le_tb_rx_vacask

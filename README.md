@@ -228,6 +228,7 @@ An overview of the open-source design flow for SPARX is shown below. The flow co
 │     │  ├─ plot_sparx_powdet_sbd_tb_hb_dBV-dBV_vacask.py
 │     │  ├─ plot_sparx_powdet_sbd_tb_nf_vacask.py
 │     │  ├─ plot_sparx_powdet_sbd_tb_pss_vacask.py
+│     │  ├─ plot_sparx_powdet_sbd_tb_tn_lo_vacask.py
 │     │  ├─ plot_sparx_powdet_sbd_tb_tn_vacask.py
 │     │  ├─ plot_sparx_top_le_tb_rx_vacask.py
 │     │  └─ sparam_plot.py
@@ -821,8 +822,9 @@ The following testbenches are simulated:
 - `sparx_powdet_sbd_tb_ngspice`: SBD-based power detector (ngspice)
 - `sparx_powdet_sbd_tb_hb_vacask`: SBD-based power detector, harmonic balance (VACASK)
 - `sparx_powdet_sbd_tb_pss_vacask`: SBD-based power detector, single-tone periodic steady state (VACASK), fits the responsivity that the noise figure bench turns into an NEP
-- `sparx_powdet_sbd_tb_nf_vacask`: SBD-based power detector, noise figure and NEP (VACASK), quiescent `noise` and LO-pumped `hbnoise` with the `hbac` conversion, checked against `pnoise` and `pac` on a shooting PSS of the same LO, runs after the PSS bench. This bench and the PSS bench need VACASK `1b48553` or later, see the [testbench README](testbenches/xschem/README.md)
+- `sparx_powdet_sbd_tb_nf_vacask`: SBD-based power detector, noise figure and NEP (VACASK), small-signal `noise` at the dc operating point and LO-pumped `hbnoise` with the `hbac` conversion, checked against `pnoise` and `pac` on a shooting PSS of the same LO, runs after the PSS bench. This bench and the PSS bench need VACASK `1b48553` or later, see the [testbench README](testbenches/xschem/README.md)
 - `sparx_powdet_sbd_tb_tn_vacask`: SBD-based power detector, LO-pumped transient-noise ladder checked against `hbnoise` (VACASK), runs after the NF bench
+- `sparx_powdet_sbd_tb_tn_lo_vacask`: SBD-based power detector, the same ladder at nine LO levels, noise figure against LO drive from transient noise, `hbnoise`, `pnoise` and the small-signal `noise` analysis at the dc operating point (VACASK), runs after the NF bench
 - `sparx_top_le_tb_rx_vacask`: six-port receiver, full-core LE model with the four power detectors, as fabricated and post-layout (`VARIANT=m1_pex`): HB at the LO, HBAC IF response and IF output against LO power, two-tone HB cross-check, transient (VACASK)
 - `sparx_top_le_tb_tran_ngspice` / `sparx_top_tb_tran_ngspice`: six-port receiver transient with the full-core and the composed LE model (ngspice), LO +12 dBm and RF -20 dBm behind 50 Ohm at the pads
 

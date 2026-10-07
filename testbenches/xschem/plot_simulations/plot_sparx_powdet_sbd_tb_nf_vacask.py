@@ -418,9 +418,9 @@ for (lo, hi), (v_rms, m, m_np) in mds.items():
     print(f'Video band {lo:.0e} .. {hi:.0e} Hz : {v_rms*1e6:7.1f} uV RMS, '
           f'MDS {dbm(m):6.1f} dBm  (without PCell PNP: {dbm(m_np):6.1f} dBm)')
 print()
-print('Output noise, pumped (hbnoise, LO on) against quiescent (noise, LO off), and the')
-print('noise figure from each. The pumped column is the result, the quiescent one is the')
-print('estimate the bench reported before hbnoise existed.')
+print('Output noise, pumped (hbnoise, LO on) against the small-signal noise at the dc operating')
+print('point (noise, LO off), and the noise figure from each. The pumped column is the result,')
+print('the other one is what the bench reported before hbnoise existed.')
 print(f'{"f_IF":>10} {"ASD pumped":>11} {"ASD quiesc":>11} {"p/q":>6} {"NF_DSB":>8} {"NF_DSB q":>9} '
       f'{"NF_SSB":>8} {"NF no PNP":>9} {"beta(f)":>9} {"NEP":>11} {"NEP no PNP":>11}')
 print(f'{"[Hz]":>10} {"[V/rtHz]":>11} {"[V/rtHz]":>11} {"":>6} {"[dB]":>8} {"[dB]":>9} '
@@ -436,7 +436,7 @@ print()
 print(f'Noise figure against LO drive at {F_IF_LO/1e9:.0f} GHz IF:')
 print(f'  pumped noise   : best {nf_vs_plo[i_best]:.1f} dB at {dbm(plo_grid[i_best]):.1f} dBm LO, '
       f'{float(np.interp(np.log10(p_lo), np.log10(plo_grid), nf_vs_plo)):.1f} dB at the {dbm(p_lo):.1f} dBm used here')
-print(f'  quiescent noise: best {nf_vs_plo_q[i_best_q]:.1f} dB at {dbm(plo_grid[i_best_q]):.1f} dBm LO, '
+print(f'  dc op. noise   : best {nf_vs_plo_q[i_best_q]:.1f} dB at {dbm(plo_grid[i_best_q]):.1f} dBm LO, '
       f'{float(np.interp(np.log10(p_lo), np.log10(plo_grid), nf_vs_plo_q)):.1f} dB at the {dbm(p_lo):.1f} dBm used here')
 print(f'{"P_LO [dBm]":>11} {"S_int pumped":>13} {"pumped/quiesc":>14} {"NF_DSB":>8} {"NF_DSB q":>9}')
 for i in range(plo_grid.size):
@@ -496,7 +496,7 @@ ax.grid(True, which='both')
 
 ax = axes[1, 0]
 ax.semilogx(f_n, nf_dsb, 'k', lw=2, label='NF$_{DSB}$, hbnoise')
-ax.semilogx(f_n, nf_dsb_q, 'k--', lw=1.5, label='NF$_{DSB}$, quiescent-noise estimate')
+ax.semilogx(f_n, nf_dsb_q, 'k--', lw=1.5, label='NF$_{DSB}$, small-signal noise at the dc operating point')
 ax.semilogx(f_n, nf_dsb_nopnp, ':', color='tab:gray', label='hbnoise, without PCell PNP flicker')
 if HAVE_SHOOTING:
     ax.semilogx(f_n[::2], nf_dsb_pn[::2], 'o', color='k', mfc='none', ms=4, label='NF$_{DSB}$, pnoise and pac')
@@ -507,7 +507,7 @@ ax.grid(True, which='both')
 
 ax = axes[1, 1]
 ax.semilogx(plo_grid, nf_vs_plo, 'k', lw=2, label=f'NF$_{{DSB}}$ at IF = {F_IF_LO/1e9:g} GHz, hbnoise')
-ax.semilogx(plo_grid, nf_vs_plo_q, 'k--', lw=1.5, label='quiescent-noise estimate')
+ax.semilogx(plo_grid, nf_vs_plo_q, 'k--', lw=1.5, label='small-signal noise at the dc operating point')
 ax.semilogx(plo_grid, nf_vs_plo_nopnp, ':', color='tab:gray', label='hbnoise, without PCell PNP flicker')
 if HAVE_SHOOTING:
     ax.semilogx(plo_grid, nf_vs_plo_pn, 'o', color='k', mfc='none', ms=4, label='pnoise')

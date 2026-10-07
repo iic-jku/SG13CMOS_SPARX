@@ -394,7 +394,7 @@ if nf_rows is not None and 'nf_curve' in globals():
         ax.semilogx(nf_curve['f_nf'], nf_curve['nf_hbnoise_full'], 'k', lw=2,
                     label='hbnoise, LO on')
         ax.semilogx(nf_curve['f_nf'], nf_curve['nf_quiescent_full'], 'k--', lw=1.5,
-                    label='small-signal noise at the operating point, LO off')
+                    label='small-signal noise at the dc operating point, LO off')
         if has_pn:
             # Open circles on every other point: pnoise sits within 0.1 dB of hbnoise and a line would vanish under it.
             ax.semilogx(nf_curve['f_nf'][::2], nf_curve['nf_pnoise_full'][::2], 'o', color='k', mfc='none',
