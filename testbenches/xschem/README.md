@@ -158,6 +158,8 @@ make sim-xschem TB=sparx_core_le_tb_acsp_vacask
 
 The active block. A forward-biased Schottky barrier diode feeds a transimpedance amplifier, with a replica branch for differential readout. Six testbenches cover it, from the verification that existed at tapeout to the full receiver-front-end characterization added later.
 
+[SBD-PD-RESULTS.md](SBD-PD-RESULTS.md) traces every number of Section IV of the NorCAS 2026 paper to these testbenches and their data files, and derives the equations behind them.
+
 ### 3.1 Two-tone verification, as at tapeout
 
 | | |

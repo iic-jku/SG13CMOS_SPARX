@@ -6,8 +6,8 @@
 #
 # The testbench drives one RF tone through a 50 Ohm source resistance Rs and
 # sweeps its amplitude with harmonic balance on a decade grid (powdet_pss1),
-# then runs the shooting periodic steady-state analysis at five drive levels
-# (powdet_pss2a to powdet_pss2e, one analysis each). HB supplies the curve,
+# then runs the shooting periodic steady-state analysis at nine drive levels
+# (powdet_pss2a to powdet_pss2i, one analysis each). HB supplies the curve,
 # PSS is the check: the period average of the PSS output waveform has to equal
 # the HB curve at the same amplitude, interpolated in log-log, and the script
 # prints how far apart the two are.

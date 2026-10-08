@@ -203,7 +203,8 @@ def noise_split(raw):
 
     The source resistor's own noise is part of the source, not of the detector,
     so it comes out of S_int. In the hbnoise result it is the thermal noise of
-    Rs folded from every spur, still well under 0.1 % of the total here.
+    Rs folded from every spur, about 1/F of the total (1.4e-4 for one cell,
+    2.8e-3 for 16 cells), nearly all of it from the two signal sidebands.
     """
     r = rawread(os.path.join(SIM_DIR, raw)).get()
     f = np.real(r['frequency'])
