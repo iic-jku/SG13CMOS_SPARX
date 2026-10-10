@@ -7,7 +7,7 @@
 The testbenches netlist the schematic as fabricated. The paper compares that
 design against two variants that do not exist as schematics, so they are
 produced by rewriting the emitted netlist. Any bench that instantiates the
-detector qualifies, the receiver bench sparx_top_le_tb_rx_vacask included, and
+detector qualifies, the receiver benches sparx_top_le_tb_*_vacask included, and
 the rewritten netlist runs in simulations/<variant>/, so every include with a
 relative path gets one more ../ on the way (relocate_includes):
 

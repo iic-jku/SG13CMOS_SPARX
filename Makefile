@@ -70,8 +70,8 @@ PEX_MERGED_PINS ?=
 # Override with: make <target> EV_PRECISION=<digits>
 EV_PRECISION ?= 5
 
-# Power-detector design variant for the VACASK testbenches that instantiate the detector, the receiver bench
-# sparx_top_le_tb_rx_vacask included, rewritten from the emitted netlist by scripts/powdet_variant.py: m1 (as
+# Power-detector design variant for the VACASK testbenches that instantiate the detector, the receiver benches
+# sparx_top_le_tb_*_vacask included, rewritten from the emitted netlist by scripts/powdet_variant.py: m1 (as
 # fabricated, the default), m16 (Schottky diodes with 16 parallel cells), m1_pex (the fabricated design with its
 # Magic full-RC parasitics, netlist/pex/<CELL>_magic_pex_3.spice). A variant runs in simulations/<VARIANT>/ and its
 # plots and data files carry the variant as a suffix.
@@ -480,10 +480,12 @@ sim-xschem: ## Run a testbench simulation with Xschem in batch mode (usage: make
 	$(if $(findstring _hb_vacask,$(TB)),python3 $(SIM_PLOT_DIR)/plot_sparx_powdet_sbd_tb_hb_dBV-dBV_vacask.py)
 	$(if $(findstring _hb_vacask,$(TB)),python3 $(SIM_PLOT_DIR)/plot_sparx_powdet_sbd_tb_hb_V-W_vacask.py)
 	$(if $(findstring _pss_vacask,$(TB)),POWDET_VARIANT=$(VARIANT) python3 $(SIM_PLOT_DIR)/plot_sparx_powdet_sbd_tb_pss_vacask.py)
-	$(if $(findstring _nf_vacask,$(TB)),POWDET_VARIANT=$(VARIANT) python3 $(SIM_PLOT_DIR)/plot_sparx_powdet_sbd_tb_nf_vacask.py)
-	$(if $(findstring _tn_vacask,$(TB)),POWDET_VARIANT=$(VARIANT) python3 $(SIM_PLOT_DIR)/plot_sparx_powdet_sbd_tb_tn_vacask.py)
+	$(if $(findstring powdet_sbd_tb_nf_vacask,$(TB)),POWDET_VARIANT=$(VARIANT) python3 $(SIM_PLOT_DIR)/plot_sparx_powdet_sbd_tb_nf_vacask.py)
+	$(if $(findstring powdet_sbd_tb_tn_vacask,$(TB)),POWDET_VARIANT=$(VARIANT) python3 $(SIM_PLOT_DIR)/plot_sparx_powdet_sbd_tb_tn_vacask.py)
 	$(if $(findstring _tn_lo_vacask,$(TB)),POWDET_VARIANT=$(VARIANT) python3 $(SIM_PLOT_DIR)/plot_sparx_powdet_sbd_tb_tn_lo_vacask.py)
 	$(if $(findstring _rx_vacask,$(TB)),POWDET_VARIANT=$(VARIANT) python3 $(SIM_PLOT_DIR)/plot_sparx_top_le_tb_rx_vacask.py)
+	$(if $(findstring top_le_tb_nf_vacask,$(TB)),POWDET_VARIANT=$(VARIANT) python3 $(SIM_PLOT_DIR)/plot_sparx_top_le_tb_nf_vacask.py)
+	$(if $(findstring top_le_tb_tn_vacask,$(TB)),POWDET_VARIANT=$(VARIANT) python3 $(SIM_PLOT_DIR)/plot_sparx_top_le_tb_tn_vacask.py)
 .PHONY: sim-xschem
 
 sim-powdet-variants: ## Run the power-detector PSS and NF testbenches for the m16 and m1_pex design variants (usage: make sim-powdet-variants)
@@ -522,6 +524,10 @@ sim-all: ## Run all Xschem testbench simulations (usage: make sim-all)
 	$(MAKE) sim-xschem TB=sparx_top_le_tb_rx_vacask VARIANT=m1_pex
 	$(MAKE) sim-xschem TB=sparx_top_le_tb_tran_ngspice
 	$(MAKE) sim-xschem TB=sparx_top_tb_tran_ngspice
+# 	Receiver noise figure from noise, hbnoise and pnoise, as fabricated and post-layout, after the detector NF and receiver benches it is compared against. The transient-noise ladder follows the NF bench whose rawfiles it is checked against.
+	$(MAKE) sim-xschem TB=sparx_top_le_tb_nf_vacask
+	$(MAKE) sim-xschem TB=sparx_top_le_tb_nf_vacask VARIANT=m1_pex
+	$(MAKE) sim-xschem TB=sparx_top_le_tb_tn_vacask
 .PHONY: sim-all
 # ================================================================================================
 
