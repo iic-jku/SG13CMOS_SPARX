@@ -27,15 +27,14 @@
 # the LO, and pnoise around the shooting PSS of the same LO, which shares no
 # code with HB and is read only if its rawfiles come from the same run.
 #
-# The fit is noiseless: snp2le emits its resistors with noisy=0, because a
-# vector fit's resistors are fitting elements and their noise is meaningless.
-# The script checks that every sparx_core_le contribution is zero. What that
-# leaves out is bounded by Bosma's theorem: a passive network at temperature T
-# delivers at most k T per hertz to a port, which is what a matched 50 Ohm
-# source delivers. In the detector NF bench such a source carries about 1e-4
-# of the output noise, so the core's own thermal noise would move the noise
-# figure by well under 0.01 dB. The three resistors the receiver does have,
-# Rrf, Rlo and R4, are reported with their share as the same order of check.
+# The core fit carries the thermal noise of the passive core, kT(I - S S^H) at
+# its ports, from the generator snp2le --thermal-noise appends to it: one noisy
+# resistor per port, Rnz_e1 to Rnz_e7, while the fit's own resistors stay
+# noiseless (noisy=0), since their noise would be meaningless. The script stops
+# if any other core element contributes, and reports the core's share and the NF
+# it adds. A core made without --thermal-noise contributes nothing and is
+# reported as noiseless. The three resistors the receiver has besides, Rrf, Rlo
+# and R4, are reported with their share as well.
 #
 # Two further checks on the result:
 #
@@ -81,6 +80,7 @@ COLOR = {'out1': 'tab:green', 'out2': 'tab:blue', 'out3': 'tab:gray', 'out4': 't
 # Detector instance per output inside sparx_top_le, the core fit and the port 7 termination.
 DET_INST = {'out1': 'x1:x1', 'out2': 'x1:x2', 'out3': 'x1:x3', 'out4': 'x1:x9'}
 CORE_INST = 'x1:x4'
+CORE_SRC = re.compile(r'^n\(x1:x4:Rnz_e\d+\)$')    # the core's noise generator sources
 TERMS = {'Rrf': 'Rrf', 'Rlo': 'Rlo', 'R4': 'x1:XR1'}
 SRC = 'n(Rrf)'
 # The parasitic PNP inside each Schottky PCell, whatever the diode is called in
@@ -177,12 +177,12 @@ def noise_split(name):
     r = load(name)
     f = np.real(r['frequency'])
     s_out = np.real(r['onoise'])
-    core = [n for n in r.names if n.startswith(f'n({CORE_INST}:')]
-    core_max = max((float(np.max(np.abs(np.real(r[n])))) for n in core), default=0.0)
-    if core_max > 0.0:
-        raise RuntimeError(f'{name}: the core fit contributes noise ({core_max:.3e} V^2/Hz). Its '
-                           'resistors must be noiseless (noisy=0), a vector fit makes meaningless '
-                           'noise. Regenerate the model with a current snp2le.')
+    fit_noise = [n for n in r.names if n.startswith(f'n({CORE_INST}:') and ',' not in n
+                 and not CORE_SRC.match(n) and np.max(np.abs(np.real(r[n]))) > 0.0]
+    if fit_noise:
+        raise RuntimeError(f'{name}: {fit_noise[0]} contributes noise. Only the generator sources '
+                           'Rnz_e* may, a vector fit\'s own resistors must be noiseless (noisy=0). '
+                           'Regenerate the model with a current snp2le.')
     s_pnp = sum(np.real(r[n]) for n in r.names if PNP_PATTERN.match(n))
     return f, s_out, s_out - np.real(r[SRC]), s_pnp, r
 
@@ -214,9 +214,11 @@ for o in OUTS:
         if fx.size != f.size or np.max(np.abs(fx / f - 1.0)) > 1e-6:
             raise RuntimeError('noise, hbac and hbnoise must sweep the same IF grid')
     nf_dsb, nf_ssb = noise_figures(sp, g_u[o], g_l[o])
+    s_core = inst_sum(hn, CORE_INST)
     res[o] = {
         's_q': sq, 's_p': sp, 's_p_out': sp_out, 's_p_pnp': sp_pnp, 'nz': nz, 'hn': hn,
-        'nf_dsb': nf_dsb, 'nf_ssb': nf_ssb,
+        'nf_dsb': nf_dsb, 'nf_ssb': nf_ssb, 's_p_core': s_core,
+        'nf_added_by_core': nf_dsb - noise_figures(sp - s_core, g_u[o], g_l[o])[0],
         'nf_dsb_q': noise_figures(sq, g_u[o], g_l[o])[0],
         'nf_dsb_nopnp': noise_figures(np.clip(sp - sp_pnp, 0, None), g_u[o], g_l[o])[0],
         'gain_check_db': float(np.max(np.abs(db(4.0 * RS * np.real(hn['gain']) / g_u[o])))),
@@ -321,7 +323,14 @@ if all(os.path.isfile(x) for x in (pd_file, rx_file, beta_file)):
 i_op = int(np.argmin(np.abs(a_grid - ampl_lo)))
 print(f'Variant              : {VARIANT or "as fabricated"}')
 print(f'LO                   : {freq_lo/1e9:.0f} GHz at {dbm(p_lo):+.1f} dBm available at the pad')
-print(f'Fit noise            : every n({CORE_INST}:...) is zero, the core is noiseless as intended')
+core_share = {o: at_f(f, res[o]['s_p_core'] / res[o]['s_p_out'], F_IF) for o in OUTS}
+core_nf = {o: at_f(f, res[o]['nf_added_by_core'], F_IF) for o in OUTS}
+if max(core_share.values()) > 0.0:
+    print(f'Core thermal noise   : {min(core_share.values()):.1e} to {max(core_share.values()):.1e} of the '
+          f'output noise, {min(core_nf.values()):.5f} to {max(core_nf.values()):.5f} dB of NF_DSB '
+          f'at {F_IF/1e9:.0f} GHz (hbnoise), from the Rnz_e* sources only')
+else:
+    print('Core thermal noise   : none, the core fit was made without --thermal-noise')
 print()
 print(f'At {F_IF/1e9:.0f} GHz IF, NF_DSB referred to the RF pad:')
 print(f'{"output":>16} {"g_U":>8} {"hbnoise":>8} {"pnoise":>7} {"dc op":>7} {"no PNP":>7} '
@@ -339,6 +348,8 @@ for o in OUTS:
            'nf_dsb_no_pnp_dB': at_f(f, r['nf_dsb_nopnp'], F_IF),
            'pumped_over_quiescent': at_f(f, r['s_p'] / r['s_q'], F_IF),
            'termination_share_hbnoise': shares,
+           'core_share_hbnoise': core_share[o],
+           'nf_dsb_added_by_core_dB': core_nf[o],
            'hbnoise_gain_vs_hbac_max_dB': r['gain_check_db'],
            'hbnoise_gain_vs_hbac_lo_sweep_max_dB': lo[o]['gain_check_db']}
     if HAVE_SHOOTING:

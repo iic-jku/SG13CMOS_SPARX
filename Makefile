@@ -115,11 +115,14 @@ BPF_EM_NAME  := sparx$(FREQ)_bpf
 CORE_EM_NAME := sparx$(FREQ)_core
 
 # S-parameter to lumped element netlist conversion with snp2le (always the de-embedded EM result)
-# Override with: make snp2le SNP=<file.sNp> ORDER=<N> LE_FORMAT=<spice|spectre> LE_OUT=<output_path>
+# Override with: make snp2le SNP=<file.sNp> ORDER=<N> LE_FORMAT=<spice|spectre> LE_OUT=<output_path> LE_NOISE=<noiseless|thermal>
 SNP ?= $(EM_SPARAM_DIR)/$(BPF_EM_NAME)_deembedded.s2p
 ORDER ?= 13
 LE_FORMAT ?= spice
 LE_OUT ?= netlist/spice/sparx_bpf_le.spice
+# noiseless: the fit's resistors carry noisy=0. thermal: snp2le --thermal-noise adds the passive's own
+# thermal noise, kT(I - S S^H) at the ports.
+LE_NOISE ?= noiseless
 
 # EM run name for the copy-sparam target (base name of the GDS/Touchstone files)
 # Override with: make copy-sparam SPARAM=<em_run_name>
@@ -438,17 +441,22 @@ copy-sparam: ## Copy the raw and de-embedded Touchstone files of an EM run to ve
 
 
 # Netlist Conversion Target
-snp2le: ## Convert an S-parameter Touchstone file to a lumped element netlist via a universal fit (usage: make snp2le SNP=<file.sNp> [ORDER=<N>] [LE_FORMAT=<spice|spectre>] [LE_OUT=<path>])
+snp2le: ## Convert an S-parameter Touchstone file to a lumped element netlist via a universal fit (usage: make snp2le SNP=<file.sNp> [ORDER=<N>] [LE_FORMAT=<spice|spectre>] [LE_OUT=<path>] [LE_NOISE=<noiseless|thermal>])
 	@if [ -z "$(SNP)" ]; then echo "ERROR: set the input Touchstone file, e.g. make snp2le SNP=verification/em/s-parameter/sparx160_blc_deembedded.s4p"; exit 1; fi
 	case "$(LE_FORMAT)" in \
 		spice)   SNP2LE_FORMAT=ngspice; DEFAULT_OUT=$(NET_SPICE_DIR)/$$(basename $(SNP) | sed -E 's/\.s[0-9]+p$$//I')_le.spice ;; \
 		spectre) SNP2LE_FORMAT=vacask;  DEFAULT_OUT=$(NET_SPECTRE_DIR)/$$(basename $(SNP) | sed -E 's/\.s[0-9]+p$$//I')_le.inc ;; \
 		*) echo "Invalid LE_FORMAT: $(LE_FORMAT). Use spice or spectre."; exit 1 ;; \
 	esac; \
+	case "$(LE_NOISE)" in \
+		noiseless) NOISE_FLAG= ;; \
+		thermal)   NOISE_FLAG=--thermal-noise ;; \
+		*) echo "Invalid LE_NOISE: $(LE_NOISE). Use noiseless or thermal."; exit 1 ;; \
+	esac; \
 	OUT="$(LE_OUT)"; \
 	if [ -z "$$OUT" ]; then OUT="$$DEFAULT_OUT"; fi; \
 	mkdir -p "$$(dirname "$$OUT")"; \
-	snp2le -b convert $(SNP) --mode universal --order $(ORDER) --format $$SNP2LE_FORMAT -o "$$OUT"
+	snp2le -b convert $(SNP) --mode universal --order $(ORDER) --format $$SNP2LE_FORMAT $$NOISE_FLAG -o "$$OUT"
 .PHONY: snp2le
 # ================================================================================================
 
@@ -533,11 +541,11 @@ sim-all: ## Run all Xschem testbench simulations (usage: make sim-all)
 
 
 # Six-Port Core EM Flow Target
-sparx-core: ## Run the six-port core EM flow: EM simulation, S-parameter copy, LE fit with ORDER=24, and core testbench simulation (usage: make sparx-core [FREQ=<GHz>])
+sparx-core: ## Run the six-port core EM flow: EM simulation, S-parameter copy, LE fit with ORDER=24 and thermal noise, and core testbench simulation (usage: make sparx-core [FREQ=<GHz>])
 	$(MAKE) sim-sparx-core-em
 	$(MAKE) copy-sparam SPARAM=sparx$(FREQ)_core
-	$(MAKE) snp2le SNP=$(EM_SPARAM_DIR)/sparx$(FREQ)_core.s7p ORDER=24 LE_FORMAT=spice LE_OUT=netlist/spice/sparx_core_le.spice
-	$(MAKE) snp2le SNP=$(EM_SPARAM_DIR)/sparx$(FREQ)_core.s7p ORDER=24 LE_FORMAT=spectre LE_OUT=netlist/spectre/sparx_core_le.inc
+	$(MAKE) snp2le SNP=$(EM_SPARAM_DIR)/sparx$(FREQ)_core.s7p ORDER=24 LE_FORMAT=spice LE_OUT=netlist/spice/sparx_core_le.spice LE_NOISE=thermal
+	$(MAKE) snp2le SNP=$(EM_SPARAM_DIR)/sparx$(FREQ)_core.s7p ORDER=24 LE_FORMAT=spectre LE_OUT=netlist/spectre/sparx_core_le.inc LE_NOISE=thermal
 	$(MAKE) sim-xschem TB=sparx_core_tb_acsp_ngspice
 	$(MAKE) sim-xschem TB=sparx_core_tb_acsp_vacask
 .PHONY: sparx-core

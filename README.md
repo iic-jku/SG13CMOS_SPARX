@@ -737,26 +737,27 @@ make copy-sparam SPARAM=sparx160_blc
 
 ### S-Parameter to Lumped Element Netlist Conversion
 
-Converts an S-parameter Touchstone file into a lumped element (LE) netlist with [snp2le](https://github.com/iic-jku/snp2le). The conversion performs a universal rational fit of the given order and writes a passivity-enforced `.subckt` model that can be resimulated in place of the full EM S-parameter model. The de-embedded EM results (`*_deembedded.sNp`, see `copy-sparam`) are always used as input.
+Converts an S-parameter Touchstone file into a lumped element (LE) netlist with [snp2le](https://github.com/iic-jku/snp2le). The conversion performs a universal rational fit of the given order and writes a passivity-enforced `.subckt` model that can be resimulated in place of the full EM S-parameter model. The de-embedded EM results (`*_deembedded.sNp`, see `copy-sparam`) are used as input, except for the full core, which is fitted from the raw `sparx<FREQ>_core.s7p`.
 
 - `SNP` is the input Touchstone file (default: the de-embedded BPF EM result `verification/em/s-parameter/sparx160_bpf_deembedded.s2p`).
 - `ORDER` sets the maximum model order (number of poles) of the universal fit (default: `13`).
 - `LE_FORMAT` selects the output dialect: `spice` (ngspice, `.spice`) or `spectre` (VACASK, `.inc`) (default: `spice`).
 - `LE_OUT` sets the output netlist path, which also names the `.subckt` (default: `netlist/spice/sparx_bpf_le.spice`). If set to an empty value, it falls back to `netlist/spice/<name>_le.spice` for `spice` or `netlist/spectre/<name>_le.inc` for `spectre`, where `<name>` is the input file name without its Touchstone extension.
+- `LE_NOISE` selects the noise of the model: `noiseless` emits the fit's resistors with `noisy=0`, since their noise would follow the fit and not the structure, and `thermal` (snp2le `--thermal-noise`) adds the thermal noise of the passive itself, kT(I - S S<sup>H</sup>) at its ports, as a generator computed from the fit (default: `noiseless`). `thermal` needs an snp2le newer than 0.1.9.
 
-Running `make snp2le` without arguments reproduces the BPF conversion (first example below). The commands used to generate the LE netlists in `netlist/spice/` are:
+Running `make snp2le` without arguments reproduces the BPF conversion (first example below). The commands used to generate the LE netlists in `netlist/spice/` are (`LE_FORMAT=spectre` and an `.inc` path in `netlist/spectre/` for the VACASK ones):
 
 ```sh
 make snp2le SNP=verification/em/s-parameter/sparx160_bpf_deembedded.s2p ORDER=13 LE_FORMAT=spice LE_OUT=netlist/spice/sparx_bpf_le.spice
 make snp2le SNP=verification/em/s-parameter/sparx160_wpd_deembedded.s3p ORDER=10 LE_FORMAT=spice LE_OUT=netlist/spice/sparx_wpd_le.spice
 make snp2le SNP=verification/em/s-parameter/sparx160_blc_deembedded.s4p ORDER=6 LE_FORMAT=spice LE_OUT=netlist/spice/sparx_blc_le.spice
-make snp2le SNP=verification/em/s-parameter/sparx160_core_deembedded.s7p ORDER=24 LE_FORMAT=spice LE_OUT=netlist/spice/sparx_core_le.spice
+make snp2le SNP=verification/em/s-parameter/sparx160_core.s7p ORDER=24 LE_FORMAT=spice LE_OUT=netlist/spice/sparx_core_le.spice LE_NOISE=thermal
 ```
 
 
 ### Six-Port Core EM Flow
 
-Runs the complete six-port core EM flow in one target: EM simulation of the core (`sim-sparx-core-em`), copying of the raw and de-embedded S-parameters (`copy-sparam`), lumped element fitting with snp2le (`ORDER=24`, in both SPICE and Spectre dialects), and AC S-parameter simulation of the six-port core testbenches (`sparx_core_tb_acsp_ngspice` and `sparx_core_tb_acsp_vacask`).
+Runs the complete six-port core EM flow in one target: EM simulation of the core (`sim-sparx-core-em`), copying of the raw and de-embedded S-parameters (`copy-sparam`), lumped element fitting with snp2le (`ORDER=24` with the core's thermal noise, `LE_NOISE=thermal`, in both SPICE and Spectre dialects), and AC S-parameter simulation of the six-port core testbenches (`sparx_core_tb_acsp_ngspice` and `sparx_core_tb_acsp_vacask`).
 
 This target is intentionally not part of `make all` because the seven-port full-core EM simulation has a very long runtime. It starts from `verification/em/layout/sparx<FREQ>_core.gds`, so run `build-layout` for the target frequency first (the 160 GHz core is committed to the repository).
 
