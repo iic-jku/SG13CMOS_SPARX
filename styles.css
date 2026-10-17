@@ -1,0 +1,10 @@
+/* SPDX-FileCopyrightText: 2026 The SPARX Team */
+/* SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1 */
+
+/* The figures are drawn on a transparent background with black lines, so give them white paper in the dark theme. */
+.quarto-dark img.figure-img,
+.quarto-dark .quarto-figure img {
+  background-color: #ffffff;
+  padding: 4px;
+  border-radius: 4px;
+}

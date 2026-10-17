@@ -1,1 +1,1 @@
-Sitemap: https://iic-jku.github.io/SG13G2_SPARX/sitemap.xml
+Sitemap: https://iic-jku.github.io/SG13CMOS_SPARX/sitemap.xml
