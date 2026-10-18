@@ -821,7 +821,7 @@ Table&nbsp;4: Tools and versions.
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-xschem TB=sparx_wpd_le_tb_acsp_vacask  <span class="co"># one testbench</span></span>
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> regression                                 <span class="co"># tool and flow smoke test</span></span>
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> all                                        <span class="co"># the complete flow</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><code>make all</code> runs the Palace EM solves of the three blocks (<a href="#sec-em-cost" class="quarto-xref">Section&nbsp;8.4</a>) and 21 of the 24 testbenches, all except the three passive-model transients, several hours in total. The seven-port EM solve of the full core takes about 20 times the core-hours of the three blocks and runs only with <code>make sparx-core</code>. <code>make help</code> lists every target, and the repository <a href="https://github.com/iic-jku/SG13CMOS_SPARX#makefile-targets">README</a> documents each of them with its parameters.</p>
+<p><code>make all</code> runs the Palace EM solves of the three blocks (<a href="#sec-em-cost" class="quarto-xref">Section&nbsp;8.4</a>) and 21 of the 24 testbenches, all except the three passive-model transients, several hours in total. The seven-port EM solve of the full core takes about 20 times the core-hours of the three blocks and runs only with <code>make sparx-core</code> or <code>make all WITH_CORE=1</code>. <code>make help</code> lists every target, and the repository <a href="https://github.com/iic-jku/SG13CMOS_SPARX#makefile-targets">README</a> documents each of them with its parameters.</p>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -908,7 +908,7 @@ Table&nbsp;5: Repository structure.
 <p>Every folder with schematics has its own <code>xschemrc</code>, and the Makefile targets pass it with <code>--rcfile</code>. Netlists and simulator output of both folders land in <code>testbenches/xschem/simulations/</code>, so the relative includes of the testbenches always resolve. <code>make open</code> opens all design files in the <code>sak-open.py</code> file browser of the container.</p>
 </section>
 </section>
-<section id="sec-flow" class="level1" data-number="4">
+<section id="sec-flow" class="level1 page-columns page-full" data-number="4">
 <h1 data-number="4"><span class="header-section-number">4</span> Design Flow</h1>
 <div id="fig-flow" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -1012,7 +1012,7 @@ Table&nbsp;6: Flow steps and their Makefile targets.
 </tr>
 <tr class="even">
 <td style="text-align: left;">Everything</td>
-<td style="text-align: left;">all of the above except the full-core EM</td>
+<td style="text-align: left;">all of the above, the full-core EM flow only with <code>WITH_CORE=1</code></td>
 <td style="text-align: left;"><code>all</code></td>
 <td style="text-align: left;"></td>
 </tr>
@@ -1027,6 +1027,17 @@ Table&nbsp;6: Flow steps and their Makefile targets.
 </div>
 </figure>
 </div>
+<div id="fig-targets" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-fig figure page-columns page-full">
+<div aria-describedby="fig-targets-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
+<a href="fig/targets_overview/targets_overview.svg" class="lightbox page-columns page-full" data-gallery="quarto-lightbox-gallery-3" title="Figure&nbsp;3: Makefile targets that make all runs in five stages. Each header names the folders its stage writes to, and the targets of a stage run from top to bottom. An indented target is called by the nearest target above it with less indent, a box marked ×N stands for N calls of the same target, and the second line of a box shows the parameters of the call. The dashed boxes run only with WITH_CORE=1, and the LVS of the top cell is not part of make all yet."><img src="fig/targets_overview/targets_overview.svg" class="img-fluid figure-img column-page" style="width:100.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-targets-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Makefile targets that <code>make all</code> runs in five stages. Each header names the folders its stage writes to, and the targets of a stage run from top to bottom. An indented target is called by the nearest target above it with less indent, a box marked ×N stands for N calls of the same target, and the second line of a box shows the parameters of the call. The dashed boxes run only with <code>WITH_CORE=1</code>, and the LVS of the top cell is not part of <code>make all</code> yet.
+</figcaption>
+</figure>
+</div>
+<p><a href="#fig-targets" class="quarto-xref">Figure&nbsp;3</a> shows how the targets of <a href="#tbl-flow" class="quarto-xref">Table&nbsp;6</a> are chained. All of them live in the one top-level <code>Makefile</code>, and every arrow is a direct <code>$(MAKE)</code> call. <code>make all</code> runs the stages from left to right, so the testbenches simulate the LE models that the same run has just fitted. The two dashed boxes are the EM solve and the fit of the full core. <code>make all</code> runs them only with <code>WITH_CORE=1</code>, through <code>make sparx-core</code> after the block fits. That step also runs the two <code>sparx_core_tb_acsp_*</code> benches, which <code>sim-all</code> repeats. With the default <code>WITH_CORE=0</code>, <code>make all</code> simulates the committed full-core fit in the <code>sparx_core_le_tb_acsp_*</code> and <code>sparx_top_le_tb_*</code> benches. After a change to a structure parameter in <code>scripts/six_port_gen.py</code>, run <code>make sparx-core</code> or <code>make all WITH_CORE=1</code>, or those benches keep showing the core of the old layout. The LVS box of the top cell is drawn ahead of the flow: <code>make all</code> runs it once top-level LVS works (<a href="#sec-issues" class="quarto-xref">Section&nbsp;14</a>). The figure leaves out the helper steps: <code>copy-sparam</code> after the EM runs, the schematic netlist export inside <code>klayout-lvs</code> and <code>magic-lvs</code>, and the <code>symbol-pex</code> call inside the two PEX targets.</p>
 </section>
 <section id="sec-layout" class="level1" data-number="5">
 <h1 data-number="5"><span class="header-section-number">5</span> Programmatic Layout Generation</h1>
@@ -1131,14 +1142,14 @@ Table&nbsp;7: Design parameters of the generator.
 </section>
 <section id="sec-closed-form" class="level2" data-number="5.3">
 <h2 data-number="5.3" class="anchored" data-anchor-id="sec-closed-form"><span class="header-section-number">5.3</span> Closed-Form Analytical Models</h2>
-<p>Every passive is built from embedded microstrip lines, defined by their width <span class="math inline">\(w\)</span> and length <span class="math inline">\(l\)</span> and by the metal layers they use. <a href="#fig-microstrip" class="quarto-xref">Figure&nbsp;3</a> shows the cross-section: <span class="math inline">\(t\)</span> is the conductor thickness, <span class="math inline">\(h_1\)</span> the distance from the conductor to the ground plane, and <span class="math inline">\(h_2\)</span> the total dielectric height including the oxide above the conductor. The width sets the characteristic impedance <span class="math inline">\(Z_0\)</span>, and the length scales with the guided wavelength <span class="math inline">\(\lambda_\mathrm{g} = \lambda_0 / \sqrt{\varepsilon_\mathrm{r,eff}}\)</span>, with <span class="math inline">\(\lambda_0\)</span> the free-space wavelength.</p>
+<p>Every passive is built from embedded microstrip lines, defined by their width <span class="math inline">\(w\)</span> and length <span class="math inline">\(l\)</span> and by the metal layers they use. <a href="#fig-microstrip" class="quarto-xref">Figure&nbsp;4</a> shows the cross-section: <span class="math inline">\(t\)</span> is the conductor thickness, <span class="math inline">\(h_1\)</span> the distance from the conductor to the ground plane, and <span class="math inline">\(h_2\)</span> the total dielectric height including the oxide above the conductor. The width sets the characteristic impedance <span class="math inline">\(Z_0\)</span>, and the length scales with the guided wavelength <span class="math inline">\(\lambda_\mathrm{g} = \lambda_0 / \sqrt{\varepsilon_\mathrm{r,eff}}\)</span>, with <span class="math inline">\(\lambda_0\)</span> the free-space wavelength.</p>
 <div id="fig-microstrip" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-microstrip-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/layout/embedded_microstrip.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Figure&nbsp;3: Cross-section of the embedded microstrip line with relative permittivity \varepsilon_\mathrm{r}, conductor width w and thickness t, dielectric height h_1 below the conductor, and total dielectric height h_2."><img src="fig/layout/embedded_microstrip.svg" class="img-fluid figure-img" style="width:60.0%"></a>
+<a href="fig/layout/embedded_microstrip.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-4" title="Figure&nbsp;4: Cross-section of the embedded microstrip line with relative permittivity \varepsilon_\mathrm{r}, conductor width w and thickness t, dielectric height h_1 below the conductor, and total dielectric height h_2."><img src="fig/layout/embedded_microstrip.svg" class="img-fluid figure-img" style="width:60.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-microstrip-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;3: Cross-section of the embedded microstrip line with relative permittivity <span class="math inline">\(\varepsilon_\mathrm{r}\)</span>, conductor width <span class="math inline">\(w\)</span> and thickness <span class="math inline">\(t\)</span>, dielectric height <span class="math inline">\(h_1\)</span> below the conductor, and total dielectric height <span class="math inline">\(h_2\)</span>.
+Figure&nbsp;4: Cross-section of the embedded microstrip line with relative permittivity <span class="math inline">\(\varepsilon_\mathrm{r}\)</span>, conductor width <span class="math inline">\(w\)</span> and thickness <span class="math inline">\(t\)</span>, dielectric height <span class="math inline">\(h_1\)</span> below the conductor, and total dielectric height <span class="math inline">\(h_2\)</span>.
 </figcaption>
 </figure>
 </div>
@@ -1233,25 +1244,25 @@ Table&nbsp;8: Microstrip geometry of six signal and ground combinations. SPARX u
 <div id="fig-z0" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-z0-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/layout/tline_z0.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-4" title="Figure&nbsp;4: EM-simulated (solid) and IPC-2141 closed-form (dashed) characteristic impedance at 160 GHz against trace width for the six combinations. The closed form does not apply where h_1 < t (TM2 over TM1, TM1 over M5). The stars mark \sqrt{2} Z_0, Z_0 and Z_0/\sqrt{2} for TM2 over M5."><img src="fig/layout/tline_z0.svg" class="img-fluid figure-img" style="width:85.0%"></a>
+<a href="fig/layout/tline_z0.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-5" title="Figure&nbsp;5: EM-simulated (solid) and IPC-2141 closed-form (dashed) characteristic impedance at 160 GHz against trace width for the six combinations. The closed form does not apply where h_1 < t (TM2 over TM1, TM1 over M5). The stars mark \sqrt{2} Z_0, Z_0 and Z_0/\sqrt{2} for TM2 over M5."><img src="fig/layout/tline_z0.svg" class="img-fluid figure-img" style="width:85.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-z0-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;4: EM-simulated (solid) and IPC-2141 closed-form (dashed) characteristic impedance at 160 GHz against trace width for the six combinations. The closed form does not apply where <span class="math inline">\(h_1 &lt; t\)</span> (TM2 over TM1, TM1 over M5). The stars mark <span class="math inline">\(\sqrt{2} Z_0\)</span>, <span class="math inline">\(Z_0\)</span> and <span class="math inline">\(Z_0/\sqrt{2}\)</span> for TM2 over M5.
+Figure&nbsp;5: EM-simulated (solid) and IPC-2141 closed-form (dashed) characteristic impedance at 160 GHz against trace width for the six combinations. The closed form does not apply where <span class="math inline">\(h_1 &lt; t\)</span> (TM2 over TM1, TM1 over M5). The stars mark <span class="math inline">\(\sqrt{2} Z_0\)</span>, <span class="math inline">\(Z_0\)</span> and <span class="math inline">\(Z_0/\sqrt{2}\)</span> for TM2 over M5.
 </figcaption>
 </figure>
 </div>
 <div id="fig-loss" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-loss-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/layout/tline_loss.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-5" title="Figure&nbsp;5: EM-simulated attenuation at 160 GHz against trace width for the six combinations. The SPARX design point, TM2 over M5 at w = 7.2\ \mum, loses 1.26 dB/mm. The losses come from the surface metal model, see Section&nbsp;8.3."><img src="fig/layout/tline_loss.svg" class="img-fluid figure-img" style="width:85.0%"></a>
+<a href="fig/layout/tline_loss.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-6" title="Figure&nbsp;6: EM-simulated attenuation at 160 GHz against trace width for the six combinations. The SPARX design point, TM2 over M5 at w = 7.2\ \mum, loses 1.26 dB/mm. The losses come from the surface metal model, see Section&nbsp;8.3."><img src="fig/layout/tline_loss.svg" class="img-fluid figure-img" style="width:85.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-loss-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;5: EM-simulated attenuation at 160 GHz against trace width for the six combinations. The SPARX design point, TM2 over M5 at <span class="math inline">\(w = 7.2\ \mu\)</span>m, loses 1.26 dB/mm. The losses come from the surface metal model, see <a href="#sec-em-metal" class="quarto-xref">Section&nbsp;8.3</a>.
+Figure&nbsp;6: EM-simulated attenuation at 160 GHz against trace width for the six combinations. The SPARX design point, TM2 over M5 at <span class="math inline">\(w = 7.2\ \mu\)</span>m, loses 1.26 dB/mm. The losses come from the surface metal model, see <a href="#sec-em-metal" class="quarto-xref">Section&nbsp;8.3</a>.
 </figcaption>
 </figure>
 </div>
-<p><a href="#fig-z0" class="quarto-xref">Figure&nbsp;4</a> confirms the range <span class="math inline">\(0.1 \le w/h_1 \le 2\)</span> that IPC-2141 states for <a href="#eq-z0" class="quarto-xref">Equation&nbsp;2</a>, for every combination with <span class="math inline">\(h_1 &gt; t\)</span>. For TM2 over M5, <a href="#eq-z0" class="quarto-xref">Equation&nbsp;2</a> gives 2.5 <span class="math inline">\(\mu\)</span>m, 7.2 <span class="math inline">\(\mu\)</span>m and 12.5 <span class="math inline">\(\mu\)</span>m for the <span class="math inline">\(\sqrt{2} Z_0 = 70.7\ \Omega\)</span>, <span class="math inline">\(Z_0 = 50\ \Omega\)</span> and <span class="math inline">\(Z_0/\sqrt{2} = 35.4\ \Omega\)</span> the WPD and the BLCs need <span class="citation" data-cites="Wilkinson_1960 Reed_1956">(<a href="#ref-Wilkinson_1960" role="doc-biblioref">Wilkinson 1960</a>; <a href="#ref-Reed_1956" role="doc-biblioref">Reed and Wheeler 1956</a>)</span>. At these widths the EM simulation gives 74.1 <span class="math inline">\(\Omega\)</span>, 51.1 <span class="math inline">\(\Omega\)</span> and 39.4 <span class="math inline">\(\Omega\)</span>, which is 4.7 %, 2.2 % and 11.5 % above target, the last beyond <span class="math inline">\(w/h_1 = 2\)</span>. Where <span class="math inline">\(h_1 &lt; t\)</span> the closed form is off by more than 14 % at every width and is of no use.</p>
-<p>The TM1 rows estimate what IHP’s five-layer SG13CMOS5L stack would allow, with one thick top metal and four thin layers. By <a href="#fig-z0" class="quarto-xref">Figure&nbsp;4</a> and <a href="#fig-loss" class="quarto-xref">Figure&nbsp;5</a> the only usable combination there is TM1 over M2, which corresponds to TM1 over M1 in SG13CMOS5L.</p>
+<p><a href="#fig-z0" class="quarto-xref">Figure&nbsp;5</a> confirms the range <span class="math inline">\(0.1 \le w/h_1 \le 2\)</span> that IPC-2141 states for <a href="#eq-z0" class="quarto-xref">Equation&nbsp;2</a>, for every combination with <span class="math inline">\(h_1 &gt; t\)</span>. For TM2 over M5, <a href="#eq-z0" class="quarto-xref">Equation&nbsp;2</a> gives 2.5 <span class="math inline">\(\mu\)</span>m, 7.2 <span class="math inline">\(\mu\)</span>m and 12.5 <span class="math inline">\(\mu\)</span>m for the <span class="math inline">\(\sqrt{2} Z_0 = 70.7\ \Omega\)</span>, <span class="math inline">\(Z_0 = 50\ \Omega\)</span> and <span class="math inline">\(Z_0/\sqrt{2} = 35.4\ \Omega\)</span> the WPD and the BLCs need <span class="citation" data-cites="Wilkinson_1960 Reed_1956">(<a href="#ref-Wilkinson_1960" role="doc-biblioref">Wilkinson 1960</a>; <a href="#ref-Reed_1956" role="doc-biblioref">Reed and Wheeler 1956</a>)</span>. At these widths the EM simulation gives 74.1 <span class="math inline">\(\Omega\)</span>, 51.1 <span class="math inline">\(\Omega\)</span> and 39.4 <span class="math inline">\(\Omega\)</span>, which is 4.7 %, 2.2 % and 11.5 % above target, the last beyond <span class="math inline">\(w/h_1 = 2\)</span>. Where <span class="math inline">\(h_1 &lt; t\)</span> the closed form is off by more than 14 % at every width and is of no use.</p>
+<p>The TM1 rows estimate what IHP’s five-layer SG13CMOS5L stack would allow, with one thick top metal and four thin layers. By <a href="#fig-z0" class="quarto-xref">Figure&nbsp;5</a> and <a href="#fig-loss" class="quarto-xref">Figure&nbsp;6</a> the only usable combination there is TM1 over M2, which corresponds to TM1 over M1 in SG13CMOS5L.</p>
 <p>The widths of the WPD and the BLCs follow from their impedances through <a href="#eq-z0" class="quarto-xref">Equation&nbsp;2</a>, and their quarter-wave lengths <span class="math inline">\(\lambda_\mathrm{g}/4\)</span> through <a href="#eq-eps-eff" class="quarto-xref">Equation&nbsp;3</a>. The hairpin BPF is synthesized from a Butterworth or Chebyshev prototype <span class="citation" data-cites="Cristal_1972 Hong_2001">(<a href="#ref-Cristal_1972" role="doc-biblioref">Cristal and Frankel 1972</a>; <a href="#ref-Hong_2001" role="doc-biblioref">Hong and Lancaster 2001</a>)</span>. Since every computation is closed-form, all widths and lengths follow directly from the design frequency, without optimization loops, iterations or training data.</p>
 </section>
 <section id="design-considerations" class="level2" data-number="5.4">
@@ -1259,10 +1270,10 @@ Figure&nbsp;5: EM-simulated attenuation at 160 GHz against trace width for the s
 <div id="fig-layout-labels" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-layout-labels-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/layout/sparx_layout_labels.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-6" title="Figure&nbsp;6: Labeled layout render of the 160 GHz SPARX: embedded microstrip on TM2 over the M5 ground plane, TM2 fill, logos, author labels, seal ring and pad frame."><img src="fig/layout/sparx_layout_labels.svg" class="img-fluid figure-img" style="width:70.0%"></a>
+<a href="fig/layout/sparx_layout_labels.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-7" title="Figure&nbsp;7: Labeled layout render of the 160 GHz SPARX: embedded microstrip on TM2 over the M5 ground plane, TM2 fill, logos, author labels, seal ring and pad frame."><img src="fig/layout/sparx_layout_labels.svg" class="img-fluid figure-img" style="width:70.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-layout-labels-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;6: Labeled layout render of the 160 GHz SPARX: embedded microstrip on TM2 over the M5 ground plane, TM2 fill, logos, author labels, seal ring and pad frame.
+Figure&nbsp;7: Labeled layout render of the 160 GHz SPARX: embedded microstrip on TM2 over the M5 ground plane, TM2 fill, logos, author labels, seal ring and pad frame.
 </figcaption>
 </figure>
 </div>
@@ -1329,10 +1340,10 @@ Table&nbsp;9: Die outline of the generated layouts in <code>layout/</code>, in <
 <div id="fig-render-black" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-render-black-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/sparx160/sparx160_top_black_pinout.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7" title="Figure&nbsp;7: Taped-out layout with the Metal5 ground plane and the pinout. The termination labeled R_1 here is R_4 in the text."><img src="fig/sparx160/sparx160_top_black_pinout.png" class="img-fluid figure-img"></a>
+<a href="fig/sparx160/sparx160_top_black_pinout.png" class="lightbox" data-gallery="quarto-lightbox-gallery-8" title="Figure&nbsp;8: Taped-out layout with the Metal5 ground plane and the pinout. The termination labeled R_1 here is R_4 in the text."><img src="fig/sparx160/sparx160_top_black_pinout.png" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-render-black-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;7: Taped-out layout with the Metal5 ground plane and the pinout. The termination labeled <span class="math inline">\(R_1\)</span> here is <span class="math inline">\(R_4\)</span> in the text.
+Figure&nbsp;8: Taped-out layout with the Metal5 ground plane and the pinout. The termination labeled <span class="math inline">\(R_1\)</span> here is <span class="math inline">\(R_4\)</span> in the text.
 </figcaption>
 </figure>
 </div>
@@ -1341,10 +1352,10 @@ Figure&nbsp;7: Taped-out layout with the Metal5 ground plane and the pinout. The
 <div id="fig-render-white" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-render-white-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/sparx160/sparx160_top_white_wo_M5.png" class="lightbox" data-gallery="quarto-lightbox-gallery-8" title="Figure&nbsp;8: Taped-out layout without the Metal5 ground plane."><img src="fig/sparx160/sparx160_top_white_wo_M5.png" class="img-fluid figure-img"></a>
+<a href="fig/sparx160/sparx160_top_white_wo_M5.png" class="lightbox" data-gallery="quarto-lightbox-gallery-9" title="Figure&nbsp;9: Taped-out layout without the Metal5 ground plane."><img src="fig/sparx160/sparx160_top_white_wo_M5.png" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-render-white-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;8: Taped-out layout without the Metal5 ground plane.
+Figure&nbsp;9: Taped-out layout without the Metal5 ground plane.
 </figcaption>
 </figure>
 </div>
@@ -1361,10 +1372,10 @@ Figure&nbsp;8: Taped-out layout without the Metal5 ground plane.
 <div id="fig-pd" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-pd-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/sparx_powdet_sbd/sparx_powdet_sbd_circuit.png" class="lightbox" data-gallery="quarto-lightbox-gallery-9" title="Figure&nbsp;9: Schematic of the SBD power detector with its replica for differential readout, annotated with the dc operating point. The supply and bias voltages are decoupled on chip by MIM capacitors. The output low-pass capacitor, 5 pF per output, is placed off chip and not drawn."><img src="fig/sparx_powdet_sbd/sparx_powdet_sbd_circuit.png" class="img-fluid figure-img" style="width:100.0%"></a>
+<a href="fig/sparx_powdet_sbd/sparx_powdet_sbd_circuit.png" class="lightbox" data-gallery="quarto-lightbox-gallery-10" title="Figure&nbsp;10: Schematic of the SBD power detector with its replica for differential readout, annotated with the dc operating point. The supply and bias voltages are decoupled on chip by MIM capacitors. The output low-pass capacitor, 5 pF per output, is placed off chip and not drawn."><img src="fig/sparx_powdet_sbd/sparx_powdet_sbd_circuit.png" class="img-fluid figure-img" style="width:100.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-pd-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;9: Schematic of the SBD power detector with its replica for differential readout, annotated with the dc operating point. The supply and bias voltages are decoupled on chip by MIM capacitors. The output low-pass capacitor, 5 pF per output, is placed off chip and not drawn.
+Figure&nbsp;10: Schematic of the SBD power detector with its replica for differential readout, annotated with the dc operating point. The supply and bias voltages are decoupled on chip by MIM capacitors. The output low-pass capacitor, 5 pF per output, is placed off chip and not drawn.
 </figcaption>
 </figure>
 </div>
@@ -1507,10 +1518,10 @@ Table&nbsp;11: Detector versions.
 <div id="fig-pd-pss" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-pd-pss-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/sim/sparx_powdet_sbd_pss_sweep.png" class="lightbox" data-gallery="quarto-lightbox-gallery-10" title="Figure&nbsp;10: Detected output voltage, responsivity and large-signal input impedance of the fabricated detector against the available power of a 161 GHz tone, from a 15-harmonic HB sweep with shooting PSS check points (sparx_powdet_sbd_tb_pss_vacask)."><img src="fig/sim/sparx_powdet_sbd_pss_sweep.png" class="img-fluid figure-img" style="width:80.0%"></a>
+<a href="fig/sim/sparx_powdet_sbd_pss_sweep.png" class="lightbox" data-gallery="quarto-lightbox-gallery-11" title="Figure&nbsp;11: Detected output voltage, responsivity and large-signal input impedance of the fabricated detector against the available power of a 161 GHz tone, from a 15-harmonic HB sweep with shooting PSS check points (sparx_powdet_sbd_tb_pss_vacask)."><img src="fig/sim/sparx_powdet_sbd_pss_sweep.png" class="img-fluid figure-img" style="width:80.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-pd-pss-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;10: Detected output voltage, responsivity and large-signal input impedance of the fabricated detector against the available power of a 161 GHz tone, from a 15-harmonic HB sweep with shooting PSS check points (<code>sparx_powdet_sbd_tb_pss_vacask</code>).
+Figure&nbsp;11: Detected output voltage, responsivity and large-signal input impedance of the fabricated detector against the available power of a 161 GHz tone, from a 15-harmonic HB sweep with shooting PSS check points (<code>sparx_powdet_sbd_tb_pss_vacask</code>).
 </figcaption>
 </figure>
 </div>
@@ -1590,10 +1601,10 @@ F_\mathrm{DSB} = 1 + \frac{S_v(f_\mathrm{IF})}{(g_\mathrm{U} + g_\mathrm{L})\, k
 <div id="fig-pd-nf-lo" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-pd-nf-lo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/sim/sparx_powdet_sbd_nf_lo_compare.png" class="lightbox" data-gallery="quarto-lightbox-gallery-11" title="Figure&nbsp;11: Double-sideband noise figure of the fabricated detector at a 2 GHz IF against the LO power, from four noise estimates: HBNOISE, PNOISE around a shooting PSS, the linear term of a transient-noise ladder, and the small-signal noise at the dc operating point (sparx_powdet_sbd_tb_tn_lo_vacask)."><img src="fig/sim/sparx_powdet_sbd_nf_lo_compare.png" class="img-fluid figure-img" style="width:80.0%"></a>
+<a href="fig/sim/sparx_powdet_sbd_nf_lo_compare.png" class="lightbox" data-gallery="quarto-lightbox-gallery-12" title="Figure&nbsp;12: Double-sideband noise figure of the fabricated detector at a 2 GHz IF against the LO power, from four noise estimates: HBNOISE, PNOISE around a shooting PSS, the linear term of a transient-noise ladder, and the small-signal noise at the dc operating point (sparx_powdet_sbd_tb_tn_lo_vacask)."><img src="fig/sim/sparx_powdet_sbd_nf_lo_compare.png" class="img-fluid figure-img" style="width:80.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-pd-nf-lo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;11: Double-sideband noise figure of the fabricated detector at a 2 GHz IF against the LO power, from four noise estimates: HBNOISE, PNOISE around a shooting PSS, the linear term of a transient-noise ladder, and the small-signal noise at the dc operating point (<code>sparx_powdet_sbd_tb_tn_lo_vacask</code>).
+Figure&nbsp;12: Double-sideband noise figure of the fabricated detector at a 2 GHz IF against the LO power, from four noise estimates: HBNOISE, PNOISE around a shooting PSS, the linear term of a transient-noise ladder, and the small-signal noise at the dc operating point (<code>sparx_powdet_sbd_tb_tn_lo_vacask</code>).
 </figcaption>
 </figure>
 </div>
@@ -1648,14 +1659,14 @@ Table&nbsp;13: Noise results of the three detector versions.
 </div>
 </figure>
 </div>
-<p><a href="#fig-pd-nf-lo" class="quarto-xref">Figure&nbsp;11</a> compares the four noise estimates. PAC and PNOISE reproduce HBAC and HBNOISE within 0.2 dB, and the transient noise, which needs no linearization, lies 0.6 dB to 1.1 dB above them. The conventional small-signal noise at the dc operating point is 2.3 dB optimistic at the minimum and 8.4 dB at +6.9 dBm, where it predicts a falling noise figure that every large-signal analysis shows rising. A mixer noise figure therefore needs a large-signal noise analysis.</p>
+<p><a href="#fig-pd-nf-lo" class="quarto-xref">Figure&nbsp;12</a> compares the four noise estimates. PAC and PNOISE reproduce HBAC and HBNOISE within 0.2 dB, and the transient noise, which needs no linearization, lies 0.6 dB to 1.1 dB above them. The conventional small-signal noise at the dc operating point is 2.3 dB optimistic at the minimum and 8.4 dB at +6.9 dBm, where it predicts a falling noise figure that every large-signal analysis shows rising. A mixer noise figure therefore needs a large-signal noise analysis.</p>
 <div id="fig-pd-nf" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-pd-nf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
-<a href="fig/sim/sparx_powdet_sbd_nf.png" class="lightbox page-columns page-full" data-gallery="quarto-lightbox-gallery-12" title="Figure&nbsp;12: Noise figure, NEP and conversion of the fabricated detector over the IF, with the PAC and PNOISE cross-check as open circles (sparx_powdet_sbd_tb_nf_vacask)."><img src="fig/sim/sparx_powdet_sbd_nf.png" class="img-fluid figure-img column-page" style="width:100.0%"></a>
+<a href="fig/sim/sparx_powdet_sbd_nf.png" class="lightbox page-columns page-full" data-gallery="quarto-lightbox-gallery-13" title="Figure&nbsp;13: Noise figure, NEP and conversion of the fabricated detector over the IF, with the PAC and PNOISE cross-check as open circles (sparx_powdet_sbd_tb_nf_vacask)."><img src="fig/sim/sparx_powdet_sbd_nf.png" class="img-fluid figure-img column-page" style="width:100.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-pd-nf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;12: Noise figure, NEP and conversion of the fabricated detector over the IF, with the PAC and PNOISE cross-check as open circles (<code>sparx_powdet_sbd_tb_nf_vacask</code>).
+Figure&nbsp;13: Noise figure, NEP and conversion of the fabricated detector over the IF, with the PAC and PNOISE cross-check as open circles (<code>sparx_powdet_sbd_tb_nf_vacask</code>).
 </figcaption>
 </figure>
 </div>
@@ -2125,10 +2136,10 @@ Table&nbsp;20: The snp2le models of SPARX, each in both dialects.
 <div id="fig-core-fit" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-core-fit-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
-<a href="fig/sim/sparx_core_le_tb_acsp_vacask.png" class="lightbox page-columns page-full" data-gallery="quarto-lightbox-gallery-13" title="Figure&nbsp;13: The order-24 full-core fit resimulated in VACASK, all 49 S-parameters split by excitation port (sparx_core_le_tb_acsp_vacask)."><img src="fig/sim/sparx_core_le_tb_acsp_vacask.png" class="img-fluid figure-img column-page" style="width:100.0%"></a>
+<a href="fig/sim/sparx_core_le_tb_acsp_vacask.png" class="lightbox page-columns page-full" data-gallery="quarto-lightbox-gallery-14" title="Figure&nbsp;14: The order-24 full-core fit resimulated in VACASK, all 49 S-parameters split by excitation port (sparx_core_le_tb_acsp_vacask)."><img src="fig/sim/sparx_core_le_tb_acsp_vacask.png" class="img-fluid figure-img column-page" style="width:100.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-core-fit-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;13: The order-24 full-core fit resimulated in VACASK, all 49 S-parameters split by excitation port (<code>sparx_core_le_tb_acsp_vacask</code>).
+Figure&nbsp;14: The order-24 full-core fit resimulated in VACASK, all 49 S-parameters split by excitation port (<code>sparx_core_le_tb_acsp_vacask</code>).
 </figcaption>
 </figure>
 </div>
@@ -2286,10 +2297,10 @@ Table&nbsp;22: The 24 testbenches.
 <div id="fig-rx" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-rx-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/sim/sparx_top_le_rx_m1_pex.png" class="lightbox" data-gallery="quarto-lightbox-gallery-14" title="Figure&nbsp;14: Post-layout receiver at +12 dBm of LO and -20 dBm of RF at the pads: transient of the four differential detector outputs, IF output at 2 GHz against LO power from HBAC, and IF response (sparx_top_le_tb_rx_vacask, VARIANT=m1_pex)."><img src="fig/sim/sparx_top_le_rx_m1_pex.png" class="img-fluid figure-img" style="width:85.0%"></a>
+<a href="fig/sim/sparx_top_le_rx_m1_pex.png" class="lightbox" data-gallery="quarto-lightbox-gallery-15" title="Figure&nbsp;15: Post-layout receiver at +12 dBm of LO and -20 dBm of RF at the pads: transient of the four differential detector outputs, IF output at 2 GHz against LO power from HBAC, and IF response (sparx_top_le_tb_rx_vacask, VARIANT=m1_pex)."><img src="fig/sim/sparx_top_le_rx_m1_pex.png" class="img-fluid figure-img" style="width:85.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-rx-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;14: Post-layout receiver at +12 dBm of LO and -20 dBm of RF at the pads: transient of the four differential detector outputs, IF output at 2 GHz against LO power from HBAC, and IF response (<code>sparx_top_le_tb_rx_vacask</code>, <code>VARIANT=m1_pex</code>).
+Figure&nbsp;15: Post-layout receiver at +12 dBm of LO and -20 dBm of RF at the pads: transient of the four differential detector outputs, IF output at 2 GHz against LO power from HBAC, and IF response (<code>sparx_top_le_tb_rx_vacask</code>, <code>VARIANT=m1_pex</code>).
 </figcaption>
 </figure>
 </div>
@@ -2306,10 +2317,10 @@ Figure&nbsp;14: Post-layout receiver at +12 dBm of LO and -20 dBm of RF at the p
 <div id="fig-rx-nf" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
 <figure class="quarto-float quarto-float-fig figure page-columns page-full">
 <div aria-describedby="fig-rx-nf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
-<a href="fig/sim/sparx_top_le_nf_m1_pex.png" class="lightbox page-columns page-full" data-gallery="quarto-lightbox-gallery-15" title="Figure&nbsp;15: Noise figure of the post-layout receiver: I and Q outputs and the four detector outputs over the IF, their conversion, and the noise figure at a 2 GHz IF against the LO power at the pad (sparx_top_le_tb_nf_vacask, VARIANT=m1_pex)."><img src="fig/sim/sparx_top_le_nf_m1_pex.png" class="img-fluid figure-img column-page" style="width:100.0%"></a>
+<a href="fig/sim/sparx_top_le_nf_m1_pex.png" class="lightbox page-columns page-full" data-gallery="quarto-lightbox-gallery-16" title="Figure&nbsp;16: Noise figure of the post-layout receiver: I and Q outputs and the four detector outputs over the IF, their conversion, and the noise figure at a 2 GHz IF against the LO power at the pad (sparx_top_le_tb_nf_vacask, VARIANT=m1_pex)."><img src="fig/sim/sparx_top_le_nf_m1_pex.png" class="img-fluid figure-img column-page" style="width:100.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-rx-nf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;15: Noise figure of the post-layout receiver: I and Q outputs and the four detector outputs over the IF, their conversion, and the noise figure at a 2 GHz IF against the LO power at the pad (<code>sparx_top_le_tb_nf_vacask</code>, <code>VARIANT=m1_pex</code>).
+Figure&nbsp;16: Noise figure of the post-layout receiver: I and Q outputs and the four detector outputs over the IF, their conversion, and the noise figure at a 2 GHz IF against the LO power at the pad (<code>sparx_top_le_tb_nf_vacask</code>, <code>VARIANT=m1_pex</code>).
 </figcaption>
 </figure>
 </div>
