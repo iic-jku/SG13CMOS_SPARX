@@ -427,7 +427,8 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#flow" id="toc-flow" class="nav-link" data-scroll-target="#flow"><span class="header-section-number">8.1</span> Flow</a></li>
   <li><a href="#results-at-160-ghz" id="toc-results-at-160-ghz" class="nav-link" data-scroll-target="#results-at-160-ghz"><span class="header-section-number">8.2</span> Results at 160 GHz</a></li>
-  <li><a href="#sec-em-cost" id="toc-sec-em-cost" class="nav-link" data-scroll-target="#sec-em-cost"><span class="header-section-number">8.3</span> Cost</a></li>
+  <li><a href="#sec-em-metal" id="toc-sec-em-metal" class="nav-link" data-scroll-target="#sec-em-metal"><span class="header-section-number">8.3</span> Metal Model</a></li>
+  <li><a href="#sec-em-cost" id="toc-sec-em-cost" class="nav-link" data-scroll-target="#sec-em-cost"><span class="header-section-number">8.4</span> Cost</a></li>
   </ul></li>
   <li><a href="#sec-snp2le" id="toc-sec-snp2le" class="nav-link" data-scroll-target="#sec-snp2le"><span class="header-section-number">9</span> Lumped-Element Models with snp2le</a>
   <ul class="collapse">
@@ -820,7 +821,7 @@ Table&nbsp;4: Tools and versions.
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> sim-xschem TB=sparx_wpd_le_tb_acsp_vacask  <span class="co"># one testbench</span></span>
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> regression                                 <span class="co"># tool and flow smoke test</span></span>
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> all                                        <span class="co"># the complete flow</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><code>make all</code> runs the Palace EM solves of the three blocks (<a href="#sec-em-cost" class="quarto-xref">Section&nbsp;8.3</a>) and 21 of the 24 testbenches, all except the three passive-model transients, several hours in total. The seven-port EM solve of the full core takes about 20 times the core-hours of the three blocks and runs only with <code>make sparx-core</code>. <code>make help</code> lists every target, and the repository <a href="https://github.com/iic-jku/SG13CMOS_SPARX#makefile-targets">README</a> documents each of them with its parameters.</p>
+<p><code>make all</code> runs the Palace EM solves of the three blocks (<a href="#sec-em-cost" class="quarto-xref">Section&nbsp;8.4</a>) and 21 of the 24 testbenches, all except the three passive-model transients, several hours in total. The seven-port EM solve of the full core takes about 20 times the core-hours of the three blocks and runs only with <code>make sparx-core</code>. <code>make help</code> lists every target, and the repository <a href="https://github.com/iic-jku/SG13CMOS_SPARX#makefile-targets">README</a> documents each of them with its parameters.</p>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -885,7 +886,7 @@ Table&nbsp;5: Repository structure.
 </tr>
 <tr class="even">
 <td style="text-align: left;"><code>verification/em/</code></td>
-<td style="text-align: left;"><code>layout/</code> (EM structures), <code>palace_model/</code> (Palace runs), <code>s-parameter/</code> (Touchstone files), <code>scripts/</code>, <code>stackups/</code></td>
+<td style="text-align: left;"><code>layout/</code> (EM structures), <code>metal_model/</code> (surface versus volume metal, <a href="#sec-em-metal" class="quarto-xref">Section&nbsp;8.3</a>), <code>palace_model/</code> (Palace runs), <code>s-parameter/</code> (Touchstone files), <code>scripts/</code>, <code>stackups/</code></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"><code>render/</code>, <code>release/</code>, <code>doc/</code></td>
@@ -1242,10 +1243,10 @@ Figure&nbsp;4: EM-simulated (solid) and IPC-2141 closed-form (dashed) characteri
 <div id="fig-loss" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-loss-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="fig/layout/tline_loss.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-5" title="Figure&nbsp;5: EM-simulated attenuation at 160 GHz against trace width for the six combinations. The SPARX design point, TM2 over M5 at w = 7.2\ \mum, loses 1.26 dB/mm."><img src="fig/layout/tline_loss.svg" class="img-fluid figure-img" style="width:85.0%"></a>
+<a href="fig/layout/tline_loss.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-5" title="Figure&nbsp;5: EM-simulated attenuation at 160 GHz against trace width for the six combinations. The SPARX design point, TM2 over M5 at w = 7.2\ \mum, loses 1.26 dB/mm. The losses come from the surface metal model, see Section&nbsp;8.3."><img src="fig/layout/tline_loss.svg" class="img-fluid figure-img" style="width:85.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-loss-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;5: EM-simulated attenuation at 160 GHz against trace width for the six combinations. The SPARX design point, TM2 over M5 at <span class="math inline">\(w = 7.2\ \mu\)</span>m, loses 1.26 dB/mm.
+Figure&nbsp;5: EM-simulated attenuation at 160 GHz against trace width for the six combinations. The SPARX design point, TM2 over M5 at <span class="math inline">\(w = 7.2\ \mu\)</span>m, loses 1.26 dB/mm. The losses come from the surface metal model, see <a href="#sec-em-metal" class="quarto-xref">Section&nbsp;8.3</a>.
 </figcaption>
 </figure>
 </div>
@@ -1816,18 +1817,22 @@ Table&nbsp;16: Palace settings of the committed runs.
 <td style="text-align: left;">TopMetal2 signal over Metal5 ground, 50 <span class="math inline">\(\Omega\)</span> (<code>SIGNAL_CROSS_SECTION</code>, <code>GROUND_CROSS_SECTION</code>, <code>Z0</code>)</td>
 </tr>
 <tr class="odd">
+<td style="text-align: left;">Metal model</td>
+<td style="text-align: left;">gds2palace’s surface model, a surface impedance on every metal face, see <a href="#sec-em-metal" class="quarto-xref">Section&nbsp;8.3</a></td>
+</tr>
+<tr class="even">
 <td style="text-align: left;">Frequency sweep</td>
 <td style="text-align: left;">80 GHz to 240 GHz in 1.6 GHz steps, 101 points, adaptive sweep tolerance 0.02</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">Element order</td>
 <td style="text-align: left;">2</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">Linear solver</td>
 <td style="text-align: left;">GMRES, tolerance <span class="math inline">\(10^{-6}\)</span></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">MPI ranks</td>
 <td style="text-align: left;">12 for the committed block runs, 128 for the core, <code>NP=4</code> by default</td>
 </tr>
@@ -1929,10 +1934,14 @@ Table&nbsp;18: Imbalances of the 160 GHz six-port core at 160 GHz, de-embedded.
 </div>
 </figure>
 </div>
-<p>The insertion loss at 160 GHz is 16.7 dB to 18.6 dB from the LO port to the four outputs and 6.5 dB to 10.7 dB from the RF port, into 50 <span class="math inline">\(\Omega\)</span>. The phase differences deviate from the ideal -90° by 5° to 12.5°. Imbalances of this size are static, and six-port calibration removes them <span class="citation" data-cites="Mailand_2018">(<a href="#ref-Mailand_2018" role="doc-biblioref">Mailand 2018</a>)</span>.</p>
+<p>The insertion loss at 160 GHz is 16.7 dB to 18.6 dB from the LO port to the four outputs and 6.5 dB to 10.7 dB from the RF port, into 50 <span class="math inline">\(\Omega\)</span>. The phase differences deviate from the ideal -90° by 5° to 12.5°. Imbalances of this size are static, and six-port calibration removes them <span class="citation" data-cites="Mailand_2018">(<a href="#ref-Mailand_2018" role="doc-biblioref">Mailand 2018</a>)</span>. The losses come from the surface metal model and are slightly pessimistic, see <a href="#sec-em-metal" class="quarto-xref">Section&nbsp;8.3</a>.</p>
 </section>
-<section id="sec-em-cost" class="level2" data-number="8.3">
-<h2 data-number="8.3" class="anchored" data-anchor-id="sec-em-cost"><span class="header-section-number">8.3</span> Cost</h2>
+<section id="sec-em-metal" class="level2" data-number="8.3">
+<h2 data-number="8.3" class="anchored" data-anchor-id="sec-em-metal"><span class="header-section-number">8.3</span> Metal Model</h2>
+<p>gds2palace models a metal either as a hollow shell with a surface impedance on every face, its default and the model of all SPARX runs, or as a conducting volume whose current Palace solves inside the metal. A check of 2026-10-18 compared the surface results with a 2D volume reference of the TopMetal2-over-Metal5 line and with volume physics emulated on the blocks. The 2.5 <span class="math inline">\(\mu\)</span>m WPD arms agree within 1 %, the 7.2 <span class="math inline">\(\mu\)</span>m 50 <span class="math inline">\(\Omega\)</span> lines read 6 % to 14 % too lossy from 80 GHz to 240 GHz, and the BPF passband would improve by about 0.5 dB. Three errors of the surface model partly cancel: Palace’s thickness correction treats the 0.49 <span class="math inline">\(\mu\)</span>m Metal5 ground as carrying current on both faces and reads it too lossy, the 2 <span class="math inline">\(\mu\)</span>m mesh reads 2 % to 6 % high, and the surface impedance reads narrow, thick strips low. A volume solve that resolves the 0.23 <span class="math inline">\(\mu\)</span>m skin depth of TopMetal2 at 160 GHz needs several times the memory of the available hosts, and the error is conservative, so the flow stays on the surface model for now. <a href="https://github.com/iic-jku/SG13CMOS_SPARX/blob/main/verification/em/metal_model/README.md"><code>verification/em/metal_model/README.md</code></a> explains the two models, documents the check with its scripts and results, and lists when to switch to volume metal.</p>
+</section>
+<section id="sec-em-cost" class="level2" data-number="8.4">
+<h2 data-number="8.4" class="anchored" data-anchor-id="sec-em-cost"><span class="header-section-number">8.4</span> Cost</h2>
 <div id="tbl-em-cost" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-em-cost-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -2442,7 +2451,8 @@ Table&nbsp;25: Releases.
 <li><strong>Frequencies other than 160 GHz</strong> pass the <code>macro</code>-level DRC, but the repository holds no DRC report and no EM result for them.</li>
 <li><strong>Author label.</strong> Every generated layout carries the label “SPARX 160”, whatever its frequency, because the label is a fixed image, <code>scripts/assets/D_Kellerer.png</code>, placed as a committed GDS.</li>
 <li><strong>BPF.</strong> The closed-form models reach their limits on the meanders and coupled lines of the hairpin filter: the 160 GHz filter loses 10 dB and matches only to -6.2 dB, in the LO path. It is the block with the most to gain from optimization.</li>
-<li><strong>No mesh-convergence study.</strong> The committed Palace runs use element order 2 on a single mesh without adaptive refinement.</li>
+<li><strong>No mesh-convergence study.</strong> The committed Palace runs use element order 2 on a single mesh without adaptive refinement. The metal-model check of <a href="#sec-em-metal" class="quarto-xref">Section&nbsp;8.3</a> refined the TopMetal2 edges once, from 2 <span class="math inline">\(\mu\)</span>m to 0.5 <span class="math inline">\(\mu\)</span>m, which lowered the loss by 2 % to 6 %.</li>
+<li><strong>Metal model.</strong> The EM runs use gds2palace’s surface metal model. Against volume physics the 50 <span class="math inline">\(\Omega\)</span> lines read 6 % to 14 % too lossy and the BPF about 0.5 dB, while the WPD agrees within 1 %, see <a href="#sec-em-metal" class="quarto-xref">Section&nbsp;8.3</a>.</li>
 <li><strong>Fit extrapolation.</strong> The fits see the EM band from 80 GHz to 240 GHz only, and they are passive inside it. Above it the WPD fit reaches a largest singular value of 1.618 at 679 GHz. The receiver benches also evaluate the core at the IF and at the LO harmonics, where the passive fit extrapolates. The detector noise figure plus the RF path loss, a composition in which the detector sees 50 <span class="math inline">\(\Omega\)</span> at every frequency, agrees with the simulated receiver within 0.3 dB, which bounds the effect at the operating point.</li>
 <li><strong>Detector noise model.</strong> 97 % of the detector noise comes from the flicker model of a parasitic PNP evaluated far below any characterized current, and its value depends on the BJT area scaling of the simulator build. Measurements will show how far it applies.</li>
 <li><strong>Detector guard rings.</strong> The substrate guard rings of the two Schottky diodes are not tied to ground by metal. The <code>vss</code> network of the full-RC extraction therefore comes out differently in every run (<code>extresist</code> reports an orphaned node), and the VACASK benches idealize that net.</li>
