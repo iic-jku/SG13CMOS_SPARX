@@ -9,7 +9,7 @@
 <meta name="author" content="Simon Dorrer">
 <meta name="author" content="David Kellerer-Pirklbauer">
 <meta name="author" content="Harald Pretl">
-<meta name="dcterms.date" content="2026-10-18">
+<meta name="dcterms.date" content="2026-10-19">
 
 <title>SPARX: An Open-Source, Automated, Programmatically Generated, Frequency-Scalable Six-Port Receiver in 130-nm CMOS – SPARX</title>
 <style>
@@ -485,7 +485,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">October 18, 2026</p>
+      <p class="date">October 19, 2026</p>
     </div>
   </div>
   
@@ -908,7 +908,7 @@ Table&nbsp;5: Repository structure.
 <p>Every folder with schematics has its own <code>xschemrc</code>, and the Makefile targets pass it with <code>--rcfile</code>. Netlists and simulator output of both folders land in <code>testbenches/xschem/simulations/</code>, so the relative includes of the testbenches always resolve. <code>make open</code> opens all design files in the <code>sak-open.py</code> file browser of the container.</p>
 </section>
 </section>
-<section id="sec-flow" class="level1 page-columns page-full" data-number="4">
+<section id="sec-flow" class="level1" data-number="4">
 <h1 data-number="4"><span class="header-section-number">4</span> Design Flow</h1>
 <div id="fig-flow" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -1027,10 +1027,10 @@ Table&nbsp;6: Flow steps and their Makefile targets.
 </div>
 </figure>
 </div>
-<div id="fig-targets" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
-<figure class="quarto-float quarto-float-fig figure page-columns page-full">
-<div aria-describedby="fig-targets-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="page-columns page-full">
-<a href="fig/targets_overview/targets_overview.svg" class="lightbox page-columns page-full" data-gallery="quarto-lightbox-gallery-3" title="Figure&nbsp;3: Makefile targets that make all runs in five stages. Each header names the folders its stage writes to, and the targets of a stage run from top to bottom. An indented target is called by the nearest target above it with less indent, a box marked ×N stands for N calls of the same target, and the second line of a box shows the parameters of the call. The dashed boxes run only with WITH_CORE=1, and the LVS of the top cell is not part of make all yet."><img src="fig/targets_overview/targets_overview.svg" class="img-fluid figure-img column-page" style="width:100.0%"></a>
+<div id="fig-targets" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-targets-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="fig/targets_overview/targets_overview.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Figure&nbsp;3: Makefile targets that make all runs in five stages. Each header names the folders its stage writes to, and the targets of a stage run from top to bottom. An indented target is called by the nearest target above it with less indent, a box marked ×N stands for N calls of the same target, and the second line of a box shows the parameters of the call. The dashed boxes run only with WITH_CORE=1, and the LVS of the top cell is not part of make all yet."><img src="fig/targets_overview/targets_overview.svg" class="img-fluid figure-img" style="width:100.0%"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-targets-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;3: Makefile targets that <code>make all</code> runs in five stages. Each header names the folders its stage writes to, and the targets of a stage run from top to bottom. An indented target is called by the nearest target above it with less indent, a box marked ×N stands for N calls of the same target, and the second line of a box shows the parameters of the call. The dashed boxes run only with <code>WITH_CORE=1</code>, and the LVS of the top cell is not part of <code>make all</code> yet.
