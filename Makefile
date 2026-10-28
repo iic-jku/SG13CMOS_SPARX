@@ -67,6 +67,10 @@ DRC_LEVEL ?= macro
 # Override with: make <target> PEX_MERGED_PINS="<pin> <pin> ..."
 PEX_MERGED_PINS ?=
 
+# Port net that the substrate port sub! of the kpex 2.5D netlist is tied to, as Magic ties the substrate to vss. Empty keeps sub! as a port, which <CELL>_pex.sym does not have.
+# Override with: make klayout-pex PEX_SUB_NET=<net>
+PEX_SUB_NET ?= vss
+
 # Floating-point precision (significant digits) for Xschem's ev function
 # Override with: make <target> EV_PRECISION=<digits>
 EV_PRECISION ?= 5
@@ -152,7 +156,7 @@ PALACE_SCRIPTS_DIR 	:= $(PDK_ROOT)/$(PDK)/libs.tech/palace/scripts
 
 # Help Target
 help: ## Show this help message
-	@echo 'Usage: make <target> [CELL=<cellname>] [EXT_MODE=<1|2|3>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>] [DRC_LEVEL=<precheck|macro|regular>] [PEX_MERGED_PINS="<pin> ..."] [EV_PRECISION=<digits>] [FREQ=<GHz>] [START_FREQ=<GHz>] [STOP_FREQ=<GHz>] [STEP_FREQ=<GHz>] [NO_FILL=0|1] [NO_FILL_M5=0|1] [TB=<testbenchname>] [SCRIPT=<scriptname>] [WITH_CORE=0|1] [VERSION=<version>] [OPEN_ARGS=<options>]'
+	@echo 'Usage: make <target> [CELL=<cellname>] [EXT_MODE=<1|2|3>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>] [DRC_LEVEL=<precheck|macro|regular>] [PEX_MERGED_PINS="<pin> ..."] [PEX_SUB_NET=<net>] [EV_PRECISION=<digits>] [FREQ=<GHz>] [START_FREQ=<GHz>] [STOP_FREQ=<GHz>] [STEP_FREQ=<GHz>] [NO_FILL=0|1] [NO_FILL_M5=0|1] [TB=<testbenchname>] [SCRIPT=<scriptname>] [WITH_CORE=0|1] [VERSION=<version>] [OPEN_ARGS=<options>]'
 	@echo ''
 	@echo 'Available targets:'
 	@grep -E '^[a-zA-Z0-9_.-]+:.*## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*## "}; {printf "  %-20s %s\n", $$1, $$2}'
@@ -163,6 +167,7 @@ help: ## Show this help message
 	@echo 'THRESHOLD/MINRES/MINDELAY are full-RC (EXT_MODE=3) extresist settings for magic-pex (defaults 1000 mOhm / 100 mOhm / 0 ps, gating by resistance, the Magic defaults are 10000 / 1000 / 1).'
 	@echo 'DRC_LEVEL defaults to macro. Sets the KLayout DRC level for klayout-drc (precheck|macro|regular).'
 	@echo 'PEX_MERGED_PINS is empty by default. Lists the supply pins that the flat extraction merges, they are dropped from the generated PEX symbol.'
+	@echo 'PEX_SUB_NET defaults to vss. The port net that klayout-pex ties the substrate port sub! of the kpex 2.5D netlist to (empty keeps sub! as a port).'
 	@echo 'FREQ defaults to 160 (GHz). Selects the layout, its top cell (TOP) and the EM structures.'
 	@echo 'NO_FILL defaults to 0 (fill enabled). Set to 1 to disable metal fill.'
 	@echo 'NO_FILL_M5 defaults to 0 (M5 fill enabled). Set to 1 to disable M5 ground fill.'
@@ -316,31 +321,32 @@ symbol-pex: ## Build the Xschem PEX symbol <CELL>_pex.sym from <CELL>.sym (usage
 	fi
 .PHONY: symbol-pex
 
-klayout-pex: ## Run Parasitic Extraction with KPEX of the CELL cell (usage: make klayout-pex [CELL=<cellname>] [EXT_MODE=<1|2|3>])
+klayout-pex: ## Run Parasitic Extraction with the KPEX 2.5D engine of the CELL cell (usage: make klayout-pex [CELL=<cellname>] [EXT_MODE=<1|2|3>] [PEX_SUB_NET=<net>])
 	mkdir -p $(NET_PEX_DIR)
 	$(MAKE) symbol-pex CELL=$(CELL)
+#	kpex runs its own LVS and reads the schematic as SPICE, so it gets the CDL netlist, or a dummy schematic for a cell without one.
+	@if [ -f $(XSCHEM_SCH_DIR)/$(CELL).sch ]; then $(MAKE) klayout-lvs-netlist CELL=$(CELL); fi
+#	TICER reduction (EXT_MODE=3): ngspice with KLU finds no operating point for the unreduced RC netlist (resistors below 1 mOhm).
 	PDK_UNDERSCORED=$$(echo $$PDK | sed -e 's/-/_/g'); \
 	case $(EXT_MODE) in \
-		1) echo "WARNING: KPEX does not support C-decoupled (C) mode yet, using C-coupled (CC) mode instead."; KPEX_MODE=CC ;; \
-		2) KPEX_MODE=CC ;; \
-		3) KPEX_MODE=RC ;; \
+		1) echo "WARNING: KPEX does not support C-decoupled (C) mode yet, using C-coupled (CC) mode instead."; KPEX_MODE=CC; KPEX_REDUCE= ;; \
+		2) KPEX_MODE=CC; KPEX_REDUCE= ;; \
+		3) KPEX_MODE=RC; KPEX_REDUCE="--reduce ticer" ;; \
 		*) echo "Invalid EXT_MODE: $(EXT_MODE). Use 1, 2, or 3."; exit 1;; \
 	esac; \
-	kpex \
+	SCH_ARG=; if [ -f $(XSCHEM_SCH_DIR)/$(CELL).sch ]; then SCH_ARG="--schematic $(NET_SCH_DIR)/$(CELL)_klayout.cdl"; fi; \
+	kpex extract \
 	--pdk $$PDK_UNDERSCORED \
 	--cell $(CELL) \
-	--schematic $(XSCHEM_SCH_DIR)/$(CELL).sch \
+	$$SCH_ARG \
 	--gds $(LAY_DIR)/$(CELL).gds \
-	--magic \
-	--magic_mode $$KPEX_MODE \
-	--out_dir $(NET_PEX_DIR) \
-	--out_spice $(NET_PEX_DIR)/$(CELL)_klayout_pex_$(EXT_MODE).spice
-#	--2.5D
-#	--mode $$KPEX_MODE
+	--2.5D \
+	--mode $$KPEX_MODE $$KPEX_REDUCE \
+	--out-dir $(NET_PEX_DIR) \
+	--out-netlist $(NET_PEX_DIR)/$(CELL)_klayout_pex_$(EXT_MODE).spice
+	$(if $(PEX_SUB_NET),python3 $(SCRIPTS_DIR)/tie_pex_substrate.py $(NET_PEX_DIR)/$(CELL)_klayout_pex_$(EXT_MODE).spice --net $(PEX_SUB_NET))
 	sed -i 's/$(CELL)/$(CELL)_pex/g' $(NET_PEX_DIR)/$(CELL)_klayout_pex_$(EXT_MODE).spice
-	rm -rf $(NET_PEX_DIR)/$(CELL)__$(CELL)
-	rm -f $(CELL).nodes $(CELL).sim $(NET_PEX_DIR)/$(CELL).nodes $(NET_PEX_DIR)/$(CELL).sim
-	rm -f $(NET_PEX_DIR)/$(CELL).ext $(NET_PEX_DIR)/$(CELL).res.ext
+	rm -rf $(NET_PEX_DIR)/$(CELL)__$(CELL) $(NET_PEX_DIR)/.kpex_cache
 	@if [ -f $(XSCHEM_SCH_DIR)/$(CELL)_pex.sym ]; then \
 		echo "Reordering pins in $(CELL)_klayout_pex_$(EXT_MODE).spice to match $(CELL)_pex.sym..."; \
 		sak-pin-reorder.py $(XSCHEM_SCH_DIR)/$(CELL)_pex.sym $(NET_PEX_DIR)/$(CELL)_klayout_pex_$(EXT_MODE).spice --format spice; \

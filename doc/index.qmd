@@ -138,10 +138,11 @@ Everything runs inside the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-
 | [IHP-GDSFactory-Addon](https://github.com/iic-jku/IHP-GDSFactory-Addon) | cloned and installed into `.venv/` by `make build-pdk` | layout generation and EM targets |
 | VACASK | `1b48553` (2026-09-29) or later | the PSS bench of the detector and the NF benches of the detector and the receiver, which run `pss`, `pac` and `pnoise` |
 | snp2le | 0.1.10 or later | `LE_NOISE=thermal`, used by `make sparx-core` for the full-core fit |
+| kpex | 0.6.12 or later | `klayout-pex`, which runs the 2.5D engine ([klayout-pex#148](https://github.com/iic-jku/klayout-pex/issues/148)) |
 
 : Tools and versions. {#tbl-requirements tbl-colwidths="[25,40,35]"}
 
-The `2026.10` image ships VACASK `fb8cc20` and snp2le 0.1.17. The images up to `2026.09` ship older VACASK builds: `2026.09` has `hbnoise` but neither `pac` nor `pnoise`, and `2026.08` has none of the three. On such a binary the shooting analyses of the PSS bench abort, the NF benches report `pac` and `pnoise` as unknown analyses and run the rest, and VACASK still exits 0. To check a binary:
+The `2026.10` image ships VACASK `fb8cc20`, snp2le 0.1.17 and kpex 0.6.8, which is too old for `klayout-pex` (it stops in full-RC mode). The images up to `2026.09` ship older VACASK builds: `2026.09` has `hbnoise` but neither `pac` nor `pnoise`, and `2026.08` has none of the three. On such a binary the shooting analyses of the PSS bench abort, the NF benches report `pac` and `pnoise` as unknown analyses and run the rest, and VACASK still exits 0. To check a binary:
 
 ```sh
 strings $(which vacask) | grep -c "PNOISE periodic"    # 0 on a build without pnoise
@@ -181,7 +182,7 @@ Most build outputs are committed: layouts, netlists, Palace results, Touchstone 
 | Path | Contents |
 | :--- | :--- |
 | `Makefile`, `README.md` | the single flow for the whole chip, and the documentation of every target |
-| `scripts/` | `six_port_gen.py` (the layout generator), `powdet_variant.py` (detector variants), `prune_pex_symbol.py`, `check_pex_ports.py`, `img2lay.py`, logo `assets/` |
+| `scripts/` | `six_port_gen.py` (the layout generator), `powdet_variant.py` (detector variants), `prune_pex_symbol.py`, `check_pex_ports.py`, `tie_pex_substrate.py`, `img2lay.py`, logo `assets/` |
 | `layout/` | generated GDS: `sparx<FREQ>_top.gds` for 60 GHz to 300 GHz, and the detector `sparx_powdet_sbd.gds` |
 | `schematic/xschem/` | detector, six-port and top-level schematics, and the symbols of the LE models |
 | `testbenches/xschem/` | 24 ngspice and VACASK testbenches, the `plot_simulations/` scripts with their `data/` and `figures/` |
@@ -501,10 +502,10 @@ The power detector passes LVS in both flows. Top-level LVS is open, blocked by t
 
 ```sh
 make magic-pex CELL=sparx_powdet_sbd               # EXT_MODE=3, full RC
-make klayout-pex CELL=sparx_powdet_sbd             # kpex with the Magic engine
+make klayout-pex CELL=sparx_powdet_sbd             # kpex 2.5D engine, kpex 0.6.12 or later
 ```
 
-`EXT_MODE` selects C-decoupled (1), C-coupled (2) or full-RC (3, the default) extraction. kpex has no C-decoupled mode and falls back to C-coupled for 1. The netlists land in `netlist/pex/<CELL>_<tool>_pex_<EXT_MODE>.spice`, so the modes do not overwrite each other. Both targets first rebuild the PEX symbol `schematic/xschem/<CELL>_pex.sym` from `<CELL>.sym`, reorder the subcircuit pins to match it, and finish with `scripts/check_pex_ports.py`, which fails the target if a declared port does not reach the circuit. Such a netlist simulates without a warning while the cell behaves differently.
+`EXT_MODE` selects C-decoupled (1), C-coupled (2) or full-RC (3, the default) extraction. kpex has no C-decoupled mode and falls back to C-coupled for 1. `klayout-pex` reduces its full-RC netlist with TICER, without which ngspice with KLU finds no operating point, and ties the substrate port `sub!` of the 2.5D netlist to `vss`, as Magic does. The netlists land in `netlist/pex/<CELL>_<tool>_pex_<EXT_MODE>.spice`, so the modes do not overwrite each other. Both targets first rebuild the PEX symbol `schematic/xschem/<CELL>_pex.sym` from `<CELL>.sym`, reorder the subcircuit pins to match it, and finish with `scripts/check_pex_ports.py`, which fails the target if a declared port does not reach the circuit. Such a netlist simulates without a warning while the cell behaves differently.
 
 For full-RC extraction `magic-pex` gates `extresist` by resistance, not by delay (`THRESHOLD=1000`, `MINRES=100`, `MINDELAY=0`, in m$\Omega$ and ps). A delay gate of 1 ps is 58° at 160 GHz and drops the baseband route resistances that matter for the TIA.
 

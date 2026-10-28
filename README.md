@@ -212,7 +212,8 @@ An overview of the open-source design flow for SPARX is shown below. The flow co
 │  ├─ img2lay.py
 │  ├─ prune_pex_symbol.py
 │  ├─ six_port_gen.py
-│  └─ sparx_powdet_sbd_circuit.ipynb
+│  ├─ sparx_powdet_sbd_circuit.ipynb
+│  └─ tie_pex_substrate.py
 ├─ 📁 sscs-ose-code-a-chip/
 │  ├─ 📁 assets/
 │  ├─ README.md
@@ -650,13 +651,21 @@ python3 scripts/check_pex_ports.py netlist/pex/sparx_powdet_sbd_magic_pex_3.spic
 python3 scripts/check_pex_ports.py -v netlist/pex/*.spice     # -v also prints the size of each subcircuit
 ```
 
-**KLayout PEX** uses `kpex` with the Magic extraction engine (the 2.5D engine is work in progress):
+**KLayout PEX** uses the 2.5D engine of `kpex` (`kpex extract --2.5D`), which needs kpex 0.6.12 or later ([klayout-pex#148](https://github.com/iic-jku/klayout-pex/issues/148)). The `2026.10` image ships kpex 0.6.8, which stops in full-RC mode:
 
 ```sh
 make klayout-pex
 make klayout-pex CELL=sparx_powdet_sbd
 make klayout-pex CELL=sparx_powdet_sbd EXT_MODE=3
 ```
+
+On top of the extraction the target does three things:
+
+- It passes the CDL netlist of `klayout-lvs-netlist` as schematic, because kpex runs its own LVS and reads the schematic as SPICE. A cell without a schematic gets a dummy one.
+- It reduces the full-RC netlist with TICER (`--reduce ticer`). ngspice with `klu` finds no operating point for the unreduced netlist (resistors below 1 mOhm), the reduced one converges and stays within 0.05 dB of it in S11 at 160 GHz.
+- It ties the substrate port `sub!` of the 2.5D netlist to `PEX_SUB_NET` (default `vss`, [`scripts/tie_pex_substrate.py`](scripts/tie_pex_substrate.py)), as Magic ties the substrate to `vss`, so the netlist keeps the pins of `<CELL>_pex.sym`.
+
+The two extractions differ at the RF input of the power detector: Z_in at 160 GHz is 50 - 40j Ohm from kpex and 40 - 25j Ohm from Magic (S11 -8.6 dB against -10.9 dB), mostly from the resistance of the 30-cell bias MIM array, which Magic keeps on one node.
 
 **Magic PEX** uses `sak-pex.sh`, which extracts the parasitics with Magic (C-decoupled, C-coupled, or full-RC):
 

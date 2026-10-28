@@ -19,7 +19,7 @@ When adding a flow or a folder, mirror the template layout and its `Makefile` co
 | Path | Contents |
 | --- | --- |
 | `Makefile`, `README.md` | The single flow for the whole chip. `README.md` documents every target. |
-| `scripts/` | `six_port_gen.py` (GDSFactory generator of the full layout), `powdet_variant.py`, `prune_pex_symbol.py`, `check_pex_ports.py`, `img2lay.py`, logo `assets/` |
+| `scripts/` | `six_port_gen.py` (GDSFactory generator of the full layout), `powdet_variant.py`, `prune_pex_symbol.py`, `check_pex_ports.py`, `tie_pex_substrate.py`, `img2lay.py`, logo `assets/` |
 | `layout/` | Generated GDS: `sparx<FREQ>_top.gds` for 60 to 300 GHz and the power detector `sparx_powdet_sbd.gds` |
 | `schematic/xschem/` | Power detector and six-port schematics and symbols, symbols of the lumped-element (LE) models |
 | `testbenches/xschem/` | ngspice and VACASK testbenches, `plot_simulations/` scripts with their `data/` and `figures/` |
