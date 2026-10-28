@@ -7541,6 +7541,69 @@ a.anchor-link {
 </div>
 </div>
 </div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=c7d2e941">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h1 id="Reading-Guide">Reading Guide<a class="anchor-link" href="#Reading-Guide">¶</a></h1><p>This notebook is saved with the outputs of a complete run, so it can be read without running it. The PDF and HTML exports next to it show the same content. For an overview in two minutes, watch the video in Section 1.2, look at the finished chip at the end of Section 3.10, and read the results below. Section 6 summarizes them.</p>
+<table>
+<thead>
+<tr>
+<th>Section</th>
+<th>Step</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>3</td>
+<td>layout generation</td>
+<td>complete chip from the design frequency <code>f</code> alone, every RF dimension from closed-form models</td>
+</tr>
+<tr>
+<td>4.2</td>
+<td>KLayout DRC, all rules</td>
+<td>no violations apart from the 33 antenna violations that IHP waived for the tapeout</td>
+</tr>
+<tr>
+<td>5.2</td>
+<td>snp2le fit of the 7-port EM result of the core</td>
+<td>passive lumped-element netlist with thermal noise, all 49 S-parameters within 0.45 dB and 9.9° at 160 GHz</td>
+</tr>
+<tr>
+<td>5.3</td>
+<td>detector transfer curve, HB and PSS</td>
+<td>responsivity of 41.2 V/W, 1 dB compression point at -2.7 dBm</td>
+</tr>
+<tr>
+<td>5.4</td>
+<td>detector noise, HBNOISE and PNOISE</td>
+<td>DSB noise figure of 42.2 dB at a 2 GHz IF, 2.2 dB above the small-signal noise at the dc operating point</td>
+</tr>
+<tr>
+<td>5.5</td>
+<td>detector transient noise</td>
+<td>within 1.4 dB of HBNOISE</td>
+</tr>
+<tr>
+<td>5.6</td>
+<td>receiver with post-layout detectors</td>
+<td>I/Q amplitude imbalance of 2.0 dB and phase difference of 85.4°, predicted by the detector-loaded EM core within 0.1 dB and 0.1°</td>
+</tr>
+<tr>
+<td>5.7</td>
+<td>receiver noise figure</td>
+<td>48.5 dB at the $I$ output and 46.3 dB at the $Q$ output</td>
+</tr>
+</tbody>
+</table>
+<p>To run the notebook, open it in Colab with the badge at the top and select <em>Runtime → Run all</em>. It installs every tool itself and takes about one hour, see Section 2.</p>
+</div>
+</div>
+</div>
+</div>
 <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=fe7ed9a4">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
@@ -7720,7 +7783,53 @@ a.anchor-link {
 </tr>
 </tbody>
 </table>
-<p>The add-on, the IHP Open-PDK, and the Python packages are fetched at the commits and versions this notebook was tested with, and VACASK comes from the IIC-OSIC-TOOLS 2026.10 image, so a later run uses the same tools.</p>
+<p>The notebook fetches every tool at the version it was tested with, so a later run uses the same tools:</p>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Version</th>
+<th>Section</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IHP Open-PDK</td>
+<td>commit <code>6f788ad</code> of the <code>dev</code> branch</td>
+<td>2.2</td>
+</tr>
+<tr>
+<td>GDSFactory add-on for the IHP Open-PDK</td>
+<td>commit <code>4e5b296</code> of the <code>main</code> branch</td>
+<td>2.1</td>
+</tr>
+<tr>
+<td>GDSFactory, KFactory, doroutes</td>
+<td>9.51.0, 3.0.4, 0.5.0</td>
+<td>2.1</td>
+</tr>
+<tr>
+<td>SciPy, schemdraw, ziamath</td>
+<td>1.18.1, 0.23, 0.13</td>
+<td>2.1</td>
+</tr>
+<tr>
+<td>KLayout (Python package and application)</td>
+<td>0.30.12</td>
+<td>2.1, 4.1</td>
+</tr>
+<tr>
+<td>snp2le, scikit-rf</td>
+<td>0.1.12, 2.1.0</td>
+<td>5.2</td>
+</tr>
+<tr>
+<td>VACASK, OpenVAF-Reloaded</td>
+<td>VACASK <code>fb8cc20</code>, both from the IIC-OSIC-TOOLS 2026.10 image</td>
+<td>5.1</td>
+</tr>
+</tbody>
+</table>
 <blockquote>
 <p><strong>Running on Google Colab:</strong> Open the notebook with the badge at the top and select <em>Runtime → Run all</em>. The notebook installs every tool itself. If Colab asks to restart the session after the package installation, confirm and select <em>Runtime → Run all</em> again. A complete run takes about one hour on the free tier, more than half of it in the receiver noise figure of Section 5.7. Every simulation cell has a <code>RUN_...</code> flag at its top, set it to <code>0</code> to skip that cell.</p>
 </blockquote>
