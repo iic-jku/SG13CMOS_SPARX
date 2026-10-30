@@ -13,7 +13,7 @@ Submission to the IEEE SSCS Open-Source Ecosystem “Code-a-Chip” Travel Grant
 **Repository:** https://github.com/iic-jku/SG13CMOS_SPARX, with the documentation at https://iic-jku.github.io/SG13CMOS_SPARX/
 
 <p align="center">
-  <img src="assets/sparx160_top_black_pinout.png" alt="Render of the 160 GHz SPARX chip with the Metal5 ground plane and the pinout, 1 mm × 1.4 mm" width="45%">
+  <img src="assets/sparx160_top_black_pinout.png" alt="Render of the 160 GHz SPARX chip with the Metal5 ground plane and the pinout, 1 mm × 1.4 mm" width="60%">
 </p>
 
 SPARX is a CMOS-only six-port receiver in the 130-nm IHP Open-PDK. A 160 GHz version was taped out on an IHP open MPW run in March 2026. One Python program on GDSFactory generates the complete layout from a single input, the design frequency, and closed-form models size every RF structure from 60 GHz to 300 GHz ([video](assets/sparx_gen_60ghz_to_300ghz.mp4)). The notebook generates the chip, checks it with the KLayout DRC, fits the EM result of the passive core into a noisy lumped-element netlist with snp2le, and characterizes the Schottky-diode power detector and the receiver in VACASK. To the authors' knowledge, SPARX is the first RF building block characterized with harmonic balance and periodic steady-state analyses, including their small-signal and noise extensions, using only open-source tools.
