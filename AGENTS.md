@@ -85,6 +85,15 @@ make regression                                  # tool/flow smoke test, reuses 
 - `make release` defaults to `VERSION=2.0.0` and overwrites the committed `release/v.2.0.0/`. Never run it without an explicit new `VERSION`.
 - `make klayout-drc-regular` reports antenna violations that IHP waived for the tapeout (`KNOWN_ISSUES.md`). Top-level LVS is open (`ToDo.md`), so the regression verifies only `sparx_powdet_sbd`.
 - `palace -np $(NP)` uses `NP=4` by default. Open MPI counts physical cores and aborts with "not enough slots" on smaller hosts: lower `NP` or set `OMPI_MCA_hwloc_base_use_hwthreads_as_cpus=1` as `regression.yml` does.
+- The Code-a-Chip notebook downloads its runtime files from the `next_release` branch, while the copy submitted to ISSCC'27 is frozen. Do not delete `next_release`, do not move or rename the files below, and change their content only if a rerun of the notebook still gives the results its text quotes:
+  - `sscs-ose-code-a-chip/SPARX_JKU_ISSCC2027.ipynb` (the Colab badge opens it) and `sscs-ose-code-a-chip/assets/`
+  - the `.spectre` and `.save` netlists of `sparx_powdet_sbd_tb_{pss,nf,tn}_vacask` and `sparx_top_le_tb_{rx,nf}_vacask` in `testbenches/xschem/netlists/`, and their `plot_simulations/plot_<testbench>.py`
+  - `sparx_powdet_sbd_beta.json`, `sparx_powdet_sbd_nf.json` and `sparx_top_le_rx.json` in `testbenches/xschem/plot_simulations/data/`
+  - `netlist/spectre/sparx_core_le.inc`, `netlist/pex/sparx_powdet_sbd_magic_pex_3.spice`, `scripts/powdet_variant.py` and `verification/em/s-parameter/sparx160_core.s7p`
+  - linked from the text: the headings 1, 3.2 to 3.5, 4.1 and 4.2 of `testbenches/xschem/README.md` (anchors), `sparx_powdet_sbd_nf_lo_compare.png` and `sparx_top_le_nf_compare.png` in `plot_simulations/figures/`, `KNOWN_ISSUES.md`, and `layout/sparx160_top.gds`
+  - the folders of its sparse checkout: `testbenches/xschem/`, `netlist/`, `scripts/` and `verification/em/s-parameter/`
+
+  `make clean`, `sim-xschem`, `sim-all`, `sparx-core`, `magic-pex` (or `magic-verify CELL=sparx_powdet_sbd`) and `build-layout` after a generator change rewrite some of them. `git restore` them unless the same change updates the notebook.
 
 ## License headers
 
