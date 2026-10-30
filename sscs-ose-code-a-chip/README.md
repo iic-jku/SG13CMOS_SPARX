@@ -25,7 +25,7 @@ All results are for the 160 GHz design and come from the outputs saved in the no
 | Section | Step | Result |
 |---|---|---|
 | 3 | layout generation | complete chip from the design frequency alone, every RF dimension from closed-form models |
-| 4.2 | KLayout DRC, all rules | no violations apart from the 33 antenna violations that IHP waived for the tapeout |
+| 4.2 | full top-level KLayout DRC (`regular`, all rules) | no violations apart from the 33 antenna violations that IHP waived for the tapeout |
 | 5.2 | snp2le fit of the 7-port EM result of the core | passive lumped-element netlist with thermal noise, all 49 S-parameters within 0.45 dB and 9.9° |
 | 5.3 | detector transfer curve, HB and PSS | responsivity of 41.2 V/W, 1 dB compression point at -2.7 dBm |
 | 5.4 | detector noise, HBNOISE and PNOISE | DSB noise figure of 42.2 dB at a 2 GHz IF, 2.2 dB above the small-signal noise at the dc operating point |
