@@ -6,7 +6,9 @@ Submission to the IEEE SSCS Open-Source Ecosystem “Code-a-Chip” Travel Grant
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19654232.svg)](https://doi.org/10.5281/zenodo.19654232)
 [![License: Solderpad Hardware License v2.1](https://img.shields.io/badge/License-Solderpad%20Hardware%20License%20v2.1-blue.svg)](LICENSE)
 
-**Team:** David Kellerer-Pirklbauer, Simon Dorrer, and Harald Pretl, Institute for Integrated Circuits and Quantum Computing, Johannes Kepler University (JKU), Linz, Austria
+**Team:** Simon Dorrer\*, David Kellerer-Pirklbauer\*, and Harald Pretl, Institute for Integrated Circuits and Quantum Computing, Johannes Kepler University (JKU), Linz, Austria
+
+\*S. Dorrer and D. Kellerer-Pirklbauer contributed equally to this work, see the author contributions at the end of the notebook.
 
 **Paper:** S. Dorrer, D. Kellerer-Pirklbauer, G. Zachl, and H. Pretl, “SPARX: An Open-Source, Automated, Programmatically Generated, Frequency-Scalable Six-Port Receiver in 130-nm CMOS,” accepted and presented at the 2026 IEEE Nordic Circuits and Systems Conference (NorCAS), not yet available in IEEE Xplore.
 
