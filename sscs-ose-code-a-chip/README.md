@@ -30,10 +30,10 @@ All results are for the 160 GHz design and come from the outputs saved in the no
 | 4.2 | full top-level KLayout DRC (`regular`, all rules) | no violations apart from the 33 antenna violations that IHP waived for the tapeout |
 | 5.2 | snp2le fit of the 7-port EM result of the core | passive lumped-element netlist with thermal noise, all 49 S-parameters within 0.45 dB and 9.9° |
 | 5.3 | detector transfer curve, HB and PSS | responsivity of 41.2 V/W, 1 dB compression point at -2.7 dBm |
-| 5.4 | detector noise, HBNOISE and PNOISE | DSB noise figure of 42.2 dB at a 2 GHz IF, 2.2 dB above the small-signal noise at the dc operating point |
+| 5.4 | detector noise, HBNOISE and PNOISE | DSB noise figure of 42.2 dB at a 2 GHz IF, 2.2 dB above the small-signal noise at the dc operating point, and 35.2 dB without the flicker noise of the parasitic PNP in the diode model |
 | 5.5 | detector transient noise | within 1.4 dB of HBNOISE |
 | 5.6 | receiver with post-layout detectors | I/Q amplitude imbalance of 2.0 dB and phase difference of 85.4°, predicted by the detector-loaded EM core within 0.1 dB and 0.1° |
-| 5.7 | receiver noise figure | 48.5 dB at the I output and 46.3 dB at the Q output |
+| 5.7 | receiver noise figure | 48.5 dB at the I output and 46.3 dB at the Q output, set by the detectors behind the passive core, since the receiver has no LNA |
 
 <p align="center">
   <img src="assets/sparx_powdet_sbd_nf_compare.png" alt="Noise figure of the power detector from four noise estimates" width="100%">
