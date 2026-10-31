@@ -2,7 +2,7 @@
 
 Submission to the IEEE SSCS Open-Source Ecosystem “Code-a-Chip” Travel Grant Awards at [ISSCC'27](https://www.isscc.org/), official submission repository https://github.com/sscs-ose/sscs-ose-code-a-chip.github.io.
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/iic-jku/SG13CMOS_SPARX/blob/next_release/sscs-ose-code-a-chip/SPARX_JKU_ISSCC2027.ipynb)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/iic-jku/SG13CMOS_SPARX/blob/CaC-ISSCC2027/sscs-ose-code-a-chip/SPARX_JKU_ISSCC2027.ipynb)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19654232.svg)](https://doi.org/10.5281/zenodo.19654232)
 [![License: Solderpad Hardware License v2.1](https://img.shields.io/badge/License-Solderpad%20Hardware%20License%20v2.1-blue.svg)](LICENSE)
 
@@ -43,7 +43,7 @@ Noise figure of the power detector at -6.5 dBm of LO from four noise estimates (
 
 ## Reading and Running the Notebook
 
-The notebook [`SPARX_JKU_ISSCC2027.ipynb`](SPARX_JKU_ISSCC2027.ipynb) is saved with the outputs of a complete run, so it can be read without running it. Its reading guide after the abstract gives an overview in two minutes. If GitHub does not render the notebook, open the [PDF](SPARX_JKU_ISSCC2027.pdf) or [nbviewer](https://nbviewer.org/github/iic-jku/SG13CMOS_SPARX/blob/next_release/sscs-ose-code-a-chip/SPARX_JKU_ISSCC2027.ipynb).
+The notebook [`SPARX_JKU_ISSCC2027.ipynb`](SPARX_JKU_ISSCC2027.ipynb) is saved with the outputs of a complete run, so it can be read without running it. Its reading guide after the abstract gives an overview in two minutes. If GitHub does not render the notebook, open the [PDF](SPARX_JKU_ISSCC2027.pdf) or [nbviewer](https://nbviewer.org/github/iic-jku/SG13CMOS_SPARX/blob/CaC-ISSCC2027/sscs-ose-code-a-chip/SPARX_JKU_ISSCC2027.ipynb).
 
 To run it, open the notebook in Google Colab with the badge above and select *Runtime → Run all*. It installs every tool itself, at the versions listed in its Section 2, and takes one to two hours on the free tier. With `FULL_RUN = 0` in the cell after the reading guide, it skips the DRC and the three longest simulations, whose stored outputs are then not regenerated, and finishes in about 8 minutes.
 
