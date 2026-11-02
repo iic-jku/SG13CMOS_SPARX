@@ -66,6 +66,8 @@ These are the analyses this folder uses. Which analyses a given build has is wor
 | `pac` | small-signal transfer around the shooting PSS solution, sideband to sideband | check of the detector and receiver `hbac` conversion |
 | `pnoise` | small-signal noise around the shooting PSS solution, modulated and folded like `hbnoise` | check of the detector and receiver `hbnoise` noise figure, over the IF and against the LO drive |
 
+The theory behind these analyses is the subject of the appendix [RF Circuit Simulation](https://iic-jku.github.io/radio-frequency-integrated-circuits/rfic.html#sec-simulation) of the JKU course Radio-Frequency Integrated Circuits: what each analysis assumes and computes, how they compare, and [which one to choose](https://iic-jku.github.io/radio-frequency-integrated-circuits/rfic.html#sec-simulation-selection) for mixers, oscillators, switched-capacitor circuits and power detectors. It uses the SPARX detector as its worked example.
+
 ### Why two ways to compute the same steady state
 
 `hb` and `pss` both produce the periodic steady state, and they are complementary rather than redundant. Harmonic balance solves for the Fourier coefficients directly, which suits mildly nonlinear, high-Q and multi-tone problems. Shooting solves for the initial condition that reproduces itself after one period, which suits stiff, sharply switching circuits. Running both on the same detector and getting the same transfer curve is the strongest evidence available that the curve is real, because the two algorithms share no code path. They agree within 0.6 percent here. The NF bench extends the pairing to the small-signal analyses on top, `pac` against `hbac` and `pnoise` against `hbnoise`.

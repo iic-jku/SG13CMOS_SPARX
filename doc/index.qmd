@@ -685,6 +685,11 @@ Every passive model is simulated in both ngspice and VACASK, and the top-level t
 
 HB and shooting PSS compute the same periodic steady state with algorithms that share no code: HB solves for the Fourier coefficients, shooting for the initial condition that reproduces itself after one period. Agreement between the two, and between their small-signal and noise extensions, shows that a result is not an artifact of one algorithm. Transient noise shares no linearization with either.
 
+::: {.callout-tip}
+## RF Circuit Simulation in the RFIC Course
+The appendix [RF Circuit Simulation](https://iic-jku.github.io/radio-frequency-integrated-circuits/rfic.html#sec-simulation) of the JKU course Radio-Frequency Integrated Circuits explains every analysis of @tbl-analyses, from the dc operating point to PNOISE and HBNOISE, and compares them. It recommends analyses for typical RF building blocks such as LNAs, mixers, oscillators, switched-capacitor circuits and power detectors, lists the corresponding ngspice commands, and uses the SPARX power detector as its worked example. The [lecture slides](https://iic-jku.github.io/radio-frequency-integrated-circuits/slides/simulation.html) summarize it.
+:::
+
 ## Running Testbenches
 
 ```sh
