@@ -324,10 +324,10 @@ symbol-pex: ## Build the Xschem PEX symbol <CELL>_pex.sym from <CELL>.sym (usage
 klayout-pex: ## Run Parasitic Extraction with the KPEX 2.5D engine of the CELL cell (usage: make klayout-pex [CELL=<cellname>] [EXT_MODE=<1|2|3>] [PEX_SUB_NET=<net>])
 	mkdir -p $(NET_PEX_DIR)
 	$(MAKE) symbol-pex CELL=$(CELL)
-#	kpex runs its own LVS and reads the schematic as SPICE, so it gets the CDL netlist, or a dummy schematic for a cell without one.
+#	kpex reads the schematic as SPICE, so it gets the CDL netlist, or a dummy schematic for a cell without one.
 	@if [ -f $(XSCHEM_SCH_DIR)/$(CELL).sch ]; then $(MAKE) klayout-lvs-netlist CELL=$(CELL); fi
-#	TICER reduction (EXT_MODE=3): ngspice with KLU finds no operating point for the unreduced RC netlist (resistors below 1 mOhm).
-	PDK_UNDERSCORED=$$(echo $$PDK | sed -e 's/-/_/g'); \
+#	TICER reduction (EXT_MODE=3): fewer elements and a faster simulation, and ngspice with KLU can lose the operating point of an unreduced RC netlist (resistors below 1 mOhm).
+#	The log level drops the echo of the whole netlist from the console.
 	case $(EXT_MODE) in \
 		1) echo "WARNING: KPEX does not support C-decoupled (C) mode yet, using C-coupled (CC) mode instead."; KPEX_MODE=CC; KPEX_REDUCE= ;; \
 		2) KPEX_MODE=CC; KPEX_REDUCE= ;; \
@@ -336,7 +336,8 @@ klayout-pex: ## Run Parasitic Extraction with the KPEX 2.5D engine of the CELL c
 	esac; \
 	SCH_ARG=; if [ -f $(XSCHEM_SCH_DIR)/$(CELL).sch ]; then SCH_ARG="--schematic $(NET_SCH_DIR)/$(CELL)_klayout.cdl"; fi; \
 	kpex extract \
-	--pdk $$PDK_UNDERSCORED \
+	--log-level info \
+	--pdk $$PDK \
 	--cell $(CELL) \
 	$$SCH_ARG \
 	--gds $(LAY_DIR)/$(CELL).gds \
@@ -621,7 +622,7 @@ release: ## Copy the gds, netlist files and chip renders to the release folder (
 NIGHTLY_REGRESSION ?= 0
 
 regression: ## Regression test target for IIC-OSIC-TOOLS (usage: make regression [NIGHTLY_REGRESSION=1])
-# 	Substrate tie of the kpex netlist, for the wrapped port lists that the power detector does not have.
+# 	Substrate tie of the kpex netlist, also for port lists wrapped over several lines.
 	python3 $(SCRIPTS_DIR)/test_tie_pex_substrate.py
 # 	GDSFactory programmatic six-port layout generation
 	$(MAKE) build-top

@@ -85,6 +85,7 @@ make regression                                  # tool/flow smoke test, reuses 
 - `make release` defaults to `VERSION=2.0.0` and overwrites the committed `release/v.2.0.0/`. Never run it without an explicit new `VERSION`.
 - `make klayout-drc-regular` reports antenna violations that IHP waived for the tapeout (`KNOWN_ISSUES.md`). Top-level LVS is open (`ToDo.md`), so the regression verifies only `sparx_powdet_sbd`.
 - `palace -np $(NP)` uses `NP=4` by default. Open MPI counts physical cores and aborts with "not enough slots" on smaller hosts: lower `NP` or set `OMPI_MCA_hwloc_base_use_hwthreads_as_cpus=1` as `regression.yml` does.
+- `klayout-pex` runs the 2.5D engine of `kpex` and needs kpex 0.7.0 or later, which no released image ships yet (`2026.10` has 0.6.8). A full-RC extraction of the small `sparx_powdet_sbd` takes about 4 min where Magic takes seconds, so use `magic-pex` for a quick netlist.
 
 ## License headers
 
