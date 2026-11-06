@@ -49,7 +49,7 @@ The name carries a second meaning: *SPARX* sounds like *spark*, which is *Funken
 The project has three parts:
 
 - **A chip.** A passive six-port core of one hairpin coupled-line bandpass filter (BPF), one Wilkinson power divider (WPD) and three branch-line couplers (BLC), built as embedded microstrip on TopMetal2 over a Metal5 ground plane, followed by four Schottky barrier diode (SBD) power detectors. It uses CMOS devices only, so it needs no heterojunction bipolar transistor (HBT) as earlier mm-wave six-ports did [@Laemmle_2013; @Voelkel_2018].
-- **A flow.** Layout generation with [GDSFactory](https://gdsfactory.github.io/gdsfactory) and a custom IHP Open-PDK add-on, DRC, LVS and PEX with KLayout, Magic and Netgen, EM simulation with AWS Palace, lumped-element (LE) models of the EM results with [snp2le](https://github.com/iic-jku/snp2le), and circuit simulation with ngspice and VACASK, all driven by one `Makefile` inside the IIC-OSIC-TOOLS container.
+- **A flow.** Layout generation with [GDSFactory](https://gdsfactory.github.io/gdsfactory) and a custom IHP Open-PDK add-on, DRC, LVS and PEX with KLayout, Magic and Netgen, a third DRC with gdscheck, EM simulation with AWS Palace, lumped-element (LE) models of the EM results with [snp2le](https://github.com/iic-jku/snp2le), and circuit simulation with ngspice and VACASK, all driven by one `Makefile` inside the IIC-OSIC-TOOLS container.
 - **A characterization.** The detector and the complete post-layout receiver are characterized in VACASK with harmonic balance (HB), periodic steady state (PSS) by shooting, their small-signal and noise extensions (HBAC, HBNOISE, PAC, PNOISE), and transient noise (TN). Except for HB, VACASK gained these analyses in 2026, after the tapeout.
 
 The video shows the generation of thirteen receivers from 60 GHz to 300 GHz in 20 GHz steps, which takes less than one minute.
@@ -129,7 +129,7 @@ Recommended reading on six-port receivers: the survey [@Koelpin_2010], the theor
 
 ## Requirements {#sec-requirements}
 
-Everything runs inside the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS) container [@Pretl_2023; @Fath_2024], which ships the IHP Open-PDK [@Herman_2024], Xschem, ngspice, VACASK, KLayout, Magic, Netgen, kpex, GDSFactory, gds2palace, AWS Palace and snp2le. The repository follows the structure of the [ihp-sg13g2-ams-chip-template](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template), whose [tutorial](https://iic-jku.github.io/ihp-sg13g2-ams-chip-template/index.html) explains the folder layout and the Makefile conventions. SPARX extends it with the GDSFactory layout generator, the Palace EM flow, snp2le and the large-signal RF testbenches.
+Everything runs inside the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS) container [@Pretl_2023; @Fath_2024], which ships the IHP Open-PDK [@Herman_2024], Xschem, ngspice, VACASK, KLayout, Magic, Netgen, gdscheck, kpex, GDSFactory, gds2palace, AWS Palace and snp2le. The repository follows the structure of the [ihp-sg13g2-ams-chip-template](https://github.com/iic-jku/ihp-sg13g2-ams-chip-template), whose [tutorial](https://iic-jku.github.io/ihp-sg13g2-ams-chip-template/index.html) explains the folder layout and the Makefile conventions. SPARX extends it with the GDSFactory layout generator, the Palace EM flow, snp2le and the large-signal RF testbenches.
 
 | Component | Version | Needed for |
 | :--- | :--- | :--- |
@@ -210,7 +210,7 @@ Nothing in the flow is specific to a six-port. The structure parameters live in 
 | Add-on install | git, pip | `build-pdk` | `IHP/`, `.venv/` |
 | Layout generation | GDSFactory, IHP add-on | `build-layout`, `build-layout-sweep` | `layout/`, `verification/em/layout/` |
 | Render | `sak-render.py` | `render-gds` | `render/img/` |
-| DRC | KLayout, Magic | `klayout-drc`, `klayout-drc-regular`, `magic-drc` | `verification/drc/` |
+| DRC | KLayout, Magic, gdscheck | `klayout-drc`, `klayout-drc-regular`, `magic-drc`, `gdscheck-drc`, `gdscheck-drc-regular` | `verification/drc/` |
 | LVS | Xschem, KLayout, Magic, Netgen | `klayout-lvs`, `magic-lvs` | `verification/lvs/`, `netlist/schematic/`, `netlist/layout/` |
 | PEX | kpex, Magic | `klayout-pex`, `magic-pex` | `netlist/pex/` |
 | EM simulation | gds2palace, AWS Palace | `sim-bpf-em`, `sim-wpd-em`, `sim-blc-em`, `sim-sparx-core-em` | `palace_model/` in `verification/em/` |
@@ -459,7 +459,7 @@ Every number of this section is traced to its testbench, data file and field, wi
 
 ## DRC
 
-Both flows use `sak-drc.sh` and write per-cell run folders, `verification/drc/<CELL>.klayout.drc/` with a `.lyrdb` report and `verification/drc/<CELL>.magic.drc/`. `DRC_LEVEL` selects the KLayout rule set, while Magic always runs the full rule set of its tech file.
+All three flows use `sak-drc.sh` and write per-cell run folders, `verification/drc/<CELL>.klayout.drc/` and `verification/drc/<CELL>.gdscheck.drc/` with a `.lyrdb` report and `verification/drc/<CELL>.magic.drc/`. `DRC_LEVEL` selects the KLayout rule set and the gdscheck suite, while Magic always runs the full rule set of its tech file. `DRC_JOBS` caps the KLayout processes and sets the gdscheck threads. KLayout is the sign-off deck, Magic and gdscheck give a second and a third opinion. `make all` runs KLayout and gdscheck on the power detector and the top cell, at `macro` level, and leaves the Magic DRC out.
 
 | Check | `precheck` | `macro` (default) | `regular` |
 | :--- | :---: | :---: | :---: |
@@ -475,6 +475,9 @@ make klayout-drc                                        # top cell, DRC_LEVEL=ma
 make klayout-drc-regular                                # top cell, full rule set
 make klayout-drc CELL=sparx_powdet_sbd DRC_LEVEL=regular
 make magic-drc CELL=sparx_powdet_sbd
+make gdscheck-drc                                       # top cell, DRC_LEVEL=macro, suite core
+make gdscheck-drc-regular                               # top cell, suite main
+make gdscheck-drc CELL=sparx_powdet_sbd GDSCHECK_DECKS=cont,via1
 ```
 
 The 160 GHz top cell has no violations at `macro` level, and neither have the generated layouts of the other twelve frequencies. At `regular` level the 160 GHz top cell shows 33 antenna violations, which IHP waived for the March 2026 tapeout:
@@ -486,6 +489,8 @@ The 160 GHz top cell has no violations at `macro` level, and neither have the ge
 | `Ant.h` | 1 | the antenna diode built into the `schottky` PCell sits in NWell, a quirk of the device cell |
 
 : Antenna violations at `regular` level, waived for the tapeout. {#tbl-antenna tbl-colwidths="[35,10,55]"}
+
+The other two engines report more on the 160 GHz top cell, and neither is a sign-off. gdscheck 0.2.0 reports 8 `nSDB.e` at `macro` level, all on the contact of the `schottky` PCell, because it checks `nSD.block` against every contact, where the KLayout deck leaves that device out of the rule. Its `main` suite adds 24 items of the antenna rules of @tbl-antenna. Magic reports 976 `MIM.e` and 38 `MIM.i`. KLayout reports no `MIM.e` at `regular` level, and `MIM.i` is in no KLayout deck. A flow stops on a violation of any engine it calls, so the flows leave the Magic DRC out until `MIM.e` and `MIM.i` are settled upstream, and gdscheck stops `make all` until `nSDB.e` is fixed.
 
 ## LVS
 
@@ -784,6 +789,7 @@ The measurement plan probes the LO and RF pads with a wafer prober and bonds the
 
 - **Top-level LVS** is open, blocked by [IHP-Open-PDK issue 1041](https://github.com/IHP-GmbH/IHP-Open-PDK/issues/1041). Only the power detector has full LVS.
 - **Antenna rules.** `klayout-drc-regular` reports the 33 antenna violations IHP waived for the tapeout, see @tbl-antenna.
+- **Magic and gdscheck DRC.** Magic reports `MIM.e` and `MIM.i`, and gdscheck 0.2.0 `nSDB.e` on the `schottky` PCell, while the KLayout deck passes the layout at `macro` level, so the flows leave the Magic DRC out and gdscheck stops `make all` until these are fixed upstream ([`KNOWN_ISSUES.md`](https://github.com/iic-jku/SG13CMOS_SPARX/blob/main/KNOWN_ISSUES.md)).
 - **Author label.** Every generated layout carries the label "SPARX 160", whatever its frequency, because the label is a fixed image, `scripts/assets/D_Kellerer.png`, placed as a committed GDS.
 - **BPF.** The closed-form models reach their limits on the meanders and coupled lines of the hairpin filter: the 160 GHz filter loses 10 dB and matches only to -6.2 dB, in the LO path. It is the block with the most to gain from optimization.
 - **No mesh-convergence study.** The committed Palace runs use element order 2 on a single mesh without adaptive refinement. The metal-model check of @sec-em-metal refined the TopMetal2 edges once, from 2 $\mu$m to 0.5 $\mu$m, which lowered the loss by 2 % to 6 %.

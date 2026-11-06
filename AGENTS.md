@@ -48,8 +48,9 @@ make help                                        # targets of the Makefile
 make build-top                                   # build-pdk, build-layout at 160 GHz, render-gds
 make build-layout FREQ=77 NO_FILL=1              # layout at another frequency, no metal fill
 make klayout-verify CELL=sparx_powdet_sbd        # KLayout DRC, LVS, PEX
-make magic-verify CELL=sparx_powdet_sbd          # Magic DRC, Netgen LVS, Magic PEX
+make magic-verify CELL=sparx_powdet_sbd          # Netgen LVS, Magic PEX, its DRC is commented out
 make klayout-drc                                 # top cell at DRC_LEVEL=macro
+make gdscheck-drc                                # top cell at DRC_LEVEL=macro, suite core
 make sim-wpd-em                                  # Palace EM of the WPD (sim-blc-em, sim-bpf-em likewise)
 make copy-sparam SPARAM=sparx160_wpd             # Palace output to verification/em/s-parameter/
 make snp2le SNP=verification/em/s-parameter/sparx160_wpd_deembedded.s3p ORDER=10 LE_FORMAT=spice LE_OUT=netlist/spice/sparx_wpd_le.spice
@@ -84,6 +85,7 @@ make regression                                  # tool/flow smoke test, reuses 
 - `make snp2le` without `LE_OUT=` writes to `netlist/spice/sparx_bpf_le.spice`, whatever `SNP` is. Pass `LE_OUT=<path>`, or `LE_OUT=` (empty) for a name derived from the input.
 - `make release` defaults to `VERSION=2.0.0` and overwrites the committed `release/v.2.0.0/`. Never run it without an explicit new `VERSION`.
 - `make klayout-drc-regular` reports antenna violations that IHP waived for the tapeout (`KNOWN_ISSUES.md`). Top-level LVS is open (`ToDo.md`), so the regression verifies only `sparx_powdet_sbd`.
+- KLayout is the sign-off DRC. Magic reports `MIM.e` and `MIM.i`, and gdscheck reports `nSDB.e` on the `schottky` PCell (`KNOWN_ISSUES.md`), so until the upstream fixes are in the image the flows leave the Magic DRC out, its lines are commented out in `magic-verify` and `make all`, and `gdscheck-drc` stops `make all`. Fix such a report upstream, not with make's `-` prefix in a flow. `DRC_JOBS=<n>` caps the KLayout processes and sets the gdscheck threads.
 - `palace -np $(NP)` uses `NP=4` by default. Open MPI counts physical cores and aborts with "not enough slots" on smaller hosts: lower `NP` or set `OMPI_MCA_hwloc_base_use_hwthreads_as_cpus=1` as `regression.yml` does.
 - `klayout-pex` runs the 2.5D engine of `kpex` and needs kpex 0.7.0 or later, which no released image ships yet (`2026.10` has 0.6.8). A full-RC extraction of the small `sparx_powdet_sbd` takes about 4 min where Magic takes seconds, so use `magic-pex` for a quick netlist.
 

@@ -58,9 +58,26 @@ MINRES ?= 100
 # Override with: make <target> MINDELAY=<ps>
 MINDELAY ?= 0
 
-# KLayout DRC level: precheck, macro, or regular (sak-drc.sh -l, only used by klayout-drc; default: macro)
+# KLayout/gdscheck DRC level: precheck, macro, or regular (sak-drc.sh -l, only used by klayout-drc and gdscheck-drc; default: macro)
 # Override with: make <target> DRC_LEVEL=<precheck|macro|regular>
 DRC_LEVEL ?= macro
+
+# gdscheck suite, replaces the one DRC_LEVEL selects (sak-drc.sh -s, only used by gdscheck-drc; default: empty = precheck runs precheck, macro core, regular main)
+# Override with: make <target> GDSCHECK_SUITE=<precheck|core|main|density|antenna|recommended>
+GDSCHECK_SUITE ?=
+
+# gdscheck rule decks instead of a suite, comma-separated (sak-drc.sh -D, only used by gdscheck-drc, not together with GDSCHECK_SUITE; default: empty = run the suite)
+# Override with: make <target> GDSCHECK_DECKS=<deck>[,<deck>...]
+GDSCHECK_DECKS ?=
+
+# Parallel DRC jobs, the KLayout processes and gdscheck threads (sak-drc.sh -j, used by the klayout-drc* and gdscheck-drc* targets; default: empty = 4 KLayout processes or fewer, gdscheck on every CPU)
+# Override with: make <target> DRC_JOBS=<n>
+DRC_JOBS ?=
+
+# sak-drc.sh options for the three variables above, left out when empty so that the script defaults apply
+_GDSCHECK_SUITE_OPT = $(if $(GDSCHECK_SUITE),-s "$(GDSCHECK_SUITE)")
+_GDSCHECK_DECKS_OPT = $(if $(GDSCHECK_DECKS),-D "$(GDSCHECK_DECKS)")
+_DRC_JOBS_OPT = $(if $(DRC_JOBS),-j $(DRC_JOBS))
 
 # Supply pins that the flat PEX extraction merges into one node, they are dropped from the generated <CELL>_pex.sym so it matches the extracted netlist.
 # Empty by default: the power detector keeps vdd and vss as separate ports in both the Magic and the KPEX extraction. Pads that repeat a pin name are dropped down to one pin the same way, only the pin boxes go and the labels stay.
@@ -156,7 +173,7 @@ PALACE_SCRIPTS_DIR 	:= $(PDK_ROOT)/$(PDK)/libs.tech/palace/scripts
 
 # Help Target
 help: ## Show this help message
-	@echo 'Usage: make <target> [CELL=<cellname>] [EXT_MODE=<1|2|3>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>] [DRC_LEVEL=<precheck|macro|regular>] [PEX_MERGED_PINS="<pin> ..."] [PEX_SUB_NET=<net>] [EV_PRECISION=<digits>] [FREQ=<GHz>] [START_FREQ=<GHz>] [STOP_FREQ=<GHz>] [STEP_FREQ=<GHz>] [NO_FILL=0|1] [NO_FILL_M5=0|1] [TB=<testbenchname>] [SCRIPT=<scriptname>] [WITH_CORE=0|1] [VERSION=<version>] [OPEN_ARGS=<options>]'
+	@echo 'Usage: make <target> [CELL=<cellname>] [EXT_MODE=<1|2|3>] [THRESHOLD=<mOhm>] [MINRES=<mOhm>] [MINDELAY=<ps>] [DRC_LEVEL=<precheck|macro|regular>] [GDSCHECK_SUITE=<suite>|GDSCHECK_DECKS=<decks>] [DRC_JOBS=<n>] [PEX_MERGED_PINS="<pin> ..."] [PEX_SUB_NET=<net>] [EV_PRECISION=<digits>] [FREQ=<GHz>] [START_FREQ=<GHz>] [STOP_FREQ=<GHz>] [STEP_FREQ=<GHz>] [NO_FILL=0|1] [NO_FILL_M5=0|1] [TB=<testbenchname>] [SCRIPT=<scriptname>] [WITH_CORE=0|1] [VERSION=<version>] [OPEN_ARGS=<options>]'
 	@echo ''
 	@echo 'Available targets:'
 	@grep -E '^[a-zA-Z0-9_.-]+:.*## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*## "}; {printf "  %-20s %s\n", $$1, $$2}'
@@ -165,7 +182,10 @@ help: ## Show this help message
 	@echo 'EXT_MODE defaults to 3 (full-RC). 1=C-decoupled, 2=C-coupled.'
 	@echo 'The extracted netlists carry the mode as suffix: netlist/pex/<CELL>_magic_pex_<EXT_MODE>.spice and <CELL>_klayout_pex_<EXT_MODE>.spice.'
 	@echo 'THRESHOLD/MINRES/MINDELAY are full-RC (EXT_MODE=3) extresist settings for magic-pex (defaults 1000 mOhm / 100 mOhm / 0 ps, gating by resistance, the Magic defaults are 10000 / 1000 / 1).'
-	@echo 'DRC_LEVEL defaults to macro. Sets the KLayout DRC level for klayout-drc (precheck|macro|regular).'
+	@echo 'DRC_LEVEL defaults to macro. Sets the DRC level for klayout-drc and gdscheck-drc (precheck|macro|regular).'
+	@echo 'GDSCHECK_SUITE replaces the gdscheck suite of DRC_LEVEL for gdscheck-drc (precheck|core|main|density|antenna|recommended).'
+	@echo 'GDSCHECK_DECKS runs gdscheck rule decks instead of a suite, comma-separated (e.g. activ,gatpoly).'
+	@echo 'DRC_JOBS caps the KLayout DRC processes and sets the gdscheck threads (default: 4 KLayout processes or fewer, gdscheck on every CPU).'
 	@echo 'PEX_MERGED_PINS is empty by default. Lists the supply pins that the flat extraction merges, they are dropped from the generated PEX symbol.'
 	@echo 'PEX_SUB_NET defaults to vss. The port net that klayout-pex ties the substrate port sub! of the kpex 2.5D netlist to (empty keeps sub! as a port).'
 	@echo 'FREQ defaults to 160 (GHz). Selects the layout, its top cell (TOP) and the EM structures.'
@@ -241,20 +261,30 @@ render-gds: ## Render images from the GDS of the TOP cell using sak-render.py (u
 
 
 # DRC Targets
-klayout-drc-regular: ## Run regular DRC of the TOP cell (usage: make klayout-drc-regular [FREQ=<GHz>])
+klayout-drc-regular: ## Run regular KLayout DRC of the TOP cell (usage: make klayout-drc-regular [FREQ=<GHz>] [DRC_JOBS=<n>])
 	mkdir -p $(DRC_RPT_DIR)
-	sak-drc.sh -d -k -l regular -w $(DRC_RPT_DIR) $(LAY_DIR)/$(TOP).gds
+	sak-drc.sh -d -k -l regular $(_DRC_JOBS_OPT) -w $(DRC_RPT_DIR) $(LAY_DIR)/$(TOP).gds
 .PHONY: klayout-drc-regular
 
-klayout-drc: ## Run KLayout DRC of the CELL cell (usage: make klayout-drc [CELL=<cellname>] [DRC_LEVEL=<precheck|macro|regular>])
+klayout-drc: ## Run KLayout DRC of the CELL cell (usage: make klayout-drc [CELL=<cellname>] [DRC_LEVEL=<precheck|macro|regular>] [DRC_JOBS=<n>])
 	mkdir -p $(DRC_RPT_DIR)
-	sak-drc.sh -d -k -l $(DRC_LEVEL) -w $(DRC_RPT_DIR) $(LAY_DIR)/$(CELL).gds
+	sak-drc.sh -d -k -l $(DRC_LEVEL) $(_DRC_JOBS_OPT) -w $(DRC_RPT_DIR) $(LAY_DIR)/$(CELL).gds
 .PHONY: klayout-drc
 
 magic-drc: ## Run Magic DRC of the CELL cell (usage: make magic-drc [CELL=<cellname>])
 	mkdir -p $(DRC_RPT_DIR)
 	sak-drc.sh -d -m -w $(DRC_RPT_DIR) $(LAY_DIR)/$(CELL).gds
 .PHONY: magic-drc
+
+gdscheck-drc-regular: ## Run regular gdscheck DRC of the TOP cell (usage: make gdscheck-drc-regular [FREQ=<GHz>] [DRC_JOBS=<n>])
+	mkdir -p $(DRC_RPT_DIR)
+	sak-drc.sh -d -g -l regular $(_DRC_JOBS_OPT) -w $(DRC_RPT_DIR) $(LAY_DIR)/$(TOP).gds
+.PHONY: gdscheck-drc-regular
+
+gdscheck-drc: ## Run gdscheck DRC of the CELL cell (usage: make gdscheck-drc [CELL=<cellname>] [DRC_LEVEL=<precheck|macro|regular>] [GDSCHECK_SUITE=<suite>|GDSCHECK_DECKS=<decks>] [DRC_JOBS=<n>])
+	mkdir -p $(DRC_RPT_DIR)
+	sak-drc.sh -d -g -l $(DRC_LEVEL) $(_GDSCHECK_SUITE_OPT) $(_GDSCHECK_DECKS_OPT) $(_DRC_JOBS_OPT) -w $(DRC_RPT_DIR) $(LAY_DIR)/$(CELL).gds
+.PHONY: gdscheck-drc
 # ================================================================================================
 
 
@@ -381,8 +411,9 @@ klayout-verify: ## Verify the CELL cell with KLayout (usage: make klayout-verify
 	$(MAKE) klayout-pex CELL=$(CELL)
 .PHONY: klayout-verify
 
-magic-verify: ## Verify the CELL cell with Magic (usage: make magic-verify [CELL=<cellname>])
-	$(MAKE) magic-drc CELL=$(CELL)
+magic-verify: ## Verify the CELL cell with Magic, LVS and PEX (usage: make magic-verify [CELL=<cellname>])
+# The flows leave the Magic DRC out until MIM.e and MIM.i are settled upstream, make magic-drc still runs it
+#	$(MAKE) magic-drc CELL=$(CELL)
 	$(MAKE) magic-lvs CELL=$(CELL)
 	$(MAKE) magic-pex CELL=$(CELL)
 .PHONY: magic-verify
@@ -571,11 +602,14 @@ all: ## Build, verify, EM-simulate, extract LE models, and run all testbenches (
 	$(MAKE) build-top
 # 	Verification
 	$(MAKE) klayout-verify CELL=$(POWDET)
+	$(MAKE) gdscheck-drc CELL=$(POWDET)
 	$(MAKE) magic-verify CELL=$(POWDET)
 #	$(MAKE) klayout-verify
 	$(MAKE) klayout-drc
+	$(MAKE) gdscheck-drc
 #	$(MAKE) magic-verify
-	$(MAKE) magic-drc
+# The flows leave the Magic DRC out until MIM.e and MIM.i are settled upstream, make magic-drc still runs it
+#	$(MAKE) magic-drc
 # 	EM simulation of the passive RF structures (BPF, WPD, BLC)
 	$(MAKE) sim-bpf-em
 	$(MAKE) sim-wpd-em
@@ -628,7 +662,9 @@ regression: ## Regression test target for IIC-OSIC-TOOLS (usage: make regression
 	$(MAKE) build-top
 # 	KLayout DRC, LVS, and kpex PEX of the power-detector cell.
 	$(MAKE) klayout-verify CELL=$(POWDET)
-# 	Magic DRC, Magic + Netgen LVS, and Magic PEX of the power-detector cell.
+# 	gdscheck DRC of rule decks the power-detector cell passes, so that a broken gdscheck fails the regression.
+	$(MAKE) gdscheck-drc CELL=$(POWDET) GDSCHECK_DECKS=cont,via1
+# 	Magic + Netgen LVS and Magic PEX of the power-detector cell.
 	$(MAKE) magic-verify CELL=$(POWDET)
 # 	Optional AWS Palace EM solve (WPD), run only when NIGHTLY_REGRESSION=1 (regression-nightly).
 	$(if $(filter 1,$(NIGHTLY_REGRESSION)),$(MAKE) sim-wpd-em)
