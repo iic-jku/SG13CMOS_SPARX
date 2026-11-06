@@ -253,7 +253,7 @@ klayout-drc: ## Run KLayout DRC of the CELL cell (usage: make klayout-drc [CELL=
 
 magic-drc: ## Run Magic DRC of the CELL cell (usage: make magic-drc [CELL=<cellname>])
 	mkdir -p $(DRC_RPT_DIR)
-	sak-drc.sh -d -m -f "*" -w $(DRC_RPT_DIR) $(LAY_DIR)/$(CELL).gds
+	sak-drc.sh -d -m -w $(DRC_RPT_DIR) $(LAY_DIR)/$(CELL).gds
 .PHONY: magic-drc
 # ================================================================================================
 
