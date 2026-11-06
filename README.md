@@ -652,7 +652,7 @@ python3 scripts/check_pex_ports.py netlist/pex/sparx_powdet_sbd_magic_pex_3.spic
 python3 scripts/check_pex_ports.py -v netlist/pex/*.spice     # -v also prints the size of each subcircuit
 ```
 
-**KLayout PEX** uses the 2.5D engine of `kpex` (`kpex extract --2.5D`), which needs kpex 0.6.12 or later ([klayout-pex#148](https://github.com/iic-jku/klayout-pex/issues/148)). The `2026.10` image ships kpex 0.6.8, which stops in full-RC mode:
+**KLayout PEX** uses the 2.5D engine of `kpex` (`kpex extract --2.5D`), which needs kpex 0.7.0 or later:
 
 ```sh
 make klayout-pex
@@ -662,8 +662,8 @@ make klayout-pex CELL=sparx_powdet_sbd EXT_MODE=3
 
 On top of the extraction the target does three things:
 
-- It passes the CDL netlist of `klayout-lvs-netlist` as schematic, because kpex runs its own LVS and reads the schematic as SPICE. A cell without a schematic gets a dummy one.
-- It reduces the full-RC netlist with TICER (`--reduce ticer`). ngspice with `klu` finds no operating point for the unreduced netlist (resistors below 1 mOhm), the reduced one converges and stays within 0.05 dB of it in S11 at 160 GHz.
+- It passes the CDL netlist of `klayout-lvs-netlist` as schematic, so that kpex checks its own LVS netlist against the device classes and totals of the schematic. A cell without a schematic gets a dummy one. kpex does not read the `$[rhigh]` lines of the CDL netlist, so a cell with resistors only stops `EXT_MODE=3` with `kpex reads no devices from the schematic`.
+- It reduces the full-RC netlist with TICER (`--reduce ticer`), which leaves far fewer elements and a faster simulation, and ngspice with `klu` can lose the operating point of an unreduced netlist (resistors below 1 mOhm). It does on the power detector, where the reduced netlist converges and stays within 0.05 dB of the unreduced one in S11 at 160 GHz.
 - It ties the substrate port `sub!` of the 2.5D netlist to `PEX_SUB_NET` (default `vss`, [`scripts/tie_pex_substrate.py`](scripts/tie_pex_substrate.py)), as Magic ties the substrate to `vss`, so the netlist keeps the pins of `<CELL>_pex.sym`.
 
 The two extractions differ at the RF input of the power detector: Z_in at 160 GHz is 50 - 40j Ohm from kpex and 40 - 25j Ohm from Magic (S11 -8.6 dB against -10.9 dB), mostly from the resistance of the 30-cell bias MIM array, which Magic keeps on one node.
