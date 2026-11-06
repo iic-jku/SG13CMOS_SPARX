@@ -31,7 +31,7 @@ format:
 ---
 
 ::: {.callout-important}
-This repository requires the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS) container with tag `2026.10` or later. All commands below run inside the container, from the repository root. `2026.10` is the first image with the VACASK and snp2le that the noise benches and the thermal-noise fit need, see @sec-requirements.
+This repository requires the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS) container with tag `2026.11` or later. All commands below run inside the container, from the repository root. `2026.10` is the first image with the VACASK and snp2le that the noise benches and the thermal-noise fit need, see @sec-requirements.
 :::
 
 ::: {.callout-note}
@@ -133,7 +133,7 @@ Everything runs inside the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-
 
 | Component | Version | Needed for |
 | :--- | :--- | :--- |
-| IIC-OSIC-TOOLS | `2026.10` or later | every target |
+| IIC-OSIC-TOOLS | `2026.11` or later | every target |
 | PDK | `ihp-sg13g2` (set by `.designinit`, or `sak-pdk ihp-sg13g2`) | every target except `help` and `clean` |
 | [IHP-GDSFactory-Addon](https://github.com/iic-jku/IHP-GDSFactory-Addon) | cloned and installed into `.venv/` by `make build-pdk` | layout generation and EM targets |
 | VACASK | `1b48553` (2026-09-29) or later | the PSS bench of the detector and the NF benches of the detector and the receiver, which run `pss`, `pac` and `pnoise` |
