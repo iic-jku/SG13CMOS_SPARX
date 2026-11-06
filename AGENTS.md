@@ -9,7 +9,7 @@ When adding a flow or a folder, mirror the template layout and its `Makefile` co
 
 ## Environment
 
-- Run every flow inside the IIC-OSIC-TOOLS container (https://github.com/iic-jku/IIC-OSIC-TOOLS), tag `2026.10` or later (`README.md`). CI uses `hpretl/iic-osic-tools:latest`.
+- Run every flow inside the IIC-OSIC-TOOLS container (https://github.com/iic-jku/IIC-OSIC-TOOLS), tag `2026.11` or later (`README.md`). CI uses `hpretl/iic-osic-tools:latest`.
 - The PDK is `ihp-sg13g2`. `.designinit` exports `PDK` and the related variables, and `sak-pdk ihp-sg13g2` switches a running shell.
 - The `Makefile` checks `$PDK` when it is parsed: every target except `help` and `clean` aborts if it is not `ihp-sg13g2`. Fix the PDK instead of passing `REQUIRED_PDK=`.
 - `make build-pdk` clones the GDSFactory PDK add-on (`IHP-GDSFactory-Addon`) into `IHP/` and installs it into `.venv/` (both git-ignored). `build-layout` and the EM targets run in that `.venv`, so run `build-pdk` (or `build-top`) once first.

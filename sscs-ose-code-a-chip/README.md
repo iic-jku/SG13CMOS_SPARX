@@ -47,7 +47,7 @@ The notebook [`SPARX_JKU_ISSCC2027.ipynb`](SPARX_JKU_ISSCC2027.ipynb) is saved w
 
 To run it, open the notebook in Google Colab with the badge above and select *Runtime → Run all*. It installs every tool itself, at the versions listed in its Section 2, and takes one to two hours on the free tier. With `FULL_RUN = 0` in the cell after the reading guide, it skips the DRC and the three longest simulations, whose stored outputs are then not regenerated, and finishes in about 8 minutes.
 
-The complete flow, including the EM simulations with AWS Palace, LVS, and parasitic extraction, is in the [SPARX repository](https://github.com/iic-jku/SG13CMOS_SPARX). It runs in the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS) container (tag 2026.10 or later) with `make all`.
+The complete flow, including the EM simulations with AWS Palace, LVS, and parasitic extraction, is in the [SPARX repository](https://github.com/iic-jku/SG13CMOS_SPARX). It runs in the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-TOOLS) container (tag 2026.11 or later) with `make all`.
 
 ## Files
 
