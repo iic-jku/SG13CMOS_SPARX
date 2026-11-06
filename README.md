@@ -213,6 +213,7 @@ An overview of the open-source design flow for SPARX is shown below. The flow co
 │  ├─ prune_pex_symbol.py
 │  ├─ six_port_gen.py
 │  ├─ sparx_powdet_sbd_circuit.ipynb
+│  ├─ test_tie_pex_substrate.py
 │  └─ tie_pex_substrate.py
 ├─ 📁 sscs-ose-code-a-chip/
 │  ├─ 📁 assets/

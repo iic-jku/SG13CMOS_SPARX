@@ -621,6 +621,8 @@ release: ## Copy the gds, netlist files and chip renders to the release folder (
 NIGHTLY_REGRESSION ?= 0
 
 regression: ## Regression test target for IIC-OSIC-TOOLS (usage: make regression [NIGHTLY_REGRESSION=1])
+# 	Substrate tie of the kpex netlist, for the wrapped port lists that the power detector does not have.
+	python3 $(SCRIPTS_DIR)/test_tie_pex_substrate.py
 # 	GDSFactory programmatic six-port layout generation
 	$(MAKE) build-top
 # 	KLayout DRC, LVS, and kpex PEX of the power-detector cell.

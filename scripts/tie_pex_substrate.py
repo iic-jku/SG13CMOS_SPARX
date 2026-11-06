@@ -7,19 +7,30 @@ import sys
 
 
 def tie(path, net, sub):
-    """Drop port `sub` from the .subckt line and move its node onto port `net`, in place."""
+    """Drop port `sub` from the .subckt card and move its node onto port `net`, in place."""
     lines = open(path, encoding="utf-8").read().splitlines()
     out, moved, dropped, found = [], 0, 0, False
-    for line in lines:
+    i = 0
+    while i < len(lines):
+        first = i
+        line = lines[i]
+        i += 1
         tokens = line.split()
-        if not tokens or line.startswith("*") or sub not in tokens[1:]:
-            out.append(line)
-            continue
-        if tokens[0].lower() == ".subckt":
+        if tokens and tokens[0].lower() == ".subckt":
+            # kpex wraps a long port list over "+" lines
+            while i < len(lines) and lines[i].startswith("+"):
+                tokens += lines[i][1:].split()
+                i += 1
+            if sub not in tokens[2:]:
+                out += lines[first:i]
+                continue
             if net not in tokens[2:]:
                 sys.exit(f"[ERROR] {path}: '{net}' is not a port of subcircuit '{tokens[1]}'.")
             found = True
             out.append(" ".join(t for t in tokens if t != sub))
+            continue
+        if not tokens or line.startswith("*") or sub not in tokens[1:]:
+            out.append(line)
             continue
         tokens = [tokens[0]] + [net if t == sub else t for t in tokens[1:]]
         # an R or C with both ends on the tied net does nothing
