@@ -50,7 +50,7 @@ The full documentation of SPARX is available [here](https://iic-jku.github.io/SG
 
 ## Overview
 
-The complete layout is generated in Python using self-made RF devices as a GDSFactory IHP PDK add-on. S-parameter simulation of the passive RF structures (BPF, WPD, and BLC) is performed with AWS Palace. The de-embedded EM results are then fitted to passivity-enforced lumped element models with [snp2le](https://github.com/iic-jku/snp2le), in both SPICE and Spectre dialects, and resimulated in Xschem testbenches with ngspice and VACASK. The six-port core is verified in two ways: as a single fitted model of the full-core EM simulation and as a composition of the individual BPF, WPD, and BLC models. With KLayout, Magic, and Netgen, a complete DRC, LVS, and PEX verification flow is implemented. The SBD-based power detector is designed in Xschem and simulated with ngspice and VACASK. This repository is controlled by a Makefile. Just clone it and run `make all` to build the six-port receiver at 160 GHz, verify it, run the EM simulations, extract the lumped element models, and simulate all testbenches. To generate a frequency-scalable layout at a different target frequency, for example 77 GHz, run `make build-layout FREQ=77`. A nightly [regression](#regression) exercises the complete tool flow in GitHub Actions inside the IIC-OSIC-TOOLS container. The following video demonstrates the generation of six-port receivers from 60 GHz to 300 GHz in under one minute.
+The complete layout is generated in Python using self-made RF devices as a GDSFactory IHP PDK add-on. S-parameter simulation of the passive RF structures (BPF, WPD, and BLC) is performed with AWS Palace. The de-embedded EM results are then fitted to passivity-enforced lumped element models with [snp2le](https://github.com/iic-jku/snp2le), in both SPICE and Spectre dialects, and resimulated in Xschem testbenches with ngspice and VACASK. The six-port core is verified in two ways: as a single fitted model of the full-core EM simulation and as a composition of the individual BPF, WPD, and BLC models. With KLayout, Magic, and Netgen, a complete DRC, LVS, and PEX verification flow is implemented, and gdscheck adds a third DRC engine. The SBD-based power detector is designed in Xschem and simulated with ngspice and VACASK. This repository is controlled by a Makefile. Just clone it and run `make all` to build the six-port receiver at 160 GHz, verify it, run the EM simulations, extract the lumped element models, and simulate all testbenches. To generate a frequency-scalable layout at a different target frequency, for example 77 GHz, run `make build-layout FREQ=77`. A nightly [regression](#regression) exercises the complete tool flow in GitHub Actions inside the IIC-OSIC-TOOLS container. The following video demonstrates the generation of six-port receivers from 60 GHz to 300 GHz in under one minute.
 
 **Index Terms:** Branch-line coupler, frequency-scalable layout, GDSFactory, hairpin coupled-line bandpass filter, IHP Open-PDK, mmWave, open-source EDA, power detector, programmatic layout, Schottky barrier diode, six-port receiver, Wilkinson power divider.
 
@@ -358,7 +358,7 @@ All targets live in the one `Makefile`, so every arrow is a direct `$(MAKE) <tar
 At the top level, `make all` runs five stages in this order:
 
 1. **Layout**: `build-top` installs the GDSFactory PDK add-on (`build-pdk`), generates the 160 GHz layout together with the EM structures in `verification/em/layout/` (`build-layout`), and renders the top-level GDS (`render-gds`).
-2. **Verification**: `klayout-verify` and `magic-verify` run DRC, LVS and PEX of the SBD power detector `sparx_powdet_sbd` with both flows. Then `klayout-drc` (`DRC_LEVEL=macro`) and `magic-drc` check the top cell of the design frequency, `sparx160_top` by default and `sparx<FREQ>_top` with `FREQ=<GHz>`. The figure already shows the LVS of the top cell (`klayout-lvs`, `magic-lvs`), which `make all` does not run yet: it follows once top-level LVS works, see [`ToDo.md`](ToDo.md).
+2. **Verification**: `klayout-verify` runs DRC, LVS and PEX of the SBD power detector `sparx_powdet_sbd`, `gdscheck-drc` its gdscheck DRC, and `magic-verify` its LVS and PEX. Then `klayout-drc` and `gdscheck-drc` (both `DRC_LEVEL=macro`) check the top cell of the design frequency, `sparx160_top` by default and `sparx<FREQ>_top` with `FREQ=<GHz>`. The figure already shows the LVS of the top cell (`klayout-lvs`, `magic-lvs`), which `make all` does not run yet: it follows once top-level LVS works, see [`ToDo.md`](ToDo.md).
 3. **EM simulation**: AWS Palace solves the BPF, WPD and BLC (`sim-bpf-em`, `sim-wpd-em`, `sim-blc-em`), and `copy-sparam` copies the raw and de-embedded Touchstone files of each run to `verification/em/s-parameter/`.
 4. **LE models**: `snp2le` fits the raw Touchstone file of each block to a SPICE and a Spectre lumped element netlist, with the fit orders 13 (BPF), 10 (WPD) and 6 (BLC).
 5. **Circuit simulation**: `sim-all` runs 21 of the 24 testbenches, all except the three transients of the passive LE models. With the power-detector design variants (`sim-powdet-variants`) and the post-layout runs of the receiver benches, these are 27 simulations.
@@ -504,9 +504,9 @@ All three images are 2048 px wide and rendered with 4x oversampling. `sak-render
 
 ### Design Rule Check (DRC)
 
-Runs DRC on the GDS layout in `layout/`. Both flows use `sak-drc.sh` and write their reports into per-cell run folders: `verification/drc/<CELL>.magic.drc/` (Magic) and `verification/drc/<CELL>.klayout.drc/` (KLayout, `.lyrdb`). The run folders are wiped at the start of each run, so they always reflect the latest run only.
+Runs DRC on the GDS layout in `layout/`. All three flows use `sak-drc.sh` and write their reports into per-cell run folders: `verification/drc/<CELL>.magic.drc/` (Magic), `verification/drc/<CELL>.klayout.drc/` (KLayout, `.lyrdb`) and `verification/drc/<CELL>.gdscheck.drc/` (gdscheck, `.lyrdb`). The run folders are wiped at the start of each run, so they always reflect the latest run only.
 
-The `DRC_LEVEL` parameter selects the KLayout DRC level (`sak-drc.sh -l`). It is ignored by `magic-drc`, since Magic has no selectable rule decks and always runs the full rule set compiled into the PDK's Magic tech file:
+The `DRC_LEVEL` parameter selects the KLayout DRC level and the gdscheck suite (`sak-drc.sh -l`). It is ignored by `magic-drc`, since Magic has no selectable rule decks and always runs the full rule set compiled into the PDK's Magic tech file:
 
 - `precheck` = the foundry precheck rule set and the pin checks (fast iteration)
 - `macro` = block-in-isolation sign-off: the full FEOL and BEOL rules with off-grid, angle, recommended and pin checks, without chip-level density, the extra rules and antenna (default)
@@ -524,6 +524,8 @@ For the IHP Open-PDK, `sak-drc.sh` passes `--precheck_drc --no_density --no_offg
 | Extra rules | – | – | ✓ |
 | Density (full-chip fill) | – | – | ✓ |
 | Antenna | – | – | ✓ |
+
+The `DRC_JOBS` parameter (`sak-drc.sh -j`) sets how many jobs one run uses at most. The default is 4, or the CPU count if lower, for KLayout and every CPU the container may use for gdscheck, which runs as one process with that many threads. Up to 4 jobs, `precheck` and `macro` run as one KLayout process with that many threads, and `regular` runs its four rule sets (main, extra rules, density and antenna) as parallel processes and writes the reports of the last three into the subfolders `maximal/`, `density/` and `antenna/` of the run folder. Above 4, `run_drc.py` splits the rule deck into its tables, one process each, and merges their reports into one. Every KLayout process needs about 0.5 GiB of RAM plus the layout, so this only pays off for large layouts.
 
 **KLayout DRC (regular)** runs a full (`regular`) KLayout DRC on the top-level cell:
 
@@ -548,8 +550,31 @@ make magic-drc FREQ=80
 make magic-drc CELL=sparx_powdet_sbd
 ```
 
+**gdscheck DRC** runs [gdscheck](https://github.com/aesc-silicon/gdscheck) (`sak-drc.sh -g`), a standalone DRC engine with its own IHP rule decks built into the binary. The DRC levels map onto its suites: `precheck` runs `precheck` (IHP's open-source precheck subset, which includes the density rules, so a single macro fails it), `macro` runs `core` (all geometric rules without density and antenna) and `regular` runs `main` (all rules, density and antenna included). The `GDSCHECK_SUITE` parameter (`sak-drc.sh -s`) replaces this mapping and also reaches the suites `density`, `antenna` and `recommended` (the advisory rules whose names end in `R`, not part of `main`). `gdscheck list-suites --process ihp-sg13g2` lists them. The `GDSCHECK_DECKS` parameter (`sak-drc.sh -D`) runs single rule decks instead of a suite, comma-separated, and `gdscheck list-decks --process ihp-sg13g2` lists them. It cannot be combined with `GDSCHECK_SUITE`. The IHP layer decks include their fill and density rules, so a single cell can fail a deck run on a rule that `macro` does not check.
+
+**gdscheck DRC (regular)** runs the `main` suite on the top-level cell:
+
+```sh
+make gdscheck-drc-regular
+```
+
+**gdscheck DRC** runs gdscheck at the selected `DRC_LEVEL`, `GDSCHECK_SUITE` or `GDSCHECK_DECKS`. `CELL` defaults to the top cell of the design frequency, `sparx<FREQ>_top`:
+
+```sh
+make gdscheck-drc
+make gdscheck-drc FREQ=80
+make gdscheck-drc CELL=sparx_powdet_sbd
+make gdscheck-drc CELL=sparx_powdet_sbd GDSCHECK_DECKS=cont,via1
+```
+
 > [!NOTE]
-> `make klayout-drc` (`macro` level) is clean. `make klayout-drc-regular` reports antenna violations that were waived by IHP for the tapeout. See [`KNOWN_ISSUES.md`](KNOWN_ISSUES.md) for the full breakdown.
+> KLayout is the sign-off DRC. Magic and gdscheck give a second and a third opinion, and on `sparx160_top` only KLayout passes at `macro` level. See [`KNOWN_ISSUES.md`](KNOWN_ISSUES.md) for the full breakdown:
+>
+> - `make klayout-drc` (`macro` level) is clean. `make klayout-drc-regular` reports antenna violations that were waived by IHP for the tapeout.
+> - `make gdscheck-drc` reports `nSDB.e` on the contact of IHP's `schottky` PCell, which the KLayout deck leaves out of the rule. `make gdscheck-drc-regular` also reports the antenna rules.
+> - `make magic-drc` reports `MIM.e` and `MIM.i`. KLayout reports no `MIM.e`, and `MIM.i` is in no KLayout deck.
+>
+> A flow stops on a violation of any engine it calls, so the flows leave the Magic DRC out until `MIM.e` and `MIM.i` are settled upstream: its lines are commented out in `magic-verify` and in `make all`, and `magic-drc` still runs it on its own. gdscheck stays in, so until `nSDB.e` is fixed it stops `make all` at `sparx_powdet_sbd`. To continue meanwhile, run the later steps directly. Upstream calls gdscheck experimental, so a clean gdscheck run is no sign-off on its own.
 
 ### Export Schematic Netlist for LVS
 
@@ -690,7 +715,7 @@ make magic-pex CELL=sparx_powdet_sbd EXT_MODE=3 THRESHOLD=5000 MINRES=500 MINDEL
 
 ### Verify a Specific Cell
 
-Runs DRC, LVS, and PEX for a specific cell (e.g. `sparx_powdet_sbd`):
+Runs DRC, LVS, and PEX with KLayout and LVS and PEX with Magic for a specific cell (e.g. `sparx_powdet_sbd`):
 
 ```sh
 make klayout-verify CELL=sparx_powdet_sbd
@@ -699,7 +724,7 @@ make magic-verify CELL=sparx_powdet_sbd
 
 ### Verify Top Cell
 
-Runs DRC, LVS, and PEX for the top cell:
+Runs DRC, LVS, and PEX with KLayout and LVS and PEX with Magic for the top cell:
 
 ```sh
 make klayout-verify
@@ -950,7 +975,7 @@ This project's own continuous integration runs the full variant: the [`regressio
 
 To keep the runtime low while still covering most of the toolchain, the regression makes the following trade-offs:
 
-- Only the small `sparx_powdet_sbd` power-detector cell is verified, not the full six-port top cell. KLayout DRC, KLayout LVS, and KLayout PEX are run. Magic DRC, Magic + Netgen LVS, and Magic PEX are run.
+- Only the small `sparx_powdet_sbd` power-detector cell is verified, not the full six-port top cell. KLayout DRC, KLayout LVS, and KLayout PEX are run. Magic + Netgen LVS and Magic PEX are run, the Magic DRC is not. gdscheck runs only the rule decks `cont` and `via1`, which this cell passes, so a broken gdscheck fails the regression.
 - The full-wave EM solve is not re-run by the default `regression`. The AWS Palace EM simulation of the Wilkinson power divider (WPD) is the slowest step, so `regression` reuses the committed WPD Palace results and only exercises the downstream flow: S-parameter copy and lumped-element conversion (SPICE and Spectre). Use `regression-nightly` (or `make sim-wpd-em`) to regenerate the EM results.
 - Only one ngspice and one VACASK testbench are simulated (the Wilkinson power divider AC S-parameter benches).
 - The layout is generated at a single frequency (160 GHz). No frequency sweep is run.
@@ -964,7 +989,8 @@ The following tools and flows are checked:
 | GDSFactory (programmatic six-port layout generation) | `build-layout` (via `build-top`) |
 | `sak-render.py` (GDS-to-image rendering) | `render-gds` (via `build-top`) |
 | Xschem netlisting, KLayout DRC, KLayout LVS, KLayout PEX | `klayout-verify CELL=sparx_powdet_sbd` |
-| Xschem netlisting, Magic DRC, Magic + Netgen LVS, Magic PEX | `magic-verify CELL=sparx_powdet_sbd` |
+| gdscheck DRC (`sak-drc.sh -g`) | `gdscheck-drc CELL=sparx_powdet_sbd GDSCHECK_DECKS=cont,via1` |
+| Xschem netlisting, Magic + Netgen LVS, Magic PEX | `magic-verify CELL=sparx_powdet_sbd` |
 | GDSFactory + gds2palace meshing + AWS Palace EM solve | `sim-wpd-em` (`regression-nightly` only) |
 | S-parameter result copy (raw + de-embedded) | `copy-sparam SPARAM=sparx160_wpd` |
 | snp2le (raw S-parameter to lumped element, SPICE + Spectre) | `snp2le SNP=.../sparx160_wpd.s3p ...` |

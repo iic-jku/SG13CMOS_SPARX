@@ -37,23 +37,23 @@
         <mxCell id="verify_3" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;klayout-pex&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
           <mxGeometry x="284" y="371" width="166" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="verify_4" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;magic-verify&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 10px;&quot;&gt;CELL=sparx_powdet_sbd&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+        <mxCell id="verify_g" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;gdscheck-drc&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 10px;&quot;&gt;CELL=sparx_powdet_sbd&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
           <mxGeometry x="260" y="406" width="190" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="verify_5" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;magic-drc&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
-          <mxGeometry x="284" y="451" width="166" height="30" as="geometry" />
+        <mxCell id="verify_4" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;magic-verify&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 10px;&quot;&gt;CELL=sparx_powdet_sbd&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+          <mxGeometry x="260" y="451" width="190" height="40" as="geometry" />
         </mxCell>
         <mxCell id="verify_6" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;magic-lvs&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
-          <mxGeometry x="284" y="486" width="166" height="30" as="geometry" />
+          <mxGeometry x="284" y="496" width="166" height="30" as="geometry" />
         </mxCell>
         <mxCell id="verify_7" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;magic-pex&lt;/b&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
-          <mxGeometry x="284" y="521" width="166" height="30" as="geometry" />
+          <mxGeometry x="284" y="531" width="166" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="verify_8" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;klayout-drc, magic-drc&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 10px;&quot;&gt;CELL=sparx*_top&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
-          <mxGeometry x="260" y="556" width="190" height="40" as="geometry" />
+        <mxCell id="verify_8" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;klayout-drc, gdscheck-drc&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 10px;&quot;&gt;CELL=sparx*_top&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
+          <mxGeometry x="260" y="566" width="190" height="40" as="geometry" />
         </mxCell>
         <mxCell id="verify_9" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 11px;&quot;&gt;&lt;b&gt;klayout-lvs, magic-lvs&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 10px;&quot;&gt;CELL=sparx*_top&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=1;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
-          <mxGeometry x="260" y="601" width="190" height="40" as="geometry" />
+          <mxGeometry x="260" y="611" width="190" height="40" as="geometry" />
         </mxCell>
         <mxCell id="hdr_em" value="&lt;b style=&quot;font-size: 16px;&quot;&gt;3. EM SIMULATION&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size: 10px;font-family: Courier New;&quot;&gt;verification/em/palace_model/&lt;br&gt;verification/em/s-parameter/&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=14;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;fontStyle=0;verticalAlign=middle;sketch=0;" parent="1" vertex="1">
           <mxGeometry x="480" y="160" width="210" height="86" as="geometry" />
@@ -130,14 +130,11 @@
         <mxCell id="e_verify_0_verify_3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.0631579;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#82b366;strokeWidth=1;endArrow=classic;endFill=1;endSize=4;" parent="1" source="verify_0" target="verify_3" edge="1">
           <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="272" y="386" /></Array></mxGeometry>
         </mxCell>
-        <mxCell id="e_verify_4_verify_5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.0631579;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#82b366;strokeWidth=1;endArrow=classic;endFill=1;endSize=4;" parent="1" source="verify_4" target="verify_5" edge="1">
-          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="272" y="466" /></Array></mxGeometry>
-        </mxCell>
         <mxCell id="e_verify_4_verify_6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.0631579;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#82b366;strokeWidth=1;endArrow=classic;endFill=1;endSize=4;" parent="1" source="verify_4" target="verify_6" edge="1">
-          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="272" y="501" /></Array></mxGeometry>
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="272" y="511" /></Array></mxGeometry>
         </mxCell>
         <mxCell id="e_verify_4_verify_7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.0631579;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#82b366;strokeWidth=1;endArrow=classic;endFill=1;endSize=4;" parent="1" source="verify_4" target="verify_7" edge="1">
-          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="272" y="536" /></Array></mxGeometry>
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="272" y="546" /></Array></mxGeometry>
         </mxCell>
         <mxCell id="e_sim_0_sim_1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.0631579;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#d6b656;strokeWidth=1;endArrow=classic;endFill=1;endSize=4;" parent="1" source="sim_0" target="sim_1" edge="1">
           <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="962" y="311" /></Array></mxGeometry>
