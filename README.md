@@ -21,6 +21,14 @@ Institute for Integrated Circuits and Quantum Computing, Johannes Kepler Univers
 > SPARX stands for **S**ix-**P**ort **A**utomated Receiver (**RX**). The name also carries a subtle double meaning: *SPARX* sounds like *spark*, which translates to *Funken* in German. Fittingly, the German verb *funken* also means to communicate via radio, a subtle nod to the wireless world this receiver was designed for.
 
 <p align="center">
+  <a href="doc/fig/silicon/sparx_die.JPG">
+    <img src="doc/fig/silicon/sparx_die.JPG" alt="Die photo of the ihp-sg13cmos six-port receiver for 160 GHz (1 × 1.4 mm²), taped out in March 2026" width=70%>
+  </a>
+  <br>
+  <em>Die photo of the ihp-sg13cmos six-port receiver for 160 GHz (1 × 1.4 mm²), taped out in March 2026.</em>
+</p>
+
+<p align="center">
   <a href="doc/fig/sparx160/sparx160_top_black_pinout.png">
     <img src="doc/fig/sparx160/sparx160_top_black_pinout.png" alt="Chip render of the ihp-sg13cmos six-port receiver for 160 GHz with M5 GND plane and pinout (1 × 1.4 mm²)" width=70%>
   </a>
