@@ -1,0 +1,2680 @@
+(kicad_sch
+	(version 20260306)
+	(generator "eeschema")
+	(generator_version "10.0")
+	(uuid "f3624484-02f5-5c83-bb1c-50ef7cff910a")
+	(paper "A4")
+	(title_block
+		(title "SPARX probe board: detector readout")
+		(date "2026-11-14")
+		(rev "0.1")
+		(company "Johannes Kepler University Linz")
+		(comment 1 "SPARX probe board: die bonded to the board, LO and RF probed (GSG, 125 um)")
+		(comment 2 "SPDX-FileCopyrightText: 2026 The SPARX Team")
+		(comment 3 "SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1")
+	)
+	(lib_symbols
+		(symbol "Connector:Conn_Coaxial"
+			(pin_names
+				(offset 1.016)
+				(hide yes)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "J"
+				(at 0.254 3.048 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "Conn_Coaxial"
+				(at 2.921 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" "coaxial connector (BNC, SMA, SMB, SMC, Cinch/RCA, LEMO, ...)"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "BNC SMA SMB SMC LEMO coaxial connector CINCH RCA MCX MMCX U.FL UMRF"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_fp_filters" "*BNC* *SMA* *SMB* *SMC* *Cinch* *LEMO* *UMRF* *MCX* *U.FL*"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "Conn_Coaxial_0_1"
+				(polyline
+					(pts
+						(xy -2.54 0) (xy -0.508 0)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(arc
+					(start 1.778 0)
+					(mid 0.222 -1.8079)
+					(end -1.778 -0.508)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(arc
+					(start -1.778 0.508)
+					(mid 0.2221 1.8084)
+					(end 1.778 0)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(circle
+					(center 0 0)
+					(radius 0.508)
+					(stroke
+						(width 0.2032)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 -2.54) (xy 0 -1.778)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "Conn_Coaxial_1_1"
+				(pin passive line
+					(at -5.08 0 0)
+					(length 2.54)
+					(name "In"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 0 -5.08 90)
+					(length 2.54)
+					(name "Ext"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
+		(symbol "Connector_Generic:Conn_01x02"
+			(pin_names
+				(offset 1.016)
+				(hide yes)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "J"
+				(at 0 2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "Conn_01x02"
+				(at 0 -5.08 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" "Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "connector"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_fp_filters" "Connector*:*_1x??_*"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "Conn_01x02_1_1"
+				(rectangle
+					(start -1.27 1.27)
+					(end 1.27 -3.81)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type background)
+					)
+				)
+				(rectangle
+					(start -1.27 0.127)
+					(end 0 -0.127)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(rectangle
+					(start -1.27 -2.413)
+					(end 0 -2.667)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(pin passive line
+					(at -5.08 0 0)
+					(length 3.81)
+					(name "Pin_1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -5.08 -2.54 0)
+					(length 3.81)
+					(name "Pin_2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
+		(symbol "Device:C"
+			(pin_numbers
+				(hide yes)
+			)
+			(pin_names
+				(offset 0.254)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "C"
+				(at 0.635 2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify left)
+				)
+			)
+			(property "Value" "C"
+				(at 0.635 -2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify left)
+				)
+			)
+			(property "Footprint" ""
+				(at 0.9652 -3.81 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" "Unpolarized capacitor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "cap capacitor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_fp_filters" "C_*"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "C_0_1"
+				(polyline
+					(pts
+						(xy -2.032 0.762) (xy 2.032 0.762)
+					)
+					(stroke
+						(width 0.508)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -2.032 -0.762) (xy 2.032 -0.762)
+					)
+					(stroke
+						(width 0.508)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "C_1_1"
+				(pin passive line
+					(at 0 3.81 270)
+					(length 2.794)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 0 -3.81 90)
+					(length 2.794)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
+		(symbol "Device:R"
+			(pin_numbers
+				(hide yes)
+			)
+			(pin_names
+				(offset 0)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "R"
+				(at 2.032 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "R"
+				(at 0 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at -1.778 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" "Resistor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "R res resistor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_fp_filters" "R_*"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "R_0_1"
+				(rectangle
+					(start -1.016 -2.54)
+					(end 1.016 2.54)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "R_1_1"
+				(pin passive line
+					(at 0 3.81 270)
+					(length 1.27)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 0 -3.81 90)
+					(length 1.27)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
+		(symbol "power:GND"
+			(power global)
+			(pin_numbers
+				(hide yes)
+			)
+			(pin_names
+				(offset 0)
+				(hide yes)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "#PWR"
+				(at 0 -6.35 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "GND"
+				(at 0 -3.81 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "global power"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "GND_0_1"
+				(polyline
+					(pts
+						(xy 0 0) (xy 0 -1.27) (xy 1.27 -1.27) (xy 0 -2.54) (xy -1.27 -1.27) (xy 0 -1.27)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "GND_1_1"
+				(pin power_in line
+					(at 0 0 270)
+					(length 0)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
+	)
+	(rectangle
+		(start 17.78 25.4)
+		(end 165.1 132.08)
+		(stroke
+			(width 0.254)
+			(type dash)
+		)
+		(fill
+			(type none)
+		)
+		(uuid "3fb5538e-59ed-52f0-88a6-31954433888d")
+	)
+	(text "Population and use (references: first digit = detector k):\n- Differential probe on the pads Jk03: the 0R links Rk03 and Rk04 stay out (default).\n- SMA readout: fit Rk03 and Rk04. The 50 Ohm scope inputs short REF\n  (about 250 Ohm source), which costs about 6.6 dB at low IF.\n- Ck01 and Ck02: off-chip capacitor of the detector. With about 1.5 to 2 pF of\n  probe input and trace they make the 5 pF of the testbenches. Adjust to the probe.\n- Rk01 and Rk02 feed the DC monitor header."
+		(exclude_from_sim no)
+		(at 22.86 140.97 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left top)
+		)
+		(uuid "9f723178-3d93-5612-9d19-bf47246722c9")
+	)
+	(text "Detector k readout: OUT and REF of one SBD power detector"
+		(exclude_from_sim no)
+		(at 19.05 26.67 0)
+		(effects
+			(font
+				(size 1.778 1.778)
+				(bold yes)
+			)
+			(justify left top)
+		)
+		(uuid "c112d0c1-6b83-5219-9ed4-e1ffe14875f8")
+	)
+	(junction
+		(at 66.04 101.6)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "2cec04ee-a8d3-5251-a252-023fbbfcdce3")
+	)
+	(junction
+		(at 63.5 50.8)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "44cd0c11-4d42-5f81-9ece-00c167d75492")
+	)
+	(junction
+		(at 45.72 50.8)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "87d5a2d9-29b2-5b33-9d2e-e03df4c4d9c2")
+	)
+	(junction
+		(at 45.72 101.6)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "8a13a6d1-0036-5217-b73b-387fa6a7b4d4")
+	)
+	(junction
+		(at 81.28 50.8)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "ad43f1ff-c0ea-525f-a160-04793d0b7748")
+	)
+	(junction
+		(at 81.28 101.6)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "f3b022ee-2055-558d-9851-dc346c3dbdeb")
+	)
+	(wire
+		(pts
+			(xy 110.49 101.6) (xy 116.84 101.6)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "01813dd6-83c4-50e5-8c83-f0ceb36c1501")
+	)
+	(wire
+		(pts
+			(xy 66.04 101.6) (xy 81.28 101.6)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "08f95939-8148-5492-ab0e-15bb2e665423")
+	)
+	(wire
+		(pts
+			(xy 81.28 101.6) (xy 95.25 101.6)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "09cea1b8-3c16-5386-a5aa-e4aefe3c4426")
+	)
+	(wire
+		(pts
+			(xy 45.72 50.8) (xy 45.72 54.61)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "10840fa3-30d6-57c3-b79c-7d91ff15886a")
+	)
+	(wire
+		(pts
+			(xy 45.72 101.6) (xy 45.72 105.41)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "20590760-b4cb-5999-a2d3-eb649b53ea2b")
+	)
+	(wire
+		(pts
+			(xy 63.5 50.8) (xy 63.5 74.93)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "2745becf-84a6-5867-a748-e53a00a72552")
+	)
+	(wire
+		(pts
+			(xy 81.28 62.23) (xy 81.28 66.04)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "2b05c060-bb43-5dd7-b967-fcfbb8b6ae39")
+	)
+	(wire
+		(pts
+			(xy 142.24 55.88) (xy 142.24 58.42)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "30443eaf-9fe0-58dd-879d-9a9543f8fd6a")
+	)
+	(wire
+		(pts
+			(xy 102.87 101.6) (xy 110.49 101.6)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4222eeca-5289-5dd6-98bd-a59640a2ef31")
+	)
+	(wire
+		(pts
+			(xy 63.5 50.8) (xy 81.28 50.8)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "45ff316f-1078-5d3c-9627-39a382a60407")
+	)
+	(wire
+		(pts
+			(xy 130.81 50.8) (xy 137.16 50.8)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "59486c5d-118a-54c6-9e80-da5f8e382a22")
+	)
+	(wire
+		(pts
+			(xy 81.28 50.8) (xy 81.28 54.61)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "59d64bf6-fa64-5bba-ad0f-1c022e9869fb")
+	)
+	(wire
+		(pts
+			(xy 45.72 62.23) (xy 45.72 64.77)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "5a820e20-fc3c-5013-9d79-3537ef7541d8")
+	)
+	(wire
+		(pts
+			(xy 25.4 50.8) (xy 45.72 50.8)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "63867d91-d974-5f48-84a1-7b10c5b963c4")
+	)
+	(wire
+		(pts
+			(xy 66.04 77.47) (xy 66.04 101.6)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "67e4b7de-a2be-5518-befe-2c05ebccaaf9")
+	)
+	(wire
+		(pts
+			(xy 45.72 113.03) (xy 45.72 115.57)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "720b5307-2e17-50eb-8e77-ed44a4e7f712")
+	)
+	(wire
+		(pts
+			(xy 68.58 77.47) (xy 66.04 77.47)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "7ab959d1-00fd-5988-ad3f-e78897a26d80")
+	)
+	(wire
+		(pts
+			(xy 124.46 50.8) (xy 130.81 50.8)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8b54a165-5a87-54e1-b07e-c035a3c18d2d")
+	)
+	(wire
+		(pts
+			(xy 81.28 50.8) (xy 95.25 50.8)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "9d897485-c7c2-5ac6-952f-21489aa48fab")
+	)
+	(wire
+		(pts
+			(xy 102.87 50.8) (xy 110.49 50.8)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a52c7d0f-b358-552e-b787-ebbba7d42d05")
+	)
+	(wire
+		(pts
+			(xy 110.49 50.8) (xy 116.84 50.8)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "aab020dd-b184-5a2b-8c7a-136ec9c1a41a")
+	)
+	(wire
+		(pts
+			(xy 63.5 74.93) (xy 68.58 74.93)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b5e21418-bd46-52f9-8d20-0e82f3ec855b")
+	)
+	(wire
+		(pts
+			(xy 25.4 101.6) (xy 45.72 101.6)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b5f83079-68c2-53ae-8aa9-b68370929f87")
+	)
+	(wire
+		(pts
+			(xy 81.28 101.6) (xy 81.28 105.41)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c8d2b046-89bf-5795-917a-7727cc45d592")
+	)
+	(wire
+		(pts
+			(xy 130.81 101.6) (xy 137.16 101.6)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "cbf52909-62d4-5194-9180-288c7021e736")
+	)
+	(wire
+		(pts
+			(xy 124.46 101.6) (xy 130.81 101.6)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d7e00f45-4e39-52bf-9215-9570e09fb320")
+	)
+	(wire
+		(pts
+			(xy 81.28 113.03) (xy 81.28 116.84)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "decd00b5-6e7b-58ff-bccf-081f96d934cf")
+	)
+	(wire
+		(pts
+			(xy 45.72 101.6) (xy 66.04 101.6)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ea562fa4-0b65-5a87-b82a-4b429d71c7bb")
+	)
+	(wire
+		(pts
+			(xy 45.72 50.8) (xy 63.5 50.8)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ec5e048e-f5b0-5766-a23a-58e60d2b63df")
+	)
+	(wire
+		(pts
+			(xy 142.24 106.68) (xy 142.24 109.22)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f356ec42-80fc-5c96-90aa-da766d2fd824")
+	)
+	(label "OUT_L"
+		(at 110.49 50.8 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "7c3dc918-cec4-5efc-996f-ea032d4f0d2e")
+	)
+	(label "REF_L"
+		(at 110.49 101.6 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "81c99981-e495-5a4b-9317-253d803137a2")
+	)
+	(label "REF_J"
+		(at 130.81 101.6 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "8c44d97f-cfb8-5f0a-a5d6-d995b14628a5")
+	)
+	(label "OUT_J"
+		(at 130.81 50.8 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "e76fca7f-6a3f-5ac7-9f52-0d8094646e31")
+	)
+	(hierarchical_label "DC_REF"
+		(shape passive)
+		(at 81.28 116.84 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "9f152424-d912-5179-8252-325bb957bfd4")
+	)
+	(hierarchical_label "DC_OUT"
+		(shape passive)
+		(at 81.28 66.04 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "ba4ea335-9ff1-5e94-a0df-271f80387358")
+	)
+	(hierarchical_label "OUT"
+		(shape passive)
+		(at 25.4 50.8 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "c0595fde-0ca2-55de-a14f-abb8a7de3c4d")
+	)
+	(hierarchical_label "REF"
+		(shape passive)
+		(at 25.4 101.6 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "cb42db57-cf97-5f5a-b8df-20d954080d8a")
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 81.28 109.22 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "049d5036-a562-5ee2-b0ae-14d3efd8b4e9")
+		(property "Reference" "R102"
+			(at 83.82 107.95 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "10k"
+			(at 83.82 110.49 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
+			(at 81.28 109.22 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 81.28 109.22 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "DC tap to the monitor header, keeps the header cable off the detector output"
+			(at 81.28 109.22 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "3d8f6120-8b2d-5b35-8eea-345fab40586e")
+		)
+		(pin "2"
+			(uuid "65dfd7a4-e54d-5714-825f-cce54e275039")
+		)
+		(instances
+			(project "sparx_probe_board"
+				(path "/ae973c55-50b7-51aa-b86a-ae28d5c31c42/7b814659-1848-5adb-b2de-4e49360f8028"
+					(reference "R102")
+					(unit 1)
+				)
+				(path "/ae973c55-50b7-51aa-b86a-ae28d5c31c42/ba7e4547-ad76-5680-91d3-269632b8d517"
+					(reference "R202")
+					(unit 1)
+				)
+				(path "/ae973c55-50b7-51aa-b86a-ae28d5c31c42/d380e418-ffd6-55b5-9945-9f995eeb95b6"
+					(reference "R402")
+					(unit 1)
+				)
+				(path "/ae973c55-50b7-51aa-b86a-ae28d5c31c42/e585a2bd-3ab7-56ca-8153-7bc2b7534e16"
+					(reference "R302")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 120.65 50.8 90)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "15acfda1-741d-5225-9ef9-e8c50c567e8d")
+		(property "Reference" "C103"
+			(at 120.65 46.99 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "100n"
+			(at 120.65 54.61 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
+			(at 120.65 50.8 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 120.65 50.8 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "DC block, the 50 Ohm scope input would pull the bias"
+			(at 120.65 50.8 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "a5bbd89e-ad42-5de9-8756-77f0e0b0600d")
+		)
+		(pin "2"
+			(uuid "46fd69e2-4329-505e-8579-a505dccc9065")
+		)
+		(instances
+			(project "sparx_probe_board"
+				(path "/ae973c55-50b7-51aa-b86a-ae28d5c31c42/7b814659-1848-5adb-b2de-4e49360f8028"
+					(reference "C103")
+					(unit 1)
+				)
+				(path "/ae973c55-50b7-51aa-b86a-ae28d5c31c42/ba7e4547-ad76-5680-91d3-269632b8d517"
+					(reference "C203")
+					(unit 1)
+				)
+				(path "/ae973c55-50b7-51aa-b86a-ae28d5c31c42/d380e418-ffd6-55b5-9945-9f995eeb95b6"
+					(reference "C403")
+					(unit 1)
+				)
+				(path "/ae973c55-50b7-51aa-b86a-ae28d5c31c42/e585a2bd-3ab7-56ca-8153-7bc2b7534e16"
+					(reference "C303")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 99.06 50.8 90)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp yes)
+		(uuid "1ec9bfe7-2027-514c-9e7e-9712448941ef")
+		(property "Reference" "R103"
+			(at 99.06 46.99 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "0R"
+			(at 99.06 54.61 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
+			(at 99.06 50.8 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 99.06 50.8 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Link to the SMA line. Fit for the SMA readout, leave out while the differential probe measures."
+			(at 99.06 50.8 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "32d4aafe-13fd-564a-9662-ec73722085e1")
+		)
+		(pin "2"
+			(uuid "681b0579-b9fc-5f5a-b469-31970de3114f")
+		)
+		(instances
+			(project "sparx_probe_board"
+				(path "/ae973c55-50b7-51aa-b86a-ae28d5c31c42/7b814659-1848-5adb-b2de-4e49360f8028"
+					(reference "R103")
+					(unit 1)
+				)
+				(path "/ae973c55-50b7-51aa-b86a-ae28d5c31c42/ba7e4547-ad76-5680-91d3-269632b8d517"
+					(reference "R203")
+					(unit 1)
+				)
+				(path "/ae973c55-50b7-51aa-b86a-ae28d5c31c42/d380e418-ffd6-55b5-9945-9f995eeb95b6"
+					(reference "R403")
+					(unit 1)
+				)
+				(path "/ae973c55-50b7-51aa-b86a-ae28d5c31c42/e585a2bd-3ab7-56ca-8153-7bc2b7534e16"
+					(reference "R303")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 45.72 109.22 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "3a86f882-2703-5358-9982-e2221463763c")
+		(property "Reference" "C102"
+			(at 48.26 107.95 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "3.3p C0G"
+			(at 48.26 110.49 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0201_0603Metric"
+			(at 45.72 109.22 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 45.72 109.22 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Off-chip filter capacitor. With the probe or amplifier input and the trace it makes the 5 pF of the bench, adjust to the probe."
+			(at 45.72 109.22 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Tolerance" "0.1pF"
+			(at 45.72 109.22 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Voltage" "50V"
+			(at 45.72 109.22 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Dielectric" "C0G"
+			(at 45.72 109.22 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "d9720416-978b-50c6-8c92-215e10c1fe12")
+		)
+		(pin "2"
+			(uuid "07154424-1ba3-5a1c-9291-206290ae800a")
+		)
+		(instances
+			(project "sparx_probe_board"
+				(path "/ae973c55-50b7-51aa-b86a-ae28d5c31c42/7b814659-1848-5adb-b2de-4e49360f8028"
+					(reference "C102")
+					(unit 1)
+				)
+				(path "/ae973c55-50b7-51aa-b86a-ae28d5c31c42/ba7e4547-ad76-5680-91d3-269632b8d517"
+					(reference "C202")
+					(unit 1)
+				)
+				(path "/ae973c55-50b7-51aa-b86a-ae28d5c31c42/d380e418-ffd6-55b5-9945-9f995eeb95b6"
+					(reference "C402")
+					(unit 1)
+				)
+				(path "/ae973c55-50b7-51aa-b86a-ae28d5c31c42/e585a2bd-3ab7-56ca-8153-7bc2b7534e16"
+					(reference "C302")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 45.72 58.42 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "507a334d-113a-5c9a-b9f9-f9004494465a")
+		(property "Reference" "C101"
+			(at 48.26 57.15 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "3.3p C0G"
+			(at 48.26 59.69 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0201_0603Metric"
+			(at 45.72 58.42 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 45.72 58.42 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Off-chip filter capacitor. With the probe or amplifier input and the trace it makes the 5 pF of the bench, adjust to the probe."
+			(at 45.72 58.42 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Tolerance" "0.1pF"
+			(at 45.72 58.42 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Voltage" "50V"
+			(at 45.72 58.42 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Dielectric" "C0G"
+			(at 45.72 58.42 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "5c10768e-15ff-56df-a17c-a46633e26cef")
+		)
+		(pin "2"
+			(uuid "5f8a1d05-4f53-5153-a91b-eb7eceb8185a")
+		)
+		(instances
+			(project "sparx_probe_board"
+				(path "/ae973c55-50b7-51aa-b86a-ae28d5c31c42/7b814659-1848-5adb-b2de-4e49360f8028"
+					(reference "C101")
+					(unit 1)
+				)
+				(path "/ae973c55-50b7-51aa-b86a-ae28d5c31c42/ba7e4547-ad76-5680-91d3-269632b8d517"
+					(reference "C201")
+					(unit 1)
+				)
+				(path "/ae973c55-50b7-51aa-b86a-ae28d5c31c42/d380e418-ffd6-55b5-9945-9f995eeb95b6"
+					(reference "C401")
+					(unit 1)
+				)
+				(path "/ae973c55-50b7-51aa-b86a-ae28d5c31c42/e585a2bd-3ab7-56ca-8153-7bc2b7534e16"
+					(reference "C301")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 120.65 101.6 90)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "71c37bb5-1922-598f-8ff7-9fc1fb1aaa34")
+		(property "Reference" "C104"
+			(at 120.65 97.79 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "100n"
+			(at 120.65 105.41 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
+			(at 120.65 101.6 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 120.65 101.6 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "DC block, the 50 Ohm scope input would pull the bias"
+			(at 120.65 101.6 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "eba56f48-9b02-5bc5-aec6-594a01276e4e")
+		)
+		(pin "2"
+			(uuid "df0ca38c-b771-5a1a-bac4-0ae67db9a7e3")
+		)
+		(instances
+			(project "sparx_probe_board"
+				(path "/ae973c55-50b7-51aa-b86a-ae28d5c31c42/7b814659-1848-5adb-b2de-4e49360f8028"
+					(reference "C104")
+					(unit 1)
+				)
+				(path "/ae973c55-50b7-51aa-b86a-ae28d5c31c42/ba7e4547-ad76-5680-91d3-269632b8d517"
+					(reference "C204")
+					(unit 1)
+				)
+				(path "/ae973c55-50b7-51aa-b86a-ae28d5c31c42/d380e418-ffd6-55b5-9945-9f995eeb95b6"
+					(reference "C404")
+					(unit 1)
+				)
+				(path "/ae973c55-50b7-51aa-b86a-ae28d5c31c42/e585a2bd-3ab7-56ca-8153-7bc2b7534e16"
+					(reference "C304")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 45.72 64.77 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "720ab8e2-98ae-5d9f-8c1d-4f6026488846")
+		(property "Reference" "#PWR101"
+			(at 45.72 71.12 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 45.72 68.58 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 45.72 64.77 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 45.72 64.77 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 45.72 64.77 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "dacc2033-a402-541a-9bee-c57cee566893")
+		)
+		(instances
+			(project "sparx_probe_board"
+				(path "/ae973c55-50b7-51aa-b86a-ae28d5c31c42/7b814659-1848-5adb-b2de-4e49360f8028"
+					(reference "#PWR101")
+					(unit 1)
+				)
+				(path "/ae973c55-50b7-51aa-b86a-ae28d5c31c42/ba7e4547-ad76-5680-91d3-269632b8d517"
+					(reference "#PWR201")
+					(unit 1)
+				)
+				(path "/ae973c55-50b7-51aa-b86a-ae28d5c31c42/d380e418-ffd6-55b5-9945-9f995eeb95b6"
+					(reference "#PWR401")
+					(unit 1)
+				)
+				(path "/ae973c55-50b7-51aa-b86a-ae28d5c31c42/e585a2bd-3ab7-56ca-8153-7bc2b7534e16"
+					(reference "#PWR301")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 99.06 101.6 90)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp yes)
+		(uuid "7217e8d1-87ba-50e1-b62c-d84c3c13251a")
+		(property "Reference" "R104"
+			(at 99.06 97.79 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "0R"
+			(at 99.06 105.41 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
+			(at 99.06 101.6 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 99.06 101.6 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Link to the SMA line. Fit for the SMA readout, leave out while the differential probe measures."
+			(at 99.06 101.6 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "b00b73e4-b524-5e85-b292-ba8e01b385ad")
+		)
+		(pin "2"
+			(uuid "fa696948-a5f5-551e-a849-f4348030a09d")
+		)
+		(instances
+			(project "sparx_probe_board"
+				(path "/ae973c55-50b7-51aa-b86a-ae28d5c31c42/7b814659-1848-5adb-b2de-4e49360f8028"
+					(reference "R104")
+					(unit 1)
+				)
+				(path "/ae973c55-50b7-51aa-b86a-ae28d5c31c42/ba7e4547-ad76-5680-91d3-269632b8d517"
+					(reference "R204")
+					(unit 1)
+				)
+				(path "/ae973c55-50b7-51aa-b86a-ae28d5c31c42/d380e418-ffd6-55b5-9945-9f995eeb95b6"
+					(reference "R404")
+					(unit 1)
+				)
+				(path "/ae973c55-50b7-51aa-b86a-ae28d5c31c42/e585a2bd-3ab7-56ca-8153-7bc2b7534e16"
+					(reference "R304")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector:Conn_Coaxial")
+		(at 142.24 101.6 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "89e62e7c-403c-5ebf-9bb3-abc3bb64a481")
+		(property "Reference" "J102"
+			(at 144.78 96.52 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "SMA"
+			(at 144.78 93.98 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "sparx_pcb:SMA_Molex_73251-1153_EdgeLaunch"
+			(at 142.24 101.6 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 142.24 101.6 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "REF k to the scope, 50 Ohm"
+			(at 142.24 101.6 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "73251-1153"
+			(at 142.24 101.6 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "a856dd6f-134a-5385-bc9d-d76c9fe81b72")
+		)
+		(pin "2"
+			(uuid "7e04e1e2-70f0-52d5-b93d-96f0e9de0979")
+		)
+		(instances
+			(project "sparx_probe_board"
+				(path "/ae973c55-50b7-51aa-b86a-ae28d5c31c42/7b814659-1848-5adb-b2de-4e49360f8028"
+					(reference "J102")
+					(unit 1)
+				)
+				(path "/ae973c55-50b7-51aa-b86a-ae28d5c31c42/ba7e4547-ad76-5680-91d3-269632b8d517"
+					(reference "J202")
+					(unit 1)
+				)
+				(path "/ae973c55-50b7-51aa-b86a-ae28d5c31c42/d380e418-ffd6-55b5-9945-9f995eeb95b6"
+					(reference "J402")
+					(unit 1)
+				)
+				(path "/ae973c55-50b7-51aa-b86a-ae28d5c31c42/e585a2bd-3ab7-56ca-8153-7bc2b7534e16"
+					(reference "J302")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 142.24 58.42 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "8f8ef418-1342-5ecc-a3c7-33fe27b96efb")
+		(property "Reference" "#PWR102"
+			(at 142.24 64.77 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 142.24 62.23 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 142.24 58.42 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 142.24 58.42 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 142.24 58.42 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "c8c28be6-833f-5e55-9c67-379f99978bc6")
+		)
+		(instances
+			(project "sparx_probe_board"
+				(path "/ae973c55-50b7-51aa-b86a-ae28d5c31c42/7b814659-1848-5adb-b2de-4e49360f8028"
+					(reference "#PWR102")
+					(unit 1)
+				)
+				(path "/ae973c55-50b7-51aa-b86a-ae28d5c31c42/ba7e4547-ad76-5680-91d3-269632b8d517"
+					(reference "#PWR202")
+					(unit 1)
+				)
+				(path "/ae973c55-50b7-51aa-b86a-ae28d5c31c42/d380e418-ffd6-55b5-9945-9f995eeb95b6"
+					(reference "#PWR402")
+					(unit 1)
+				)
+				(path "/ae973c55-50b7-51aa-b86a-ae28d5c31c42/e585a2bd-3ab7-56ca-8153-7bc2b7534e16"
+					(reference "#PWR302")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 45.72 115.57 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "a720909d-e1f1-5f25-b402-60d7e32d6495")
+		(property "Reference" "#PWR103"
+			(at 45.72 121.92 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 45.72 119.38 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 45.72 115.57 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 45.72 115.57 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 45.72 115.57 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "a6ca2359-b4fa-5399-b766-2dc706924606")
+		)
+		(instances
+			(project "sparx_probe_board"
+				(path "/ae973c55-50b7-51aa-b86a-ae28d5c31c42/7b814659-1848-5adb-b2de-4e49360f8028"
+					(reference "#PWR103")
+					(unit 1)
+				)
+				(path "/ae973c55-50b7-51aa-b86a-ae28d5c31c42/ba7e4547-ad76-5680-91d3-269632b8d517"
+					(reference "#PWR203")
+					(unit 1)
+				)
+				(path "/ae973c55-50b7-51aa-b86a-ae28d5c31c42/d380e418-ffd6-55b5-9945-9f995eeb95b6"
+					(reference "#PWR403")
+					(unit 1)
+				)
+				(path "/ae973c55-50b7-51aa-b86a-ae28d5c31c42/e585a2bd-3ab7-56ca-8153-7bc2b7534e16"
+					(reference "#PWR303")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector:Conn_Coaxial")
+		(at 142.24 50.8 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "b50e65df-7bb3-552c-b2fd-1d798b72b621")
+		(property "Reference" "J101"
+			(at 144.78 45.72 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "SMA"
+			(at 144.78 43.18 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "sparx_pcb:SMA_Molex_73251-1153_EdgeLaunch"
+			(at 142.24 50.8 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 142.24 50.8 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "OUT k to the scope, 50 Ohm"
+			(at 142.24 50.8 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "73251-1153"
+			(at 142.24 50.8 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "e111d738-fcc9-5b10-957d-ad4452c2bbb1")
+		)
+		(pin "2"
+			(uuid "87d9d147-27d6-5389-afee-8713ab28ee00")
+		)
+		(instances
+			(project "sparx_probe_board"
+				(path "/ae973c55-50b7-51aa-b86a-ae28d5c31c42/7b814659-1848-5adb-b2de-4e49360f8028"
+					(reference "J101")
+					(unit 1)
+				)
+				(path "/ae973c55-50b7-51aa-b86a-ae28d5c31c42/ba7e4547-ad76-5680-91d3-269632b8d517"
+					(reference "J201")
+					(unit 1)
+				)
+				(path "/ae973c55-50b7-51aa-b86a-ae28d5c31c42/d380e418-ffd6-55b5-9945-9f995eeb95b6"
+					(reference "J401")
+					(unit 1)
+				)
+				(path "/ae973c55-50b7-51aa-b86a-ae28d5c31c42/e585a2bd-3ab7-56ca-8153-7bc2b7534e16"
+					(reference "J301")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 81.28 58.42 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "c5dfeaa9-eda7-58f0-9f0e-b9943f07655c")
+		(property "Reference" "R101"
+			(at 83.82 57.15 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "10k"
+			(at 83.82 59.69 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
+			(at 81.28 58.42 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 81.28 58.42 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "DC tap to the monitor header, keeps the header cable off the detector output"
+			(at 81.28 58.42 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "9f35301b-f07f-567f-8b34-6224c9fd9850")
+		)
+		(pin "2"
+			(uuid "bf59411d-cf9d-53b6-b9fc-e52817969a65")
+		)
+		(instances
+			(project "sparx_probe_board"
+				(path "/ae973c55-50b7-51aa-b86a-ae28d5c31c42/7b814659-1848-5adb-b2de-4e49360f8028"
+					(reference "R101")
+					(unit 1)
+				)
+				(path "/ae973c55-50b7-51aa-b86a-ae28d5c31c42/ba7e4547-ad76-5680-91d3-269632b8d517"
+					(reference "R201")
+					(unit 1)
+				)
+				(path "/ae973c55-50b7-51aa-b86a-ae28d5c31c42/d380e418-ffd6-55b5-9945-9f995eeb95b6"
+					(reference "R401")
+					(unit 1)
+				)
+				(path "/ae973c55-50b7-51aa-b86a-ae28d5c31c42/e585a2bd-3ab7-56ca-8153-7bc2b7534e16"
+					(reference "R301")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 142.24 109.22 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "e185a3b8-ffc6-5563-981d-fa50fa48d319")
+		(property "Reference" "#PWR104"
+			(at 142.24 115.57 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 142.24 113.03 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 142.24 109.22 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 142.24 109.22 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 142.24 109.22 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "d7d48431-e7f0-50c3-97d7-31431a2b700a")
+		)
+		(instances
+			(project "sparx_probe_board"
+				(path "/ae973c55-50b7-51aa-b86a-ae28d5c31c42/7b814659-1848-5adb-b2de-4e49360f8028"
+					(reference "#PWR104")
+					(unit 1)
+				)
+				(path "/ae973c55-50b7-51aa-b86a-ae28d5c31c42/ba7e4547-ad76-5680-91d3-269632b8d517"
+					(reference "#PWR204")
+					(unit 1)
+				)
+				(path "/ae973c55-50b7-51aa-b86a-ae28d5c31c42/d380e418-ffd6-55b5-9945-9f995eeb95b6"
+					(reference "#PWR404")
+					(unit 1)
+				)
+				(path "/ae973c55-50b7-51aa-b86a-ae28d5c31c42/e585a2bd-3ab7-56ca-8153-7bc2b7534e16"
+					(reference "#PWR304")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector_Generic:Conn_01x02")
+		(at 73.66 74.93 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "f81db6a0-19ac-5b44-b1fb-fc56e042a919")
+		(property "Reference" "J103"
+			(at 76.2 72.39 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "DiffProbe"
+			(at 76.2 80.01 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "sparx_pcb:DiffProbe_Pads_2x0.5mm_P1.1mm"
+			(at 73.66 74.93 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 73.66 74.93 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Differential probe landing pads: pad 1 OUT (+), pad 2 REF (-)"
+			(at 73.66 74.93 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "ebd03dc6-8c93-52c1-8b28-8ee2ce02f2ce")
+		)
+		(pin "2"
+			(uuid "daf9b6e3-afb3-54cc-998d-3bc9a5407637")
+		)
+		(instances
+			(project "sparx_probe_board"
+				(path "/ae973c55-50b7-51aa-b86a-ae28d5c31c42/7b814659-1848-5adb-b2de-4e49360f8028"
+					(reference "J103")
+					(unit 1)
+				)
+				(path "/ae973c55-50b7-51aa-b86a-ae28d5c31c42/ba7e4547-ad76-5680-91d3-269632b8d517"
+					(reference "J203")
+					(unit 1)
+				)
+				(path "/ae973c55-50b7-51aa-b86a-ae28d5c31c42/d380e418-ffd6-55b5-9945-9f995eeb95b6"
+					(reference "J403")
+					(unit 1)
+				)
+				(path "/ae973c55-50b7-51aa-b86a-ae28d5c31c42/e585a2bd-3ab7-56ca-8153-7bc2b7534e16"
+					(reference "J303")
+					(unit 1)
+				)
+			)
+		)
+	)
+)

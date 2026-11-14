@@ -182,6 +182,13 @@ An overview of the open-source design flow for SPARX is shown below. The flow co
 │     ├─ sparx_bpf_le.spice
 │     ├─ sparx_core_le.spice
 │     └─ sparx_wpd_le.spice
+├─ 📁 pcb/
+│  ├─ 📁 lib/
+│  ├─ 📁 render/
+│  ├─ README.md
+│  ├─ sparx_probe_board.kicad_pcb
+│  ├─ sparx_probe_board.kicad_pro
+│  └─ sparx_probe_board.kicad_sch
 ├─ 📁 release/
 │  ├─ 📁 v.1.0.0/
 │  │  ├─ 📁 gds/
