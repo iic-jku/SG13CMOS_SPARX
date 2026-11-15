@@ -39,12 +39,12 @@ Stock parts use the KiCad 10 libraries, and their 3D models resolve through `${K
 
 Wire length hardly matters below 2 GHz IF: 0.8 nH against 1.2 nH on `OUT` moves the detector response by 0.4 dB at 2 GHz.
 
-Gold ball bonding on ENIG is marginal. Neither fab offers ENEPIG or soft gold, and Aisler's ENIG carries 0.05 to 0.1 µm of gold. Pull-test on the 10 × 10 mm bond test pad `TP1` first, and use ball-stitch-on-ball if the stitch does not hold.
+Gold ball bonding on ENIG is marginal. Neither fab offers ENEPIG or soft gold, and Aisler's ENIG carries 0.05 to 0.1 µm of gold. Pull-test on the 5 × 5 mm bond test pad `TP1` first, and use ball-stitch-on-ball if the stitch does not hold.
 
 ## Probing
 
 LO comes from the left and RF from the right, both GSG at 125 µm pitch. The RF pads sit 0.117 mm above the LO axis.
-Along both probe axes the board keeps a corridor that is ±1.2 mm wide at the die and widens to ±8 mm at 14 mm from the die centre. Inside it are only 0201 capacitors and 0402 resistors (at most 0.35 mm tall), flat pads and the markings below. The mounting holes `H1` to `H4` sit at x ±32.5 mm, 3.5 mm beside the axes: use low screw heads there, or hold the board by vacuum.
+Along both probe axes the board keeps a corridor that is ±1.2 mm wide at the die and widens to ±8 mm at 14 mm from the die centre. Inside it are only the four 0402 REF capacitors (0.5 mm tall), the 0603 REF taps and links (0.55 mm at most), flat pads and the markings below. The mounting holes `H1` to `H4` sit at x ±32.5 mm, 3.5 mm beside the axes, and the DC monitor headers reach to 7.6 mm from them at the board ends: use low screw heads there, or hold the board by vacuum.
 
 The LO pad wants about +12 dBm, which puts about −6 dBm on each detector. The ZC170 (more than +6 dBm) therefore belongs on LO and the ZC220 (more than −2 dBm) on RF.
 
@@ -54,14 +54,14 @@ Sheet `detector.kicad_sch`. The first digit of a reference is the detector, for 
 
 | Reference | Part | Default | Function |
 | --- | --- | --- | --- |
-| `Ck01`, `Ck02` | 3.3 pF C0G 0201 | fitted | Off-chip filter capacitor of `OUT` and `REF` at the finger |
+| `Ck01`, `Ck02` | 2.7 pF C0G 0402 | fitted | Off-chip filter capacitor of `OUT` and `REF` next to the bond window |
 | `Jk03` | 2 pads 0.5 mm at 1.1 mm pitch | | Differential probe: pin 1 `OUT`, pin 2 `REF` |
-| `Rk01`, `Rk02` | 10 kΩ 0402 | fitted | DC taps to the monitor headers |
-| `Rk03`, `Rk04` | 0 Ω 0402 | not fitted | Links to the SMA lines |
-| `Ck03`, `Ck04` | 100 nF 0402 | fitted | DC blocks of the SMA lines |
+| `Rk01`, `Rk02` | 10 kΩ 0603 | fitted | DC taps to the monitor headers |
+| `Rk03`, `Rk04` | 0 Ω 0603 | not fitted | Links to the SMA lines |
+| `Ck03`, `Ck04` | 100 nF 0603 | fitted | DC blocks of the SMA lines |
 | `Jk01`, `Jk02` | Molex 73251-1153 | fitted | Edge SMAs of `OUT` and `REF` |
 
-The off-chip capacitor sets the IF bandwidth. The testbenches use 5 pF (−3 dB at 1.29 GHz), and the 3.3 pF assume 1.5 to 2 pF of probe input and trace. Adjust `Ck01` and `Ck02` once the probe is known.
+The off-chip capacitor sets the IF bandwidth. The testbenches use 5 pF (−3 dB at 1.29 GHz), and the 2.7 pF assume about 2.3 pF of probe input, pads and trace. Adjust `Ck01` and `Ck02` once the probe is known.
 
 Two readout modes:
 
@@ -84,7 +84,11 @@ The DC monitor headers carry the detector voltages through the 10 kΩ taps. Odd 
 | 1-2 (default, bridged) | `VIN` of 3.3 to 5 V on the red jack `J1` (black `J3`), through the reverse polarity diode `D1` into the LP5907 LDO `U2` at 1.5 V |
 | 2-3 | `VDD` straight from the yellow jack `J2` (black `J6`), 1.4 to 1.6 V, never above 1.6 V. Cut the 1-2 bridge first. |
 
-`VDD` reaches the die pads 4 and 11 through the 0 Ω links `R1` and `R2`, which can be replaced by current shunts. Each pad has 100 pF and 1 nF C0G 0201 at the finger, 100 nF 0402 and 1 µF 0603. The die draws 17.5 mA (4.36 mA per detector, simulated). The LDO sees 3.2 µF on its output, within the 10 µF limit of the LP5907.
+`VDD` reaches the die pads 4 and 11 through the 0 Ω links `R1` and `R2`, which can be replaced by current shunts. Each pad has 100 pF and 1 nF C0G 0603 5.75 mm from the die centre, and 100 nF X7R 0603 and 1 µF X7R 0805 beside the link. The die draws 17.5 mA (4.36 mA per detector, simulated). The LDO sees 3.2 µF on its output, within the 10 µF limit of the LP5907.
+
+## Assembly
+
+Every passive is 0603 or 0805 except the eight 0402 off-chip capacitors next to the bond window, so the board can be soldered by hand. An 0603 there would sit further from the die with more loop inductance (about 1.2 nH against 0.7 nH), which moves its self-resonance to about 2.5 GHz and bends the IF response near 2 GHz. With the 0402 at 2.7 pF the response stays within 0.4 dB of the original 0201 design up to 2 GHz (lumped estimate). Solder all parts before the die is glued and bonded, and let the bonder operator check the clearance of the 0603 capacitors, which stand up to 0.9 mm tall about 4 mm from the bond fingers.
 
 ## Markings
 
@@ -121,8 +125,8 @@ Order ENIG at either fab. For bonding, Aisler's gold is the better of the two.
 
 The project is ERC clean, the schematic and the board agree (DRC with `--schematic-parity`), and DRC reports no errors and no unconnected items. Two warning classes are left on purpose:
 
-- 199 `solder_mask_bridge`: 102 inside the bond window, which is open over the die land, the fingers and the ground around them, and 97 where the open mask strips over the 50 Ω lines expose the line next to the untented ground fence vias. The project sets this check to warning.
-- 32 `track_angle`: the house 45° rule at the T-junctions where the 10 kΩ taps leave the eight die nets.
+- 199 `solder_mask_bridge`: KiCad stops reporting a violation type after 199 items, so this number is a cap. DRC on copies with openings removed shows where they come from: the bond window, open over the die land, the fingers and the ground around them (199 or more on its own), and the open mask strips over the 50 Ω lines, which expose the line next to the untented ground fence vias (145). Nothing else bridges. The project sets this check to warning.
+- 16 `track_angle`: the house 45° rule, two per T-junction where the four OUT taps and the four VDD capacitors nearest the die branch off a track.
 
 From the repo root:
 

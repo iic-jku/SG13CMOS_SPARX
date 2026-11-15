@@ -781,7 +781,7 @@
 		)
 		(uuid "3fb5538e-59ed-52f0-88a6-31954433888d")
 	)
-	(text "Population and use (references: first digit = detector k):\n- Differential probe on the pads Jk03: the 0R links Rk03 and Rk04 stay out (default).\n- SMA readout: fit Rk03 and Rk04. The 50 Ohm scope inputs short REF\n  (about 250 Ohm source), which costs about 6.6 dB at low IF.\n- Ck01 and Ck02: off-chip capacitor of the detector. With about 1.5 to 2 pF of\n  probe input and trace they make the 5 pF of the testbenches. Adjust to the probe.\n- Rk01 and Rk02 feed the DC monitor header."
+	(text "Population and use (references: first digit = detector k):\n- Differential probe on the pads Jk03: the 0R links Rk03 and Rk04 stay out (default).\n- SMA readout: fit Rk03 and Rk04. The 50 Ohm scope inputs short REF\n  (about 250 Ohm source), which costs about 6.6 dB at low IF.\n- Ck01 and Ck02: off-chip capacitor of the detector. With about 2.3 pF of probe\n  input, pads and trace they make the 5 pF of the testbenches. Adjust to the probe.\n- Rk01 and Rk02 feed the DC monitor header."
 		(exclude_from_sim no)
 		(at 22.86 140.97 0)
 		(effects
@@ -1257,7 +1257,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 81.28 109.22 0)
 			(hide yes)
 			(show_name no)
@@ -1348,7 +1348,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 120.65 50.8 90)
 			(hide yes)
 			(show_name no)
@@ -1439,7 +1439,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 99.06 50.8 90)
 			(hide yes)
 			(show_name no)
@@ -1521,7 +1521,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "3.3p C0G"
+		(property "Value" "2.7p C0G"
 			(at 48.26 110.49 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1532,7 +1532,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0201_0603Metric"
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 45.72 109.22 0)
 			(hide yes)
 			(show_name no)
@@ -1647,7 +1647,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "3.3p C0G"
+		(property "Value" "2.7p C0G"
 			(at 48.26 59.69 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1658,7 +1658,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0201_0603Metric"
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 45.72 58.42 0)
 			(hide yes)
 			(show_name no)
@@ -1782,7 +1782,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 120.65 101.6 90)
 			(hide yes)
 			(show_name no)
@@ -1962,7 +1962,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 99.06 101.6 90)
 			(hide yes)
 			(show_name no)
@@ -2437,7 +2437,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 81.28 58.42 0)
 			(hide yes)
 			(show_name no)
