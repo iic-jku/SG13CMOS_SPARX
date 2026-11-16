@@ -44,9 +44,19 @@ Gold ball bonding on ENIG is marginal. Neither fab offers ENEPIG or soft gold, a
 ## Probing
 
 LO comes from the left and RF from the right, both GSG at 125 µm pitch. The RF pads sit 0.117 mm above the LO axis.
-Along both probe axes the board keeps a corridor that is ±1.2 mm wide at the die and widens to ±8 mm at 14 mm from the die centre. Inside it are only the four 0402 REF capacitors (0.5 mm tall), the 0603 REF taps and links (0.55 mm at most), flat pads and the markings below. The mounting holes `H1` to `H4` sit at x ±32.5 mm, 3.5 mm beside the axes, and the DC monitor headers reach to 7.6 mm from them at the board ends: use low screw heads there, or hold the board by vacuum.
+The board is laid out for GGB Picoprobe 170-GSG-100-BT-M probes (110 to 170 GHz, WR-6, 100 µm pitch). Their ground tips land about 33 µm inside the inner edge of the 125 µm ground pads.
+The probe body, read off GGB's drawing `mod170.pdf`, is a block 30.5 mm wide from about 20 mm behind the tip, its bottom 1.2 mm above the tip, with a mounting plate 8.4 mm above the tip at the back. Every part within 1 mm of that outline (0.3 mm along the coaxial tip) stays below it:
 
-The LO pad wants about +12 dBm, which puts about −6 dBm on each detector. The ZC170 (more than +6 dBm) therefore belongs on LO and the ZC220 (more than −2 dBm) on RF.
+| Parts under or beside the probe | Clearance |
+| --- | --- |
+| 0603 DC blocks `Ck04` (beside the block, not under it) | 0.51 mm |
+| 0603 REF taps and links | 0.91 mm |
+| Tip jacks, under the mounting plate | 3.7 mm |
+| `D1`, under the mounting plate | 7.6 mm |
+
+The DC monitor headers sit in the bottom corners, outside the probe footprint. Screw heads in `H1` to `H4`, under the mounting plates, must stay below 7 mm.
+
+The LO pad wants about +12 dBm, which puts about −6 dBm on each detector, so the LO source needs the higher output power: about +9 dBm from an R&S ZTXR170 on LO, against −15 to −10 dBm from an OML V06VNA2 extender, which suits RF.
 
 ## Detector readout
 
@@ -68,9 +78,9 @@ Two readout modes:
 - Differential probe on `Jk03` with the links out (default). It reads `OUT − REF` and loads each node only with the probe's input impedance.
 - SMAs with `Rk03` and `Rk04` fitted, subtracted in the oscilloscope. `OUT` drives with about 25 Ω but `REF` with about 250 Ω, so the 50 Ω inputs cost 6.6 dB of `OUT − REF` at low IF and 4 dB at 2 GHz.
 
-The SMA lines are grounded coplanar waveguides on `F.Cu` over `In1.Cu`, 0.18 mm wide with 0.15 mm gaps.
+The SMA lines are grounded coplanar waveguides on `F.Cu` over `In1.Cu`, 0.18 mm wide with 0.15 mm gaps. Every track bend on the board is a tangent arc: 1.1 to 1.5 mm on the SMA lines, 0.1 to 0.3 mm on the die escapes, up to 1 mm on the other tracks.
 
-The DC monitor headers carry the detector voltages through the 10 kΩ taps. Odd pins are signals, even pins `GND`.
+The DC monitor headers carry the detector voltages through the 10 kΩ taps. Each sits in a bottom corner with its signal row above the `GND` row and pin 1 at the right end.
 
 | Header | Pin 1 | Pin 3 | Pin 5 | Pin 7 |
 | --- | --- | --- | --- | --- |
@@ -139,7 +149,7 @@ kicad-cli pcb render --quality high --use-board-stackup-colors -o build/board.pn
 
 ## Open points
 
-- Probe tips and beak clearance against the 0201 and 0402 parts beside the die.
+- The probe outline comes from a drawing read to about ±0.5 mm, so watch the first landing from the side.
 - Differential probe model: input capacitance (sets `Ck01`, `Ck02`) and tip spacing (pads at 1.1 mm pitch).
-- Probe loss at 160 GHz and the LO power that reaches the pad.
+- The GGB 170 loss at 160 GHz (not published) and the LO power that reaches the pad.
 - Bond trial on ENIG with the bonder operator.
