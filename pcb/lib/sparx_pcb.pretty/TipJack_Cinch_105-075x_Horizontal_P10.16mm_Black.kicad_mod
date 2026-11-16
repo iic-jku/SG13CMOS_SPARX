@@ -1,0 +1,124 @@
+(footprint "TipJack_Cinch_105-075x_Horizontal_P10.16mm_Black"
+	(version 20260206)
+	(generator "pcbnew")
+	(generator_version "10.0")
+	(layer "F.Cu")
+	(descr "Cinch (Johnson) horizontal PCB tip jack for a 2 mm (0.080 in) tip plug, 105-0753-001 black: body 10.46 x 3.96 mm, two leads on one contact 10.16 mm apart, 1.32 mm holes. The plug enters along the body axis from either end. 3D model simplified.")
+	(tags "tip jack 2mm banana Cinch Johnson")
+	(property "Reference" "REF**"
+		(at 0 -3.2 0)
+		(layer "F.SilkS")
+		(uuid "b89250e1-bba6-467a-aecf-61d9b3f92178")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "TipJack_Cinch_105-075x_Horizontal_P10.16mm_Black"
+		(at 0 3.2 0)
+		(layer "F.Fab")
+		(uuid "06fab778-0e86-4534-ae2b-ff489d3b1ed6")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "4111d2f1-17f4-42ff-ba9d-7d753b8fd415")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "e0d18973-b3d8-4760-bdd9-0fa74f6b2d46")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(attr through_hole)
+	(duplicate_pad_numbers_are_jumpers no)
+	(fp_line
+		(start -3.9 -2.1)
+		(end 3.9 -2.1)
+		(stroke
+			(width 0.12)
+			(type default)
+		)
+		(layer "F.SilkS")
+		(uuid "0a9e4be1-f9dc-45af-840c-743f6dfe2295")
+	)
+	(fp_line
+		(start -3.9 2.1)
+		(end 3.9 2.1)
+		(stroke
+			(width 0.12)
+			(type default)
+		)
+		(layer "F.SilkS")
+		(uuid "15c96c0e-2f4d-4474-bf98-c0e871624bdb")
+	)
+	(fp_rect
+		(start -6.33 -2.48)
+		(end 6.33 2.48)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(fill no)
+		(layer "F.CrtYd")
+		(uuid "4f72f253-d44a-479f-bf96-0a0e71d6b784")
+	)
+	(fp_rect
+		(start -5.23 -1.98)
+		(end 5.23 1.98)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(fill no)
+		(layer "F.Fab")
+		(uuid "0514099a-bf02-4cad-a78f-c5b404be613b")
+	)
+	(pad "1" thru_hole circle
+		(at -5.08 0)
+		(size 2 2)
+		(drill 1.32)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "dd3e5650-0c27-48a6-a043-9e2a07b7caa7")
+	)
+	(pad "1" thru_hole circle
+		(at 5.08 0)
+		(size 2 2)
+		(drill 1.32)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "b31cc26a-f8d9-4d40-8a19-2beef6d623d3")
+	)
+	(embedded_fonts no)
+	(model "${KIPRJMOD}/lib/sparx_pcb.3dshapes/tipjack_cinch_105-075x_black.wrl"
+		(offset
+			(xyz 0 0 0)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz 0 0 0)
+		)
+	)
+)

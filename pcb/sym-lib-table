@@ -1,0 +1,4 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "sparx_pcb")(type "KiCad")(uri "${KIPRJMOD}/lib/sparx_pcb.kicad_sym")(options "")(descr "SPARX probe board symbols"))
+)

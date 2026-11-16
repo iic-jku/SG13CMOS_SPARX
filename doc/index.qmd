@@ -192,6 +192,7 @@ Most build outputs are committed: layouts, netlists, Palace results, Touchstone 
 | `render/`, `release/`, `doc/` | layout renders, published releases, this documentation |
 | `sscs-ose-code-a-chip/` | the Code-a-Chip notebook, see @sec-cac |
 | `measurements/` | lab measurement notes |
+| `pcb/` | KiCad 10 project of the wafer-prober board, see `pcb/README.md` |
 
 : Repository structure. {#tbl-repo tbl-colwidths="[30,70]"}
 
