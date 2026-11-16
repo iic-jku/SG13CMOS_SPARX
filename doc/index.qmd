@@ -218,7 +218,7 @@ Nothing in the flow is specific to a six-port. The structure parameters live in 
 | Circuit simulation | Xschem, ngspice, VACASK | `sim-xschem`, `sim-all`, `sim-powdet-variants` | `plot_simulations/` in `testbenches/xschem/` |
 | Full-core EM flow | AWS Palace, snp2le, ngspice, VACASK | `sparx-core` | core EM, both fits, two benches |
 | Everything | all of the above, the full-core EM flow only with `WITH_CORE=1` | `all` | |
-| Smoke test | a subset of the above | `regression`, `regression-nightly` | |
+| Smoke test | a subset of the above | `regression`, `regression-full` | |
 
 : Flow steps and their Makefile targets. {#tbl-flow tbl-colwidths="[18,22,32,28]"}
 
@@ -749,11 +749,11 @@ The noise-figure bench `sparx_top_le_tb_nf_vacask` evaluates the double-sideband
 
 # Regression and Continuous Integration {#sec-ci}
 
-`make regression` is the smoke test of the tools and the flow in the IIC-OSIC-TOOLS environment, not a design sign-off. It needs nothing but a plain container and runs `build-top` with the add-on install, `klayout-verify` and `magic-verify` of the detector, the S-parameter copy and both snp2le conversions of the WPD, and one ngspice and one VACASK WPD bench. It reuses the committed WPD Palace result. `make regression-nightly` adds the WPD Palace solve.
+`make regression` is the smoke test of the tools and the flow in the IIC-OSIC-TOOLS environment, not a design sign-off. It needs nothing but a plain container and runs `build-top` with the add-on install, `klayout-verify` and `magic-verify` of the detector, the S-parameter copy and both snp2le conversions of the WPD, and one ngspice and one VACASK WPD bench. It reuses the committed WPD Palace result. `make regression-full` adds the WPD Palace solve.
 
 | Workflow | Trigger | What it runs |
 | :--- | :--- | :--- |
-| [`regression.yml`](https://github.com/iic-jku/SG13CMOS_SPARX/actions/workflows/regression.yml) | nightly at 02:00 UTC if `main` changed in the last 25 h, and on manual dispatch | `make regression-nightly` in `hpretl/iic-osic-tools:latest` |
+| [`regression.yml`](https://github.com/iic-jku/SG13CMOS_SPARX/actions/workflows/regression.yml) | push to `main`, and on manual dispatch | `make regression-full` in `hpretl/iic-osic-tools:latest` |
 | [`license-check.yml`](https://github.com/iic-jku/SG13CMOS_SPARX/actions/workflows/license-check.yml) | push and pull request to `main` | `reuse lint` |
 | [`quarto-publish.yml`](https://github.com/iic-jku/SG13CMOS_SPARX/actions/workflows/quarto-publish.yml) | push to `main`, and on manual dispatch | renders this documentation and publishes it to `gh-pages` |
 
