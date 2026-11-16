@@ -78,7 +78,7 @@ Two readout modes:
 - Differential probe on `Jk03` with the links out (default). It reads `OUT − REF` and loads each node only with the probe's input impedance.
 - SMAs with `Rk03` and `Rk04` fitted, subtracted in the oscilloscope. `OUT` drives with about 25 Ω but `REF` with about 250 Ω, so the 50 Ω inputs cost 6.6 dB of `OUT − REF` at low IF and 4 dB at 2 GHz.
 
-The SMA lines are grounded coplanar waveguides on `F.Cu` over `In1.Cu`, 0.18 mm wide with 0.15 mm gaps. Every track bend on the board is a tangent arc: 1.1 to 1.5 mm on the SMA lines, 0.1 to 0.3 mm on the die escapes, up to 1 mm on the other tracks.
+The SMA lines are grounded coplanar waveguides on `F.Cu` over `In1.Cu`, 0.18 mm wide with 0.15 mm gaps. They bend in tangent arcs of 1.1 to 1.5 mm radius. All other tracks bend in 45° corners.
 
 The DC monitor headers carry the detector voltages through the 10 kΩ taps. Each sits in a bottom corner with its signal row above the `GND` row and pin 1 at the right end.
 
