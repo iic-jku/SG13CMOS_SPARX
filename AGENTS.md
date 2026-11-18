@@ -61,7 +61,7 @@ make regression                                  # tool/flow smoke test, reuses 
 ## CI
 
 - `.github/workflows/license-check.yml` runs `reuse lint` on pushes and pull requests to `main`.
-- `.github/workflows/regression.yml` runs `make regression-nightly` (the regression plus the WPD Palace solve) at the repo root inside `hpretl/iic-osic-tools:latest`, nightly at 02:00 UTC if `main` has a commit from the last 25 h, and on manual dispatch. It is a tool/flow smoke test, not sign-off. "Regression" in `README.md` lists what it covers.
+- `.github/workflows/regression.yml` runs `make regression-full` (the regression plus the WPD Palace solve) at the repo root inside `hpretl/iic-osic-tools:latest`, on every push to `main` and on manual dispatch. It is a tool/flow smoke test, not sign-off. "Regression" in `README.md` lists what it covers.
 - `.github/workflows/quarto-publish.yml` renders `doc/` and publishes it to `gh-pages` on every push to `main`.
 
 ## Design conventions
