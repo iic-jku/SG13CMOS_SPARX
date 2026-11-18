@@ -58,7 +58,7 @@ The full documentation of SPARX is available [here](https://iic-jku.github.io/SG
 
 ## Overview
 
-The complete layout is generated in Python using self-made RF devices as a GDSFactory IHP PDK add-on. S-parameter simulation of the passive RF structures (BPF, WPD, and BLC) is performed with AWS Palace. The de-embedded EM results are then fitted to passivity-enforced lumped element models with [snp2le](https://github.com/iic-jku/snp2le), in both SPICE and Spectre dialects, and resimulated in Xschem testbenches with ngspice and VACASK. The six-port core is verified in two ways: as a single fitted model of the full-core EM simulation and as a composition of the individual BPF, WPD, and BLC models. With KLayout, Magic, and Netgen, a complete DRC, LVS, and PEX verification flow is implemented, and gdscheck adds a third DRC engine. The SBD-based power detector is designed in Xschem and simulated with ngspice and VACASK. This repository is controlled by a Makefile. Just clone it and run `make all` to build the six-port receiver at 160 GHz, verify it, run the EM simulations, extract the lumped element models, and simulate all testbenches. To generate a frequency-scalable layout at a different target frequency, for example 77 GHz, run `make build-layout FREQ=77`. A nightly [regression](#regression) exercises the complete tool flow in GitHub Actions inside the IIC-OSIC-TOOLS container. The following video demonstrates the generation of six-port receivers from 60 GHz to 300 GHz in under one minute.
+The complete layout is generated in Python using self-made RF devices as a GDSFactory IHP PDK add-on. S-parameter simulation of the passive RF structures (BPF, WPD, and BLC) is performed with AWS Palace. The de-embedded EM results are then fitted to passivity-enforced lumped element models with [snp2le](https://github.com/iic-jku/snp2le), in both SPICE and Spectre dialects, and resimulated in Xschem testbenches with ngspice and VACASK. The six-port core is verified in two ways: as a single fitted model of the full-core EM simulation and as a composition of the individual BPF, WPD, and BLC models. With KLayout, Magic, and Netgen, a complete DRC, LVS, and PEX verification flow is implemented, and gdscheck adds a third DRC engine. The SBD-based power detector is designed in Xschem and simulated with ngspice and VACASK. This repository is controlled by a Makefile. Just clone it and run `make all` to build the six-port receiver at 160 GHz, verify it, run the EM simulations, extract the lumped element models, and simulate all testbenches. To generate a frequency-scalable layout at a different target frequency, for example 77 GHz, run `make build-layout FREQ=77`. A [regression](#regression) on every push to `main` exercises the complete tool flow in GitHub Actions inside the IIC-OSIC-TOOLS container. The following video demonstrates the generation of six-port receivers from 60 GHz to 300 GHz in under one minute.
 
 **Index Terms:** Branch-line coupler, frequency-scalable layout, GDSFactory, hairpin coupled-line bandpass filter, IHP Open-PDK, mmWave, open-source EDA, power detector, programmatic layout, Schottky barrier diode, six-port receiver, Wilkinson power divider.
 
@@ -973,18 +973,18 @@ make regression
 
 The default `regression` is run manually and as part of the IIC-OSIC-TOOLS release regression tests ([`_tests/22`](https://github.com/iic-jku/IIC-OSIC-TOOLS/tree/next_release/_tests/22)), which validate each IIC-OSIC-TOOLS release against real designs.
 
-By default (`NIGHTLY_REGRESSION=0`), `regression` reuses the committed WPD Palace results and does not re-run the slow full-wave EM solve. The `regression-nightly` target is the full variant: it runs everything `regression` does **plus** the WPD AWS Palace EM solve (`sim-wpd-em`), so the copy, snp2le, and Xschem steps run on freshly generated EM data. Internally, `regression-nightly` just calls `regression` with `NIGHTLY_REGRESSION=1`, so `make regression-nightly` and `make regression NIGHTLY_REGRESSION=1` are equivalent.
+By default (`FULL_REGRESSION=0`), `regression` reuses the committed WPD Palace results and does not re-run the slow full-wave EM solve. The `regression-full` target is the full variant: it runs everything `regression` does **plus** the WPD AWS Palace EM solve (`sim-wpd-em`), so the copy, snp2le, and Xschem steps run on freshly generated EM data. Internally, `regression-full` just calls `regression` with `FULL_REGRESSION=1`, so `make regression-full` and `make regression FULL_REGRESSION=1` are equivalent.
 
 ```sh
-make regression-nightly
+make regression-full
 ```
 
-This project's own continuous integration runs the full variant: the [`regression`](.github/workflows/regression.yml) GitHub Actions workflow runs `make regression-nightly` (including the EM solve) inside the `hpretl/iic-osic-tools` container nightly (and on manual dispatch), and its status is shown by the *Regression* badge at the top of this README. The scheduled run is gated so it only executes when there have been changes since the previous night.
+This project's own continuous integration runs the full variant: the [`regression`](.github/workflows/regression.yml) GitHub Actions workflow runs `make regression-full` (including the EM solve) inside the `hpretl/iic-osic-tools` container on every push to `main` (and on manual dispatch), and its status is shown by the *Regression* badge at the top of this README.
 
 To keep the runtime low while still covering most of the toolchain, the regression makes the following trade-offs:
 
 - Only the small `sparx_powdet_sbd` power-detector cell is verified, not the full six-port top cell. KLayout DRC, KLayout LVS, and KLayout PEX are run. Magic + Netgen LVS and Magic PEX are run, the Magic DRC is not. gdscheck runs only the rule decks `cont` and `via1`, which this cell passes, so a broken gdscheck fails the regression.
-- The full-wave EM solve is not re-run by the default `regression`. The AWS Palace EM simulation of the Wilkinson power divider (WPD) is the slowest step, so `regression` reuses the committed WPD Palace results and only exercises the downstream flow: S-parameter copy and lumped-element conversion (SPICE and Spectre). Use `regression-nightly` (or `make sim-wpd-em`) to regenerate the EM results.
+- The full-wave EM solve is not re-run by the default `regression`. The AWS Palace EM simulation of the Wilkinson power divider (WPD) is the slowest step, so `regression` reuses the committed WPD Palace results and only exercises the downstream flow: S-parameter copy and lumped-element conversion (SPICE and Spectre). Use `regression-full` (or `make sim-wpd-em`) to regenerate the EM results.
 - Only one ngspice and one VACASK testbench are simulated (the Wilkinson power divider AC S-parameter benches).
 - The layout is generated at a single frequency (160 GHz). No frequency sweep is run.
 - Top-level LVS is not run (work in progress).
@@ -999,7 +999,7 @@ The following tools and flows are checked:
 | Xschem netlisting, KLayout DRC, KLayout LVS, KLayout PEX | `klayout-verify CELL=sparx_powdet_sbd` |
 | gdscheck DRC (`sak-drc.sh -g`) | `gdscheck-drc CELL=sparx_powdet_sbd GDSCHECK_DECKS=cont,via1` |
 | Xschem netlisting, Magic + Netgen LVS, Magic PEX | `magic-verify CELL=sparx_powdet_sbd` |
-| GDSFactory + gds2palace meshing + AWS Palace EM solve | `sim-wpd-em` (`regression-nightly` only) |
+| GDSFactory + gds2palace meshing + AWS Palace EM solve | `sim-wpd-em` (`regression-full` only) |
 | S-parameter result copy (raw + de-embedded) | `copy-sparam SPARAM=sparx160_wpd` |
 | snp2le (raw S-parameter to lumped element, SPICE + Spectre) | `snp2le SNP=.../sparx160_wpd.s3p ...` |
 | Xschem netlisting + ngspice | `sim-xschem TB=sparx_wpd_le_tb_acsp_ngspice` |
