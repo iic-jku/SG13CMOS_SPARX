@@ -9,7 +9,7 @@
 <meta name="author" content="Simon Dorrer">
 <meta name="author" content="David Kellerer-Pirklbauer">
 <meta name="author" content="Harald Pretl">
-<meta name="dcterms.date" content="2026-11-11">
+<meta name="dcterms.date" content="2026-11-18">
 
 <title>SPARX: An Open-Source, Automated, Programmatically Generated, Frequency-Scalable Six-Port Receiver in 130-nm CMOS – SPARX</title>
 <style>
@@ -494,7 +494,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">November 11, 2026</p>
+      <p class="date">November 18, 2026</p>
     </div>
   </div>
   
@@ -1028,7 +1028,7 @@ Table&nbsp;6: Flow steps and their Makefile targets.
 <tr class="odd">
 <td style="text-align: left;">Smoke test</td>
 <td style="text-align: left;">a subset of the above</td>
-<td style="text-align: left;"><code>regression</code>, <code>regression-nightly</code></td>
+<td style="text-align: left;"><code>regression</code>, <code>regression-full</code></td>
 <td style="text-align: left;"></td>
 </tr>
 </tbody>
@@ -2384,7 +2384,7 @@ Table&nbsp;23: Double-sideband noise figure of the receiver, referred to the RF 
 </section>
 <section id="sec-ci" class="level1" data-number="12">
 <h1 data-number="12"><span class="header-section-number">12</span> Regression and Continuous Integration</h1>
-<p><code>make regression</code> is the smoke test of the tools and the flow in the IIC-OSIC-TOOLS environment, not a design sign-off. It needs nothing but a plain container and runs <code>build-top</code> with the add-on install, <code>klayout-verify</code> and <code>magic-verify</code> of the detector, the S-parameter copy and both snp2le conversions of the WPD, and one ngspice and one VACASK WPD bench. It reuses the committed WPD Palace result. <code>make regression-nightly</code> adds the WPD Palace solve.</p>
+<p><code>make regression</code> is the smoke test of the tools and the flow in the IIC-OSIC-TOOLS environment, not a design sign-off. It needs nothing but a plain container and runs <code>build-top</code> with the add-on install, <code>klayout-verify</code> and <code>magic-verify</code> of the detector, the S-parameter copy and both snp2le conversions of the WPD, and one ngspice and one VACASK WPD bench. It reuses the committed WPD Palace result. <code>make regression-full</code> adds the WPD Palace solve.</p>
 <div id="tbl-ci" class="quarto-float quarto-figure quarto-figure-center anchored" data-tbl-colwidths="[25,40,35]">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ci-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -2407,8 +2407,8 @@ Table&nbsp;24: GitHub Actions workflows.
 <tbody>
 <tr class="odd">
 <td style="text-align: left;"><a href="https://github.com/iic-jku/SG13CMOS_SPARX/actions/workflows/regression.yml"><code>regression.yml</code></a></td>
-<td style="text-align: left;">nightly at 02:00 UTC if <code>main</code> changed in the last 25 h, and on manual dispatch</td>
-<td style="text-align: left;"><code>make regression-nightly</code> in <code>hpretl/iic-osic-tools:latest</code></td>
+<td style="text-align: left;">push to <code>main</code>, and on manual dispatch</td>
+<td style="text-align: left;"><code>make regression-full</code> in <code>hpretl/iic-osic-tools:latest</code></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"><a href="https://github.com/iic-jku/SG13CMOS_SPARX/actions/workflows/license-check.yml"><code>license-check.yml</code></a></td>
