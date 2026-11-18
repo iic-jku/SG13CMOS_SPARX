@@ -175,7 +175,7 @@ help: ## Show this help message
 	@echo 'EM sim: solves the structures written by build-layout to $(EM_LAY_DIR), so run build-layout first.'
 	@echo 'EM sim: NP=<procs> Z0=<Ohms> SIGNAL_CROSS_SECTION=<metal> GROUND_CROSS_SECTION=<metal> are the port settings of the solve.'
 	@echo 'view-em-sim: FILE_NAME=<name_with_extension>. copy-sparam: SPARAM=<em_run_name>. release: VERSION=<version>.'
-	@echo 'regression is the fast tool/flow smoke test (committed EM result). regression-nightly also runs the WPD AWS Palace EM solve.'
+	@echo 'regression is the fast tool/flow smoke test (committed EM result). regression-full also runs the WPD AWS Palace EM solve.'
 	@echo 'WITH_CORE defaults to 0. Set to 1 to run sparx-core (seven-port core EM, long runtime) inside all, before sim-all.'
 	@echo 'VERSION defaults to $(VERSION). Used by the release target.'
 	@echo 'OPEN_ARGS passes extra options to sak-open.py for the open target (e.g. --all).'
@@ -608,23 +608,23 @@ release: ## Copy the gds, netlist files and chip renders to the release folder (
 
 
 # Regression Targets
-# NIGHTLY_REGRESSION toggles the WPD AWS Palace EM solve inside `regression`:
+# FULL_REGRESSION toggles the WPD AWS Palace EM solve inside `regression`:
 # - 0 (default) reuses the committed EM result
 # - 1 runs sim-wpd-em first.
-# The regression-nightly target sets it to 1.
-NIGHTLY_REGRESSION ?= 0
+# The regression-full target sets it to 1.
+FULL_REGRESSION ?= 0
 
-regression: ## Regression test target for IIC-OSIC-TOOLS (usage: make regression [NIGHTLY_REGRESSION=1])
+regression: ## Regression test target for IIC-OSIC-TOOLS (usage: make regression [FULL_REGRESSION=1])
 # 	GDSFactory programmatic six-port layout generation
 	$(MAKE) build-top
 # 	KLayout DRC, LVS, and kpex PEX of the power-detector cell.
 	$(MAKE) klayout-verify CELL=$(POWDET)
 # 	Magic DRC, Magic + Netgen LVS, and Magic PEX of the power-detector cell.
 	$(MAKE) magic-verify CELL=$(POWDET)
-# 	Optional AWS Palace EM solve (WPD), run only when NIGHTLY_REGRESSION=1 (regression-nightly).
-	$(if $(filter 1,$(NIGHTLY_REGRESSION)),$(MAKE) sim-wpd-em)
+# 	Optional AWS Palace EM solve (WPD), run only when FULL_REGRESSION=1 (regression-full).
+	$(if $(filter 1,$(FULL_REGRESSION)),$(MAKE) sim-wpd-em)
 # 	Copy the raw and de-embedded S-parameter results (WPD): the fresh sim-wpd-em output when
-# 	NIGHTLY_REGRESSION=1, otherwise the committed Palace output.
+# 	FULL_REGRESSION=1, otherwise the committed Palace output.
 	$(MAKE) copy-sparam SPARAM=$(WPD_EM_NAME)
 # 	Raw S-parameter to lumped-element netlist conversion (WPD).
 	$(MAKE) snp2le SNP=$(EM_SPARAM_DIR)/$(WPD_EM_NAME).s3p ORDER=10 LE_FORMAT=spice LE_OUT=netlist/spice/sparx_wpd_le.spice
@@ -634,9 +634,9 @@ regression: ## Regression test target for IIC-OSIC-TOOLS (usage: make regression
 	$(MAKE) sim-xschem TB=sparx_wpd_le_tb_acsp_vacask
 .PHONY: regression
 
-regression-nightly: ## Nightly regression test target for IIC-OSIC-TOOLS (usage: make regression-nightly)
-	$(MAKE) regression NIGHTLY_REGRESSION=1
-.PHONY: regression-nightly
+regression-full: ## Full regression test target for CI (usage: make regression-full)
+	$(MAKE) regression FULL_REGRESSION=1
+.PHONY: regression-full
 # ================================================================================================
 
 
