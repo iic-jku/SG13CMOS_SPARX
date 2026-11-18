@@ -220,9 +220,7 @@ An overview of the open-source design flow for SPARX is shown below. The flow co
 │  ├─ img2lay.py
 │  ├─ prune_pex_symbol.py
 │  ├─ six_port_gen.py
-│  ├─ sparx_powdet_sbd_circuit.ipynb
-│  ├─ test_tie_pex_substrate.py
-│  └─ tie_pex_substrate.py
+│  └─ sparx_powdet_sbd_circuit.ipynb
 ├─ 📁 sscs-ose-code-a-chip/
 │  ├─ 📁 assets/
 │  ├─ README.md
@@ -667,9 +665,9 @@ The `EXT_MODE` parameter selects the extraction mode:
 - `3` = full-RC (default)
 
 > [!NOTE]
-> For `klayout-pex`, `EXT_MODE=1` (C-decoupled) is not yet supported by kpex and automatically falls back to `EXT_MODE=2` (C-coupled) with a warning.
+> For `klayout-pex`, `EXT_MODE=1` (C-decoupled) runs kpex in its mode `C`, which replaces each coupling capacitance by its full value from both nets to the substrate.
 
-The `.subckt` name in the extracted SPICE file is `<CELL>_pex`: `magic-pex` sets it directly via the `sak-pex.sh` option `-n <CELL>_pex`, while for `klayout-pex` it is automatically renamed from `<CELL>` (kpex).
+The `.subckt` name in the extracted SPICE file is `<CELL>_pex`: both targets set it via the `sak-pex.sh` option `-n <CELL>_pex`.
 
 Both targets start by running `symbol-pex` (see above), so `schematic/xschem/<CELL>_pex.sym` always reflects the current cell symbol. If it exists, the `.subckt` pin order in the extracted SPICE file is then reordered with `sak-pin-reorder.py` (installed in the IIC-OSIC-TOOLS container) to match that symbol's pin positions. This ensures the PEX netlist can be used directly with the corresponding Xschem symbol for simulation regardless of the selected `EXT_MODE`.
 
@@ -685,7 +683,7 @@ python3 scripts/check_pex_ports.py netlist/pex/sparx_powdet_sbd_magic_pex_3.spic
 python3 scripts/check_pex_ports.py -v netlist/pex/*.spice     # -v also prints the size of each subcircuit
 ```
 
-**KLayout PEX** uses the 2.5D engine of `kpex` (`kpex extract --2.5D`), which needs kpex 0.9.0 or later:
+**KLayout PEX** uses `sak-pex.sh -k`, which extracts with the 2.5D engine of `kpex`. Both come with the image from `2026.11` on (kpex 0.10.0):
 
 ```sh
 make klayout-pex
@@ -693,11 +691,12 @@ make klayout-pex CELL=sparx_powdet_sbd
 make klayout-pex CELL=sparx_powdet_sbd EXT_MODE=3
 ```
 
-On top of the extraction the target does three things:
+On top of the extraction the target does four things:
 
-- It passes the CDL netlist of `klayout-lvs-netlist` as schematic, so that kpex checks its own LVS netlist against the device classes and totals of the schematic. A mismatch fails the target in full-RC (`EXT_MODE=3`) and is only a warning in C-coupled mode (`EXT_MODE=1` and `2`). A cell without a schematic gets a dummy one.
-- It reduces the full-RC netlist with TICER (`--reduce ticer`), which leaves far fewer elements and a faster simulation, and ngspice with `klu` can lose the operating point of an unreduced netlist (resistors below 1 mOhm). It does on the power detector, where the reduced netlist converges and stays within 0.05 dB of the unreduced one in S11 at 160 GHz.
-- It ties the substrate port `sub!` of the 2.5D netlist to `PEX_SUB_NET` (default `vss`, [`scripts/tie_pex_substrate.py`](scripts/tie_pex_substrate.py)), as Magic ties the substrate to `vss`, so the netlist keeps the pins of `<CELL>_pex.sym`.
+- It passes the CDL netlist of `klayout-lvs-netlist` as schematic (`sak-pex.sh -S`), so that kpex checks its own LVS netlist against the device classes and totals of the schematic. A mismatch fails the target in full-RC (`EXT_MODE=3`) and is only a warning in `EXT_MODE=1` and `2`. A cell without a schematic gets a dummy one.
+- It keeps MIM and MOM capacitors as devices with their models (`--blackbox y`), which kpex would otherwise replace by the extracted capacitance of their plates.
+- It reduces the full-RC netlist with TICER (`KPEX_REDUCE`, default `ticer`), which leaves far fewer elements and a faster simulation, and ngspice with `klu` can lose the operating point of an unreduced netlist (resistors below 1 mOhm). It does on the power detector, where the reduced netlist converges and stays within 0.05 dB of the unreduced one in S11 at 160 GHz.
+- It ties the substrate port `sub!` of the 2.5D netlist to `PEX_SUB_NET` (default `vss`, `sak-pex.sh -g`), as Magic ties the substrate to `vss`, so the netlist keeps the pins of `<CELL>_pex.sym`.
 
 The two extractions differ at the RF input of the power detector: Z_in at 160 GHz is 50 - 40j Ohm from kpex and 40 - 25j Ohm from Magic (S11 -8.6 dB against -10.9 dB), mostly from the resistance of the 30-cell bias MIM array, which Magic keeps on one node.
 
