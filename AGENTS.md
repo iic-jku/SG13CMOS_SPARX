@@ -19,7 +19,7 @@ When adding a flow or a folder, mirror the template layout and its `Makefile` co
 | Path | Contents |
 | --- | --- |
 | `Makefile`, `README.md` | The single flow for the whole chip. `README.md` documents every target. |
-| `scripts/` | `six_port_gen.py` (GDSFactory generator of the full layout), `powdet_variant.py`, `prune_pex_symbol.py`, `check_pex_ports.py`, `tie_pex_substrate.py` with `test_tie_pex_substrate.py`, `img2lay.py`, logo `assets/` |
+| `scripts/` | `six_port_gen.py` (GDSFactory generator of the full layout), `powdet_variant.py`, `prune_pex_symbol.py`, `check_pex_ports.py`, `img2lay.py`, logo `assets/` |
 | `layout/` | Generated GDS: `sparx<FREQ>_top.gds` for 60 to 300 GHz and the power detector `sparx_powdet_sbd.gds` |
 | `schematic/xschem/` | Power detector and six-port schematics and symbols, symbols of the lumped-element (LE) models |
 | `testbenches/xschem/` | ngspice and VACASK testbenches, `plot_simulations/` scripts with their `data/` and `figures/` |
@@ -87,7 +87,7 @@ make regression                                  # tool/flow smoke test, reuses 
 - `make klayout-drc-regular` reports antenna violations that IHP waived for the tapeout (`KNOWN_ISSUES.md`). Top-level LVS is open (`ToDo.md`), so the regression verifies only `sparx_powdet_sbd`.
 - KLayout is the sign-off DRC. Magic reports `MIM.e` and `MIM.i`, and gdscheck reports `nSDB.e` on the `schottky` PCell (`KNOWN_ISSUES.md`), so until the upstream fixes are in the image the flows leave the Magic DRC out, its lines are commented out in `magic-verify` and `make all`, and `gdscheck-drc` stops `make all`. Fix such a report upstream, not with make's `-` prefix in a flow. `DRC_JOBS=<n>` caps the KLayout processes and sets the gdscheck threads.
 - `palace -np $(NP)` uses `NP=4` by default. Open MPI counts physical cores and aborts with "not enough slots" on smaller hosts: lower `NP` or set `OMPI_MCA_hwloc_base_use_hwthreads_as_cpus=1` as `regression.yml` does.
-- `klayout-pex` runs the 2.5D engine of `kpex` and needs kpex 0.7.0 or later, which no released image ships yet (`2026.10` has 0.6.8). A full-RC extraction of the small `sparx_powdet_sbd` takes about 4 min where Magic takes seconds, so use `magic-pex` for a quick netlist.
+- `klayout-pex` runs the 2.5D engine of `kpex` through `sak-pex.sh -k`, which the image ships from `2026.11` on (with kpex 0.10.0). A full-RC extraction of the small `sparx_powdet_sbd` takes about 1 min where Magic takes seconds, so use `magic-pex` for a quick netlist.
 
 ## License headers
 
