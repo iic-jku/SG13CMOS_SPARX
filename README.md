@@ -698,7 +698,7 @@ On top of the extraction the target does four things:
 - It reduces the full-RC netlist with TICER (`KPEX_REDUCE`, default `ticer`), which leaves far fewer elements and a faster simulation, and ngspice with `klu` can lose the operating point of an unreduced netlist (resistors below 1 mOhm). It does on the power detector, where the reduced netlist converges and stays within 0.05 dB of the unreduced one in S11 at 160 GHz.
 - It ties the substrate port `sub!` of the 2.5D netlist to `PEX_SUB_NET` (default `vss`, `sak-pex.sh -g`), as Magic ties the substrate to `vss`, so the netlist keeps the pins of `<CELL>_pex.sym`.
 
-The two extractions differ at the RF input of the power detector: Z_in at 160 GHz is 50 - 40j Ohm from kpex and 40 - 25j Ohm from Magic (S11 -8.6 dB against -10.9 dB), mostly from the resistance of the 30-cell bias MIM array, which Magic keeps on one node.
+The two extractions differ at the RF input of the power detector: Z_in at `rfin` at 160 GHz is 50 - 40j Ohm from kpex and 40 - 25j Ohm from Magic (S11 -8.5 dB against -10.9 dB, without the 50 Ohm source resistor `Rs` of the ngspice bench, see #18), mostly from the resistance of the 30-cell bias MIM array, which Magic keeps on one node.
 
 **Magic PEX** uses `sak-pex.sh`, which extracts the parasitics with Magic (C-decoupled, C-coupled, or full-RC):
 
