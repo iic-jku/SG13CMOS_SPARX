@@ -138,11 +138,11 @@ Everything runs inside the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSIC-
 | [IHP-GDSFactory-Addon](https://github.com/iic-jku/IHP-GDSFactory-Addon) | cloned and installed into `.venv/` by `make build-pdk` | layout generation and EM targets |
 | VACASK | `1b48553` (2026-09-29) or later | the PSS bench of the detector and the NF benches of the detector and the receiver, which run `pss`, `pac` and `pnoise` |
 | snp2le | 0.1.10 or later | `LE_NOISE=thermal`, used by `make sparx-core` for the full-core fit |
-| kpex | 0.9.0 or later | `klayout-pex`, which runs the 2.5D engine |
+| kpex, `sak-pex.sh` | kpex 0.10.0, `sak-pex.sh -k` (image `2026.11` or later) | `klayout-pex`, which runs the 2.5D engine |
 
 : Tools and versions. {#tbl-requirements tbl-colwidths="[25,40,35]"}
 
-The `2026.10` image ships VACASK `fb8cc20`, snp2le 0.1.17 and kpex 0.6.8, which is too old for `klayout-pex` (it stops in full-RC mode). The images up to `2026.09` ship older VACASK builds: `2026.09` has `hbnoise` but neither `pac` nor `pnoise`, and `2026.08` has none of the three. On such a binary the shooting analyses of the PSS bench abort, the NF benches report `pac` and `pnoise` as unknown analyses and run the rest, and VACASK still exits 0. To check a binary:
+The `2026.10` image ships VACASK `fb8cc20`, snp2le 0.1.17, kpex 0.6.8 and a `sak-pex.sh` without `-k`, so `klayout-pex` needs `2026.11`. The images up to `2026.09` ship older VACASK builds: `2026.09` has `hbnoise` but neither `pac` nor `pnoise`, and `2026.08` has none of the three. On such a binary the shooting analyses of the PSS bench abort, the NF benches report `pac` and `pnoise` as unknown analyses and run the rest, and VACASK still exits 0. To check a binary:
 
 ```sh
 strings $(which vacask) | grep -c "PNOISE periodic"    # 0 on a build without pnoise
