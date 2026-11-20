@@ -2,8 +2,8 @@
 
 [![License: Solderpad Hardware License v2.1](https://img.shields.io/badge/License-Solderpad%20Hardware%20License%20v2.1-blue.svg)](LICENSE)
 [![Quarto Publish](https://github.com/iic-jku/SG13CMOS_SPARX/actions/workflows/quarto-publish.yml/badge.svg?branch=main)](https://github.com/iic-jku/SG13CMOS_SPARX/actions/workflows/quarto-publish.yml)
-[![Regression](https://github.com/iic-jku/SG13CMOS_SPARX/actions/workflows/regression.yml/badge.svg)](https://github.com/iic-jku/SG13CMOS_SPARX/actions/workflows/regression.yml)
-[![License Check](https://github.com/iic-jku/SG13CMOS_SPARX/actions/workflows/license-check.yml/badge.svg)](https://github.com/iic-jku/SG13CMOS_SPARX/actions/workflows/license-check.yml)
+[![Regression](https://github.com/iic-jku/SG13CMOS_SPARX/actions/workflows/regression.yml/badge.svg?branch=main)](https://github.com/iic-jku/SG13CMOS_SPARX/actions/workflows/regression.yml)
+[![License Check](https://github.com/iic-jku/SG13CMOS_SPARX/actions/workflows/license-check.yml/badge.svg?branch=main)](https://github.com/iic-jku/SG13CMOS_SPARX/actions/workflows/license-check.yml)
 [![Documentation](https://img.shields.io/badge/Documentation-online-orange?logo=quarto)](https://iic-jku.github.io/SG13CMOS_SPARX/index.html)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19654232.svg)](https://doi.org/10.5281/zenodo.19654232)
 
@@ -416,6 +416,8 @@ Opens a file browser for this folder with `sak-open.py` from the [IIC-OSIC-TOOLS
 ```sh
 make open
 ```
+
+All file types are ticked at startup, each checkbox showing how many files of that type the tree holds. `None` and `All` untick or tick every type at once, and `Rescan` rereads the tree immediately. The filter field keeps only the files whose path contains the typed text (case-insensitive), so `powdet` reduces the list to the files of the power detector and its testbenches. Clicking a directory heading folds it away. Hovering a button shows the file's size and age in the status line at the bottom. A right click on a button opens a menu with `Cell view` (all views of that cell, for example its `.sch`, `.sym` and `.gds`, wherever they live in the tree), `Scope here` (rescan from that file's directory), `Fold all`, `Save view` (remember the folded directories and ticked types for this tree), `Open shell` and `Copy path`.
 
 Clicking a button launches the matching tool in the file's own directory, so Xschem finds its `simulations/` folder and KLayout the layouts where they belong:
 
@@ -1038,13 +1040,13 @@ make all
 ## Cite This Work
 
 ```
-@misc{2026_SPARX,
-  author = {Dorrer, Simon and Kellerer-Pirklbauer, David and Pretl, Harald},
-  month = oct,
-  year = {2026},
-  title = {{GitHub Repository of SPARX: An Open-Source, Automated, Programmatically Generated, Frequency-Scalable Six-Port Receiver in 130-nm CMOS}},
-  url = {https://github.com/iic-jku/SG13CMOS_SPARX},
-  doi = {10.5281/zenodo.19654232}
+@software{2026_SPARX,
+	author = {Dorrer, Simon and Kellerer-Pirklbauer, David and Pretl, Harald},
+	month = oct,
+	year = {2026},
+	title = {{GitHub Repository of SPARX: An Open-Source, Automated, Programmatically Generated, Frequency-Scalable Six-Port Receiver in 130-nm CMOS}},
+	url = {https://github.com/iic-jku/SG13CMOS_SPARX},
+	doi = {10.5281/zenodo.19654232}
 }
 ```
 
