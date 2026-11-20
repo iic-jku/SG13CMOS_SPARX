@@ -29,7 +29,7 @@ website:
         href: index.pdf
     right:
       - icon: github
-        href: "{{< meta var.url-repo >}}"
+        href: "https://github.com/iic-jku/SG13CMOS_SPARX"
         target: "_blank"
   page-footer:
     left: |
@@ -52,3 +52,17 @@ format:
     fig-align: center
     lang: en-US
     lightbox: true
+    include-after-body:
+      text: |
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          document.querySelectorAll('a').forEach(function(a) {
+            var t = (a.textContent || '').trim();
+            if (t === 'Edit this page') {
+              a.href = 'https://github.com/iic-jku/SG13CMOS_SPARX/pulls';
+            } else if (t === 'Report an issue') {
+              a.href = 'https://github.com/iic-jku/SG13CMOS_SPARX/issues';
+            }
+          });
+        });
+        </script>

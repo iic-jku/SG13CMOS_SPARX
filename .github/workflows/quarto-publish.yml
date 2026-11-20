@@ -1,5 +1,6 @@
 # SPDX-FileCopyrightText: 2025-2026 The SPARX Team
 # SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1
+
 name: quarto-publish
 
 on:
@@ -19,7 +20,7 @@ jobs:
           sudo apt -y install librsvg2-bin
       
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           submodules: recursive
 
@@ -29,7 +30,7 @@ jobs:
           tinytex: true
 
       - name: Install Python and Dependencies
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v6
         with:
           python-version: '3.x'
           cache: 'pip'

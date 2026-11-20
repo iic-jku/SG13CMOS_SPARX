@@ -1,6 +1,7 @@
 # Makefile for SPARX: An Automated, Programmatically Generated Frequency-Scalable Six-Port Receiver in 130-nm CMOS
 #
 # SPDX-FileCopyrightText: 2025-2026 The SPARX Team
+# Johannes Kepler University, Department for Integrated Circuits
 # SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1
 # ========================================================================
 
@@ -30,14 +31,6 @@ endif
 # ========================================================================
 
 
-# Version for release target
-# Override with: make <target> VERSION=<version>
-VERSION ?= 2.0.0
-
-# Extra options for the sak-open.py file browser (e.g. --all to include build outputs)
-# Override with: make open OPEN_ARGS=<options>
-OPEN_ARGS ?=
-
 # Cell name for verification targets (default: top-level cell)
 # Override with: make <target> CELL=<cellname>
 CELL ?= $(TOP)
@@ -54,7 +47,7 @@ THRESHOLD ?= 1000
 # Override with: make <target> MINRES=<mOhm>
 MINRES ?= 100
 
-# full-RC extresist mindelay in ps (sak-pex.sh -y, only used in EXT_MODE=3; default: 0, gate by resistance)
+# full-RC extresist mindelay in ps (sak-pex.sh -y, only used in EXT_MODE=3; default: 0 = gate by resistance)
 # Override with: make <target> MINDELAY=<ps>
 MINDELAY ?= 0
 
@@ -95,6 +88,14 @@ KPEX_REDUCE ?= ticer
 # Floating-point precision (significant digits) for Xschem's ev function
 # Override with: make <target> EV_PRECISION=<digits>
 EV_PRECISION ?= 5
+
+# Version for release target
+# Override with: make <target> VERSION=<version>
+VERSION ?= 2.0.0
+
+# Extra options for the sak-open.py file browser (e.g. --all to include build outputs)
+# Override with: make open OPEN_ARGS=<options>
+OPEN_ARGS ?=
 
 # Power-detector design variant for the VACASK testbenches that instantiate the detector, the receiver benches
 # sparx_top_le_tb_*_vacask included, rewritten from the emitted netlist by scripts/powdet_variant.py: m1 (as
@@ -155,24 +156,24 @@ LE_NOISE ?= noiseless
 SPARAM ?= $(BLC_EM_NAME)
 
 # Folder structure
-XSCHEM_SCH_DIR  	:= schematic/xschem
-LAY_DIR     		:= layout
-SCRIPTS_DIR     	:= scripts
-XSCHEM_TB_DIR   	:= testbenches/xschem
-SIM_PLOT_DIR    	:= testbenches/xschem/plot_simulations
-RELEASE_DIR			:= release
-RENDER_IMG_DIR  	:= render/img
-NET_SCH_DIR 		:= netlist/schematic
-NET_LAY_DIR 		:= netlist/layout
-NET_PEX_DIR 		:= netlist/pex
-NET_SPICE_DIR 		:= netlist/spice
-NET_SPECTRE_DIR 	:= netlist/spectre
-LVS_RPT_DIR 		:= verification/lvs
-DRC_RPT_DIR 		:= verification/drc
-EM_RPT_DIR 			:= verification/em
-EM_LAY_DIR 			:= verification/em/layout
-EM_SPARAM_DIR 		:= verification/em/s-parameter
-PALACE_SCRIPTS_DIR 	:= $(PDK_ROOT)/$(PDK)/libs.tech/palace/scripts
+XSCHEM_SCH_DIR  		:= schematic/xschem
+XSCHEM_TB_DIR   		:= testbenches/xschem
+LAY_DIR         		:= layout
+SCRIPTS_DIR     		:= scripts
+SIM_PLOT_DIR    		:= testbenches/xschem/plot_simulations
+RENDER_IMG_DIR  		:= render/img
+RELEASE_DIR     		:= release
+NET_SCH_DIR     		:= netlist/schematic
+NET_LAY_DIR     		:= netlist/layout
+NET_PEX_DIR     		:= netlist/pex
+NET_SPICE_DIR   		:= netlist/spice
+NET_SPECTRE_DIR 		:= netlist/spectre
+LVS_RPT_DIR     		:= verification/lvs
+DRC_RPT_DIR     		:= verification/drc
+EM_RPT_DIR      		:= verification/em
+EM_LAY_DIR      		:= verification/em/layout
+EM_SPARAM_DIR   		:= verification/em/s-parameter
+PALACE_SCRIPTS_DIR		:= $(PDK_ROOT)/$(PDK)/libs.tech/palace/scripts
 
 
 # Help Target
@@ -193,11 +194,11 @@ help: ## Show this help message
 	@echo 'PEX_MERGED_PINS is empty by default. Lists the supply pins that the flat extraction merges, they are dropped from the generated PEX symbol.'
 	@echo 'PEX_SUB_NET defaults to vss. The port net that klayout-pex ties the substrate port sub! of the kpex 2.5D netlist to (empty keeps sub! as a port).'
 	@echo 'KPEX_REDUCE defaults to ticer. Sets the RC network reduction of klayout-pex in EXT_MODE=3 (none|floating|ticer).'
+	@echo 'EV_PRECISION defaults to 5 significant digits for Xschem ev function.'
 	@echo 'FREQ defaults to 160 (GHz). Selects the layout, its top cell (TOP) and the EM structures.'
 	@echo 'NO_FILL defaults to 0 (fill enabled). Set to 1 to disable metal fill.'
 	@echo 'NO_FILL_M5 defaults to 0 (M5 fill enabled). Set to 1 to disable M5 ground fill.'
 	@echo 'START_FREQ, STOP_FREQ, STEP_FREQ default to 60, 300, and 20 (GHz) for build-layout-sweep.'
-	@echo 'EV_PRECISION defaults to 5 significant digits for Xschem ev function.'
 	@echo 'TB selects the Xschem testbench for sim-xschem (default: sparx_bpf_le_tb_acsp_ngspice).'
 	@echo 'SCRIPT selects the plotting script for sim-view-xschem (default: plot_n_port_tb_acsp_ngspice).'
 	@echo 'VARIANT selects a power-detector design variant for sim-xschem (m16, m1_pex), empty runs the design as fabricated.'
@@ -256,7 +257,7 @@ build-top: ## Build TOP cell (usage: make build-top [FREQ=<GHz>])
 # ================================================================================================
 
 
-# Rendering Target
+# Render Target
 render-gds: ## Render images from the GDS of the TOP cell using sak-render.py (usage: make render-gds [FREQ=<GHz>])
 	mkdir -p $(RENDER_IMG_DIR)/
 	sak-render.py -t ihp-sg13g2 -w 2048 -s 4 -o $(RENDER_IMG_DIR)/sparx$(FREQ)_top $(LAY_DIR)/sparx$(FREQ)_top.gds
@@ -390,13 +391,13 @@ magic-pex: ## Run Parasitic Extraction with Magic of the CELL cell (usage: make 
 
 
 # Verify Targets
-klayout-verify: ## Verify the CELL cell with KLayout (usage: make klayout-verify [CELL=<cellname>])
+klayout-verify: ## Verify CELL cell with KLayout (usage: make klayout-verify [CELL=<cellname>])
 	$(MAKE) klayout-drc CELL=$(CELL)
 	$(MAKE) klayout-lvs CELL=$(CELL)
 	$(MAKE) klayout-pex CELL=$(CELL)
 .PHONY: klayout-verify
 
-magic-verify: ## Verify the CELL cell with Magic, LVS and PEX (usage: make magic-verify [CELL=<cellname>])
+magic-verify: ## Verify CELL cell with Magic, LVS and PEX (usage: make magic-verify [CELL=<cellname>])
 # The flows leave the Magic DRC out until MIM.e and MIM.i are settled upstream, make magic-drc still runs it
 #	$(MAKE) magic-drc CELL=$(CELL)
 	$(MAKE) magic-lvs CELL=$(CELL)
@@ -449,6 +450,8 @@ sim-sparx-core-em: ## Run the six-port core EM simulation with AWS Palace (usage
 
 
 # View EM Simulation Results Target
+# Touchstone file that view-em-sim plots, searched under verification/em/palace_model (default: the BLC result of FREQ)
+# Override with: make view-em-sim FILE_NAME=<name_with_extension>
 FILE_NAME ?= $(BLC_EM_NAME).s4p
 view-em-sim: ## View EM simulation results with s-parameter plots (usage: make view-em-sim FILE_NAME=<name_with_extension>)
 	cd $(EM_RPT_DIR)/palace_model && python3 ../scripts/plot_snp.py $$(find . -type f -name "$(FILE_NAME)")
@@ -486,7 +489,7 @@ snp2le: ## Convert an S-parameter Touchstone file to a lumped element netlist vi
 # ================================================================================================
 
 
-# Xschem Simulation Targets
+# Simulation Targets
 # Testbench for sim-xschem (default: the bandpass filter AC S-parameter bench, the same block the snp2le default converts)
 # Override with: make <target> TB=<testbenchname>
 TB ?= sparx_bpf_le_tb_acsp_ngspice
@@ -581,6 +584,7 @@ sparx-core: ## Run the six-port core EM flow: EM simulation, S-parameter copy, L
 # - 0 (default) reuses the committed full-core fit
 # - 1 runs sparx-core before sim-all, so the sparx_core_le and sparx_top_le testbenches simulate a fresh fit.
 # The seven-port EM solve costs about 20 times the EM of the three blocks.
+# Override with: make all WITH_CORE=1
 WITH_CORE ?= 0
 
 all: ## Build, verify, EM-simulate, extract LE models, and run all testbenches (usage: make all [WITH_CORE=0|1])
@@ -638,6 +642,7 @@ release: ## Copy the gds, netlist files and chip renders to the release folder (
 # - 0 (default) reuses the committed EM result
 # - 1 runs sim-wpd-em first.
 # The regression-full target sets it to 1.
+# Override with: make regression FULL_REGRESSION=1
 FULL_REGRESSION ?= 0
 
 regression: ## Regression test target for IIC-OSIC-TOOLS (usage: make regression [FULL_REGRESSION=1])
