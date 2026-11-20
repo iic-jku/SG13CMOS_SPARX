@@ -11,7 +11,7 @@ When adding a flow or a folder, mirror the template layout and its `Makefile` co
 
 - Run every flow inside the IIC-OSIC-TOOLS container (https://github.com/iic-jku/IIC-OSIC-TOOLS), tag `2026.11` or later (`README.md`). CI uses `hpretl/iic-osic-tools:latest`.
 - The PDK is `ihp-sg13g2`. `.designinit` exports `PDK` and the related variables, and `sak-pdk ihp-sg13g2` switches a running shell.
-- The `Makefile` checks `$PDK` when it is parsed: every target except `help` and `clean` aborts if it is not `ihp-sg13g2`. Fix the PDK instead of passing `REQUIRED_PDK=`.
+- The `Makefile` checks `$PDK` when it is parsed: every target except `help` and `clean` aborts if it is not `ihp-sg13g2`. Fix the PDK instead of passing `REQUIRED_PDK=`. A new target that does not read the PDK goes into `PDK_FREE_GOALS`, every other target inherits the guard.
 - `make build-pdk` clones the GDSFactory PDK add-on (`IHP-GDSFactory-Addon`) into `IHP/` and installs it into `.venv/` (both git-ignored). `build-layout` and the EM targets run in that `.venv`, so run `build-pdk` (or `build-top`) once first.
 
 ## Repository layout
@@ -33,8 +33,8 @@ When adding a flow or a folder, mirror the template layout and its `Makefile` co
 ## Makefiles
 
 - The root `Makefile` drives every flow, and `README.md` documents each target. Read it before changing a flow.
-- It sets `.DEFAULT_GOAL := help`, and `make help` lists every target from its `## ` comment. Give every new target a `## ` comment.
-- Variables are set with `?=` and overridden on the command line, for example `FREQ=<GHz>`, `CELL=<cell>`, `TB=<testbench>`, `VARIANT=<m16|m1_pex>`, `NP=<procs>`.
+- It sets `.DEFAULT_GOAL := help`, and `make help` lists every target from its `## ` comment. Give every new target a `## ` comment on the rule line and a `.PHONY:` line.
+- Overridable variables use `?=` with a `# Override with: make <target> VAR=<value>` comment above them and are set on the command line, for example `FREQ=<GHz>`, `CELL=<cell>`, `TB=<testbench>`, `VARIANT=<m16|m1_pex>`, `NP=<procs>`.
 - There is no RTL and no cocotb testbench in this repo.
 - Each folder with schematics has its own `xschemrc`, and the targets pass it with `--rcfile`. See "Xschem Configuration" in `README.md`.
 - `doc/fig/targets_overview/targets_overview.drawio` draws the call tree of `make all` ("Makefile Structure" in `README.md`, `@fig-targets` in the documentation). After a change to `all`, `build-top`, the verify targets, `sparx-core` or `sim-all`, update the drawio and re-export the PNG, SVG and PDF together. The PDF render of the documentation uses the PDF next to the SVG, so a stale PDF ships even when the SVG is current.
@@ -85,7 +85,7 @@ make regression                                  # tool/flow smoke test, reuses 
 - `make snp2le` without `LE_OUT=` writes to `netlist/spice/sparx_bpf_le.spice`, whatever `SNP` is. Pass `LE_OUT=<path>`, or `LE_OUT=` (empty) for a name derived from the input.
 - `make release` defaults to `VERSION=2.0.0` and overwrites the committed `release/v.2.0.0/`. Never run it without an explicit new `VERSION`.
 - `make klayout-drc-regular` reports antenna violations that IHP waived for the tapeout (`KNOWN_ISSUES.md`). Top-level LVS is open (`ToDo.md`), so the regression verifies only `sparx_powdet_sbd`.
-- KLayout is the sign-off DRC. Magic reports `MIM.e` and `MIM.i`, and gdscheck reports `nSDB.e` on the `schottky` PCell (`KNOWN_ISSUES.md`), so until the upstream fixes are in the image the flows leave the Magic DRC out, its lines are commented out in `magic-verify` and `make all`, and `gdscheck-drc` stops `make all`. Fix such a report upstream, not with make's `-` prefix in a flow. `DRC_JOBS=<n>` caps the KLayout processes and sets the gdscheck threads.
+- KLayout is the sign-off DRC. Magic reports `MIM.e` and `MIM.i`, and gdscheck reports `nSDB.e` on the `schottky` PCell (`KNOWN_ISSUES.md`), so until the upstream fixes are in the image the flows leave the Magic DRC out, its lines are commented out in `magic-verify` and `make all`, and `gdscheck-drc` stops `make all`. Fix such a report upstream, not with make's `-` prefix in a flow. Keep `-f` patterns for Magic away from the top cell: `sak-drc.sh` refuses one that matches it, because Magic would check an empty cell. `DRC_JOBS=<n>` caps the KLayout processes and sets the gdscheck threads.
 - `palace -np $(NP)` uses `NP=4` by default. Open MPI counts physical cores and aborts with "not enough slots" on smaller hosts: lower `NP` or set `OMPI_MCA_hwloc_base_use_hwthreads_as_cpus=1` as `regression.yml` does.
 - `klayout-pex` runs the 2.5D engine of `kpex` through `sak-pex.sh -k`, which the image ships from `2026.11` on (with kpex 0.10.0). A full-RC extraction of the small `sparx_powdet_sbd` takes about 1 min where Magic takes seconds, so use `magic-pex` for a quick netlist.
 
