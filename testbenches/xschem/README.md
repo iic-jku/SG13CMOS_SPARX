@@ -432,7 +432,7 @@ make sim-xschem TB=sparx_powdet_sbd_tb_acsp_ngspice VARIANT=m1_kpex
 | post-layout, Magic (`m1_pex`) | -10.9 dB | 40.4 - j25.0 Ohm |
 | post-layout, kpex (`m1_kpex`) | -8.5 dB | 49.7 - j40.4 Ohm |
 
-The two extractions differ mostly in the resistance of the 30-cell bias MIM array, which Magic keeps on one node. The script compares Z_in at 161 GHz with the small-signal input impedance of the [PSS bench](#32-transfer-curve-and-input-impedance) of the same variant and fails above 1 Ohm. ngspice `sp` and VACASK HB agree within 0.01 Ohm on the fabricated design, `m1_pex` and `m16`. `m1_kpex` has no VACASK run, so its check is skipped.
+The two extractions differ mostly in the resistance of the 30-cell bias MIM array, which Magic keeps on one node. The script compares Z_in at 161 GHz with the small-signal input impedance of the [PSS bench](#32-transfer-curve-and-input-impedance) of the same variant and fails above 1 Ohm. ngspice `sp` and VACASK HB agree within 0.01 Ohm on the fabricated design, `m1_pex` and `m16`. `m1_kpex` has no VACASK run, so its check is skipped. `make regression` runs the fabricated case against the committed PSS result, so a resistor between the port and `rfin` fails it.
 
 The Magic row is the variant: the raw Magic netlist, without the ground idealization and the Schottky override of the rewrite, gives 40.0 - j24.7 Ohm.
 

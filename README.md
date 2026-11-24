@@ -992,7 +992,7 @@ To keep the runtime low while still covering most of the toolchain, the regressi
 
 - Only the small `sparx_powdet_sbd` power-detector cell is verified, not the full six-port top cell. KLayout DRC, KLayout LVS, and KLayout PEX are run. Magic + Netgen LVS and Magic PEX are run, the Magic DRC is not. gdscheck runs only the rule decks `cont` and `via1`, which this cell passes, so a broken gdscheck fails the regression.
 - The full-wave EM solve is not re-run by the default `regression`. The AWS Palace EM simulation of the Wilkinson power divider (WPD) is the slowest step, so `regression` reuses the committed WPD Palace results and only exercises the downstream flow: S-parameter copy and lumped-element conversion (SPICE and Spectre). Use `regression-full` (or `make sim-wpd-em`) to regenerate the EM results.
-- Only one ngspice and one VACASK testbench are simulated (the Wilkinson power divider AC S-parameter benches).
+- Only three testbenches are simulated: the AC S-parameter benches of the Wilkinson power divider in ngspice and VACASK, and the ngspice S-parameter bench of the power detector, whose input impedance at `rfin` is checked against the committed VACASK PSS result.
 - The layout is generated at a single frequency (160 GHz). No frequency sweep is run.
 - Top-level LVS is not run (work in progress).
 
@@ -1011,6 +1011,7 @@ The following tools and flows are checked:
 | snp2le (raw S-parameter to lumped element, SPICE + Spectre) | `snp2le SNP=.../sparx160_wpd.s3p ...` |
 | Xschem netlisting + ngspice | `sim-xschem TB=sparx_wpd_le_tb_acsp_ngspice` |
 | Xschem netlisting + VACASK | `sim-xschem TB=sparx_wpd_le_tb_acsp_vacask` |
+| ngspice S-parameter analysis of PDK devices, input match checked against VACASK | `sim-xschem TB=sparx_powdet_sbd_tb_acsp_ngspice` |
 
 
 ### Clean

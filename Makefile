@@ -677,9 +677,11 @@ regression: ## Regression test target for IIC-OSIC-TOOLS (usage: make regression
 # 	Raw S-parameter to lumped-element netlist conversion (WPD).
 	$(MAKE) snp2le SNP=$(EM_SPARAM_DIR)/$(WPD_EM_NAME).s3p ORDER=10 LE_FORMAT=spice LE_OUT=netlist/spice/sparx_wpd_le.spice
 	$(MAKE) snp2le SNP=$(EM_SPARAM_DIR)/$(WPD_EM_NAME).s3p ORDER=10 LE_FORMAT=spectre LE_OUT=netlist/spectre/sparx_wpd_le.inc
-# 	Xschem netlisting + one ngspice and one VACASK AC S-parameter simulation.
+# 	Xschem netlisting + one ngspice and one VACASK AC S-parameter simulation (WPD).
 	$(MAKE) sim-xschem TB=sparx_wpd_le_tb_acsp_ngspice
 	$(MAKE) sim-xschem TB=sparx_wpd_le_tb_acsp_vacask
+# 	ngspice S-parameter simulation of the power detector, its input impedance checked against the committed VACASK PSS result.
+	$(MAKE) sim-xschem TB=sparx_powdet_sbd_tb_acsp_ngspice
 .PHONY: regression
 
 regression-full: ## Full regression test target for CI (usage: make regression-full)
