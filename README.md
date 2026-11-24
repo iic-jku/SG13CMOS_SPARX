@@ -49,7 +49,7 @@ Institute for Integrated Circuits and Quantum Computing, Johannes Kepler Univers
 ## Documentation
 
 > [!IMPORTANT]
-> This work has been accepted for publication at the 2026 IEEE Nordic Circuits and Systems Conference (NorCAS).
+> This work has been published at the 2026 IEEE Nordic Circuits and Systems Conference (NorCAS) and is available in [IEEE Xplore](https://ieeexplore.ieee.org/document/11791174), doi: [10.1109/NorCAS71164.2026.11791174](https://doi.org/10.1109/NorCAS71164.2026.11791174). [Cite This Work](#cite-this-work) gives the BibTeX entries.
 >
 > © 2026 IEEE. Personal use of this material is permitted. Permission from IEEE must be obtained for all other uses, in any current or future media, including reprinting/republishing this material for advertising or promotional purposes, creating new collective works, for resale or redistribution to servers or lists, or reuse of any copyrighted component of this work in other works.
 
@@ -1041,7 +1041,21 @@ make all
 
 ## Cite This Work
 
+Please cite the paper and the repository:
+
 ```
+@inproceedings{Dorrer_2026,
+	author = {Dorrer, Simon and Kellerer-Pirklbauer, David and Zachl, Georg and Pretl, Harald},
+	title = {{SPARX: An Open-Source, Automated, Programmatically Generated, Frequency-Scalable Six-Port Receiver in 130-nm CMOS}},
+	booktitle = {2026 IEEE Nordic Circuits and Systems Conference (NorCAS)},
+	address = {Tampere, Finland},
+	publisher = {IEEE},
+	month = oct,
+	year = {2026},
+	pages = {1--7},
+	doi = {10.1109/NorCAS71164.2026.11791174}
+}
+
 @software{2026_SPARX,
 	author = {Dorrer, Simon and Kellerer-Pirklbauer, David and Pretl, Harald},
 	month = oct,
