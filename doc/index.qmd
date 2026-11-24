@@ -171,7 +171,7 @@ make regression                                 # tool and flow smoke test
 make all                                        # the complete flow
 ```
 
-`make all` runs the Palace EM solves of the three blocks (@sec-em-cost) and 21 of the 24 testbenches, all except the three passive-model transients, several hours in total. The seven-port EM solve of the full core takes about 20 times the core-hours of the three blocks and runs only with `make sparx-core` or `make all WITH_CORE=1`. `make help` lists every target, and the repository [README](https://github.com/iic-jku/SG13CMOS_SPARX#makefile-targets) documents each of them with its parameters.
+`make all` runs the Palace EM solves of the three blocks (@sec-em-cost) and 22 of the 25 testbenches, all except the three passive-model transients, several hours in total. The seven-port EM solve of the full core takes about 20 times the core-hours of the three blocks and runs only with `make sparx-core` or `make all WITH_CORE=1`. `make help` lists every target, and the repository [README](https://github.com/iic-jku/SG13CMOS_SPARX#makefile-targets) documents each of them with its parameters.
 
 ::: {.callout-warning}
 Most build outputs are committed: layouts, netlists, Palace results, Touchstone files, DRC and LVS reports, renders and simulation data. The targets overwrite them, and `make clean` deletes them, `layout/` included. Check `git status` after a run and `git restore` what you did not mean to change. `make release` defaults to `VERSION=2.0.0` and overwrites the committed release, so always pass a new `VERSION`.
@@ -185,7 +185,7 @@ Most build outputs are committed: layouts, netlists, Palace results, Touchstone 
 | `scripts/` | `six_port_gen.py` (the layout generator), `powdet_variant.py` (detector variants), `prune_pex_symbol.py`, `check_pex_ports.py`, `img2lay.py`, logo `assets/` |
 | `layout/` | generated GDS: `sparx<FREQ>_top.gds` for 60 GHz to 300 GHz, and the detector `sparx_powdet_sbd.gds` |
 | `schematic/xschem/` | detector, six-port and top-level schematics, and the symbols of the LE models |
-| `testbenches/xschem/` | 24 ngspice and VACASK testbenches, the `plot_simulations/` scripts with their `data/` and `figures/` |
+| `testbenches/xschem/` | 25 ngspice and VACASK testbenches, the `plot_simulations/` scripts with their `data/` and `figures/` |
 | `netlist/` | `schematic/`, `layout/` and `pex/` netlists of the detector, `spice/` and `spectre/` LE models from snp2le |
 | `verification/drc/`, `verification/lvs/` | DRC and LVS run folders |
 | `verification/em/` | `layout/` (EM structures), `metal_model/` (surface versus volume metal, @sec-em-metal), `palace_model/` (Palace runs), `s-parameter/` (Touchstone files), `scripts/`, `stackups/` |
@@ -393,8 +393,10 @@ The detector is characterized in three versions, all at the typical corner and 2
 
 ```sh
 make sim-xschem TB=sparx_powdet_sbd_tb_pss_vacask VARIANT=m16
-make sim-powdet-variants        # PSS and NF benches for m16 and m1_pex
+make sim-powdet-variants        # PSS and NF benches for m16 and m1_pex, input match of both extractions, m1_pex transient
 ```
+
+The rewrite serves the ngspice benches as well. There, `VARIANT=m1_kpex` puts in the kpex extraction instead of the Magic one, for the input match of `sparx_powdet_sbd_tb_acsp_ngspice`: $(50 - \mathrm{j}40)\ \Omega$ at 160 GHz against $(40 - \mathrm{j}25)\ \Omega$ from Magic.
 
 At tapeout in March 2026 the detector was checked with a two-tone HB sweep in VACASK. It confirmed square-law detection, $V_\mathrm{IF} \propto V_\mathrm{RF} V_\mathrm{LO}$, but says nothing about the absolute responsivity, the match, the compression or the noise. The TN, HBAC, HBNOISE, shooting PSS, PAC and PNOISE analyses that VACASK gained later in 2026 characterize the detector as a receiver front-end.
 
@@ -709,10 +711,10 @@ make sim-view-xschem SCRIPT=plot_n_port_tb_acsp_ngspice
 | :--- | :--- | :---: |
 | Passive models, S-parameters | BPF, WPD, BLC, full-core fit and composed core, each in ngspice and VACASK | 10 |
 | Passive models, transient | stability and causality of the fits | 3 |
-| SBD power detector | two-tone HB, transfer curve, noise figure, transient noise, ngspice cross-check | 6 |
+| SBD power detector | two-tone HB, transfer curve, noise figure, transient noise, ngspice cross-check, input match | 7 |
 | Receiver and top level | receiver characterization, receiver noise figure and transient noise, top-level transients | 5 |
 
-: The 24 testbenches. {#tbl-benches tbl-colwidths="[30,55,15]"}
+: The 25 testbenches. {#tbl-benches tbl-colwidths="[30,55,15]"}
 
 The [testbench README](https://github.com/iic-jku/SG13CMOS_SPARX/blob/main/testbenches/xschem/README.md) documents every bench: its analyses and settings, its findings and its limits. Some benches read the results of others, and `sim-all` runs them in the required order. The detector PSS bench runs before the detector NF bench, which reads the fitted responsivity. The receiver NF bench runs after the detector NF bench and the receiver bench. The transient-noise benches run after the NF benches whose results they check. The fits in `netlist/` must exist before any bench that includes them.
 
@@ -760,7 +762,7 @@ The noise-figure bench `sparx_top_le_tb_nf_vacask` evaluates the double-sideband
 
 # Regression and Continuous Integration {#sec-ci}
 
-`make regression` is the smoke test of the tools and the flow in the IIC-OSIC-TOOLS environment, not a design sign-off. It needs nothing but a plain container and runs `build-top` with the add-on install, `klayout-verify` and `magic-verify` of the detector, the S-parameter copy and both snp2le conversions of the WPD, and one ngspice and one VACASK WPD bench. It reuses the committed WPD Palace result. `make regression-full` adds the WPD Palace solve.
+`make regression` is the smoke test of the tools and the flow in the IIC-OSIC-TOOLS environment, not a design sign-off. It needs nothing but a plain container and runs `build-top` with the add-on install, `klayout-verify` and `magic-verify` of the detector, the S-parameter copy and both snp2le conversions of the WPD, one ngspice and one VACASK WPD bench, and the ngspice input match of the detector, checked against the committed VACASK result. It reuses the committed WPD Palace result. `make regression-full` adds the WPD Palace solve.
 
 | Workflow | Trigger | What it runs |
 | :--- | :--- | :--- |
@@ -794,6 +796,7 @@ The measurement plan probes the LO and RF pads with a wafer prober and bonds the
 - **Top-level LVS** is open, blocked by [IHP-Open-PDK issue 1041](https://github.com/IHP-GmbH/IHP-Open-PDK/issues/1041). Only the power detector has full LVS.
 - **Antenna rules.** `klayout-drc-regular` reports the 33 antenna violations IHP waived for the tapeout, see @tbl-antenna.
 - **Magic and gdscheck DRC.** Magic reports `MIM.e` and `MIM.i`, and gdscheck 0.2.0 `nSDB.e` on the `schottky` PCell, while the KLayout deck passes the layout at `macro` level, so the flows leave the Magic DRC out and gdscheck stops `make all` until these are fixed upstream ([`KNOWN_ISSUES.md`](https://github.com/iic-jku/SG13CMOS_SPARX/blob/main/KNOWN_ISSUES.md)).
+- **ngspice KLU.** With `.options klu`, ngspice-47 aborts the post-layout transient of the detector, so the ngspice detector benches use the default Sparse solver ([`KNOWN_ISSUES.md`](https://github.com/iic-jku/SG13CMOS_SPARX/blob/main/KNOWN_ISSUES.md)).
 - **Author label.** Every generated layout carries the label "SPARX 160", whatever its frequency, because the label is a fixed image, `scripts/assets/D_Kellerer.png`, placed as a committed GDS.
 - **BPF.** The closed-form models reach their limits on the meanders and coupled lines of the hairpin filter: the 160 GHz filter loses 10 dB and matches only to -6.2 dB, in the LO path. It is the block with the most to gain from optimization.
 - **No mesh-convergence study.** The committed Palace runs use element order 2 on a single mesh without adaptive refinement. The metal-model check of @sec-em-metal refined the TopMetal2 edges once, from 2 $\mu$m to 0.5 $\mu$m, which lowered the loss by 2 % to 6 %.

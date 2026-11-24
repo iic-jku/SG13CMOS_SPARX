@@ -19,3 +19,7 @@
 ## Magic DRC
 
 `make magic-drc` is not clean. It reports 976 `MIM.e` and 38 `MIM.i` on `sparx160_top`, and 244 `MIM.e` and 9 `MIM.i` on `sparx_powdet_sbd`. KLayout reports no `MIM.e`, also at `regular` level, so the Magic rule is the suspect. `MIM.i` is in no KLayout deck, so it has no second opinion. The flows leave the Magic DRC out until these are settled, its lines are commented out in `magic-verify` and `make all`.
+
+## ngspice KLU
+
+With `.options klu`, ngspice-47 does not run the post-layout transient of the power detector (`VARIANT=m1_pex`). Gmin and source stepping fail, only the transient fallback finds the operating point, and the transient aborts at 0.109 ps with `Timestep too small ... trouble with node "vss#branch"`. The default Sparse solver finds the operating point directly and completes the run, so both ngspice detector benches run without `klu`. The raw Magic netlist fails the same way once its Schottky geometry is corrected and converges with the drawn outline geometry, so the correct diode triggers it, not the rewrite in `scripts/powdet_variant.py`. To reproduce, add `klu` to the `.options` line of `sparx_powdet_sbd_tb_ngspice` and run `make sim-xschem TB=sparx_powdet_sbd_tb_ngspice VARIANT=m1_pex` (IIC-OSIC-TOOLS nightly of 2026-11-20, IHP Open PDK `c420dc6`). Not yet reported to ngspice.

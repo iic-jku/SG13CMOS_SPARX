@@ -230,6 +230,7 @@ An overview of the open-source design flow for SPARX is shown below. The flow co
 │     ├─ 📁 plot_simulations/
 │     │  ├─ 📁 data/
 │     │  ├─ 📁 figures/
+│     │  ├─ check_sparx_powdet_sbd_tb_acsp_ngspice.py
 │     │  ├─ ngspice2python.py
 │     │  ├─ plot_n_port_tb_acsp_ngspice.py
 │     │  ├─ plot_n_port_tb_acsp_vacask.py
@@ -247,6 +248,8 @@ An overview of the open-source design flow for SPARX is shown below. The flow co
 │     ├─ sparx_blc_le_tb_acsp_ngspice.sch
 │     ├─ ...
 │     ├─ sparx_core_tb_acsp_ngspice.sch
+│     ├─ ...
+│     ├─ sparx_powdet_sbd_tb_acsp_ngspice.sch
 │     ├─ ...
 │     ├─ sparx_powdet_sbd_tb_ngspice.sch
 │     ├─ ...
@@ -367,7 +370,7 @@ At the top level, `make all` runs five stages in this order:
 2. **Verification**: `klayout-verify` runs DRC, LVS and PEX of the SBD power detector `sparx_powdet_sbd`, `gdscheck-drc` its gdscheck DRC, and `magic-verify` its LVS and PEX. Then `klayout-drc` and `gdscheck-drc` (both `DRC_LEVEL=macro`) check the top cell of the design frequency, `sparx160_top` by default and `sparx<FREQ>_top` with `FREQ=<GHz>`. The figure already shows the LVS of the top cell (`klayout-lvs`, `magic-lvs`), which `make all` does not run yet: it follows once top-level LVS works, see [`ToDo.md`](ToDo.md).
 3. **EM simulation**: AWS Palace solves the BPF, WPD and BLC (`sim-bpf-em`, `sim-wpd-em`, `sim-blc-em`), and `copy-sparam` copies the raw and de-embedded Touchstone files of each run to `verification/em/s-parameter/`.
 4. **LE models**: `snp2le` fits the raw Touchstone file of each block to a SPICE and a Spectre lumped element netlist, with the fit orders 13 (BPF), 10 (WPD) and 6 (BLC).
-5. **Circuit simulation**: `sim-all` runs 21 of the 24 testbenches, all except the three transients of the passive LE models. With the power-detector design variants (`sim-powdet-variants`) and the post-layout runs of the receiver benches, these are 27 simulations.
+5. **Circuit simulation**: `sim-all` runs 22 of the 25 testbenches, all except the three transients of the passive LE models. With the power-detector design variants (`sim-powdet-variants`) and the post-layout runs of the receiver benches, these are 31 simulations.
 
 The simulations run last, so the block benches and the composed-core benches use the LE models that the same invocation has just fitted.
 
@@ -659,7 +662,7 @@ Runs parasitic extraction on the GDS layout in `layout/`. The extracted SPICE ne
 - `klayout-pex` writes `netlist/pex/<CELL>_klayout_pex_<EXT_MODE>.spice`
 - `magic-pex` writes `netlist/pex/<CELL>_magic_pex_<EXT_MODE>.spice`
 
-The committed netlists of the power detector are the full-RC ones, `sparx_powdet_sbd_magic_pex_3.spice` and `sparx_powdet_sbd_klayout_pex_3.spice`. The Magic one is what the `.include` in the ngspice testbench `sparx_powdet_sbd_tb_ngspice.sch` and the `m1_pex` variant of the VACASK power-detector testbenches (`scripts/powdet_variant.py`) read.
+The committed netlists of the power detector are the full-RC ones, `sparx_powdet_sbd_magic_pex_3.spice` and `sparx_powdet_sbd_klayout_pex_3.spice`. The power-detector testbenches read them through the design variants of `scripts/powdet_variant.py`: `VARIANT=m1_pex` the Magic one, in VACASK and ngspice, and `VARIANT=m1_kpex` the kpex one, in ngspice only.
 
 The `EXT_MODE` parameter selects the extraction mode:
 - `1` = C-decoupled
@@ -700,7 +703,7 @@ On top of the extraction the target does four things:
 - It reduces the full-RC netlist with TICER (`KPEX_REDUCE`, default `ticer`), which leaves far fewer elements and a faster simulation, and ngspice with `klu` can lose the operating point of an unreduced netlist (resistors below 1 mOhm). It does on the power detector, where the reduced netlist converges and stays within 0.05 dB of the unreduced one in S11 at 160 GHz.
 - It ties the substrate port `sub!` of the 2.5D netlist to `PEX_SUB_NET` (default `vss`, `sak-pex.sh -g`), as Magic ties the substrate to `vss`, so the netlist keeps the pins of `<CELL>_pex.sym`.
 
-The two extractions differ at the RF input of the power detector: Z_in at `rfin` at 160 GHz is 50 - 40j Ohm from kpex and 40 - 25j Ohm from Magic (S11 -8.5 dB against -10.9 dB, without the 50 Ohm source resistor `Rs` of the ngspice bench, see #18), mostly from the resistance of the 30-cell bias MIM array, which Magic keeps on one node.
+The two extractions differ at the RF input of the power detector: Z_in at `rfin` at 160 GHz is 50 - 40j Ohm from kpex and 40 - 25j Ohm from Magic (S11 -8.5 dB against -10.9 dB, `sparx_powdet_sbd_tb_acsp_ngspice` with `VARIANT=m1_kpex` and `VARIANT=m1_pex`), mostly from the resistance of the 30-cell bias MIM array, which Magic keeps on one node.
 
 **Magic PEX** uses `sak-pex.sh`, which extracts the parasitics with Magic (C-decoupled, C-coupled, or full-RC):
 
@@ -916,12 +919,13 @@ The following testbenches are simulated:
 - `sparx_blc_le_tb_acsp_ngspice` / `sparx_blc_le_tb_acsp_vacask`: branch-line coupler LE model, AC S-parameter
 - `sparx_core_le_tb_acsp_ngspice` / `sparx_core_le_tb_acsp_vacask`: six-port core LE model, AC S-parameter
 - `sparx_core_tb_acsp_ngspice` / `sparx_core_tb_acsp_vacask`: six-port core built from the BPF, WPD, and BLC LE models, AC S-parameter
-- `sparx_powdet_sbd_tb_ngspice`: SBD-based power detector (ngspice)
+- `sparx_powdet_sbd_tb_ngspice`: SBD-based power detector, two-tone transient (ngspice), post-layout (`VARIANT=m1_pex`) in `sim-powdet-variants`
 - `sparx_powdet_sbd_tb_hb_vacask`: SBD-based power detector, harmonic balance (VACASK)
 - `sparx_powdet_sbd_tb_pss_vacask`: SBD-based power detector, single-tone periodic steady state (VACASK), fits the responsivity that the noise figure bench turns into an NEP
 - `sparx_powdet_sbd_tb_nf_vacask`: SBD-based power detector, noise figure and NEP (VACASK), small-signal `noise` at the dc operating point and LO-pumped `hbnoise` with the `hbac` conversion, checked against `pnoise` and `pac` on a shooting PSS of the same LO, runs after the PSS bench. This bench and the PSS bench need VACASK `1b48553` or later, see the [testbench README](testbenches/xschem/README.md)
 - `sparx_powdet_sbd_tb_tn_vacask`: SBD-based power detector, LO-pumped transient-noise ladder checked against `hbnoise` (VACASK), runs after the NF bench
 - `sparx_powdet_sbd_tb_tn_lo_vacask`: SBD-based power detector, the same ladder at nine LO levels, noise figure against LO drive from transient noise, `hbnoise`, `pnoise` and the small-signal `noise` analysis at the dc operating point (VACASK), runs after the NF bench
+- `sparx_powdet_sbd_tb_acsp_ngspice`: SBD-based power detector, S11 and input impedance at `rfin` (ngspice), checked against the input impedance of the PSS bench, so it runs after it. The Magic and kpex extractions (`VARIANT=m1_pex`, `VARIANT=m1_kpex`) run in `sim-powdet-variants`, after the post-layout PSS bench
 - `sparx_top_le_tb_rx_vacask`: six-port receiver, full-core LE model with the four power detectors, as fabricated and post-layout (`VARIANT=m1_pex`): HB at the LO, HBAC IF response and IF output against LO power, two-tone HB cross-check, transient (VACASK)
 - `sparx_top_le_tb_tran_ngspice` / `sparx_top_tb_tran_ngspice`: six-port receiver transient with the full-core and the composed LE model (ngspice), LO +12 dBm and RF -20 dBm behind 50 Ohm at the pads
 - `sparx_top_le_tb_nf_vacask`: six-port receiver noise figure of the four detector outputs and the I and Q outputs, full-core LE model with the four power detectors, as fabricated and post-layout (`VARIANT=m1_pex`): small-signal `noise` at the dc operating point, `hbnoise` and `pnoise` with the `hbac` and `pac` conversion, over the IF and against LO power (VACASK `1b48553` or later), runs after the detector NF bench and the receiver bench
@@ -988,7 +992,7 @@ To keep the runtime low while still covering most of the toolchain, the regressi
 
 - Only the small `sparx_powdet_sbd` power-detector cell is verified, not the full six-port top cell. KLayout DRC, KLayout LVS, and KLayout PEX are run. Magic + Netgen LVS and Magic PEX are run, the Magic DRC is not. gdscheck runs only the rule decks `cont` and `via1`, which this cell passes, so a broken gdscheck fails the regression.
 - The full-wave EM solve is not re-run by the default `regression`. The AWS Palace EM simulation of the Wilkinson power divider (WPD) is the slowest step, so `regression` reuses the committed WPD Palace results and only exercises the downstream flow: S-parameter copy and lumped-element conversion (SPICE and Spectre). Use `regression-full` (or `make sim-wpd-em`) to regenerate the EM results.
-- Only one ngspice and one VACASK testbench are simulated (the Wilkinson power divider AC S-parameter benches).
+- Only three testbenches are simulated: the AC S-parameter benches of the Wilkinson power divider in ngspice and VACASK, and the ngspice S-parameter bench of the power detector, whose input impedance at `rfin` is checked against the committed VACASK PSS result.
 - The layout is generated at a single frequency (160 GHz). No frequency sweep is run.
 - Top-level LVS is not run (work in progress).
 
@@ -1007,6 +1011,7 @@ The following tools and flows are checked:
 | snp2le (raw S-parameter to lumped element, SPICE + Spectre) | `snp2le SNP=.../sparx160_wpd.s3p ...` |
 | Xschem netlisting + ngspice | `sim-xschem TB=sparx_wpd_le_tb_acsp_ngspice` |
 | Xschem netlisting + VACASK | `sim-xschem TB=sparx_wpd_le_tb_acsp_vacask` |
+| ngspice S-parameter analysis of PDK devices, input match checked against VACASK | `sim-xschem TB=sparx_powdet_sbd_tb_acsp_ngspice` |
 
 
 ### Clean
