@@ -607,7 +607,7 @@ The benches need VACASK `1b48553` or later, see [README, Running a testbench](RE
 make sim-xschem TB=sparx_powdet_sbd_tb_pss_vacask      # transfer curve, beta JSON
 make sim-xschem TB=sparx_powdet_sbd_tb_nf_vacask       # NEP, NF, MDS, needs the beta JSON
 make sim-xschem TB=sparx_powdet_sbd_tb_tn_lo_vacask    # transient noise against LO power, about 24 minutes
-make sim-powdet-variants                               # PSS and NF benches for m16 and m1_pex
+make sim-powdet-variants                               # PSS and NF benches for m16 and m1_pex, plus three ngspice runs
 ```
 
 The headline numbers of all three versions follow from the committed data files alone, run from the repository root:

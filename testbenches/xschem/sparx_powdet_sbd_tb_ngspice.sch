@@ -5,20 +5,18 @@ V {}
 S {}
 F {}
 E {}
-T {This is only need for .sp simulation,
-as two ports are required. However, we
-are only interested in S11.} 1000 -340 0 0 0.3 0.3 {}
 T {Ngspice Testbench for SBD-Based Power Detector} 600 -1720 0 0 1 1 {}
-T {Vin3 is an RF port: its z0 of 50 Ohm is in
-series in every analysis, op, ac and tran
-included, so it is the 50 Ohm source and
-puts the sp reference plane at rfin.} 1060 -820 0 0 0.3 0.3 {}
+T {Vin3 is an RF port: its z0 of
+50 Ohm is in series in every
+analysis, op and tran included,
+so it is the 50 Ohm source.
+S11 is measured in
+sparx_powdet_sbd_tb_acsp_ngspice.} 1060 -870 0 0 0.3 0.3 {}
 T {SPDX-FileCopyrightText: 2025-2026 The SPARX Team
 SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1
 } 1920 -220 0 0 0.4 0.4 {}
 N 800 -400 800 -380 {
 lab=GND}
-N 1080 -480 1240 -480 {lab=rfdummy}
 N 1020 -620 1020 -540 {lab=gnd_local}
 N 1020 -700 1020 -680 {lab=#net1}
 N 1400 -540 1560 -540 {lab=gnd_local}
@@ -42,10 +40,6 @@ N 1020 -900 1320 -900 {lab=rfin}
 N 1400 -840 1400 -540 {lab=gnd_local}
 N 1020 -540 1400 -540 {lab=gnd_local}
 N 800 -540 800 -460 {lab=gnd_local}
-N 1080 -400 1080 -380 {lab=GND}
-N 1240 -400 1240 -380 {lab=GND}
-N 1240 -480 1240 -460 {lab=rfdummy}
-N 1080 -480 1080 -460 {lab=rfdummy}
 N 800 -1040 1400 -1040 {lab=vdd}
 N 1480 -920 1660 -920 {lab=out_cm}
 N 1480 -880 1560 -880 {lab=ref}
@@ -86,28 +80,30 @@ op
 write @schname\\\\.raw
 set appendwrite
 
-sp lin 31 100G 200G 0
-write @schname\\\\.raw
-
-ac dec 1001 1MEG 10G
-write @schname\\\\.raw
-
 tran 0.05p 22n 20n
 write @schname\\\\.raw
 
+* tone amplitudes by Fourier projection over the 2 ns window, a whole number
+* of LO, RF and IF periods (meas FIND on an fft would read the real part)
 linearize rfin out
 setplot tran2
+let c = mean(rfin*cos(2*pi*lo_freq*time))
+let s = mean(rfin*sin(2*pi*lo_freq*time))
+let lo_amp = 2*sqrt(c*c + s*s)
+let c = mean(rfin*cos(2*pi*rf_freq*time))
+let s = mean(rfin*sin(2*pi*rf_freq*time))
+let rf_amp = 2*sqrt(c*c + s*s)
+let c = mean(out*cos(2*pi*if_freq*time))
+let s = mean(out*sin(2*pi*if_freq*time))
+let if_amp = 2*sqrt(c*c + s*s)
+print lo_amp > result.txt
+print rf_amp >> result.txt
+print if_amp >> result.txt
 fft rfin
 plot db(rfin)
-meas sp lo_tone FIND v(rfin) AT=$&lo_freq
-meas sp rf_tone FIND v(rfin) AT=$&rf_freq
-print lo_tone > result.txt
-print rf_tone >> result.txt
 setplot tran2
 fft out
 plot db(out)
-meas sp if_tone FIND v(out) AT=$&if_freq
-print if_tone >> result.txt
 
 *exit
 .endc
@@ -122,13 +118,6 @@ descr="annotate OP"
 tclcommand="set show_hidden_texts 1; xschem annotate_op"
 }
 C {devices/lab_pin.sym} 1660 -920 0 1 {name=p6 sig_type=std_logic lab=out_cm}
-C {devices/vsource.sym} 1080 -430 0 0 {name=Vin1 value="dc 0 ac 0 portnum 2"}
-C {devices/lab_pin.sym} 1080 -480 0 0 {name=p7 sig_type=std_logic lab=rfdummy}
-C {devices/gnd.sym} 1080 -380 0 0 {name=l5 lab=GND}
-C {capa.sym} 1240 -430 0 0 {name=C3
-m=1
-value=1f}
-C {devices/gnd.sym} 1240 -380 0 0 {name=l6 lab=GND}
 C {spice_probe.sym} 1020 -900 0 0 {name=p8 attrs=""}
 C {spice_probe.sym} 1660 -920 0 0 {name=p9 attrs=""}
 C {devices/vsource.sym} 1020 -650 0 0 {name=Vin2 value="dc 0 ac 0 sin(0 \{lo_lev\} \{lo_freq\})"}

@@ -370,7 +370,7 @@ At the top level, `make all` runs five stages in this order:
 2. **Verification**: `klayout-verify` runs DRC, LVS and PEX of the SBD power detector `sparx_powdet_sbd`, `gdscheck-drc` its gdscheck DRC, and `magic-verify` its LVS and PEX. Then `klayout-drc` and `gdscheck-drc` (both `DRC_LEVEL=macro`) check the top cell of the design frequency, `sparx160_top` by default and `sparx<FREQ>_top` with `FREQ=<GHz>`. The figure already shows the LVS of the top cell (`klayout-lvs`, `magic-lvs`), which `make all` does not run yet: it follows once top-level LVS works, see [`ToDo.md`](ToDo.md).
 3. **EM simulation**: AWS Palace solves the BPF, WPD and BLC (`sim-bpf-em`, `sim-wpd-em`, `sim-blc-em`), and `copy-sparam` copies the raw and de-embedded Touchstone files of each run to `verification/em/s-parameter/`.
 4. **LE models**: `snp2le` fits the raw Touchstone file of each block to a SPICE and a Spectre lumped element netlist, with the fit orders 13 (BPF), 10 (WPD) and 6 (BLC).
-5. **Circuit simulation**: `sim-all` runs 22 of the 25 testbenches, all except the three transients of the passive LE models. With the power-detector design variants (`sim-powdet-variants`) and the post-layout runs of the receiver benches, these are 30 simulations.
+5. **Circuit simulation**: `sim-all` runs 22 of the 25 testbenches, all except the three transients of the passive LE models. With the power-detector design variants (`sim-powdet-variants`) and the post-layout runs of the receiver benches, these are 31 simulations.
 
 The simulations run last, so the block benches and the composed-core benches use the LE models that the same invocation has just fitted.
 
@@ -919,7 +919,7 @@ The following testbenches are simulated:
 - `sparx_blc_le_tb_acsp_ngspice` / `sparx_blc_le_tb_acsp_vacask`: branch-line coupler LE model, AC S-parameter
 - `sparx_core_le_tb_acsp_ngspice` / `sparx_core_le_tb_acsp_vacask`: six-port core LE model, AC S-parameter
 - `sparx_core_tb_acsp_ngspice` / `sparx_core_tb_acsp_vacask`: six-port core built from the BPF, WPD, and BLC LE models, AC S-parameter
-- `sparx_powdet_sbd_tb_ngspice`: SBD-based power detector (ngspice)
+- `sparx_powdet_sbd_tb_ngspice`: SBD-based power detector, two-tone transient (ngspice), post-layout (`VARIANT=m1_pex`) in `sim-powdet-variants`
 - `sparx_powdet_sbd_tb_hb_vacask`: SBD-based power detector, harmonic balance (VACASK)
 - `sparx_powdet_sbd_tb_pss_vacask`: SBD-based power detector, single-tone periodic steady state (VACASK), fits the responsivity that the noise figure bench turns into an NEP
 - `sparx_powdet_sbd_tb_nf_vacask`: SBD-based power detector, noise figure and NEP (VACASK), small-signal `noise` at the dc operating point and LO-pumped `hbnoise` with the `hbac` conversion, checked against `pnoise` and `pac` on a shooting PSS of the same LO, runs after the PSS bench. This bench and the PSS bench need VACASK `1b48553` or later, see the [testbench README](testbenches/xschem/README.md)

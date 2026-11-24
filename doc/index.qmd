@@ -185,7 +185,7 @@ Most build outputs are committed: layouts, netlists, Palace results, Touchstone 
 | `scripts/` | `six_port_gen.py` (the layout generator), `powdet_variant.py` (detector variants), `prune_pex_symbol.py`, `check_pex_ports.py`, `img2lay.py`, logo `assets/` |
 | `layout/` | generated GDS: `sparx<FREQ>_top.gds` for 60 GHz to 300 GHz, and the detector `sparx_powdet_sbd.gds` |
 | `schematic/xschem/` | detector, six-port and top-level schematics, and the symbols of the LE models |
-| `testbenches/xschem/` | 24 ngspice and VACASK testbenches, the `plot_simulations/` scripts with their `data/` and `figures/` |
+| `testbenches/xschem/` | 25 ngspice and VACASK testbenches, the `plot_simulations/` scripts with their `data/` and `figures/` |
 | `netlist/` | `schematic/`, `layout/` and `pex/` netlists of the detector, `spice/` and `spectre/` LE models from snp2le |
 | `verification/drc/`, `verification/lvs/` | DRC and LVS run folders |
 | `verification/em/` | `layout/` (EM structures), `metal_model/` (surface versus volume metal, @sec-em-metal), `palace_model/` (Palace runs), `s-parameter/` (Touchstone files), `scripts/`, `stackups/` |
@@ -393,7 +393,7 @@ The detector is characterized in three versions, all at the typical corner and 2
 
 ```sh
 make sim-xschem TB=sparx_powdet_sbd_tb_pss_vacask VARIANT=m16
-make sim-powdet-variants        # PSS and NF benches for m16 and m1_pex, input match of both extractions
+make sim-powdet-variants        # PSS and NF benches for m16 and m1_pex, input match of both extractions, m1_pex transient
 ```
 
 The rewrite serves the ngspice benches as well. There, `VARIANT=m1_kpex` puts in the kpex extraction instead of the Magic one, for the input match of `sparx_powdet_sbd_tb_acsp_ngspice`: $(50 - \mathrm{j}40)\ \Omega$ at 160 GHz against $(40 - \mathrm{j}25)\ \Omega$ from Magic.

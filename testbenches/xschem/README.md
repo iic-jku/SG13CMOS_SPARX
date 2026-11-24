@@ -398,11 +398,14 @@ Each seed carries one offset across all LO levels, the seeds differ by up to 1.5
 | | |
 |---|---|
 | **Testbench** | `sparx_powdet_sbd_tb_ngspice` |
-| **Analyses** | `sp lin 31 100G 200G` and `tran 0.05p 22n 20n` |
+| **Analyses** | `op` and `tran 0.05p 22n 20n` |
+| **Outputs** | `simulations/<variant>/result.txt` with the LO and RF amplitude at `rfin` and the IF amplitude at `out` |
 
-The independent cross-simulator check of the detector, a two-tone transient with the LO at 300 mV and the RF at 3 mV from 50 Ohm, -6.5 dBm and -46.5 dBm available, the LO at the operating point of the VACASK NF bench. The RF port `Vin3` is that 50 Ohm source: an ngspice port keeps its `z0` in series in every analysis, `op`, `ac` and `tran` included, so the bench has no source resistor and the reference plane of its `sp` analysis is `rfin`. A resistor in front of the port doubles the source impedance and halves the IF output. `VARIANT=m16` and `VARIANT=m1_pex` run it on the other versions, see [Design variants](#design-variants-and-why-no-symbol-is-swapped).
+The independent cross-simulator check of the detector, a two-tone transient with the LO at 300 mV and the RF at 3 mV from 50 Ohm, -6.5 dBm and -46.5 dBm available, the LO at the operating point of the VACASK NF bench. The RF port `Vin3` is that 50 Ohm source: an ngspice port keeps its `z0` in series in every analysis, `op`, `ac` and `tran` included, so the bench has no source resistor. A resistor in front of the port doubles the source impedance and halves the IF output. The amplitudes come from a Fourier projection over the 2 ns window, a whole number of LO, RF and IF periods, since `meas ... FIND` on an `fft` returns the real part of the complex bin. `VARIANT=m16` and `VARIANT=m1_pex` run it on the other versions, see [Design variants](#design-variants-and-why-no-symbol-is-swapped), and `sim-powdet-variants` runs the post-layout one.
 
-Both ngspice detector benches use ngspice's default Sparse solver. With `.options klu` the extracted netlist reaches its operating point only through the transient fallback, after gmin and source stepping fail, and the transient aborts at 0.1 ps with "Timestep too small". The raw Magic netlist with nothing but the Schottky geometry corrected does the same, so the variant rewrite is not the cause.
+**Findings.** As fabricated, 153.7 mV of LO and 1.54 mV of RF reach `rfin` and the 2 GHz IF at `out` is 60.6 uV. Post-layout (`m1_pex`) it is 152.1 mV and 43.4 uV, 2.90 dB less IF, where the `hbac` conversion of the NF bench gives 2.84 dB at the same LO.
+
+Both ngspice detector benches use ngspice's default Sparse solver. With `.options klu` the extracted netlist reaches its operating point only through the transient fallback, after gmin and source stepping fail, and the transient aborts at 0.1 ps with "Timestep too small". Observed on ngspice-47: the raw Magic netlist with nothing but the Schottky geometry corrected misses the direct operating point the same way, without the rewrite's 1 TOhm ties, while the raw netlist with the outline geometry converges directly. Removing `rshunt` or the ties changes nothing, and `gmin=1e-9` lets the transient through but not the direct operating point.
 
 ### 3.7 Input match in ngspice
 
@@ -431,7 +434,9 @@ make sim-xschem TB=sparx_powdet_sbd_tb_acsp_ngspice VARIANT=m1_kpex
 
 The two extractions differ mostly in the resistance of the 30-cell bias MIM array, which Magic keeps on one node. The script compares Z_in at 161 GHz with the small-signal input impedance of the [PSS bench](#32-transfer-curve-and-input-impedance) of the same variant and fails above 1 Ohm. ngspice `sp` and VACASK HB agree within 0.01 Ohm on the fabricated design, `m1_pex` and `m16`. `m1_kpex` has no VACASK run, so its check is skipped.
 
-**Limits.** The bench is separate from the transient of 3.6 because the kpex netlist takes about 0.1 s per 0.05 ps time step there, about 14 hours for its 22 ns, while this bench runs in seconds.
+The Magic row is the variant: the raw Magic netlist, without the ground idealization and the Schottky override of the rewrite, gives 40.0 - j24.7 Ohm.
+
+**Limits.** The bench is separate from the transient of 3.6 because the kpex netlist is slow there: 0.3 ns of that transient took 680 s, so its 22 ns would take about 14 hours, while this bench runs in seconds.
 
 ## 4. Receiver and top level
 
@@ -567,7 +572,7 @@ The detector is characterized in three versions, but there is only one schematic
 
 ```bash
 make sim-xschem TB=sparx_powdet_sbd_tb_pss_vacask VARIANT=m16
-make sim-powdet-variants        # both variants of both VACASK detector benches, input match of both extractions
+make sim-powdet-variants        # both variants of both VACASK detector benches, input match of both extractions, m1_pex transient
 ```
 
 Each variant runs in `simulations/<variant>/` and every output file carries the variant as a suffix. The ngspice benches write their tables themselves, so the rewrite also moves their `wrdata` path one folder up and appends the variant to the file name.

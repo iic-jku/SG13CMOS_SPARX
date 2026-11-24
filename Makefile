@@ -534,13 +534,14 @@ sim-xschem: ## Run a testbench simulation with Xschem in batch mode (usage: make
 	$(if $(findstring powdet_sbd_tb_acsp_ngspice,$(TB)),POWDET_VARIANT=$(VARIANT) python3 $(SIM_PLOT_DIR)/check_sparx_powdet_sbd_tb_acsp_ngspice.py)
 .PHONY: sim-xschem
 
-sim-powdet-variants: ## Run the power-detector PSS and NF testbenches for the m16 and m1_pex design variants and the ngspice input match of both extractions (usage: make sim-powdet-variants)
+sim-powdet-variants: ## Run the power-detector PSS and NF testbenches for the m16 and m1_pex design variants, the ngspice input match of both extractions and the post-layout ngspice transient (usage: make sim-powdet-variants)
 	$(MAKE) sim-xschem TB=sparx_powdet_sbd_tb_pss_vacask VARIANT=m16
 	$(MAKE) sim-xschem TB=sparx_powdet_sbd_tb_nf_vacask VARIANT=m16
 	$(MAKE) sim-xschem TB=sparx_powdet_sbd_tb_pss_vacask VARIANT=m1_pex
 	$(MAKE) sim-xschem TB=sparx_powdet_sbd_tb_nf_vacask VARIANT=m1_pex
 	$(MAKE) sim-xschem TB=sparx_powdet_sbd_tb_acsp_ngspice VARIANT=m1_pex
 	$(MAKE) sim-xschem TB=sparx_powdet_sbd_tb_acsp_ngspice VARIANT=m1_kpex
+	$(MAKE) sim-xschem TB=sparx_powdet_sbd_tb_ngspice VARIANT=m1_pex
 .PHONY: sim-powdet-variants
 
 sim-view-xschem: ## Plot Xschem simulation results (usage: make sim-view-xschem [SCRIPT=<scriptname>])
