@@ -71,7 +71,9 @@ value="
 .param lo_lev=300m
 .param rf_freq=161G
 .param rf_lev=3m
-.options savecurrents klu method=gear reltol=1e-3 abstol=1e-12 gmin=1e-12 rshunt=1e14
+* no klu: on the extracted netlist (VARIANT=m1_pex) KLU finds the operating
+* point only by its transient fallback and aborts the transient at 0.1 ps
+.options savecurrents method=gear reltol=1e-3 abstol=1e-12 gmin=1e-12 rshunt=1e14
 .control
 set num_threads=8
 *set specwindow=blackman

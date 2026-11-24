@@ -400,9 +400,9 @@ Each seed carries one offset across all LO levels, the seeds differ by up to 1.5
 | **Testbench** | `sparx_powdet_sbd_tb_ngspice` |
 | **Analyses** | `sp lin 31 100G 200G` and `tran 0.05p 22n 20n` |
 
-The independent cross-simulator check of the detector, a two-tone transient with the LO at 300 mV and the RF at 3 mV from 50 Ohm, -6.5 dBm and -46.5 dBm available, the LO at the operating point of the VACASK NF bench. The RF port `Vin3` is that 50 Ohm source: an ngspice port keeps its `z0` in series in every analysis, `op`, `ac` and `tran` included, so the bench has no source resistor and the reference plane of its `sp` analysis is `rfin`. A resistor in front of the port doubles the source impedance and halves the IF output. `VARIANT=m16` runs it with 16 diode cells, see [Design variants](#design-variants-and-why-no-symbol-is-swapped).
+The independent cross-simulator check of the detector, a two-tone transient with the LO at 300 mV and the RF at 3 mV from 50 Ohm, -6.5 dBm and -46.5 dBm available, the LO at the operating point of the VACASK NF bench. The RF port `Vin3` is that 50 Ohm source: an ngspice port keeps its `z0` in series in every analysis, `op`, `ac` and `tran` included, so the bench has no source resistor and the reference plane of its `sp` analysis is `rfin`. A resistor in front of the port doubles the source impedance and halves the IF output. `VARIANT=m16` and `VARIANT=m1_pex` run it on the other versions, see [Design variants](#design-variants-and-why-no-symbol-is-swapped).
 
-**Limits.** With `VARIANT=m1_pex` the transient stops at 0.1 ps with "Timestep too small" on the `vss` branch. The cause is the KLU solver of the bench's `klu` option on the netlist with the idealized ground. ngspice's default Sparse solver runs it.
+Both ngspice detector benches use ngspice's default Sparse solver. With `.options klu` the extracted netlist reaches its operating point only through the transient fallback, after gmin and source stepping fail, and the transient aborts at 0.1 ps with "Timestep too small". The raw Magic netlist with nothing but the Schottky geometry corrected does the same, so the variant rewrite is not the cause.
 
 ### 3.7 Input match in ngspice
 

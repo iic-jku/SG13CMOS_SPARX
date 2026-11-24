@@ -58,7 +58,9 @@ C {devices/code_shown.sym} 100 -1330 0 0 {name=NGSPICE only_toplevel=true
 value="
 .temp 27
 .save all
-.options savecurrents klu method=gear reltol=1e-3 abstol=1e-12 gmin=1e-12 rshunt=1e14
+* no klu: on the extracted netlist (VARIANT=m1_pex) KLU finds the operating
+* point only by its transient fallback, the default Sparse solver directly
+.options savecurrents method=gear reltol=1e-3 abstol=1e-12 gmin=1e-12 rshunt=1e14
 .control
 set num_threads=8
 * z0 of the RF port Vin3, the reference of S11
