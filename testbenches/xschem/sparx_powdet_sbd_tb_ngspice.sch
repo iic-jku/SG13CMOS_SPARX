@@ -9,6 +9,10 @@ T {This is only need for .sp simulation,
 as two ports are required. However, we
 are only interested in S11.} 1000 -340 0 0 0.3 0.3 {}
 T {Ngspice Testbench for SBD-Based Power Detector} 600 -1720 0 0 1 1 {}
+T {Vin3 is an RF port: its z0 of 50 Ohm is in
+series in every analysis, op, ac and tran
+included, so it is the 50 Ohm source and
+puts the sp reference plane at rfin.} 1060 -820 0 0 0.3 0.3 {}
 T {SPDX-FileCopyrightText: 2025-2026 The SPARX Team
 SPDX-License-Identifier: Apache-2.0 WITH SHL-2.1
 } 1920 -220 0 0 0.4 0.4 {}
@@ -45,12 +49,11 @@ N 1080 -480 1080 -460 {lab=rfdummy}
 N 800 -1040 1400 -1040 {lab=vdd}
 N 1480 -920 1660 -920 {lab=out_cm}
 N 1480 -880 1560 -880 {lab=ref}
-N 1020 -900 1020 -840 {lab=rfin}
-N 1020 -780 1020 -760 {lab=#net2}
+N 1020 -900 1020 -760 {lab=rfin}
 C {devices/vsource.sym} 800 -430 0 0 {name=Vss value=0}
 C {devices/gnd.sym} 800 -380 0 0 {name=l2 lab=GND}
 C {devices/lab_pin.sym} 800 -480 0 1 {name=p1 sig_type=std_logic lab=gnd_local}
-C {devices/vsource.sym} 1020 -730 0 0 {name=Vin3 value="dc 0 ac 0 portnum 1 sin(0 \{rf_lev\} \{rf_freq\})"}
+C {devices/vsource.sym} 1020 -730 0 0 {name=Vin3 value="dc 0 ac 0 portnum 1 z0 50 sin(0 \{rf_lev\} \{rf_freq\})"}
 C {devices/lab_pin.sym} 1020 -900 0 0 {name=p4 sig_type=std_logic lab=rfin}
 C {devices/code_shown.sym} 2000 -1350 0 0 {name=MODEL only_toplevel=true
 format="tcleval( @value )"
@@ -62,8 +65,6 @@ value="
 "}
 C {devices/code_shown.sym} 100 -1330 0 0 {name=NGSPICE only_toplevel=true 
 value="
-.include ../../../netlist/pex/sparx_powdet_sbd_magic_pex_3.spice
-* .include ../../../netlist/pex/sparx_powdet_sbd_klayout_pex_3.spice
 .temp 27
 .save all
 .param lo_freq=159G
@@ -151,6 +152,5 @@ format="tcleval( @value )"
 value="
 .include [file rootname [file tail [xschem get schname]]].save
 "}
-C {devices/res.sym} 1020 -810 0 0 {name=Rs value=50}
 C {sparx_powdet_sbd.sym} 1400 -900 0 0 {name=x1
 }
