@@ -405,7 +405,7 @@ The independent cross-simulator check of the detector, a two-tone transient with
 
 **Findings.** As fabricated, 153.7 mV of LO and 1.54 mV of RF reach `rfin` and the 2 GHz IF at `out` is 60.6 uV. Post-layout (`m1_pex`) it is 152.1 mV and 43.4 uV, 2.90 dB less IF, where the `hbac` conversion of the NF bench gives 2.84 dB at the same LO.
 
-Both ngspice detector benches use ngspice's default Sparse solver. With `.options klu` the extracted netlist reaches its operating point only through the transient fallback, after gmin and source stepping fail, and the transient aborts at 0.1 ps with "Timestep too small". Observed on ngspice-47: the raw Magic netlist with nothing but the Schottky geometry corrected misses the direct operating point the same way, without the rewrite's 1 TOhm ties, while the raw netlist with the outline geometry converges directly. Removing `rshunt` or the ties changes nothing, and `gmin=1e-9` lets the transient through but not the direct operating point.
+Both ngspice detector benches use ngspice's default Sparse solver. With `.options klu` the extracted netlist reaches its operating point only through the transient fallback, after gmin and source stepping fail, and the transient aborts at 0.1 ps with "Timestep too small". Observed on ngspice-47: the raw Magic netlist with nothing but the Schottky geometry corrected misses the direct operating point the same way, without the rewrite's 1 TOhm ties, while the raw netlist with the outline geometry converges directly. Removing `rshunt` or the ties changes nothing, and `gmin=1e-9` lets the transient through but not the direct operating point. [`KNOWN_ISSUES.md`](../../KNOWN_ISSUES.md) has the repro.
 
 ### 3.7 Input match in ngspice
 
