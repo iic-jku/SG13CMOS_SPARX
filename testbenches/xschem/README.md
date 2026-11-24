@@ -2,13 +2,13 @@
 
 This folder holds every circuit-level testbench of SPARX, for both simulators the flow uses, together with the post-processing scripts that turn the raw simulator output into the numbers and figures used in the documentation.
 
-There are 24 testbenches in four groups:
+There are 25 testbenches in four groups:
 
 | group | what is simulated | count |
 |---|---|---|
 | [Passive models, S-parameters](#1-passive-models-s-parameters) | the snp2le lumped-element fits of the EM results, resimulated | 10 |
 | [Passive models, transient](#2-passive-models-transient) | the same fits, in the time domain | 3 |
-| [SBD power detector](#3-sbd-power-detector) | the active block, from square-law verification to noise figure | 6 |
+| [SBD power detector](#3-sbd-power-detector) | the active block, from square-law verification to noise figure | 7 |
 | [Receiver and top level](#4-receiver-and-top-level) | the six-port core driving the four detectors, and the receiver noise figure | 5 |
 
 Everything below is reproducible with the `make` targets given in each section. All results quoted here come from those targets, at the typical corner and 27 degrees Celsius unless stated otherwise.
@@ -29,11 +29,12 @@ make sim-all                                         # every testbench, in the o
 
 The notebook runs them on VACASK `fb8cc20`, which it downloads as an image layer of the IIC-OSIC-TOOLS `2026.10` image, so all five are plain exports of their schematics. On an older binary the NF plot script still post-processes the NF deck and skips the shooting cross-check when the `pac` and `pnoise` rawfiles are missing.
 
-Four ordering constraints matter:
+Five ordering constraints matter:
 
 - The detector PSS testbench must run before the NF testbench, because the NF script reads the fitted responsivity out of `plot_simulations/data/sparx_powdet_sbd_beta<variant>.json` to convert noise into NEP and MDS.
 - The two detector transient-noise testbenches must run after the NF testbench, because their scripts check the ladder against the `hbnoise` rawfiles of the NF run, turn it into a noise figure with the NF bench's conversion, and take the `pnoise` result for their comparison figures from the NF bench's JSON.
 - The receiver noise-figure testbench runs after the detector NF testbench and the receiver testbench of the same variant, because its script checks the result against the two (it skips that check without their JSON files), and the receiver transient-noise testbench runs after the receiver NF testbench for the reasons of the detector one.
+- The ngspice input-match testbench runs after the PSS testbench of the same variant, because its script checks the input impedance against the PSS bench's JSON (it skips that check without the file).
 - The passive fits must exist in `netlist/spice/` and `netlist/spectre/` before any testbench that instantiates them. They are produced by `make snp2le` from the raw Touchstone files, the EM results without de-embedding, see the repository README. The full-core fit also carries the core's own thermal noise: `make snp2le SNP=verification/em/s-parameter/sparx160_core.s7p ORDER=24 LE_FORMAT=spectre LE_OUT=netlist/spectre/sparx_core_le.inc LE_NOISE=thermal`.
 
 **The detector PSS and NF benches and the receiver NF bench need VACASK `1b48553` (2026-09-29) or later, which the 2026.10 image ships as `fb8cc20`.** The NF benches run `pac` and `pnoise`, which reached VACASK `main` on 2026-09-25 and 2026-09-28. The PSS bench relies on `pss` treating a circuit as driven unless `oscillator=1` is given, which came with `pac`: older builds need `driven=1` and solve for the period of an oscillator without it. The 2026.09 image ships `89e888d` (2026-09-21), which has `hbnoise` but neither `pac` nor `pnoise`, and the 2026.08 image ships `a9d8860`, which has none of the three. On such a binary the PSS bench aborts its nine shooting analyses ("PSS transient failed") and the NF bench reports `Analysis type 'pac' not found` for each `pac` and `pnoise` and runs the rest, while VACASK still exits 0. Check the binary first: `strings $(which vacask) | grep -c "PNOISE periodic"` prints 0 on a build without `pnoise`. The other benches use no analysis newer than the 2026.09 image.
@@ -159,7 +160,7 @@ make sim-xschem TB=sparx_core_le_tb_acsp_vacask
 
 ## 3. SBD power detector
 
-The active block. A forward-biased Schottky barrier diode feeds a transimpedance amplifier, with a replica branch for differential readout. Six testbenches cover it, from the verification that existed at tapeout to the full receiver-front-end characterization added later.
+The active block. A forward-biased Schottky barrier diode feeds a transimpedance amplifier, with a replica branch for differential readout. Seven testbenches cover it, from the verification that existed at tapeout to the full receiver-front-end characterization added later.
 
 [SBD-PD-RESULTS.md](SBD-PD-RESULTS.md) traces every number of Section IV of the NorCAS 2026 paper to these testbenches and their data files, and derives the equations behind them.
 
@@ -399,7 +400,38 @@ Each seed carries one offset across all LO levels, the seeds differ by up to 1.5
 | **Testbench** | `sparx_powdet_sbd_tb_ngspice` |
 | **Analyses** | `sp lin 31 100G 200G` and `tran 0.05p 22n 20n` |
 
-The independent cross-simulator check of the detector. It also carries the two commented-out PEX include lines, see [Design variants](#design-variants-and-why-no-symbol-is-swapped).
+The independent cross-simulator check of the detector, a two-tone transient with the LO at 300 mV and the RF at 3 mV from 50 Ohm, -6.5 dBm and -46.5 dBm available, the LO at the operating point of the VACASK NF bench. The RF port `Vin3` is that 50 Ohm source: an ngspice port keeps its `z0` in series in every analysis, `op`, `ac` and `tran` included, so the bench has no source resistor and the reference plane of its `sp` analysis is `rfin`. A resistor in front of the port doubles the source impedance and halves the IF output. `VARIANT=m16` runs it with 16 diode cells, see [Design variants](#design-variants-and-why-no-symbol-is-swapped).
+
+**Limits.** With `VARIANT=m1_pex` the transient stops at 0.1 ps with "Timestep too small" on the `vss` branch. The cause is the KLU solver of the bench's `klu` option on the netlist with the idealized ground. ngspice's default Sparse solver runs it.
+
+### 3.7 Input match in ngspice
+
+| | |
+|---|---|
+| **Testbench** | `sparx_powdet_sbd_tb_acsp_ngspice` |
+| **Post-processing** | `check_sparx_powdet_sbd_tb_acsp_ngspice.py` |
+| **Analyses** | `op` and `sp lin 101 100G 200G` |
+| **Outputs** | `data/sparx_powdet_sbd_tb_acsp_ngspice<variant>.txt` with S11 in dB and degrees and the real and imaginary part of Z_in |
+
+S11 and Z_in at `rfin`, the detector input, from port 1 of the `sp` analysis on `rfin` and a dummy port 2, since ngspice needs two ports. It runs as fabricated and with both extractions:
+
+```bash
+make sim-xschem TB=sparx_powdet_sbd_tb_acsp_ngspice
+make sim-xschem TB=sparx_powdet_sbd_tb_acsp_ngspice VARIANT=m1_pex
+make sim-xschem TB=sparx_powdet_sbd_tb_acsp_ngspice VARIANT=m1_kpex
+```
+
+**Findings** at 160 GHz:
+
+| version | S11 | Z_in |
+|---|---|---|
+| fabricated | -20.2 dB | 50.9 - j9.8 Ohm |
+| post-layout, Magic (`m1_pex`) | -10.9 dB | 40.4 - j25.0 Ohm |
+| post-layout, kpex (`m1_kpex`) | -8.5 dB | 49.7 - j40.4 Ohm |
+
+The two extractions differ mostly in the resistance of the 30-cell bias MIM array, which Magic keeps on one node. The script compares Z_in at 161 GHz with the small-signal input impedance of the [PSS bench](#32-transfer-curve-and-input-impedance) of the same variant and fails above 1 Ohm. ngspice `sp` and VACASK HB agree within 0.01 Ohm on the fabricated design, `m1_pex` and `m16`. `m1_kpex` has no VACASK run, so its check is skipped.
+
+**Limits.** The bench is separate from the transient of 3.6 because the kpex netlist takes about 0.1 s per 0.05 ps time step there, about 14 hours for its 22 ns, while this bench runs in seconds.
 
 ## 4. Receiver and top level
 
@@ -524,22 +556,23 @@ The independent integrator check of the receiver transient. ngspice reproduces t
 
 ## Design variants, and why no symbol is swapped
 
-The detector is characterized in three versions, but there is only one schematic. `scripts/powdet_variant.py` rewrites the **emitted netlist** before the simulator sees it:
+The detector is characterized in three versions, but there is only one schematic. `scripts/powdet_variant.py` rewrites the **emitted netlist** before the simulator sees it, the VACASK and the ngspice one alike:
 
 | variant | what the rewrite does |
 |---|---|
 | `m1` | the design as fabricated, copied unchanged |
 | `m16` | both Schottky instances set to `nx=4 ny=4`, that is 16 parallel unit cells |
-| `m1_pex` | the schematic subcircuit replaced by the Magic full-RC extraction from `netlist/pex/`, translated into VACASK syntax |
+| `m1_pex` | the schematic subcircuit replaced by the Magic full-RC extraction from `netlist/pex/`, translated into VACASK or SPICE syntax |
+| `m1_kpex` | the same with the kpex full-RC extraction, its ground mesh kept, for the ngspice benches only |
 
 ```bash
 make sim-xschem TB=sparx_powdet_sbd_tb_pss_vacask VARIANT=m16
-make sim-powdet-variants        # both variants, both detector benches
+make sim-powdet-variants        # both variants of both VACASK detector benches, input match of both extractions
 ```
 
-Each variant runs in `simulations/<variant>/` and every output file carries the variant as a suffix.
+Each variant runs in `simulations/<variant>/` and every output file carries the variant as a suffix. The ngspice benches write their tables themselves, so the rewrite also moves their `wrdata` path one folder up and appends the variant to the file name.
 
-**The PEX symbols in the testbenches are dormant and are never simulated.** Each detector bench does instantiate `sparx_powdet_sbd_pex.sym` next to the schematic symbol, but it carries `spice_ignore=true` and `spectre_ignore=true`, and in the ngspice bench the two PEX include lines are commented out. The verification is that the string `sparx_powdet_sbd_pex` appears zero times in every emitted netlist. The post-layout results come from the netlist rewrite above, not from a symbol swap. The same holds at the top level, where `sparx_top_le.sch` instantiates the schematic symbol four times and the PEX symbol not at all.
+**The PEX symbols in the testbenches are dormant and are never simulated.** Each detector bench does instantiate `sparx_powdet_sbd_pex.sym` next to the schematic symbol, but it carries `spice_ignore=true` and `spectre_ignore=true`. The verification is that the string `sparx_powdet_sbd_pex` appears zero times in every emitted netlist. The post-layout results come from the netlist rewrite above, not from a symbol swap. The same holds at the top level, where `sparx_top_le.sch` instantiates the schematic symbol four times and the PEX symbol not at all.
 
 What the extraction contributes is worth stating exactly, since "post-layout" can mean many things. With the resistance-gated `extresist` settings the Makefile uses, the extracted netlist is the schematic plus its parasitic capacitors, plus the deterministic route resistances of the supply, output and reference nets, of which the 22 Ohm in series with the feedback resistor is the largest. Net effect on the fabricated design: the responsivity falls 5.9 percent, from 41.2 V/W to 38.8 V/W, the input impedance detunes from 51 - j10 Ohm to 40 - j25 Ohm, and the video bandwidth falls 13 percent. The ground net is idealized onto the pin, because the extraction returns the transistor sources to ground through a substrate-like path that the layout does not have, and leaving it in place changes every large-signal number by 6 to 16 dB.
 
@@ -564,7 +597,7 @@ These cost real time to find, and none of them announce themselves.
 
 ```
 testbenches/xschem/
-  *.sch                                   the 24 testbenches
+  *.sch                                   the 25 testbenches
   netlists/                               exported VACASK netlists of the five notebook benches, for use without Xschem
   sim_range.{inc,spice}                   the frequency band the passive benches sweep
   xschemrc                                library paths for this folder
@@ -573,6 +606,7 @@ testbenches/xschem/
     plot_n_port_tb_tran_ngspice.py            passive transients
     plot_sparx_powdet_sbd_tb_*.py             detector: hb, pss, nf, tn, tn_lo
     plot_sparx_top_le_tb_{rx,nf,tn}_vacask.py receiver: characterisation, noise figure, transient noise
+    check_sparx_powdet_sbd_tb_acsp_ngspice.py detector input match, checked against the PSS bench
     sparam_plot.py, ngspice2python.py         shared helpers
     data/                                     CSV and JSON results
     figures/                                  PNG overview figures

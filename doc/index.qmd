@@ -171,7 +171,7 @@ make regression                                 # tool and flow smoke test
 make all                                        # the complete flow
 ```
 
-`make all` runs the Palace EM solves of the three blocks (@sec-em-cost) and 21 of the 24 testbenches, all except the three passive-model transients, several hours in total. The seven-port EM solve of the full core takes about 20 times the core-hours of the three blocks and runs only with `make sparx-core` or `make all WITH_CORE=1`. `make help` lists every target, and the repository [README](https://github.com/iic-jku/SG13CMOS_SPARX#makefile-targets) documents each of them with its parameters.
+`make all` runs the Palace EM solves of the three blocks (@sec-em-cost) and 22 of the 25 testbenches, all except the three passive-model transients, several hours in total. The seven-port EM solve of the full core takes about 20 times the core-hours of the three blocks and runs only with `make sparx-core` or `make all WITH_CORE=1`. `make help` lists every target, and the repository [README](https://github.com/iic-jku/SG13CMOS_SPARX#makefile-targets) documents each of them with its parameters.
 
 ::: {.callout-warning}
 Most build outputs are committed: layouts, netlists, Palace results, Touchstone files, DRC and LVS reports, renders and simulation data. The targets overwrite them, and `make clean` deletes them, `layout/` included. Check `git status` after a run and `git restore` what you did not mean to change. `make release` defaults to `VERSION=2.0.0` and overwrites the committed release, so always pass a new `VERSION`.
@@ -393,8 +393,10 @@ The detector is characterized in three versions, all at the typical corner and 2
 
 ```sh
 make sim-xschem TB=sparx_powdet_sbd_tb_pss_vacask VARIANT=m16
-make sim-powdet-variants        # PSS and NF benches for m16 and m1_pex
+make sim-powdet-variants        # PSS and NF benches for m16 and m1_pex, input match of both extractions
 ```
+
+The rewrite serves the ngspice benches as well. There, `VARIANT=m1_kpex` puts in the kpex extraction instead of the Magic one, for the input match of `sparx_powdet_sbd_tb_acsp_ngspice`: $(50 - \mathrm{j}40)\ \Omega$ at 160 GHz against $(40 - \mathrm{j}25)\ \Omega$ from Magic.
 
 At tapeout in March 2026 the detector was checked with a two-tone HB sweep in VACASK. It confirmed square-law detection, $V_\mathrm{IF} \propto V_\mathrm{RF} V_\mathrm{LO}$, but says nothing about the absolute responsivity, the match, the compression or the noise. The TN, HBAC, HBNOISE, shooting PSS, PAC and PNOISE analyses that VACASK gained later in 2026 characterize the detector as a receiver front-end.
 
@@ -709,10 +711,10 @@ make sim-view-xschem SCRIPT=plot_n_port_tb_acsp_ngspice
 | :--- | :--- | :---: |
 | Passive models, S-parameters | BPF, WPD, BLC, full-core fit and composed core, each in ngspice and VACASK | 10 |
 | Passive models, transient | stability and causality of the fits | 3 |
-| SBD power detector | two-tone HB, transfer curve, noise figure, transient noise, ngspice cross-check | 6 |
+| SBD power detector | two-tone HB, transfer curve, noise figure, transient noise, ngspice cross-check, input match | 7 |
 | Receiver and top level | receiver characterization, receiver noise figure and transient noise, top-level transients | 5 |
 
-: The 24 testbenches. {#tbl-benches tbl-colwidths="[30,55,15]"}
+: The 25 testbenches. {#tbl-benches tbl-colwidths="[30,55,15]"}
 
 The [testbench README](https://github.com/iic-jku/SG13CMOS_SPARX/blob/main/testbenches/xschem/README.md) documents every bench: its analyses and settings, its findings and its limits. Some benches read the results of others, and `sim-all` runs them in the required order. The detector PSS bench runs before the detector NF bench, which reads the fitted responsivity. The receiver NF bench runs after the detector NF bench and the receiver bench. The transient-noise benches run after the NF benches whose results they check. The fits in `netlist/` must exist before any bench that includes them.
 

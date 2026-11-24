@@ -34,7 +34,7 @@ When adding a flow or a folder, mirror the template layout and its `Makefile` co
 
 - The root `Makefile` drives every flow, and `README.md` documents each target. Read it before changing a flow.
 - It sets `.DEFAULT_GOAL := help`, and `make help` lists every target from its `## ` comment. Give every new target a `## ` comment on the rule line and a `.PHONY:` line.
-- Overridable variables use `?=` with a `# Override with: make <target> VAR=<value>` comment above them and are set on the command line, for example `FREQ=<GHz>`, `CELL=<cell>`, `TB=<testbench>`, `VARIANT=<m16|m1_pex>`, `NP=<procs>`.
+- Overridable variables use `?=` with a `# Override with: make <target> VAR=<value>` comment above them and are set on the command line, for example `FREQ=<GHz>`, `CELL=<cell>`, `TB=<testbench>`, `VARIANT=<m16|m1_pex|m1_kpex>`, `NP=<procs>`.
 - There is no RTL and no cocotb testbench in this repo.
 - Each folder with schematics has its own `xschemrc`, and the targets pass it with `--rcfile`. See "Xschem Configuration" in `README.md`.
 - `doc/fig/targets_overview/targets_overview.drawio` draws the call tree of `make all` ("Makefile Structure" in `README.md`, `@fig-targets` in the documentation). After a change to `all`, `build-top`, the verify targets, `sparx-core` or `sim-all`, update the drawio and re-export the PNG, SVG and PDF together. The PDF render of the documentation uses the PDF next to the SVG, so a stale PDF ships even when the SVG is current.
@@ -73,7 +73,7 @@ make regression                                  # tool/flow smoke test, reuses 
 - The EM drivers use gds2palace's surface metal model (no `filled_metals`, no `External` on the `Conductivity` boundaries). `verification/em/metal_model/README.md` records why and what it costs in accuracy. Read it before changing either setting.
 - snp2le fits the raw EM results (`sparx<FREQ>_<block>.sNp`, not `*_deembedded.sNp`), the full core in `sparx-core` with `LE_NOISE=thermal` (the core's thermal noise). The fit orders in use are in the `all` and `sparx-core` targets (BPF 13, WPD 10, BLC 6, core 24). The models only need to be passive inside the fitted 80 to 240 GHz band: the WPD fit reaches σ_max 1.618 at 679 GHz, and that is accepted.
 - Testbench names end in `_ngspice` or `_vacask`, which selects the netlist format and the simulator in `sim-xschem`. VACASK runs with `-sp`, so `sim-xschem` calls the postprocess scripts itself by name pattern: a new kind of `_vacask` testbench needs its line there.
-- Power-detector variants (`VARIANT=m16`, `VARIANT=m1_pex`) are rewritten from the emitted netlist by `scripts/powdet_variant.py` and run in `testbenches/xschem/simulations/<VARIANT>/`.
+- Power-detector variants (`VARIANT=m16`, `VARIANT=m1_pex`, and `VARIANT=m1_kpex` for ngspice only) are rewritten from the emitted VACASK or ngspice netlist by `scripts/powdet_variant.py` and run in `testbenches/xschem/simulations/<VARIANT>/`.
 - ngspice runs headless with `-b`, so `plot` commands in a `.control` block do nothing. Testbenches export their results to `testbenches/xschem/plot_simulations/data/`, and `make sim-view-xschem SCRIPT=<script>` plots them.
 - Keep `spectre_format` on every symbol. Without it the Spectre netlister drops the instances from VACASK netlists without a warning.
 - `<cell>_pex.sym` is regenerated from `<cell>.sym` before every extraction. Edit `<cell>.sym`, never the generated copy.
