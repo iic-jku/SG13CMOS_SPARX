@@ -10,7 +10,8 @@ the bench, prints S11 and Z_in at 160 GHz and 161 GHz, and compares Z_in at
 same variant (`z_in_small_signal_ohm` in data/sparx_powdet_sbd_beta<suffix>.json,
 from the HB solution at -76 dBm). A resistor between the RF port and rfin
 shifts the ngspice value by its resistance and fails the check. Without that
-JSON (m1_kpex, which has no VACASK run) the comparison is skipped.
+JSON (m1_kpex, which has no VACASK run) the comparison is skipped, and a
+table older than the netlist of the run fails, since it was not written by it.
 
 POWDET_VARIANT selects the variant run by the Makefile (m16, m1_pex, m1_kpex),
 as for the VACASK post-processing scripts.
@@ -25,6 +26,7 @@ TB = 'sparx_powdet_sbd_tb_acsp_ngspice'
 VARIANT = os.environ.get('POWDET_VARIANT', '').strip()
 SUFFIX = f'_{VARIANT}' if VARIANT else ''
 DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
+SIM_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'simulations')
 # ngspice and VACASK agree within 0.01 Ohm on m1, m16 and m1_pex, a source
 # resistor in the wrong place is off by 50 Ohm.
 TOL_OHM = 1.0
@@ -34,6 +36,10 @@ def main():
     table = os.path.join(DATA_DIR, f'{TB}{SUFFIX}.txt')
     if not os.path.isfile(table):
         sys.exit(f'{table} not found, run `make sim-xschem TB={TB}` first')
+    # ngspice exits 0 when wrdata fails, so an older table is the committed one, not this run's
+    netlist = os.path.join(SIM_DIR, VARIANT, f'{TB}.spice')
+    if os.path.isfile(netlist) and os.path.getmtime(table) < os.path.getmtime(netlist):
+        sys.exit(f'{table} is older than {netlist}, the run did not write it')
     f = ng.loadngspicecol(table, 'frequency')
     cols = {n: ng.loadngspicecol(table, n) for n in ('s11_db', 'zin_re', 'zin_im')}
 
