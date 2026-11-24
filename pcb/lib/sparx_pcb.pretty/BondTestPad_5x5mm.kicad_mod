@@ -1,0 +1,75 @@
+(footprint "BondTestPad_5x5mm"
+	(version 20260206)
+	(generator "pcbnew")
+	(generator_version "10.0")
+	(layer "F.Cu")
+	(descr "5 x 5 mm bare pad of the board's own finish for setting up the bonder and pulling test bonds, no paste.")
+	(tags "bond test pad")
+	(property "Reference" "REF**"
+		(at 0 -3.3 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "ac009aa4-2f3f-42fd-ae86-fdb88397fcb4")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "BondTestPad_5x5mm"
+		(at 0 3.3 0)
+		(layer "F.Fab")
+		(uuid "566c7c0c-e672-49f1-a051-36f43b7548ef")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "4dcb30a3-429f-49ad-a96a-8e58c6dbb92c")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "5e45d98e-ea19-42b6-a606-705c4f3c18fd")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(attr smd)
+	(duplicate_pad_numbers_are_jumpers no)
+	(fp_rect
+		(start -2.75 -2.75)
+		(end 2.75 2.75)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(fill no)
+		(layer "F.CrtYd")
+		(uuid "4e6f92b5-2f62-43cc-bc62-14e073c9c806")
+	)
+	(pad "1" smd rect
+		(at 0 0)
+		(size 5 5)
+		(layers "F.Cu" "F.Mask")
+		(zone_connect 2)
+		(thermal_bridge_angle 45)
+		(uuid "6193e214-971e-4351-aaff-0469e4b8dcd9")
+	)
+	(embedded_fonts no)
+)

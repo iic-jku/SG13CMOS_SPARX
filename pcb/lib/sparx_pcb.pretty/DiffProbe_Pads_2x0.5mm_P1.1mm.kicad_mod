@@ -1,0 +1,103 @@
+(footprint "DiffProbe_Pads_2x0.5mm_P1.1mm"
+	(version 20260206)
+	(generator "pcbnew")
+	(generator_version "10.0")
+	(layer "F.Cu")
+	(descr "Two bare 0.5 x 0.5 mm pads 1.1 mm apart for a differential probe tip (pad 1 positive, pad 2 negative), no paste.")
+	(tags "probe pad differential")
+	(property "Reference" "REF**"
+		(at 0 -1.4 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "0e6ecd3a-71ed-4bea-9908-029653b00f10")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "DiffProbe_Pads_2x0.5mm_P1.1mm"
+		(at 0 1.4 0)
+		(layer "F.Fab")
+		(uuid "ea382e9f-ca80-4e0b-9ed7-4799a8e0f0dc")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "daf3546a-868b-461c-80f9-4390f37c6ce0")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "4a29e79e-29c4-4ae1-a2e8-d282a6666fd0")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(attr smd)
+	(duplicate_pad_numbers_are_jumpers no)
+	(fp_rect
+		(start -0.35 -0.85)
+		(end 0.35 0.85)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(fill no)
+		(layer "F.CrtYd")
+		(uuid "c7778e1e-df0f-4525-9ffa-39f6752870ab")
+	)
+	(fp_text user "+"
+		(at 0.6 -0.55 0)
+		(layer "F.Fab")
+		(uuid "6d57c915-2081-48ee-b3c1-8c087b3de5a1")
+		(effects
+			(font
+				(size 0.4 0.4)
+				(thickness 0.06)
+			)
+		)
+	)
+	(fp_text user "-"
+		(at 0.6 0.55 0)
+		(layer "F.Fab")
+		(uuid "300c1360-ca05-4209-85e2-0b6217e70d80")
+		(effects
+			(font
+				(size 0.4 0.4)
+				(thickness 0.06)
+			)
+		)
+	)
+	(pad "1" smd rect
+		(at 0 -0.55)
+		(size 0.5 0.5)
+		(layers "F.Cu" "F.Mask")
+		(thermal_bridge_angle 45)
+		(uuid "86310ae9-43f2-4d17-ba6e-bc18a44402d0")
+	)
+	(pad "2" smd rect
+		(at 0 0.55)
+		(size 0.5 0.5)
+		(layers "F.Cu" "F.Mask")
+		(thermal_bridge_angle 45)
+		(uuid "8921d269-1eae-4318-93ca-205f10dc81f3")
+	)
+	(embedded_fonts no)
+)

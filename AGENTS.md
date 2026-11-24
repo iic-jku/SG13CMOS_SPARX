@@ -29,6 +29,7 @@ When adding a flow or a folder, mirror the template layout and its `Makefile` co
 | `render/`, `release/v.<version>/`, `doc/` | Renders, published releases, Quarto documentation site |
 | `sscs-ose-code-a-chip/` | ISSCC'27 Code-a-Chip notebook with its own copies of GDS and assets, not driven by the `Makefile` |
 | `measurements/` | Lab measurement notes |
+| `pcb/` | KiCad 10 project of the wafer-prober board: die bonded onto the board, LO and RF probed, detector outputs to edge SMAs (`pcb/README.md`) |
 
 ## Makefiles
 
