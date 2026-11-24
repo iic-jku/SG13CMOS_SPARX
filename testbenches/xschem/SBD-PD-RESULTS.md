@@ -1,6 +1,6 @@
 # SBD Power Detector: Results and Derivations
 
-This document accompanies Section IV, "SBD-Based Power Detector", of the paper S. Dorrer, D. Kellerer-Pirklbauer, G. Zachl, and H. Pretl, "SPARX: An Open-Source, Automated, Programmatically Generated, Frequency-Scalable Six-Port Receiver in 130-nm CMOS," IEEE Nordic Circuits and Systems Conference (NorCAS), 2026. Most numbers in that section are computed from the simulation data rather than read off a plot. Here each one is traced to the testbench that produces it and to the data file and field it is read from, and every equation the section uses is derived, the noise figure of Eq. (3) included.
+This document accompanies Section IV, "SBD-Based Power Detector", of the paper S. Dorrer, D. Kellerer-Pirklbauer, G. Zachl, and H. Pretl, "SPARX: An Open-Source, Automated, Programmatically Generated, Frequency-Scalable Six-Port Receiver in 130-nm CMOS," in 2026 IEEE Nordic Circuits and Systems Conference (NorCAS), Tampere, Finland, 2026, pp. 1-7, doi: [10.1109/NorCAS71164.2026.11791174](https://doi.org/10.1109/NorCAS71164.2026.11791174). Most numbers in that section are computed from the simulation data rather than read off a plot. Here each one is traced to the testbench that produces it and to the data file and field it is read from, and every equation the section uses is derived, the noise figure of Eq. (3) included.
 
 The testbenches, their analysis settings and their limits are documented in [README.md](README.md), section 3. This document does not repeat them and concentrates on the numbers.
 

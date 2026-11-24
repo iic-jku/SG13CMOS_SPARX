@@ -10,7 +10,7 @@ Submission to the IEEE SSCS Open-Source Ecosystem “Code-a-Chip” Travel Grant
 
 \*S. Dorrer and D. Kellerer-Pirklbauer contributed equally to this work, see the author contributions at the end of the notebook.
 
-**Paper:** S. Dorrer, D. Kellerer-Pirklbauer, G. Zachl, and H. Pretl, “SPARX: An Open-Source, Automated, Programmatically Generated, Frequency-Scalable Six-Port Receiver in 130-nm CMOS,” accepted and presented at the 2026 IEEE Nordic Circuits and Systems Conference (NorCAS), not yet available in IEEE Xplore.
+**Paper:** S. Dorrer, D. Kellerer-Pirklbauer, G. Zachl, and H. Pretl, “SPARX: An Open-Source, Automated, Programmatically Generated, Frequency-Scalable Six-Port Receiver in 130-nm CMOS,” in 2026 IEEE Nordic Circuits and Systems Conference (NorCAS), Tampere, Finland, 2026, pp. 1-7, doi: [10.1109/NorCAS71164.2026.11791174](https://doi.org/10.1109/NorCAS71164.2026.11791174).
 
 **Repository:** https://github.com/iic-jku/SG13CMOS_SPARX, with the documentation at https://iic-jku.github.io/SG13CMOS_SPARX/
 
