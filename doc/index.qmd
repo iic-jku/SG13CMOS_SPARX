@@ -35,7 +35,7 @@ This repository requires the [IIC-OSIC-TOOLS](https://github.com/iic-jku/IIC-OSI
 :::
 
 ::: {.callout-note}
-The design and the flow are described in a paper published at the 2026 IEEE Nordic Circuits and Systems Conference (NorCAS) [@Dorrer_2026]. This documentation follows the repository and carries more derivations and results than the paper. We happily accept [pull requests](https://github.com/iic-jku/SG13CMOS_SPARX/pulls) and [issues](https://github.com/iic-jku/SG13CMOS_SPARX/issues).
+The design and the flow are described in a paper published at the 2026 IEEE Nordic Circuits and Systems Conference (NorCAS) [@Dorrer_2026], and its preprint is available on [ResearchGate](https://www.researchgate.net/publication/418259168_SPARX_An_Open-Source_Automated_Programmatically_Generated_Frequency-Scalable_Six-Port_Receiver_in_130-nm_CMOS). This documentation follows the repository and carries more derivations and results than the paper. We happily accept [pull requests](https://github.com/iic-jku/SG13CMOS_SPARX/pulls) and [issues](https://github.com/iic-jku/SG13CMOS_SPARX/issues).
 
 © 2026 IEEE. Personal use of this material is permitted. Permission from IEEE must be obtained for all other uses, in any current or future media, including reprinting/republishing this material for advertising or promotional purposes, creating new collective works, for resale or redistribution to servers or lists, or reuse of any copyrighted component of this work in other works.
 :::
