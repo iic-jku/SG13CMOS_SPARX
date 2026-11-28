@@ -347,7 +347,7 @@ All thirteen layouts pass the KLayout DRC at `macro` level, and their EM simulat
 `make render-gds` renders the top-level GDS with `sak-render.py` into `render/img/`: all mask layers on a white and on a black background, and a TopMetal2-only view that shows the RF structures without the ground plane underneath.
 
 ::: {layout-ncol=2}
-![Taped-out layout with the Metal5 ground plane and the pinout. The termination labeled $R_1$ here is $R_4$ in the text.](fig/sparx160/sparx160_top_black_pinout.png){#fig-render-black}
+![Taped-out layout with the Metal5 ground plane and the pinout.](fig/sparx160/sparx160_top_black_pinout.png){#fig-render-black}
 
 ![Taped-out layout without the Metal5 ground plane.](fig/sparx160/sparx160_top_white_wo_M5.png){#fig-render-white}
 :::
